@@ -34,6 +34,7 @@ services:
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"
          # - SERVER_NAME="World of Pals"
+         # - ADMIN_PASSWORD="someAdminPassword"
       volumes:
          - /path/to/your/palworld/folder:/palworld/
 ```
