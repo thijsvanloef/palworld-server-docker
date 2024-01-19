@@ -1,0 +1,13 @@
+services:
+   palworld:
+      image: thijsvanloef/palworld-server-docker
+      restart: unless-stopped
+      container_name: palworld-server
+      ports:
+        - 8211:8211
+      environment:
+         - PORT=8221
+         - PLAYERS=16
+         - MULTITHREADING=FALSE
+      volumes:
+         - /path/to/your/palworld/folder:/palworld/
