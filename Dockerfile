@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
 ENV PORT=8211 \
     PLAYERS=16 \
     MULTITHREADING=false \
@@ -15,6 +14,7 @@ ENV PORT=8211 \
     PUBLIC_PORT= \
     SERVER_PASSWORD= \
     SERVER_NAME= \
+    ADMIN_PASSWORLD= \
     UPDATE_ON_BOOT=true
 
 COPY ./scripts/* /home/steam/server/

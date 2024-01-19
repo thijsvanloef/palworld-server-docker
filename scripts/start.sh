@@ -24,6 +24,10 @@ if [ -n "${SERVER_PASSWORD}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -serverpassword=${SERVER_PASSWORD}"
 fi
 
+if [ -n "${ADMIN_PASSWORD}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -adminpassword=${ADMIN_PASSWORD}"
+fi
+
 if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS"
 fi 

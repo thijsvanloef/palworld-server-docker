@@ -1,0 +1,2 @@
+# Ensure the scripts use LF line endings, not CRLF
+*.sh text eol=lf

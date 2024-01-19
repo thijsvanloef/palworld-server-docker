@@ -66,7 +66,7 @@ It is highly recommended you set the following environment values before startin
 * MULTITHREADING
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
-|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------- |
 | PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-31           |
 | PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535     |
 | MULTITHREADING** | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.             | false          | true/false     |
@@ -75,7 +75,9 @@ It is highly recommended you set the following environment values before startin
 | PUBLIC_PORT      | You can manually specify the port number of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | x.x.x.x        |
 | SERVER_NAME      | A name for your community server                                                                                                                                                                   |                | "string"       |
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
+| ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
+
 
 *highly recommended to set
 
@@ -84,7 +86,7 @@ It is highly recommended you set the following environment values before startin
 ### Game Ports
 
 | Port  | Info             | note                                           |
-|-------|------------------|------------------------------------------------|
+| ----- | ---------------- | ---------------------------------------------- |
 | 8211  | Game Port (UDP)  |                                                |
 | 27015 | Query Port (UDP) | You are not able to change this port as of now |
 
