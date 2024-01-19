@@ -7,7 +7,7 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PORT=8221
+         - PORT=8211
          - PLAYERS=16
          - MULTITHREADING=FALSE
       volumes:
