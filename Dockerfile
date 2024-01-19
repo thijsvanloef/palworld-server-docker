@@ -1,8 +1,10 @@
 FROM cm2network/steamcmd:root
 LABEL maintainer="thijs@loef.dev"
 
-RUN apt-get update && apt-get install -y \
-    xdg-user-dirs
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    xdg-user-dirs \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 
 ENV PORT=8211 \
