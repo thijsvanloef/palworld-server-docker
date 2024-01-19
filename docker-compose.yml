@@ -4,7 +4,8 @@ services:
       restart: unless-stopped
       container_name: palworld-server
       ports:
-        - 8211:8211
+        - 8211:8211/udp
+        - 27015:27015/udp
       environment:
          - PORT=8221
          - PLAYERS=16
