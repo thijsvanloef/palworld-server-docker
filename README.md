@@ -70,6 +70,13 @@ It is highly recommended you set the following environment values before startin
 
 ** Make sure you know what you are doing when running this this option enabled
 
+### Game Ports
+
+| Port  | Info             | note                                           |
+|-------|------------------|------------------------------------------------|
+| 8211  | Game Port (UDP)  |                                                |
+| 27015 | Query Port (UDP) | You are not able to change this port as of now |
+
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
