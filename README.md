@@ -31,6 +31,11 @@ services:
          - PLAYERS=16
          - MULTITHREADING=FALSE
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         # Enable the environment variables below if you have COMMUNITY=true
+         # - PUBLIC_PORT=123
+         # - PUBLIC_IP=123
+         # - SERVER_PASSWORD="worldofpals"
+         # - SERVER_NAME="World of Pals"
       volumes:
          - /path/to/your/palworld/folder:/palworld/
 ```
