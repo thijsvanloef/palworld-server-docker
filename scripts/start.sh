@@ -16,6 +16,10 @@ if [ -n "${PUBLIC_PORT}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -publiport=${PUBLIC_PORT}"
 fi
 
+if [ -n "${SERVER_NAME}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -servername=${SERVER_NAME}"
+fi
+
 if [ -n "${SERVER_PASSWORD}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -serverpassword=${SERVER_PASSWORD}"
 fi

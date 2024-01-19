@@ -75,7 +75,8 @@ It is highly recommended you set the following environment values before startin
 | COMMUNITY        | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                      | false          | true/false     |
 | PUBLIC_IP        | You can manually specify the global IP address of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x        |
 | PUBLIC_PORT      | You can manually specify the port number of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | x.x.x.x        |
-| SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | string         |
+| SERVER_NAME      | A name for your community server                                                                                                                                                                   |                | "string"         |
+| SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"         |
 
 *highly recommended to set
 

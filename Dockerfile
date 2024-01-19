@@ -13,7 +13,8 @@ ENV PORT=8211 \
     COMMUNITY=false \
     PUBLIC_IP= \
     PUBLIC_PORT= \
-    SERVER_PASSWORD=
+    SERVER_PASSWORD= \
+    SERVER_NAME=
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
