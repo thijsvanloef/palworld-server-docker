@@ -14,7 +14,7 @@ ENV PORT=8211 \
     PUBLIC_PORT= \
     SERVER_PASSWORD= \
     SERVER_NAME= \
-    ADMIN_PASSWORLD= \
+    ADMIN_PASSWORD= \
     UPDATE_ON_BOOT=true
 
 COPY ./scripts/* /home/steam/server/
