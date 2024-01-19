@@ -1,9 +1,5 @@
 # Palworld server docker
 
-![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)
-![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)
-![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)
-![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)
 
 [View on Docker Hub](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
 
