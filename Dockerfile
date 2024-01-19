@@ -7,7 +7,11 @@ RUN apt-get update && apt-get install -y \
 
 ENV PORT=8211 \
     PLAYERS=16 \
-    MULTITHREADING=FALSE
+    MULTITHREADING=false \
+    COMMUNITY=false \
+    PUBLIC_IP= \
+    PUBLIC_PORT= \
+    SERVER_PASSWORD=
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh

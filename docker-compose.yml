@@ -1,6 +1,6 @@
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       ports:
@@ -9,6 +9,7 @@ services:
       environment:
          - PORT=8211
          - PLAYERS=16
-         - MULTITHREADING=FALSE
+         - MULTITHREADING=false
+         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
       volumes:
-         - /path/to/your/palworld/folder:/palworld/
+         - ./palworld:/palworld/
