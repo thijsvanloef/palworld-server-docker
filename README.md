@@ -30,6 +30,7 @@ services:
          - PORT=8211
          - PLAYERS=16
          - MULTITHREADING=FALSE
+         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
       volumes:
          - /path/to/your/palworld/folder:/palworld/
 ```
@@ -46,6 +47,7 @@ docker run -d \
     -v ./<palworld-folder>:/palworld/ \
     -e PLAYERS=16 \
     -e PORT=8211 \
+    -e COMMUNITY=false \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker
 
