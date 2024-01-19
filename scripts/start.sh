@@ -1,6 +1,6 @@
 #!/bin/sh
 
-STARTCOMMAND="./PalServer.sh -port ${PORT} -players ${PLAYERS}"
+STARTCOMMAND="./PalServer.sh -port=${PORT} -players=${PLAYERS}"
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m"
 cd /palworld || exit
