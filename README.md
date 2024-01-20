@@ -9,7 +9,9 @@
 
 > **_NOTE:_**  Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
 
-This is a Dockerized version of the [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+This is a Docker container to help you get started with hosting your own [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+
+This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
 
 ## How to use
 
