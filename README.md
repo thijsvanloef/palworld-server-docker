@@ -1,4 +1,4 @@
-# Palworld server docker
+# Palworld Dedicated Server Docker
 
 ![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)
 ![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)
@@ -6,6 +6,8 @@
 ![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)
 
 [View on Docker Hub](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
+
+> **_NOTE:_**  Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
 
 This is a Dockerized version of the [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
