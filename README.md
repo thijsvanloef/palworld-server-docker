@@ -98,3 +98,7 @@ It is highly recommended you set the following environment values before startin
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
+
+### Known Issues
+
+Known issues are listed in the [wiki](https://github.com/thijsvanloef/palworld-server-docker/wiki/Known-Issues)
