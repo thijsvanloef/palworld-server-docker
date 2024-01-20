@@ -13,7 +13,7 @@ if [ -n "${PUBLIC_IP}" ]; then
 fi
 
 if [ -n "${PUBLIC_PORT}" ]; then
-    STARTCOMMAND="${STARTCOMMAND} -publiport=${PUBLIC_PORT}"
+    STARTCOMMAND="${STARTCOMMAND} -publicport=${PUBLIC_PORT}"
 fi
 
 if [ -n "${SERVER_NAME}" ]; then
