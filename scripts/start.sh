@@ -1,8 +1,6 @@
-#!/bin/sh
-
+#!/bin/bash
 
 STARTCOMMAND="./PalServer.sh -port=${PORT} -players=${PLAYERS}"
-
 
 if [ "${COMMUNITY}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} EpicApp=PalServer"
@@ -30,7 +28,7 @@ fi
 
 if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS"
-fi 
+fi
 
 cd /palworld || exit
 
