@@ -1,6 +1,14 @@
 #!/bin/bash
 
-STARTCOMMAND="./PalServer.sh -port=${PORT} -players=${PLAYERS}"
+STARTCOMMAND="./PalServer.sh"
+
+if [ -n "${PORT}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -port=${PORT}"
+fi
+
+if [ -n "${PLAYERS}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -players=${PLAYERS}"
+fi
 
 if [ "${COMMUNITY}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} EpicApp=PalServer"

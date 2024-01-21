@@ -7,10 +7,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV PORT=8211 \
+ENV PORT= \
     PUID=1000 \
     PGID=1000 \
-    PLAYERS=16 \
+    PLAYERS= \
     MULTITHREADING=false \
     COMMUNITY=false \
     PUBLIC_IP= \
