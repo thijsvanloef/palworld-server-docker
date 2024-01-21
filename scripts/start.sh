@@ -34,6 +34,6 @@ cd /palworld || exit
 
 echo "${STARTCOMMAND}"
 
-printf "\e[0;32m*****STARTING SERVER*****\e[0m"
+printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 
 su steam -c "${STARTCOMMAND}"
