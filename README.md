@@ -32,6 +32,8 @@ services:
         - 27015:27015/udp
       environment:
          - PORT=8211
+         - PUID=1000
+         - PGID=1000
          - PLAYERS=16
          - MULTITHREADING=FALSE
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
@@ -55,6 +57,8 @@ docker run -d \
     -v ./<palworld-folder>:/palworld/ \
     -e PLAYERS=16 \
     -e PORT=8211 \
+    -e PUID=1000 \
+    -e PGID=1000 \
     -e COMMUNITY=false \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker
@@ -74,6 +78,8 @@ It is highly recommended you set the following environment values before startin
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------- |
 | PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-31           |
 | PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535     |
+| PUID*            | The uid of the user the server should run as                                                                                                                                                       | 8211           | 1024-65535     |
+| PGID*            | The gid of the group the server should run as                                                                                                                                                      | 8211           | 1024-65535     |
 | MULTITHREADING** | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.             | false          | true/false     |
 | COMMUNITY        | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                      | false          | true/false     |
 | PUBLIC_IP        | You can manually specify the global IP address of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x        |
