@@ -13,6 +13,11 @@ This is a Docker container to help you get started with hosting your own [Palwor
 
 This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
 
+> [!IMPORTANT]
+> At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+>
+> They will need to join players using the invite code and are limited to sessions of 4 players max.
+
 ## How to use
 
 Keep in mind that you'll need to change the [environment variables](##Environment-variables).
