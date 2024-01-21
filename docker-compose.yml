@@ -8,6 +8,8 @@ services:
         - 27015:27015/udp
       environment:
          - PORT=8211
+         - PUID=1000
+         - PGID=1000
          - PLAYERS=16
          - MULTITHREADING=false
          - UPDATE_ON_BOOT=true

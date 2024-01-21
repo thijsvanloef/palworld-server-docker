@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PORT=8211 \
+    PUID=1000 \
+    PGID=1000 \
     PLAYERS=16 \
     MULTITHREADING=false \
     COMMUNITY=false \
