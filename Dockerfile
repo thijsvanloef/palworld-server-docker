@@ -25,7 +25,8 @@ RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
 
 WORKDIR /home/steam/server
 
-HEALTHCHECK CMD pgrep "PalServer-Linux" > /dev/null || exit 1
+HEALTHCHECK --start-period=5m \
+    CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT}
 ENTRYPOINT ["/home/steam/server/init.sh"]
