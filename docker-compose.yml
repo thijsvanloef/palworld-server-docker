@@ -7,12 +7,11 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PORT=8211
          - PUID=1000
          - PGID=1000
-         - PLAYERS=16
+         - PORT=8211 # Optional but recommended
+         - PLAYERS=16 # Optional but recommended
          - MULTITHREADING=false
-         - UPDATE_ON_BOOT=true
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"

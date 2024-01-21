@@ -29,25 +29,25 @@ This repository includes an example [docker-compose.yml](example/docker-compose.
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PORT=8211
          - PUID=1000
          - PGID=1000
-         - PLAYERS=16
-         - MULTITHREADING=FALSE
+         - PORT=8211 # Optional but recommended
+         - PLAYERS=16 # Optional but recommended
+         - MULTITHREADING=false
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"
          # - SERVER_NAME="World of Pals"
          # - ADMIN_PASSWORD="someAdminPassword"
       volumes:
-         - /path/to/your/palworld/folder:/palworld/
+         - ./palworld:/palworld/
 ```
 
 ### Docker Run
@@ -77,7 +77,6 @@ It is highly recommended you set the following environment values before startin
 
 * PLAYERS
 * PORT
-* MULTITHREADING
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------- |
@@ -93,7 +92,6 @@ It is highly recommended you set the following environment values before startin
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
 | ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
-
 
 *highly recommended to set
 
