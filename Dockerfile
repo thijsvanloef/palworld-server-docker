@@ -3,6 +3,7 @@ LABEL maintainer="thijs@loef.dev"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-user-dirs=0.17-2 \
+    procps=2:3.3.17-5 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -23,6 +24,8 @@ COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
 
 WORKDIR /home/steam/server
+
+HEALTHCHECK CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT}
 ENTRYPOINT ["/home/steam/server/init.sh"]
