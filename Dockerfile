@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV PORT= \
+ENV GAME_PORT= \
     PUID=1000 \
     PGID=1000 \
     PLAYERS= \
@@ -18,6 +18,8 @@ ENV PORT= \
     SERVER_PASSWORD= \
     SERVER_NAME= \
     ADMIN_PASSWORD= \
+    ENABLE_RCON=false \
+    RCON_PORT= \
     UPDATE_ON_BOOT=true
 
 COPY ./scripts/* /home/steam/server/
