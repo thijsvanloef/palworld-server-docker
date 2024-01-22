@@ -120,7 +120,7 @@ RCON is enabled by default for the palworld-server-docker image.
 Using the RCON commands is quite easy:
 
 ```bash
-docker compose run --rm rcon <Server Command>
+docker compose run --rm rcon "Server Command"
 ```
 
 ### List of server commands
