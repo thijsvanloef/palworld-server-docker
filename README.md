@@ -7,7 +7,8 @@
 
 [View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 
-> **_NOTE:_**  Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
+> [!TIP]
+> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
 
 This is a Docker container to help you get started with hosting your own [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
