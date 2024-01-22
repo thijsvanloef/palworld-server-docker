@@ -127,16 +127,16 @@ docker compose run --rm rcon <Server Command>
 
 | Command                           | Info                                                |
 |-----------------------------------|-----------------------------------------------------|
-| /Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
-| /DoExit                           | Force stop the server.                              |
-| /Broadcast                        | Send message to all player in the server            |
-| /KickPlayer {SteamID}t            | Kick player from the server..                       |
-| /BanPlayer {SteamID}              | BAN player from the server.                         |
-| /TeleportToPlayer {SteamID}       | Teleport to current location of target player.      |
-| /TeleportToMe {SteamID}           | Target player teleport to your current location     |
-| /ShowPlayers                      | Show information on all connected players.          |
-| /Info                             | Show server information.                            |
-| /Save                             | Save the world data.                                |
+| Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
+| DoExit                           | Force stop the server.                              |
+| Broadcast                        | Send message to all player in the server            |
+| KickPlayer {SteamID}t            | Kick player from the server..                       |
+| BanPlayer {SteamID}              | BAN player from the server.                         |
+| TeleportToPlayer {SteamID}       | Teleport to current location of target player.      |
+| TeleportToMe {SteamID}           | Target player teleport to your current location     |
+| ShowPlayers                      | Show information on all connected players.          |
+| Info                             | Show server information.                            |
+| Save                             | Save the world data.                                |
 
 For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
 
