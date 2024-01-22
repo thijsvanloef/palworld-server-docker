@@ -1,6 +1,6 @@
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest
+      image: thijsvanloef/palworld-test
       restart: unless-stopped
       container_name: palworld-server
       ports:
@@ -11,11 +11,17 @@ services:
          - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
-         - MULTITHREADING=false
+         - MULTITHREADING=true
+         - ENABLE_RCON=true
+         - RCON_PORT=25575
+         - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"
          # - SERVER_NAME="World of Pals"
-         # - ADMIN_PASSWORD="someAdminPassword"
       volumes:
          - ./palworld:/palworld/
+   rcon:
+      image: outdead/rcon:latest
+      entrypoint: ['/rcon', '-a', 'palworld:25575', '-p', 'adminPasswordHere']
+      profiles: ['rcon'] 

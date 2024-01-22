@@ -18,7 +18,9 @@ ENV PORT= \
     SERVER_PASSWORD= \
     SERVER_NAME= \
     ADMIN_PASSWORD= \
-    UPDATE_ON_BOOT=true
+    UPDATE_ON_BOOT=true \
+    RCON_ENABLED=true \
+    RCON_PORT=25575
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
