@@ -41,6 +41,9 @@ services:
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
          - MULTITHREADING=false
+         - ENABLE_RCON=true
+         - RCON_PORT=25575
+         - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
          # - SERVER_PASSWORD="worldofpals"
@@ -48,6 +51,10 @@ services:
          # - ADMIN_PASSWORD="someAdminPassword"
       volumes:
          - ./palworld:/palworld/
+   rcon:
+      image: outdead/rcon:latest
+      entrypoint: ['/rcon', '-a', 'palworld:25575', '-p', 'adminPasswordHere']
+      profiles: ['rcon'] 
 ```
 
 ### Docker Run
@@ -79,7 +86,7 @@ It is highly recommended you set the following environment values before startin
 * PORT
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------- |
+|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
 | PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-31           |
 | PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535     |
 | PUID*            | The uid of the user the server should run as                                                                                                                                                       | 1000           | !0             |
@@ -92,6 +99,8 @@ It is highly recommended you set the following environment values before startin
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
 | ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
+| RCON_ENABLED     | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false     |
+| RCON_PORT        | RCON port to connect to                                                                                                                                                                            | 25575          | 1024-65535     |
 
 *highly recommended to set
 
@@ -100,9 +109,36 @@ It is highly recommended you set the following environment values before startin
 ### Game Ports
 
 | Port  | Info             | note                                           |
-| ----- | ---------------- | ---------------------------------------------- |
+|-------|------------------|------------------------------------------------|
 | 8211  | Game Port (UDP)  |                                                |
 | 27015 | Query Port (UDP) | You are not able to change this port as of now |
+| 25575 | RCON Port (TCP)  |                                                |
+
+## Using RCON
+
+RCON is enabled by default for the palworld-server-docker image.
+Using the RCON commands is quite easy:
+
+```bash
+docker compose run --rm rcon <Server Command>
+```
+
+### List of server commands
+
+| Command                           | Info                                                |
+|-----------------------------------|-----------------------------------------------------|
+| /Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
+| /DoExit                           | Force stop the server.                              |
+| /Broadcast                        | Send message to all player in the server            |
+| /KickPlayer {SteamID}t            | Kick player from the server..                       |
+| /BanPlayer {SteamID}              | BAN player from the server.                         |
+| /TeleportToPlayer {SteamID}       | Teleport to current location of target player.      |
+| /TeleportToMe {SteamID}           | Target player teleport to your current location     |
+| /ShowPlayers                      | Show information on all connected players.          |
+| /Info                             | Show server information.                            |
+| /Save                             | Save the world data.                                |
+
+For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
 
 ## Reporting Issues/Feature Requests
 
