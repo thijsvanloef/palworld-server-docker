@@ -95,7 +95,7 @@ It is highly recommended you set the following environment values before startin
 
 *highly recommended to set
 
-** Make sure you know what you are doing when running this this option enabled
+** Make sure you know what you are doing when running this option enabled
 
 ### Game Ports
 
