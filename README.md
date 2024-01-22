@@ -42,7 +42,7 @@ services:
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
          - MULTITHREADING=false
-         - ENABLE_RCON=true
+         - RCON_ENABLED=true
          - RCON_PORT=25575
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
