@@ -5,7 +5,7 @@
 ![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)
 ![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)
 
-[View on Docker Hub](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
+[View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 
 > **_NOTE:_**  Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
 
