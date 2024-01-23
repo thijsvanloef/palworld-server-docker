@@ -138,6 +138,17 @@ This will open a CLI that use can use to write commands to the Palworld Server.
 
 For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
 
+## Editing Server Settings
+
+When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/PalWorldSettings.ini`
+
+Any changes made there will be applied to the Server on next boot.
+
+Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
+
+> [!TIP]
+> If the `<mount_folder>/Pal/Saved/Config/PalWorldSettings.ini` is empty, delete the file and restart the server, a new file with content will be created.
+
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
