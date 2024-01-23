@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: palworld-server
+  name: palworld-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: palworld-server
+  template:
+    metadata:
+      labels:
+        app: palworld-server
+    spec:
+      containers:
+      - env:
+        - name: "PLAYERS"
+          value: "16"
+        - name: "PORT"
+          value: "8211"
+        - name: "MULTITHREADING"
+          value: "true"
+        - name: "COMMUNITY"
+          value: "true"
+        - name: "SERVER_NAME"
+          value: "YOUR SERVER NAME"
+        - name: "ADMIN_PASSWORD"
+          value: "YOURPASSWORD"
+        - name: "UPDATE_ON_BOOT"
+          value: "true"
+        image: thijsvanloef/palworld-server-docker
+        imagePullPolicy: IfNotPresent
+        name: palworld-server
+        ports:
+        - containerPort: 8211
+          name: "8211-palworld"
+          protocol: UDP
+        - containerPort: 27015
+          name: "27015-palworld"
+          protocol: UDP
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /palworld
+          name: datadir
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: palworld-server-datadir
