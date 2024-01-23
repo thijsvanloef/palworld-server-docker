@@ -47,7 +47,7 @@ if [ ! -f /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
     printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
     # Server will generate all ini files after first run.
-    su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
+    steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
 
     # Wait for shutdown
     sleep 5
