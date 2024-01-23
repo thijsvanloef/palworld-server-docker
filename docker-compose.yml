@@ -21,7 +21,3 @@ services:
          # - SERVER_NAME="World of Pals"
       volumes:
          - ./palworld:/palworld/
-   rcon:
-      image: outdead/rcon:latest
-      entrypoint: ['/rcon', '-a', 'palworld:25575', '-p', 'adminPasswordHere']
-      profiles: ['rcon'] 

@@ -51,10 +51,6 @@ services:
          # - SERVER_NAME="World of Pals"
       volumes:
          - ./palworld:/palworld/
-   rcon:
-      image: outdead/rcon:latest
-      entrypoint: ['/rcon', '-a', 'palworld:25575', '-p', 'adminPasswordHere']
-      profiles: ['rcon'] 
 ```
 
 ### Docker Run
@@ -117,11 +113,13 @@ It is highly recommended you set the following environment values before startin
 ## Using RCON
 
 RCON is enabled by default for the palworld-server-docker image.
-Using the RCON commands is quite easy:
+Opening the RCON cli is quite easy:
 
 ```bash
-docker compose run --rm rcon "Server Command"
+docker exec -it palworld-server rcon-cli
 ```
+
+This will open a CLI that use can use to write commands to the Palworld Server.
 
 ### List of server commands
 
