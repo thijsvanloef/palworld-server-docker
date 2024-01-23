@@ -99,7 +99,7 @@ It is highly recommended you set the following environment values before startin
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
 | RCON_ENABLED     | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false     |
 | RCON_PORT        | RCON port to connect to                                                                                                                                                                            | 25575          | 1024-65535     |
-| QUERY_PORT       | Query port used to communicate with steam servers                                                                                                                                                  | 27015          | 1024-65535     |
+| QUERY_PORT       | Query port used to communicate with Steam servers                                                                                                                                                  | 27015          | 1024-65535     |
 
 *highly recommended to set
 
