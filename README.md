@@ -128,7 +128,7 @@ This will open a CLI that use can use to write commands to the Palworld Server.
 | Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
 | DoExit                           | Force stop the server.                              |
 | Broadcast                        | Send message to all player in the server            |
-| KickPlayer {SteamID}t            | Kick player from the server..                       |
+| KickPlayer {SteamID}            | Kick player from the server..                       |
 | BanPlayer {SteamID}              | BAN player from the server.                         |
 | TeleportToPlayer {SteamID}       | Teleport to current location of target player.      |
 | TeleportToMe {SteamID}           | Target player teleport to your current location     |
