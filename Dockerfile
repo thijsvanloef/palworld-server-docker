@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget https://github.com/itzg/rcon-cli/releases/download/1.6.4/rcon-cli_1.6.4_linux_amd64.tar.gz -O - | tar -xz
+RUN wget -q https://github.com/itzg/rcon-cli/releases/download/1.6.4/rcon-cli_1.6.4_linux_amd64.tar.gz -O - | tar -xz
 RUN mv rcon-cli /usr/bin/rcon-cli
 
 ENV PORT= \
@@ -24,7 +24,8 @@ ENV PORT= \
     ADMIN_PASSWORD= \
     UPDATE_ON_BOOT=true \
     RCON_ENABLED=true \
-    RCON_PORT=25575
+    RCON_PORT=25575 \
+    QUERY_PORT=27015
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh

@@ -41,7 +41,7 @@ services:
          - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
-         - MULTITHREADING=false
+         - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
          - ADMIN_PASSWORD="adminPasswordHere"
@@ -80,6 +80,8 @@ It is highly recommended you set the following environment values before startin
 
 * PLAYERS
 * PORT
+* PUID
+* PGID
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
 |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
@@ -97,6 +99,7 @@ It is highly recommended you set the following environment values before startin
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
 | RCON_ENABLED     | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false     |
 | RCON_PORT        | RCON port to connect to                                                                                                                                                                            | 25575          | 1024-65535     |
+| QUERY_PORT       | Query port used to communicate with Steam servers                                                                                                                                                  | 27015          | 1024-65535     |
 
 *highly recommended to set
 
@@ -104,11 +107,11 @@ It is highly recommended you set the following environment values before startin
 
 ### Game Ports
 
-| Port  | Info             | note                                           |
-|-------|------------------|------------------------------------------------|
-| 8211  | Game Port (UDP)  |                                                |
-| 27015 | Query Port (UDP) | You are not able to change this port as of now |
-| 25575 | RCON Port (TCP)  |                                                |
+| Port  | Info             |
+|-------|------------------|
+| 8211  | Game Port (UDP)  |
+| 27015 | Query Port (UDP) |
+| 25575 | RCON Port (TCP)  |
 
 ## Using RCON
 
@@ -123,12 +126,12 @@ This will open a CLI that use can use to write commands to the Palworld Server.
 
 ### List of server commands
 
-| Command                           | Info                                                |
-|-----------------------------------|-----------------------------------------------------|
+| Command                          | Info                                                |
+|----------------------------------|-----------------------------------------------------|
 | Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
 | DoExit                           | Force stop the server.                              |
 | Broadcast                        | Send message to all player in the server            |
-| KickPlayer {SteamID}            | Kick player from the server..                       |
+| KickPlayer {SteamID}             | Kick player from the server..                       |
 | BanPlayer {SteamID}              | BAN player from the server.                         |
 | TeleportToPlayer {SteamID}       | Teleport to current location of target player.      |
 | TeleportToMe {SteamID}           | Target player teleport to your current location     |
