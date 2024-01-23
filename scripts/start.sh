@@ -34,6 +34,10 @@ if [ -n "${ADMIN_PASSWORD}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -adminpassword=${ADMIN_PASSWORD}"
 fi
 
+if [ -n "${QUERY_PORT}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -queryport=${QUERY_PORT}"
+fi
+
 if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND="${STARTCOMMAND} -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS"
 fi
