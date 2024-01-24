@@ -8,9 +8,10 @@
 [View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 
 > [!TIP]
-> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
+> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
 
-This is a Docker container to help you get started with hosting your own [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+This is a Docker container to help you get started with hosting your own
+[Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
 This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
 
@@ -21,7 +22,7 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 
 ## How to use
 
-Keep in mind that you'll need to change the [environment variables](##Environment-variables).
+Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
 ### Docker Compose
 
@@ -77,6 +78,12 @@ docker run -d \
 
 ```
 
+### Kubernetes
+
+All files you will need to deploy this container to kubernetes are located in the [k8s folder](k8s/).
+
+Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
+
 ### Environment variables
 
 You can use the following values to change the settings of the server on boot.
@@ -96,7 +103,7 @@ It is highly recommended you set the following environment values before startin
 | MULTITHREADING** | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.             | false          | true/false     |
 | COMMUNITY        | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                      | false          | true/false     |
 | PUBLIC_IP        | You can manually specify the global IP address of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x        |
-| PUBLIC_PORT      | You can manually specify the port number of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | x.x.x.x        |
+| PUBLIC_PORT      | You can manually specify the port number of the network on which the server running.If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | 1024-65535        |
 | SERVER_NAME      | A name for your community server                                                                                                                                                                   |                | "string"       |
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
 | ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
@@ -154,7 +161,8 @@ Any changes made there will be applied to the Server on next boot.
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
 
 > [!TIP]
-> If the `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` is empty, delete the file and restart the server, a new file with content will be created.
+> If the `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` is empty,
+> delete the file and restart the server, a new file with content will be created.
 
 ## Reporting Issues/Feature Requests
 
