@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DATE=$(date +"%d-%m-%Y")
+DATE=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_PATH="/palworld/backups/palworld-save-${DATE}.tar.gz"
 cd /palworld/Pal/
 
