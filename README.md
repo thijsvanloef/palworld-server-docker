@@ -152,13 +152,15 @@ This will open a CLI that use can use to write commands to the Palworld Server.
 
 For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
 
-## Dump Save
+## Creating a backup
 
 To create a backup of the game's save at the current point in time, use the command.
 
 ```bash
-docker exec palworld-server dump_save
+docker exec palworld-server backup
 ```
+
+This will create a backup at `/palworld/backups/`
 
 ## Editing Server Settings
 
