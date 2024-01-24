@@ -84,6 +84,10 @@ All files you will need to deploy this container to kubernetes are located in th
 
 Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
+#### Using helm chart
+
+Follow up the docs on the [README.md for the helm chart](./chart/README.md) to deploy.
+
 ### Environment variables
 
 You can use the following values to change the settings of the server on boot.
