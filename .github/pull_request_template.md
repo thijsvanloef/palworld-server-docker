@@ -1,4 +1,4 @@
-## Context
+## Context <!-- markdownlint-disable MD041 -->
 
 * <!-- What do you want to achieve with this PR? -->
 

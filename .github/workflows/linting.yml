@@ -21,6 +21,15 @@ jobs:
           dockerfile: Dockerfile
           lint: 'hadolint'
           failure-threshold: error 
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - uses: DavidAnson/markdownlint-cli2-action@v15
+      with:
+        config: '.markdownlint.jsonc'
+        globs: '**/*.md'
   test-build:
     runs-on: ubuntu-latest
     steps:
