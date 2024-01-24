@@ -28,7 +28,9 @@ ENV PORT= \
     QUERY_PORT=27015
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
+RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/dump_save.sh
+
+RUN mv /home/steam/server/dump_save.sh /usr/local/bin/dump_save
 
 WORKDIR /home/steam/server
 

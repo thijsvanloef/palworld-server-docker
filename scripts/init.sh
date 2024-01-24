@@ -9,7 +9,7 @@ else
     exit 1
 fi
 
-mkdir -p /palworld
+mkdir -p /palworld/backups
 chown -R steam:steam /palworld
 
 if [ "${UPDATE_ON_BOOT}" = true ]; then
