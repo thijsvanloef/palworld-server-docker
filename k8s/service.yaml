@@ -4,21 +4,16 @@ metadata:
   labels:
     app: palworld-server
   name: palworld-server
-  namespace: default
 spec:
-  externalTrafficPolicy: Cluster
-  internalTrafficPolicy: Cluster
-  ipFamilies:
-  - IPv4
   ports:
-  - name: palworld1
+  - name: 8211-palworld
     port: 8211
     protocol: UDP
-    targetPort: 8211
-  - name: palworld2
+    targetPort: 8211-palworld
+  - name: 27015-palworld
     port: 27015
     protocol: UDP
-    targetPort: 27015
+    targetPort: 27015-palworld
   selector:
     app: palworld-server
   type: LoadBalancer

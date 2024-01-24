@@ -4,12 +4,9 @@ metadata:
   labels:
     app: palworld-server
   name: palworld-server-datadir
-  namespace: default
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
       storage: 10Gi
-  storageClassName: local-path
-  volumeMode: Filesystem
