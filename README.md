@@ -8,9 +8,10 @@
 [View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 
 > [!TIP]
-> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)  
+> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
 
-This is a Docker container to help you get started with hosting your own [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
+This is a Docker container to help you get started with hosting your own
+[Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
 This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
 
@@ -160,7 +161,8 @@ Any changes made there will be applied to the Server on next boot.
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
 
 > [!TIP]
-> If the `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` is empty, delete the file and restart the server, a new file with content will be created.
+> If the `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` is empty,
+> delete the file and restart the server, a new file with content will be created.
 
 ## Reporting Issues/Feature Requests
 

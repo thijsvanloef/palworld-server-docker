@@ -67,11 +67,11 @@
     // MD013/line-length : Line length : https://github.com/DavidAnson/markdownlint/blob/v0.33.0/doc/md013.md
     "MD013": {
       // Number of characters
-      "line_length": 80,
+      "line_length": 120,
       // Number of characters for headings
-      "heading_line_length": 80,
+      "heading_line_length": 120,
       // Number of characters for code blocks
-      "code_block_line_length": 80,
+      "code_block_line_length": 120,
       // Include code blocks
       "code_blocks": false,
       // Include tables
@@ -213,12 +213,7 @@
     "MD042": true,
   
     // MD043/required-headings : Required heading structure : https://github.com/DavidAnson/markdownlint/blob/v0.33.0/doc/md043.md
-    "MD043": {
-      // List of headings
-      "headings": [],
-      // Match case of headings
-      "match_case": false
-    },
+    "MD043": false,
   
     // MD044/proper-names : Proper names should have the correct capitalization : https://github.com/DavidAnson/markdownlint/blob/v0.33.0/doc/md044.md
     "MD044": {
