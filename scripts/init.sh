@@ -18,15 +18,20 @@ if [ "${UPDATE_ON_BOOT}" = true ]; then
 fi
 
 term_handler() {
-    rcon-cli shutdown 1
-    while true
-    do
-        rcon-cli info
-        if [ $? -ne 0 ]; then
-            break
-        fi
-        sleep 1 
-    done
+    if [ ${RCON_ENABLED} = true ]; then
+        rcon-cli shutdown 1
+        while true
+        do
+            rcon-cli info
+            if [ $? -ne 0 ]; then
+                break
+            fi
+            sleep 1 
+        done
+    else # Not graceful
+        kill -SIGTERM $(pidof PalServer-Linux-Test)
+        tail --pid=$(pidof PalServer-Linux-Test) -f 2>/dev/null
+    fi
 }
 
 trap 'term_handler' SIGTERM
