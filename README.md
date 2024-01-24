@@ -152,6 +152,16 @@ This will open a CLI that use can use to write commands to the Palworld Server.
 
 For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
 
+## Creating a backup
+
+To create a backup of the game's save at the current point in time, use the command.
+
+```bash
+docker exec palworld-server backup
+```
+
+This will create a backup at `/palworld/backups/`
+
 ## Editing Server Settings
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`

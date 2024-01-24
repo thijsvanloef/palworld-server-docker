@@ -28,7 +28,9 @@ ENV PORT= \
     QUERY_PORT=27015
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh
+RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh
+
+RUN mv /home/steam/server/backup.sh /usr/local/bin/backup
 
 WORKDIR /home/steam/server
 
