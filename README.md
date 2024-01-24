@@ -77,6 +77,12 @@ docker run -d \
 
 ```
 
+### Kubernetes
+
+All files you will need to deploy this container to kubernetes are located in the [k8s folder](k8s/).
+
+Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
+
 ### Environment variables
 
 You can use the following values to change the settings of the server on boot.
