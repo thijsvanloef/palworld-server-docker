@@ -20,10 +20,10 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8211
-              name: 8211-palworld
+              name: server
               protocol: UDP
             - containerPort: 27015
-              name: 27015-palworld
+              name: query
               protocol: UDP
           env:
             - name: ADMIN_PASSWORD
@@ -37,7 +37,13 @@ spec:
           volumeMounts:
             - mountPath: /palworld
               name: datadir
+            - name: palworld-settings
+              mountPath: /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+              subPath: PalWorldSettings.ini
       volumes:
       - name: datadir
         persistentVolumeClaim:
           claimName: palworld-server-datadir
+      - name: palworld-settings
+        configMap:
+          name: palworld-settings

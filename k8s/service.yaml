@@ -6,14 +6,14 @@ metadata:
   name: palworld-server
 spec:
   ports:
-  - name: 8211-palworld
+  - name: server
     port: 8211
     protocol: UDP
-    targetPort: 8211-palworld
-  - name: 27015-palworld
+    targetPort: server
+  - name: query
     port: 27015
     protocol: UDP
-    targetPort: 27015-palworld
+    targetPort: query
   selector:
     app: palworld-server
   type: LoadBalancer
