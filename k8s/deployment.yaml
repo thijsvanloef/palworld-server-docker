@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: palworld-server
+  name: palworld-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: palworld-server
+  template:
+    metadata:
+      labels:
+        app: palworld-server
+    spec:
+      containers:
+        - name: palworld-server
+          image: thijsvanloef/palworld-server-docker
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8211
+              name: 8211-palworld
+              protocol: UDP
+            - containerPort: 27015
+              name: 27015-palworld
+              protocol: UDP
+          env:
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: palworld-secrets
+                  key: rconPassword
+          envFrom:
+            - configMapRef:
+                name: palworld-cm
+          volumeMounts:
+            - mountPath: /palworld
+              name: datadir
+      volumes:
+      - name: datadir
+        persistentVolumeClaim:
+          claimName: palworld-server-datadir

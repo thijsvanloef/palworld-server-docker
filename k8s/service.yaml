@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: palworld-server
+  name: palworld-server
+spec:
+  ports:
+  - name: 8211-palworld
+    port: 8211
+    protocol: UDP
+    targetPort: 8211-palworld
+  - name: 27015-palworld
+    port: 27015
+    protocol: UDP
+    targetPort: 27015-palworld
+  selector:
+    app: palworld-server
+  type: LoadBalancer
