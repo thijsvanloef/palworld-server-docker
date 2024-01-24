@@ -21,6 +21,15 @@ jobs:
           dockerfile: Dockerfile
           lint: 'hadolint'
           failure-threshold: error 
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    - name: Lint Readme file
+      uses: docker://avtodev/markdown-lint:v1 # fastest way
+      with:
+        args: './README.md ./k8s/readme.md' 
   test-build:
     runs-on: ubuntu-latest
     steps:
