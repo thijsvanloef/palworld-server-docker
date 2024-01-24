@@ -73,6 +73,12 @@ docker run -d \
 
 ```
 
+### Deploy on Sealos
+
+[Sealos](https://github.com/labring/sealos) is a cloud operating system distribution based on the Kubernetes kernel. It enables the initialization of all application dependencies, including the database, with a single click.
+
+[![](https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg)](https://template.cloud.sealos.io/deploy?templateName=palworld)
+
 ### Environment variables
 
 You can use the following values to change the settings of the server on boot.
