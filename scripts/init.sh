@@ -17,4 +17,20 @@ if [ "${UPDATE_ON_BOOT}" = true ]; then
     su steam -c '/home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit'
 fi
 
-./start.sh
+term_handler() {
+    rcon-cli shutdown 1
+    while true
+    do
+        rcon-cli info
+        if [ $? -ne 0 ]; then
+            break
+        fi
+        sleep 1 
+    done
+}
+
+trap 'term_handler' SIGTERM
+
+./start.sh &
+killpid="$!"
+wait $killpid
