@@ -26,10 +26,9 @@ jobs:
     steps:
     - name: Check out code
       uses: actions/checkout@v2
-    - name: Lint Readme file
-      uses: docker://avtodev/markdown-lint:v1 # fastest way
+    - uses: DavidAnson/markdownlint-cli2-action@v15
       with:
-        args: './README.md ./k8s/readme.md' 
+        globs: '**/*.md'
   test-build:
     runs-on: ubuntu-latest
     steps:
