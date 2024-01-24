@@ -21,7 +21,7 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 
 ## How to use
 
-Keep in mind that you'll need to change the [environment variables](##Environment-variables).
+Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
 ### Docker Compose
 
