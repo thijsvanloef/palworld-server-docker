@@ -30,7 +30,6 @@ jobs:
       with:
         config: '.markdownlint.jsonc'
         globs: '**/*.md'
-        ignore: '.github/pull_request_template.md'
   test-build:
     runs-on: ubuntu-latest
     steps:
