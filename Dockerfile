@@ -15,8 +15,6 @@ RUN mv rcon-cli /usr/bin/rcon-cli
 RUN rm -f /var/run/crond.pid
 COPY ./scripts/backup.sh /usr/local/bin/backup
 RUN chmod +x /usr/local/bin/backup
-RUN echo "0 3 * * * root bash /usr/local/bin/backup" > /etc/cron.d/backups-cron
-RUN chmod 0644 /etc/cron.d/backups-cron
 
 ENV PORT= \
     PUID=1000 \
@@ -32,7 +30,10 @@ ENV PORT= \
     UPDATE_ON_BOOT=true \
     RCON_ENABLED=true \
     RCON_PORT=25575 \
-    QUERY_PORT=27015
+    QUERY_PORT=27015 \
+    BACKUP_ENABLED=true \
+    DAYS_TO_KEEP=7 \
+    BACKUP_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh

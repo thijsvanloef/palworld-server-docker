@@ -164,22 +164,32 @@ This will create a backup at `/palworld/backups/`
 
 ## Setting Up Automatic Backups with Cron
 
-This section guides you through the process of configuring automatic backups using Cron. Use the provided command to set up the necessary Cron job for your Palworld server within a Docker environment.
+Setting Up Automatic Backups with Cron
 
-The configured backup system automatically deletes backups older than 7 days to manage storage efficiently.
+### Environment Variables
+
+**DAYS_TO_KEEP:**
+
+Description: This environment variable represents the number of days to retain backup files. It is used in the cleanup process to remove backup files older than the specified duration.
+Example Usage: If set to 7, backup files older than 7 days will be deleted during the cleanup.
+
+**BACKUP_CRON_EXPRESSION:**
+
+Description: This environment variable defines the cron expression for scheduling automatic backups. It determines when the backup script should run at specific intervals.
+Example Usage: If set to 0 2 * * *, the backup script will run every day at 2:00 AM.
+
+**BACKUP_ENABLED:**
+
+Description: This environment variable indicates whether automatic backups are enabled or not. If set to a non-empty value, automatic backups will be enabled; otherwise, they will be disabled.
+Example Usage: If set to any non-empty string (e.g., true or 1), the backup script will be configured and executed as per the specified cron schedule.
+
+Example:
 
 ```bash
-docker exec palworld-server cron /etc/cron.d/backups-cron
-
+DAYS_TO_KEEP=7
+BACKUP_CRON_EXPRESSION="0 2 * * *"
+BACKUP_ENABLED=true
 ```
-
-Additionally, to stop the cron process within the Docker container, you can use the following command:
-
-```bash
-docker exec palworld-server service cron stop
-```
-
-This command stops the cron service within the specified container, halting the scheduled cron job.
 
 ## Editing Server Settings
 
