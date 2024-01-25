@@ -1,5 +1,7 @@
 #!/bin/bash
 
+printf "\e[0;34m***** RUNNING SCRIPTS start.sh *****\e[0m\n"
+
 STARTCOMMAND="./PalServer.sh"
 
 if [ -n "${PORT}" ]; then

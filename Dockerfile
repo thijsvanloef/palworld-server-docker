@@ -11,6 +11,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN wget -q https://github.com/itzg/rcon-cli/releases/download/1.6.4/rcon-cli_1.6.4_linux_amd64.tar.gz -O - | tar -xz
 RUN mv rcon-cli /usr/bin/rcon-cli
 
+
+RUN rm -f /var/run/crond.pid
+RUN apt-get update && apt-get -y install cron
+
+COPY ./scripts/backup.sh /usr/local/bin/backup
+RUN chmod +x /usr/local/bin/backup
+RUN echo "*/1 * * * * /usr/local/bin/backup\n" > /etc/cron.d/backups-cron
+RUN chmod 0644 /etc/cron.d/backups-cron
+RUN crontab /etc/cron.d/backups-cron
+
 ENV PORT= \
     PUID=1000 \
     PGID=1000 \
