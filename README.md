@@ -42,6 +42,7 @@ services:
          - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
+         - SERVER_PASSWORD="worldofpals" # Optional but recommended
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
@@ -49,7 +50,6 @@ services:
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
-         # - SERVER_PASSWORD="worldofpals"
          # - SERVER_NAME="World of Pals"
       volumes:
          - ./palworld:/palworld/
@@ -74,6 +74,7 @@ docker run -d \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
     -e ADMIN_PASSWORD="adminPasswordHere" \
+    -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker:latest
