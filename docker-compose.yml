@@ -15,6 +15,7 @@ services:
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
+         - TZ=UTC
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false
          - BACKUP_ENABLED=true
