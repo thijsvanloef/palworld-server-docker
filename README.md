@@ -134,13 +134,13 @@ It is highly recommended you set the following environment values before startin
 ## Using RCON
 
 RCON is enabled by default for the palworld-server-docker image.
-Opening the RCON cli is quite easy:
+Opening the RCON CLI is quite easy:
 
 ```bash
 docker exec -it palworld-server rcon-cli
 ```
 
-This will open a CLI that use can use to write commands to the Palworld Server.
+This will open a CLI that uses RCON to write commands to the Palworld Server.
 
 ### List of server commands
 
@@ -161,7 +161,7 @@ For a full list of commands go to: [https://tech.palworldgame.com/server-command
 
 ## Creating a backup
 
-To create a backup of the game's save at the current point in time, use the command.
+To create a backup of the game's save at the current point in time, use the command:
 
 ```bash
 docker exec palworld-server backup
