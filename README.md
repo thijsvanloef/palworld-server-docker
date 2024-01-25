@@ -45,6 +45,7 @@ services:
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
+         - TZ=UTC
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          # Enable the environment variables below if you have COMMUNITY=true
@@ -71,6 +72,7 @@ docker run -d \
     -e MULTITHREADING=true \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
+    -e TZ=UTC \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e COMMUNITY=false \
     --restart unless-stopped \
@@ -96,6 +98,7 @@ It is highly recommended you set the following environment values before startin
 
 | Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values |
 |------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
+| TZ           | Timezone used for time stamping backup server                                                                                                                                             | UTC        | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations)            |
 | PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-31           |
 | PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535     |
 | PUID*            | The uid of the user the server should run as                                                                                                                                                       | 1000           | !0             |
