@@ -31,6 +31,7 @@ ENV PORT= \
     RCON_ENABLED=true \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
+    TZ=UTC \
     BACKUP_ENABLED=true \
     DAYS_TO_KEEP=7 \
     BACKUP_CRON_EXPRESSION="0 0 * * *"
