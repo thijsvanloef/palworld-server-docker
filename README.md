@@ -162,6 +162,25 @@ docker exec palworld-server backup
 
 This will create a backup at `/palworld/backups/`
 
+## Setting Up Automatic Backups with Cron
+
+This section guides you through the process of configuring automatic backups using Cron. Use the provided command to set up the necessary Cron job for your Palworld server within a Docker environment.
+
+The configured backup system automatically deletes backups older than 7 days to manage storage efficiently.
+
+```bash
+docker exec palworld-server cron /etc/cron.d/backups-cron
+
+```
+
+Additionally, to stop the cron process within the Docker container, you can use the following command:
+
+```bash
+docker exec palworld-server service cron stop
+```
+
+This command stops the cron service within the specified container, halting the scheduled cron job.
+
 ## Editing Server Settings
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
