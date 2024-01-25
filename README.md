@@ -173,18 +173,22 @@ Setting Up Automatic Backups with Cron
 
 **DAYS_TO_KEEP:**
 
-Description: This environment variable represents the number of days to retain backup files. It is used in the cleanup process to remove backup files older than the specified duration.
+Description: This environment variable represents the number of days to retain backup files. 
+It is used in the cleanup process to remove backup files older than the specified duration.
+
 Example Usage: If set to 7, backup files older than 7 days will be deleted during the cleanup.
 
 **BACKUP_CRON_EXPRESSION:**
 
-Description: This environment variable defines the cron expression for scheduling automatic backups. It determines when the backup script should run at specific intervals.
+Description: This environment variable defines the cron expression for scheduling automatic backups. 
+It determines when the backup script should run at specific intervals.
+
 Example Usage: If set to 0 2 * * *, the backup script will run every day at 2:00 AM.
 
 **BACKUP_ENABLED:**
 
-Description: This environment variable indicates whether automatic backups are enabled or not. If set to a non-empty value, automatic backups will be enabled; otherwise, they will be disabled.
-Example Usage: If set to any non-empty string (e.g., true or 1), the backup script will be configured and executed as per the specified cron schedule.
+Description: This environment variable indicates whether automatic backups are enabled or not. 
+If set to a non-empty value, automatic backups will be disabled.
 
 Example:
 
