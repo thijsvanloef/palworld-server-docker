@@ -108,13 +108,15 @@ It is highly recommended you set the following environment values before startin
 | SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"       |
 | ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"       |
 | UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false     |
-| RCON_ENABLED     | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false     |
+| RCON_ENABLED***     | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false     |
 | RCON_PORT        | RCON port to connect to                                                                                                                                                                            | 25575          | 1024-65535     |
 | QUERY_PORT       | Query port used to communicate with Steam servers                                                                                                                                                  | 27015          | 1024-65535     |
 
 *highly recommended to set
 
 ** Make sure you know what you are doing when running this option enabled
+
+*** Required for docker stop to save and gracefully close the server
 
 ### Game Ports
 
