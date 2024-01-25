@@ -191,10 +191,13 @@ For a more detailed list of explanations of server settings go to: [shockbyte](h
     drwxrwxr-x  7 ubuntu ubuntu 4096 Jan 26 03:31 palworld/
     ```
 3. Run `migrate.sh` like this
+
     ```shell
     ./migrate.sh {CONTAINER_NAME} {SERVER_NAME}
     ```
+   
    For example,
+
     ```shell
     ./migrate.sh test-pal-migrate 74406BE1D7B54114AA5984CCF1236865
     ```
