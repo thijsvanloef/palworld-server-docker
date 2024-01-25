@@ -1,7 +1,6 @@
 services:
    palworld:
-      image: test/palworld-server-docker:latest
-      build: .
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       ports:
@@ -17,8 +16,8 @@ services:
          - RCON_PORT=25575
          - TZ=UTC
          - ADMIN_PASSWORD="adminPasswordHere"
-         - COMMUNITY=false
-         - BACKUP_ENABLED=true
+         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         - BACKUP_ENABLED=false
          - DAYS_TO_KEEP=7
          - BACKUP_CRON_EXPRESSION=0 0 * * *
          # Enable the environment variables below if you have COMMUNITY=true
