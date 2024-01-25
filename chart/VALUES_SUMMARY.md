@@ -54,7 +54,9 @@ This chart can provide an rAthena emulator installation on a Kubernetes cluster.
 | server.service.ports[2] | dict | `{"name":"rcon","port":25575,"protocol":"UDP","targetPort":25575}` | The "rcon" port definition . If you change this, make sure to change the server.ports.rcon and server.config.rcon.port accordingly. |
 | server.service.ports[3] | dict | `{"name":"healthz","port":80,"protocol":"TCP","targetPort":80}` | The "healthz" port definition . Used only to create a health check for load balancers on cloud services. |
 | server.service.type | string | `"LoadBalancer"` | The type of service to be created. |
-| server.storage | dict | `{"preventDelete":false,"size":"10Gi","storageClassName":""}` | Define some parameters for the storage volume |
+| server.storage | dict | `{"external":false,"externalName":"","preventDelete":false,"size":"10Gi","storageClassName":""}` | Define some parameters for the storage volume |
+| server.storage.external | bool | `false` | Define if it will use an existing PVC containing the installation data. |
+| server.storage.externalName | bool | `""` | The external PVC name to use. |
 | server.storage.preventDelete | bool | `false` | Keeps helm from deleting the PVC. By default, helm does not delete pvcs. |
 | server.storage.size | string | `"10Gi"` | The size of the pvc storage. |
 | server.storage.storageClassName | string | `""` | The storage class name. |

@@ -9,6 +9,10 @@ server:
   labels: { }
   # -- (dict) Define some parameters for the storage volume
   storage:
+    # -- (bool) Define if it will use an existing PVC containing the installation data.
+    external: false
+    # -- (bool) The external PVC name to use.
+    externalName: ""
     # -- Keeps helm from deleting the PVC. By default, helm does not delete pvcs.
     preventDelete: false
     # -- The size of the pvc storage.

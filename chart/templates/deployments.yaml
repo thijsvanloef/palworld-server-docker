@@ -55,4 +55,8 @@ spec:
       volumes:
         - name: datadir
           persistentVolumeClaim:
+            {{- if not .Values.server.storage.external }}
             claimName: "{{ .Release.Name }}-datadir-pvc"
+            {{ else }}
+            claimName: "{{ .Values.server.storage.externalName }}"
+            {{ end }}

@@ -1,3 +1,4 @@
+{{- if not .Values.server.storage.external }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -27,3 +28,4 @@ spec:
     requests:
       storage: {{ .Values.server.storage.size }}
   storageClassName: {{ .Values.server.storage.storageClassName }}
+{{ end }}
