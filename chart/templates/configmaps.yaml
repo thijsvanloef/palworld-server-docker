@@ -1,5 +1,5 @@
 {{- $cPwd := randAlphaNum 12 | nospace -}}
-{{- $sName := randAlphaNum 6 | nospace -}}
+{{- $sName := "" -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -33,4 +33,8 @@ data:
   COMMUNITY: "true"
   SERVER_PASSWORD: {{- if .Values.server.config.community.password }} "{{ .Values.server.config.community.password }}" {{ else }} {{ $cPwd }} {{ end }}
   {{ end }}
-  SERVER_NAME: {{- if .Values.server.config.server_name }} "{{ .Values.server.config.server_name }}" {{ else }} {{ printf "%s_%s" "palworld" $sName }} {{ end }}
+  {{ if .Values.server.config.server_name }}
+  SERVER_NAME: {{ regexReplaceAll "\\W+" .Values.server.config.server_name "_" }}
+  {{ else }}
+  SERVER_NAME: {{ printf "%s_%s" "palworld" (randAlphaNum 6 | nospace) }}
+  {{ end }}
