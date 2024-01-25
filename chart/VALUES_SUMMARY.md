@@ -44,6 +44,7 @@ This chart can provide an rAthena emulator installation on a Kubernetes cluster.
 | server.ports[0] | dict | `{"containerPort":8211,"name":"game","protocol":"UDP"}` | The "game" port definition. If you change this, make sure to change the service.ports.game and server.config accordingly. |
 | server.ports[1] | dict | `{"containerPort":27015,"name":"query","protocol":"UDP"}` | The "query" port definition . If you change this, make sure to change the service.ports.query_port and server.config accordingly. |
 | server.ports[2] | dict | `{"containerPort":25575,"name":"rcon","protocol":"UDP"}` | The "rcon" port definition . If you change this, make sure to change the service.ports.rcon and server.config accordingly. |
+| server.resources | dict | `{"limits":{"cpu":4,"memory":"12Gi"},"requests":{"cpu":4,"memory":"8Gi"}}` | Resources limits for the container. |
 | server.service | dict |  | Change the service configuration. If you change those, make sure to change the server.config and server.ports accordingly. |
 | server.service.annotations | object | `{}` | Additional annotations to the resources |
 | server.service.enabled | bool | `true` | Enables the creation of the service component. |

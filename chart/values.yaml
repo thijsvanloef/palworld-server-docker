@@ -7,6 +7,14 @@ server:
   annotations: { }
   # -- Additional labels to the resources
   labels: { }
+  # -- (dict) Resources limits for the container.
+  resources:
+    limits:
+      cpu: 4
+      memory: "12Gi"
+    requests:
+      cpu: 4
+      memory: "8Gi"
   # -- (dict) Define some parameters for the storage volume
   storage:
     # -- (bool) Define if it will use an existing PVC containing the installation data.
