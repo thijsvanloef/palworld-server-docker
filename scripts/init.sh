@@ -19,19 +19,12 @@ fi
 
 term_handler() {
     if [ ${RCON_ENABLED} = true ]; then
+        rcon-cli save
         rcon-cli shutdown 1
-        while true
-        do
-            rcon-cli info
-            if [ $? -ne 0 ]; then
-                break
-            fi
-            sleep 1 
-        done
     else # Not graceful
-        kill -SIGTERM $(pidof PalServer-Linux-Test)
-        tail --pid=$(pidof PalServer-Linux-Test) -f 2>/dev/null
+        kill -SIGTERM $killpid
     fi
+    tail --pid=$killpid -f 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
