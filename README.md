@@ -137,7 +137,7 @@ It is highly recommended you set the following environment values before startin
 > [!IMPORTANT]
 > Boolean values used in environment variables are case sensitive because they are used in the shell script.
 >
-> They must be set using exactly true or false for the option to take effect.
+> They must be set using exactly `true` or `false` for the option to take effect.
 
 ### Game Ports
 
