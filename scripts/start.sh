@@ -46,9 +46,8 @@ cd /palworld || exit
 
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
-# Check if PalWorldSettings.ini exists and it not blank
-grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-if [ ! $? ]; then
+# shellcheck disable=SC2143
+if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
     printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
