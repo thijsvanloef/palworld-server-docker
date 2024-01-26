@@ -180,6 +180,8 @@ docker exec palworld-server backup
 
 This will create a backup at `/palworld/backups/`
 
+The server will run a save before the backup if rcon is enabled.
+
 ## Editing Server Settings
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
