@@ -1,5 +1,7 @@
 # Migrate From Existing Server
 
+## Using the script
+
 > [!WARNING]
 > Use this script at your own risk, I am not responsible for dataloss!
 >
@@ -32,3 +34,14 @@
     ```shell
     ./migrate.sh test-pal-migrate 74406BE1D7B54114AA5984CCF1236865
     ```
+
+## Manually
+
+1. Copy the save from your old dedicated server to your new dedicated server.
+2. In the `PalServer\Pal\Saved\Config\LinuxServer\GameUserSettings.ini` file of the **new** server,
+   change the `DedicatedServerName` to match your save's folder name. For example,
+   if your save's folder name is `2E85FD38BAA792EB1D4C09386F3A3CDA`, the DedicatedServerName changes to
+   DedicatedServerName=`2E85FD38BAA792EB1D4C09386F3A3CDA`.
+3. Delete the entire new server save at `PalServer\Pal\Saved\SaveGames\0\<your_save_here>`,
+   and replace it with the folder from the old server.
+4. Restart the new server
