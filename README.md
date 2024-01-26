@@ -4,8 +4,11 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)
 ![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)
 ![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)
+![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)
 
 [View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+
+[Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
 > [!TIP]
 > Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
