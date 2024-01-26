@@ -9,8 +9,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
-        with:
-          severity: warning
   dockerlint:
     runs-on: ubuntu-latest
     steps:
