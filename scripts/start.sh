@@ -75,5 +75,5 @@ password: ${ADMIN_PASSWORD}
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-echo "${STARTCOMMAND[@]}"
-su steam -c "${STARTCOMMAND[@]}"
+echo "bash -c '${STARTCOMMAND[@]}'"
+su steam -c "bash -c '${STARTCOMMAND[@]}'"
