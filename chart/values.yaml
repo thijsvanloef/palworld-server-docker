@@ -24,7 +24,7 @@ server:
     # -- Keeps helm from deleting the PVC. By default, helm does not delete pvcs.
     preventDelete: false
     # -- The size of the pvc storage.
-    size: 10Gi
+    size: 12Gi
     # -- The storage class name.
     storageClassName: ""
   # -- (dict) Define the parameters for the server image container
@@ -133,5 +133,3 @@ server:
       password: ""
       # -- (string) If not provided, a random server name will be generated with the "palworld_" prefix.
     server_name: ""
-
-
