@@ -7,10 +7,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Run Shellcheck
-        uses: azohra/shell-linter@latest
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
         with:
-          severity: "error"
+          severity: warning
   dockerlint:
     runs-on: ubuntu-latest
     steps:
