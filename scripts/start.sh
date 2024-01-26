@@ -26,6 +26,10 @@ if [ -n "${SERVER_NAME}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -servername=${SERVER_NAME}"
 fi
 
+if [ -n "${SERVER_DESCRIPTION}" ]; then
+    STARTCOMMAND="${STARTCOMMAND} -serverdescription=${SERVER_DESCRIPTION}"
+fi
+
 if [ -n "${SERVER_PASSWORD}" ]; then
     STARTCOMMAND="${STARTCOMMAND} -serverpassword=${SERVER_PASSWORD}"
 fi

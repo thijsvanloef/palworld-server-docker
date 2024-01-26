@@ -26,7 +26,8 @@ ENV PORT= \
     RCON_ENABLED=true \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
-    TZ=UTC
+    TZ=UTC \
+    SERVER_DESCRIPTION=
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh
