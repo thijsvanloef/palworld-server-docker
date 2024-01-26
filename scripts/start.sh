@@ -46,7 +46,8 @@ cd /palworld || exit
 
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
-if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+# This will always overwrite
+if [ ! "$(grep -sq '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
     printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
