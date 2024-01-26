@@ -18,7 +18,6 @@ jobs:
         with:
           dockerfile: Dockerfile
           lint: 'hadolint'
-          failure-threshold: error 
   markdownlint:
     runs-on: ubuntu-latest
     steps:
