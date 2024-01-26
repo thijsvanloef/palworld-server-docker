@@ -26,7 +26,7 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 |----------|---------|------------------------------------------|
 | CPU      | 4 cores | 4+ cores                                 |
 | RAM      | 16GB    | Recommend over 32GB for stable operation |
-| Storage  | 4GB     | 10GB                                     |
+| Storage  | 4GB     | 12GB                                     |
 
 ## How to use
 
