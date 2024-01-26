@@ -10,7 +10,7 @@
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
-[English](/README.md) | [한국어](/docs/ko/README.md)
+[English](/README.md) | [한국어](/docs/kr/README.md)
 
 > [!TIP]
 > Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
