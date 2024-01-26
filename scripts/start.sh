@@ -1,45 +1,45 @@
 #!/bin/bash
 
-STARTCOMMAND=("./PalServer.sh")
+STARTCOMMAND="./PalServer.sh"
 
 if [ -n "${PORT}" ]; then
-    STARTCOMMAND+=("-port=${PORT}")
+    STARTCOMMAND="${STARTCOMMAND} -port=${PORT}"
 fi
 
 if [ -n "${PLAYERS}" ]; then
-    STARTCOMMAND+=("-players=${PLAYERS}")
+    STARTCOMMAND="${STARTCOMMAND} -players=${PLAYERS}"
 fi
 
 if [ "${COMMUNITY}" = true ]; then
-    STARTCOMMAND+=("EpicApp=PalServer")
+    STARTCOMMAND="${STARTCOMMAND} EpicApp=PalServer"
 fi
 
 if [ -n "${PUBLIC_IP}" ]; then
-    STARTCOMMAND+=("-publicip=${PUBLIC_IP}")
+    STARTCOMMAND="${STARTCOMMAND} -publicip=${PUBLIC_IP}"
 fi
 
 if [ -n "${PUBLIC_PORT}" ]; then
-    STARTCOMMAND+=("-publicport=${PUBLIC_PORT}")
+    STARTCOMMAND="${STARTCOMMAND} -publicport=${PUBLIC_PORT}"
 fi
 
 if [ -n "${SERVER_NAME}" ]; then
-    STARTCOMMAND+=("-servername=${SERVER_NAME}")
+    STARTCOMMAND="${STARTCOMMAND} -servername=${SERVER_NAME}"
 fi
 
 if [ -n "${SERVER_PASSWORD}" ]; then
-    STARTCOMMAND+=("-serverpassword=${SERVER_PASSWORD}")
+    STARTCOMMAND="${STARTCOMMAND} -serverpassword=${SERVER_PASSWORD}"
 fi
 
 if [ -n "${ADMIN_PASSWORD}" ]; then
-    STARTCOMMAND+=("-adminpassword=${ADMIN_PASSWORD}")
+    STARTCOMMAND="${STARTCOMMAND} -adminpassword=${ADMIN_PASSWORD}"
 fi
 
 if [ -n "${QUERY_PORT}" ]; then
-    STARTCOMMAND+=("-queryport=${QUERY_PORT}")
+    STARTCOMMAND="${STARTCOMMAND} -queryport=${QUERY_PORT}"
 fi
 
 if [ "${MULTITHREADING}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    STARTCOMMAND="${STARTCOMMAND} -useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS"
 fi
 
 cd /palworld || exit
@@ -75,5 +75,5 @@ password: ${ADMIN_PASSWORD}
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-echo "${STARTCOMMAND[@]}"
-su steam -c "${STARTCOMMAND[@]}"
+echo "${STARTCOMMAND}"
+su steam -c "${STARTCOMMAND}"
