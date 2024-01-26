@@ -5,7 +5,7 @@ services:
       container_name: palworld-server
       ports:
         - 8211:8211/udp
-        - 27015:27015/udp
+        - 27015:27015/udp # Required if you want your server to show up in the community servers tab 
       environment:
          - PUID=1000
          - PGID=1000
@@ -18,7 +18,6 @@ services:
          - TZ=UTC
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         # Enable the environment variables below if you have COMMUNITY=true
-         # - SERVER_NAME="World of Pals"
+         - SERVER_NAME="World of Pals"
       volumes:
          - ./palworld:/palworld/
