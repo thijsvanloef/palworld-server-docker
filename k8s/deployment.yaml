@@ -37,8 +37,8 @@ spec:
           volumeMounts:
             - mountPath: /palworld
               name: datadir
-            - name: palworld-settings
-              mountPath: /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+            - mountPath: /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+              name: palworld-settings
               subPath: PalWorldSettings.ini
       volumes:
       - name: datadir
