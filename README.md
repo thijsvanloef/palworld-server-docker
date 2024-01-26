@@ -34,7 +34,7 @@ Keep in mind that you'll need to change the [environment variables](#environment
 
 ### Docker Compose
 
-This repository includes an example [docker-compose.yml](example/docker-compose.yml) file you can use to setup your server.
+This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to setup your server.
 
 ```yml
 services:
