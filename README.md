@@ -202,9 +202,6 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-> [!TIP]
-> If the `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` is empty,
-> delete the file and restart the server, a new file with content will be created.
 
 ## Reporting Issues/Feature Requests
 
