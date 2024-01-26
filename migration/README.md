@@ -1,7 +1,9 @@
 # Migrate From Existing Server
 
-1. Find a directory which is named by game server name and contains all saved game data, usually it will at `~/Steam/steamapps/common/PalServer/Pal/Saved/SaveGames/0/`
-2. Make sure `migration/migrate.sh`, saved game data directory and mounted volume (e.g. `palworld/`) are in the same directory. Like this:
+1. Find a directory which is named by game server name and contains all saved game data,
+   usually it will at `~/Steam/steamapps/common/PalServer/Pal/Saved/SaveGames/0/`
+3. Make sure `migration/migrate.sh`, saved game data directory and mounted volume (e.g. `palworld/`) are in the same directory. Like this:
+   
     ```shell
     ubuntu@VM-4-5-ubuntu:~/test-pal-migrate$ ll
     total 24
@@ -12,7 +14,8 @@
     -rw-rw-r--  1 ubuntu ubuntu  848 Jan 26 03:31 migrate.sh
     drwxrwxr-x  7 ubuntu ubuntu 4096 Jan 26 03:31 palworld/
     ```
-3. Run `migrate.sh` like this
+
+5. Run `migrate.sh` like this
 
     ```shell
     ./migrate.sh {CONTAINER_NAME} {SERVER_NAME}
