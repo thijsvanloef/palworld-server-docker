@@ -54,7 +54,7 @@ services:
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
-         - TZ="UTC"
+         - TZ=UTC
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          - SERVER_NAME="World of Pals"
@@ -79,7 +79,7 @@ docker run -d \
     -e MULTITHREADING=true \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
-    -e TZ="UTC" \
+    -e TZ=UTC \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
