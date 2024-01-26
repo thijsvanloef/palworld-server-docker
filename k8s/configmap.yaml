@@ -13,8 +13,6 @@ data:
   RCON_PORT: "25575"
   TZ: UTC
   COMMUNITY: "false"  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-  # Enable the environment variables below if you have COMMUNITY=true
-  # SERVER_PASSWORD: "yourServerPassword"
   SERVER_NAME: "World of Pals"
   SERVER_DESCRIPTION: ""
 ---
