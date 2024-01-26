@@ -202,7 +202,6 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
