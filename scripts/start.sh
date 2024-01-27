@@ -72,8 +72,8 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-# Configure RCON settings
-cat >rcon.yaml  <<EOL
+# Configure RCON settings 
+cat >/home/steam/server/rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
   password: ${ADMIN_PASSWORD}

@@ -35,6 +35,8 @@ RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/
     mv /home/steam/server/backup.sh /usr/local/bin/backup
 
 WORKDIR /home/steam/server
+RUN touch rcon.yaml && \
+    chmod o+w rcon.yaml
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1

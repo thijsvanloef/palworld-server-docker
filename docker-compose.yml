@@ -5,13 +5,12 @@ services:
          dockerfile: Dockerfile
       # restart: unless-stopped
       container_name: palworld-server-user
+      # Works if you set to 1000:1000 (default of steam user)
       user: 1000:1000
       ports:
         - 8212:8211/udp
         #- 27015:27015/udp # Required if you want your server to show up in the community servers tab 
       environment:
-         - PUID=1000
-         - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
          - SERVER_PASSWORD="worldofpals" # Optional but recommended
