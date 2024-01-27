@@ -110,7 +110,6 @@ docker run -d \
 您可以使用以下值来修改服务器设置  
 强烈建议您在启动服务器之前设置以下变量：
 
-
 * PLAYERS
 * PORT
 * PUID
@@ -202,7 +201,8 @@ docker exec palworld-server backup
 
 请注意，环境变量将始终覆盖对 `PalWorldSettings.ini` 所做的更改
 
-有关服务器设置的更详细解释列表，请在 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看
+有关服务器设置的更详细解释列表，请在
+[shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看
 
 ## 报告问题/功能请求
 
