@@ -13,7 +13,7 @@
 
 [English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
 
-> [!提示]
+> [!TIP]
 > 不知道从何开始？ [看看这里吧！](https://tice.tips/containerization/palworld-server-docker/)
 
 这是一个 [Docker](https://docs.docker.com/engine/install/) 容器，可帮助您创建自己的
@@ -21,7 +21,7 @@
 
 此容器经测试可正常在 (Ubuntu/Debian) 和 Windows 10 上运行
 
-> [!注意]
+> [!IMPORTANT]
 > 目前, Xbox Game Pass/Xbox 主机玩家无法加入服务器
 >
 > 他们只能通过邀请码加入，并且最多允许4人游玩
@@ -140,7 +140,7 @@ docker run -d \
 
 *** 是使用docker命令保存并关闭服务器的必要条件
 
-> [!重要]
+> [!IMPORTANT]
 > 环境变量中使用的布尔值区分大小写，因为它们是在 shell 脚本中使用的
 >
 > 必须准确使用 `true` 或 `false` 设置它们，选项才能生效
@@ -201,7 +201,7 @@ docker exec palworld-server backup
 
 请注意，环境变量将始终覆盖对 `PalWorldSettings.ini` 所做的更改
 
-有关服务器设置的更详细解释列表，请在
+服务器配置文件参数相关说明，请在
 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看
 
 ## 报告问题/功能请求
