@@ -8,9 +8,9 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: "{{ .Release.Name }}-server"
+  strategy:
+    type: "{{ .Values.server.strategy }}"
   template:
-    strategy:
-      type: "{{ .Values.server.strategy }}"
     metadata:
       annotations:
         {{- with .Values.server.annotations }}
