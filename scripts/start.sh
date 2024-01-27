@@ -56,7 +56,7 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
     # Server will generate all ini files after first run.
-    su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
+    timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
 
     # Wait for shutdown
     sleep 5
@@ -73,7 +73,7 @@ if [ -n "${RCON_PORT}" ]; then
 fi
 
 # Configure RCON settings
-cat >/home/steam/server/rcon.yaml  <<EOL
+cat >rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
   password: ${ADMIN_PASSWORD}
@@ -81,5 +81,5 @@ EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 echo "bash -c '${STARTCOMMAND[*]}'"
-su steam -c "bash -c '${STARTCOMMAND[*]}'"
+"${STARTCOMMAND[@]}"
 
