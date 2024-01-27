@@ -22,6 +22,9 @@ metadata:
   name: palworld-settings
 data:
   PalWorldSettings.ini: >-
+    [/Script/OnlineSubsystemUtils.IpNetDriver]
+    NetServerMaxTickRate=60
+    
     [/Script/Pal.PalGameWorldSettings]
     
     OptionSettings=(
