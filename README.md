@@ -1,10 +1,10 @@
 # Palworld Dedicated Server Docker
 
-![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)
-![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)
-![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)
-![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)
-![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)
+[![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
+[![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/repository/docker/thijsvanloef/palworld-server-docker)
+[![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
+[![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 
 [View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 
