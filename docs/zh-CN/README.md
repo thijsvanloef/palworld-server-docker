@@ -201,7 +201,7 @@ docker exec palworld-server backup
 
 请注意，环境变量将始终覆盖对 `PalWorldSettings.ini` 所做的更改
 
-服务器配置文件参数相关说明，请在 
+服务器配置文件参数相关说明，请在
 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看
 
 ## 报告问题/功能请求
