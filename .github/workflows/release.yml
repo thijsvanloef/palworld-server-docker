@@ -20,15 +20,12 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # list of Docker images to use as base name for tags
-          images: |
-            ${{ github.repository }}
+          images: ${{ github.repository }}
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
-          # always generate latest tag on push
           flavor: latest=true
 
       - name: Docker - Build / Push
