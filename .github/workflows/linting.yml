@@ -7,10 +7,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Run Shellcheck
-        uses: azohra/shell-linter@latest
-        with:
-          severity: "error"
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
   dockerlint:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +18,6 @@ jobs:
         with:
           dockerfile: Dockerfile
           lint: 'hadolint'
-          failure-threshold: error 
   markdownlint:
     runs-on: ubuntu-latest
     steps:
