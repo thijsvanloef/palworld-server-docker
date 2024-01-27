@@ -1,36 +1,48 @@
 name: Linting
-on: [pull_request]
+on:
+  pull_request:
 
+run-name: Pull request - ${{ github.event.pull_request.number }}
 jobs:
   shellcheck:
+    name: Lint - Shell
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@master
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Shellcheck
+        uses: ludeeus/action-shellcheck@2.0.0
+
   dockerlint:
+    name: Lint - Docker
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - uses: hadolint/hadolint-action@v2.0.0
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
-          lint: 'hadolint'
+
   markdownlint:
+    name: Lint - Markdown
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code
-      uses: actions/checkout@v2
-    - uses: DavidAnson/markdownlint-cli2-action@v15
-      with:
-        config: '.markdownlint.jsonc'
-        globs: '**/*.md'
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Lint - Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          config: ".markdownlint.jsonc"
+          globs: "**/*.md"
+
   test-build:
+    name: Docker - Build
     runs-on: ubuntu-latest
     steps:
-      - name: Build the Image
-        uses: docker/build-push-action@v2
+      - name: Docker - Build
+        uses: docker/build-push-action@v5
         with:
           push: false
