@@ -67,19 +67,16 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-if [[ -n "${BACKUP_ENABLED}" ]]; then
+if [[ -n $BACKUP_ENABLED ]]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
 
-    if [[ -z "${BACKUP_CRON_EXPRESSION}" ]]; then
-        printf "\e[0;31m***** BACKUP_CRON_EXPRESSION NOT SET *****\e[0m\n"
-        exit 1
-    else
-        echo "BACKUP_CRON_EXPRESSION=${BACKUP_CRON_EXPRESSION}"
+    if [[ $BACKUP_ENABLED == true ]]; then
+        CRON_EXPRESSION=$([[ -n $BACKUP_CRON_EXPRESSION ]] && echo "$BACKUP_CRON_EXPRESSION" || echo "0 0 * * *")
+        echo "CRON_EXPRESSION=${CRON_EXPRESSION}"
+        echo "${CRON_EXPRESSION} root bash /usr/loca/bin/backup" > /etc/cron.d/backups-cron
+        chmod 0644 /etc/cron.d/backups-cron
+        cron /etc/cron.d/backups-cron
     fi
-
-    echo "${BACKUP_CRON_EXPRESSION} root bash /usr/local/bin/backup" > /etc/cron.d/backups-cron
-    chmod 0644 /etc/cron.d/backups-cron
-    cron /etc/cron.d/backups-cron
 fi
 
 # Configure RCON settings

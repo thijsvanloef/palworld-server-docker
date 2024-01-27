@@ -32,9 +32,9 @@ ENV PORT= \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
     TZ=UTC \
-    BACKUP_ENABLED=true \
-    DAYS_TO_KEEP=7 \
-    BACKUP_CRON_EXPRESSION="0 0 * * *"
+    BACKUP_ENABLED=false \
+    DAYS_TO_KEEP= \
+    BACKUP_CRON_EXPRESSION=
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh
