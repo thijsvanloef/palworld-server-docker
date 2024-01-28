@@ -105,7 +105,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/README.md) to deploy.
+Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
 
 ### Environment variables
 
