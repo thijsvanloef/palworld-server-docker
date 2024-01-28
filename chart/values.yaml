@@ -56,6 +56,8 @@ server:
     - name: rcon
       containerPort: 25575
       protocol: UDP
+  # -- (string) Change the deployment strategy
+  strategy: Recreate
 
   # -- (dict) Change the service configuration.
   # If you change those, make sure to change the server.config and server.ports accordingly.
