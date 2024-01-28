@@ -295,7 +295,7 @@ RCON_PORT="${RCON_PORT:-\1}"
 # Requires all non number values to be declared as those expressions need updating to use a replacement
 sed -E  \
     -e "s/ServerPlayerMaxNum=([0-9]*)/ServerPlayerMaxNum=$PLAYERS/" \
-    -e "s/PublicIP=\"[^\"]*\"/PublicIP=\"$PUBLIC_IP\"/" \
+    -e "s/PublicIP=\"([^\"]*\")/PublicIP=\"$PUBLIC_IP\"/" \
     -e "s/PublicPort=([0-9]*)/PublicPort=$PUBLIC_PORT/" \
     -e "s/Difficulty=([a-zA-Z]*)/Difficulty=$DIFFICULTY/" \
     -e "s/DayTimeSpeedRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/DayTimeSpeedRate=$DAYTIME_SPEEDRATE/" \
@@ -347,9 +347,9 @@ sed -E  \
     -e "s/bExistPlayerAfterLogout=([a-zA-Z]*)/bExistPlayerAfterLogout=$EXIST_PLAYER_AFTER_LOGOUT/" \
     -e "s/bEnableDefenseOtherGuildPlayer=([a-zA-Z]*)/bEnableDefenseOtherGuildPlayer=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER/" \
     -e "s/CoopPlayerMaxNum=([0-9]*)/CoopPlayerMaxNum=$COOP_PLAYER_MAX_NUM/" \
-    -e "s/Region=\"[^\"]*\"/Region=\"$REGION\"/" \
+    -e "s/Region=\"([^\"]*\")/Region=\"$REGION\"/" \
     -e "s/bUseAuth=([a-zA-Z]*)/bUseAuth=$USEAUTH/" \
-    -e "s~BanListURL=\"[^\"]*\"~BanListURL=\"$BAN_LIST_URL\"~" \
+    -e "s~BanListURL=\"([^\"]*\")~BanListURL=\"$BAN_LIST_URL\"~" \
     -e "s/RCONEnabled=([a-zA-Z]*)/RCONEnabled=$RCON_ENABLED/" \
     -e "s/RCONPort=([0-9]*)/RCONPort=$RCON_PORT/" \
     /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
