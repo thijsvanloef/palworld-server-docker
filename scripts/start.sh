@@ -143,10 +143,6 @@ if [ -n "${BUILD_OBJECT_DETERIORATION_DAMAGE_RATE}" ]; then
     echo "BUILD_OBJECT_DETERIORATION_DAMAGE_RATE=$BUILD_OBJECT_DETERIORATION_DAMAGE_RATE"
     sed -E -i "s/BuildObjectDeteriorationDamageRate=[+-]?([0-9]*[.])?[0-9]+/BuildObjectDeteriorationDamageRate=$BUILD_OBJECT_DETERIORATION_DAMAGE_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
-if [ -n "${BUILD_OBJECT_DETERIORATION_DAMAGE_RATE}" ]; then
-    echo "BUILD_OBJECT_DETERIORATION_DAMAGE_RATE=$BUILD_OBJECT_DETERIORATION_DAMAGE_RATE"
-    sed -E -i "s/PalAutoHpRegeneRateInSleep=[+-]?([0-9]*[.])?[0-9]+/PalAutoHpRegeneRateInSleep=$BUILD_OBJECT_DETERIORATION_DAMAGE_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-fi
 if [ -n "${COLLECTION_DROP_RATE}" ]; then
     echo "COLLECTION_DROP_RATE=$COLLECTION_DROP_RATE"
     sed -E -i "s/CollectionDropRate=[+-]?([0-9]*[.])?[0-9]+/CollectionDropRate=$COLLECTION_DROP_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
