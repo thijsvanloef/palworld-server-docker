@@ -11,12 +11,6 @@ def initArgs():
 
     parser = argparse.ArgumentParser(description="Palworld Settings Script")
     parser.add_argument(
-        '-h', '--help',
-        action='help',
-        default=argparse.SUPPRESS,
-        help='show this help message and exit'
-    )
-    parser.add_argument(
         '--workpath', 
         type=str, 
         default=os.getenv('WORKPATH', '/palworld'), 
@@ -54,9 +48,15 @@ def initArgs():
     )
     parser.add_argument(
         '--keep-invalid-settings', 
-        action='store_true', 
+        type=bool,
         default=os.getenv('KEEP_INVALID_SETTINGS', False), 
         help='if true, the regacy settings will be kept in "DefaultPalWorldSettings.json" (default: False)'
+    )
+    parser.add_argument(
+        '--write-json-file-always',
+        type=bool,
+        default=os.getenv('WRITE_JSON_FILE_ALWAYS', False),
+        help='if true, the "PalWorldSettings.json" will be written always (default: False)'
     )
 
     args = parser.parse_args()
@@ -65,6 +65,8 @@ def initArgs():
 def initEnv():
     global ENHANCED_PALWORLD_SETTINGS_LANG
     global KEEP_INVALID_SETTINGS
+    global WRITE_JSON_FILE_ALWAYS
+    
     global PATH_DEFAULT_PALWORLD_SETTINGS_INI
     global PATH_DEFAULT_PALWORLD_SETTINGS_JSON
     global PATH_PALWORLD_SETTINGS_INI
@@ -72,8 +74,10 @@ def initEnv():
     
     WORKPATH = args.workpath + '/'
 
-    ENHANCED_PALWORLD_SETTINGS_LANG = args.description_lang
+    ENHANCED_PALWORLD_SETTINGS_LANG = args.description_lang.lower()
     KEEP_INVALID_SETTINGS = args.keep_invalid_settings
+    WRITE_JSON_FILE_ALWAYS = args.write_json_file_always
+
     PATH_DEFAULT_PALWORLD_SETTINGS_INI = WORKPATH + args.default_palworld_settings_ini
     PATH_DEFAULT_PALWORLD_SETTINGS_JSON = WORKPATH + args.default_palworld_settings_json
     PATH_PALWORLD_SETTINGS_INI = WORKPATH + args.palworld_settings_ini
@@ -222,7 +226,7 @@ def _createDefaultPalWorldSettingsJson():
     return defaultPalWorldSettingsJson
 
 def _loadDefaultPalWorldSettingsJson():
-    if os.path.exists(PATH_DEFAULT_PALWORLD_SETTINGS_JSON):
+    if not WRITE_JSON_FILE_ALWAYS and os.path.exists(PATH_DEFAULT_PALWORLD_SETTINGS_JSON):
         with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'r', encoding='utf-8') as f:
             defaultPalWorldSettingsJson = json.load(f)
     else:
