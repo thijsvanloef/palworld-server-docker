@@ -64,6 +64,7 @@ services:
          - ADMIN_PASSWORD="adminPasswordHere"
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          - SERVER_NAME="World of Pals"
+         - SERVER_DESCRIPTION="Awesome World of Pal"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -90,6 +91,7 @@ docker run -d \
     -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
     -e SERVER_NAME="World of Pals" \
+    -e SERVER_DESCRIPTION="Awesome World of Pal" \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker:latest
 
@@ -103,7 +105,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./chart/README.md) to deploy.
+Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
 
 ### Environment variables
 
@@ -128,6 +130,7 @@ It is highly recommended you set the following environment values before startin
 | PUBLIC_PORT        | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | 1024-65535                                                                             |
 | SERVER_NAME        | A name for your server                                                                                                                                                                              |                | "string"                                                                               |
 | SERVER_PASSWORD    | Secure your community server with a password                                                                                                                                                        |                | "string"                                                                               |
+| SERVER_DESCRIPTION | Your server Description                                                                                                                                                                             |                | "string"                                                                               |
 | ADMIN_PASSWORD     | Secure administration access in the server with a password                                                                                                                                          |                | "string"                                                                               |
 | UPDATE_ON_BOOT**   | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true           | true/false                                                                                  |
 | RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                  |
@@ -201,11 +204,78 @@ The server will run a save before the backup if rcon is enabled.
 
 ## Editing Server Settings
 
+### With Environment Variables
+
+> [!IMPORTANT]
+>
+> These Environment Variables/Settings are subject to change since the game is still in beta
+
+| Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
+|-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
+| DIFFICULTY                                | Game Difficulty                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
+| DAYTIME_SPEEDRATE                         | Day time speed - Smaller number means shorter days             | 1.000000                                                                                     | Float                                  |
+| NIGHTTIME_SPEEDRATE                       | Night time speed - Smaller number means shorter nights         | 1.000000                                                                                     | Float                                  |
+| EXP_RATE                                  | EXP earn rate                                                  | 1.000000                                                                                     | Float                                  |
+| PAL_CAPTURE_RATE                          | Pal capture rate                                               | 1.000000                                                                                     | Float                                  |
+| PAL_SPAWN_NUM_RATE                        | Pal appearance rate                                            | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_ATTACK                    | Damage from pals multipiler                                    | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_DEFENSE                   | Damage to pals multipiler                                      | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_ATTACK                 | Damage from player multipiler                                  | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_DEFENSE                | Damage to  player multipiler                                   | 1.000000                                                                                     | Float                                  |
+| PLAYER_STOMACH_DECREASE_RATE              | Player hunger depletion rate                                   | 1.000000                                                                                     | Float                                  |
+| PLAYER_STAMINA_DECREASE_RATE              | Player stamina reduction rate                                  | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE                 | Player auto HP regeneration rate                               | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP        | Player sleep HP regeneration rate                              | 1.000000                                                                                     | Float                                  |
+| PAL_STOMACH_DECREASE_RATE                 | Pal hunger depletion rate                                      | 1.000000                                                                                     | Float                                  |
+| PAL_STAMINA_DECREASE_RATE                 | Pal stamina reduction rate                                     | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE                    | Pal auto HP regeneration rate                                  | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE_IN_SLEEP           | Pal sleep health regeneration rate (in Palbox)                 | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DAMAGE_RATE                  | Damage to structure multipiler                                 | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DETERIORATION_DAMAGE_RATE    | Structure determination rate                                   | 1.000000                                                                                     | Float                                  |
+| COLLECTION_DROP_RATE                      | Getherable items multipiler                                    | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_HP_RATE                 | Getherable objects HP multipiler                               | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | Getherable objects respawn interval                            | 1.000000                                                                                     | Float                                  |
+| ENEMY_DROP_ITEM_RATE                      | Dropped Items Multipiler                                       | 1.000000                                                                                     | Float                                  |
+| DEATH_PENALTY                             | What will drop when you die                                    | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
+| ENABLE_PLAYER_TO_PLAYER_DAMAGE            | Allows players to cause damage to players                      | False                                                                                        | Boolean                                |
+| ENABLE_FRIENDLY_FIRE                      | Allow friendly fire                                            | False                                                                                        | Boolean                                |
+| ENABLE_INVADER_ENEMY                      | Enable invaders                                                | True                                                                                         | Boolean                                |
+| ACTIVE_UNKO                               | Enable UNKO (?)                                                | False                                                                                        | Boolean                                |
+| ENABLE_AIM_ASSIST_PAD                     | Enable controller aim assist                                   | True                                                                                         | Boolean                                |
+| ENABLE_AIM_ASSIST_KEYBOARD                | Enable Keyboard aim assist                                     | False                                                                                        | Boolean                                |
+| DROP_ITEM_MAX_NUM                         | Maximum number of drops in the world                           | 3000                                                                                         | Integer                                |
+| DROP_ITEM_MAX_NUM_UNKO                    | Maximum number of UNKO drops in the world                      | 100                                                                                          | Integer                                |
+| BASE_CAMP_MAX_NUM                         | Maximum number of base camps                                   | 128                                                                                          | Integer                                |
+| BASE_CAMP_WORKER_MAXNUM                   | Maximum number of workers                                      | 15                                                                                           | Integer                                |
+| DROP_ITEM_ALIVE_MAX_HOURS                 | Time it takes for items to despawn in hours                    | 1.000000                                                                                     | Float                                  |
+| AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | Automatically reset guild when no players are online           | False                                                                                        | Bool                                   |
+| AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | Time to automatically reset guild when no players are online   | 72.000000                                                                                    | Float                                  |
+| GUILD_PLAYER_MAX_NUM                      | Max player of Guild                                            | 20                                                                                           | Integer                                |
+| PAL_EGG_DEFAULT_HATCHING_TIME             | Time(h) to incubate massive egg                                | 72.000000                                                                                    | Float                                  |
+| WORK_SPEED_RATE                           | Work speed muliplier                                           | 1.000000                                                                                     | Float                                  |
+| IS_MULTIPLAY                              | Enable multiplayer                                             | False                                                                                        | Boolean                                |
+| IS_PVP                                    | Enable PVP                                                     | False                                                                                        | Boolean                                |
+| CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP | Allow players from other guilds to pick up death penalty items | False                                                                                        | Boolean                                |
+| ENABLE_NON_LOGIN_PENALTY                  | Enable non-login penalty                                       | True                                                                                         | Boolean                                |
+| ENABLE_FAST_TRAVEL                        | Enable fast travel                                             | True                                                                                         | Boolean                                |
+| IS_START_LOCATION_SELECT_BY_MAP           | Enable selecting of start location                             | True                                                                                         | Boolean                                |
+| EXIST_PLAYER_AFTER_LOGOUT                 | Toggle for deleting players when they log off                  | False                                                                                        | Boolean                                |
+| ENABLE_DEFENSE_OTHER_GUILD_PLAYER         | Allows defense against other guild players                     | False                                                                                        | Boolean                                |
+| COOP_PLAYER_MAX_NUM                       | Maximum number of players in a guild                           | 4                                                                                            | Integer                                |
+| REGION                                    | Region                                                         |                                                                                              | String                                 |
+| USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
+| BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+
+### Manually
+
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
-Any changes made there will be applied to the Server on next boot.
-
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
+
+> [!IMPORTANT]
+> Changes can only be made to `PalWorldSettings.ini` while the server is off.
+>
+> Any changes made while the server is live will be overwritten when the server stops.
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 

@@ -4,7 +4,9 @@ on:
     types: [published]
 
 jobs:
+  # Builds the Dockerfile and pushes it to dockerhub
   release:
+    name: Release - Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -34,3 +36,35 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+
+  # Generates a new release specifically for the helm chart, using the helm charts version
+  # Only generates a new release if the helm charts version has changed since the last release
+  # Will then update the gh-pages branch & helm repository
+  release-helm:
+    name: Release - Helm chart
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Git - Configure
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      # Will push updates to a index.yaml file in the gh-pages branch
+      - name: Helm - chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: charts
+          pages_branch: gh-pages
+          mark_as_latest: false
+          skip_existing: true
+          config: ./charts/cr.yaml
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
