@@ -1,7 +1,7 @@
 apiVersion: v2
 name: palworld
-version: 0.0.1
-description: This chart can provide an rAthena emulator installation on a Kubernetes cluster.
+version: 0.0.2
+description: This chart will provide a Palworld server installation on a kubernetes cluster.
 type: application
 keywords:
   - palworld
