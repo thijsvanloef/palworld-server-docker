@@ -262,6 +262,7 @@ The server will run a save before the backup if rcon is enabled.
 | BAN_LIST_URL                              | Which ban list to use                                                  | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                           |
 
 ### Manually
+
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
 Any changes made while the server is live will be overridden.
