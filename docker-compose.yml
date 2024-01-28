@@ -1,7 +1,6 @@
 services:
    palworld:
-      image: test/palworld-server-docker:latest
-      build: .
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       ports:
