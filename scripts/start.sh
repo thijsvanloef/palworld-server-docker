@@ -292,7 +292,6 @@ BAN_LIST_URL="${BAN_LIST_URL:-\1}"
 RCON_ENABLED="${RCON_ENABLED:-\1}"
 RCON_PORT="${RCON_PORT:-\1}"
 
-# Requires all non number values to be declared as those expressions need updating to use a replacement
 sed -E  \
     -e "s/ServerPlayerMaxNum=([0-9]*)/ServerPlayerMaxNum=$PLAYERS/" \
     -e "s/PublicIP=\"([^\"]*\")/PublicIP=\"$PUBLIC_IP\"/" \
