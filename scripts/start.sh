@@ -289,10 +289,10 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-if [[ -n $BACKUP_ENABLED ]]; then
+if [ -n $BACKUP_ENABLED ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
 
-    if [[ $BACKUP_ENABLED == true ]]; then
+    if [ $BACKUP_ENABLED = true ]; then
         CRON_EXPRESSION=$([[ -n $BACKUP_CRON_EXPRESSION ]] && echo "$BACKUP_CRON_EXPRESSION" || echo "0 0 * * *")
         echo "CRON_EXPRESSION=${CRON_EXPRESSION}"
         echo "${CRON_EXPRESSION} root bash /usr/loca/bin/backup" > /etc/cron.d/backups-cron
