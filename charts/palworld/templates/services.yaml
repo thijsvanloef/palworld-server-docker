@@ -15,7 +15,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
   annotations:
-    {{- with .Values.server.config.annotations }}
+    {{- with .Values.server.service.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
