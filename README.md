@@ -48,6 +48,7 @@ services:
       image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
+      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
@@ -97,6 +98,10 @@ docker run -d \
 
 ```
 
+> [!TIP]
+> If you want to stop the container with a custom stop grace period then run:
+> `docker stop --name palworld-server --time 30`
+
 ### Kubernetes
 
 All files you will need to deploy this container to kubernetes are located in the [k8s folder](k8s/).
@@ -105,7 +110,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./chart/README.md) to deploy.
+Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
 
 ### Environment variables
 
@@ -297,12 +302,12 @@ BACKUP_ENABLED=true
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
-Any changes made while the server is live will be overridden.
-
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
 
 > [!IMPORTANT]
 > Changes can only be made to `PalWorldSettings.ini` while the server is off.
+>
+> Any changes made while the server is live will be overwritten when the server stops.
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 

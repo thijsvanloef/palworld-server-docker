@@ -1,0 +1,210 @@
+# -- Namespace where the resources will be created
+namespace: palworld
+# -- (dict) The server configuration
+# @notationType -- bigValue
+server:
+  # -- Additional annotations to the resources
+  annotations: { }
+  # -- Additional labels to the resources
+  labels: { }
+  # -- (dict) Resources limits for the container.
+  resources:
+    limits:
+      cpu: 4
+      memory: "12Gi"
+    requests:
+      cpu: 4
+      memory: "8Gi"
+  # -- (dict) Define some parameters for the storage volume
+  storage:
+    # -- (bool) Define if it will use an existing PVC containing the installation data.
+    external: false
+    # -- (bool) The external PVC name to use.
+    externalName: ""
+    # -- Keeps helm from deleting the PVC. By default, helm does not delete pvcs.
+    preventDelete: false
+    # -- The size of the pvc storage.
+    size: 12Gi
+    # -- The storage class name.
+    storageClassName: ""
+  # -- (dict) Define the parameters for the server image container
+  # @notationType -- bigValue
+  image:
+    # -- Name of the image, without the tag.
+    name: thijsvanloef/palworld-server-docker
+    # -- The tag of the image.
+    tag: latest
+    # -- Define the pull policy for the server image.
+    imagePullPolicy: IfNotPresent
+
+  # -- (dict) Change the ports to be mapped to the pod.
+  # If you change those, make sure to change the service.ports and server.config accordingly.
+  # @notationType -- bigValue
+  ports:
+    # -- (dict) The "game" port definition.
+    # If you change this, make sure to change the service.ports.game and server.config accordingly.
+    - name: game
+      containerPort: 8211
+      protocol: UDP
+    # -- (dict) The "query" port definition .
+    # If you change this, make sure to change the service.ports.query_port and server.config accordingly.
+    - name: query
+      containerPort: 27015
+      protocol: UDP
+    # -- (dict) The "rcon" port definition .
+    # If you change this, make sure to change the service.ports.rcon and server.config accordingly.
+    - name: rcon
+      containerPort: 25575
+      protocol: UDP
+  # -- (string) Change the deployment strategy
+  strategy: Recreate
+
+  # -- (dict) Change the service configuration.
+  # If you change those, make sure to change the server.config and server.ports accordingly.
+  # @notationType -- bigValue
+  service:
+    # -- (bool) Enables the creation of the service component.
+    enabled: true
+    # -- Additional annotations to the resources
+    annotations: { }
+    # -- Additional labels to the resources
+    labels: { }
+    # -- (string) The type of service to be created.
+    type: LoadBalancer
+    # -- (dict) The "healthz" definition .
+    # Use if you need to create a TCP health check for load balancers on cloud services.
+    healthz:
+      enabled: false
+      name: healthz
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    # -- (dict) Change the ports to be mapped to the service.
+    # If you change those, make sure to change the server.config and server.ports accordingly.
+    # @notationType -- bigValue
+    ports:
+      # -- (dict) The "game" port definition.
+      # If you change this, make sure to change the server.ports.game and server.config.port accordingly.
+      - name: game
+        port: 8211
+        protocol: UDP
+        targetPort: 8211
+      # -- (dict) The "query" port definition .
+      # If you change this, make sure to change the server.ports.query and server.config.query_port accordingly.
+      - name: query
+        port: 27015
+        protocol: UDP
+        targetPort: 27015
+      # -- (dict) The "rcon" port definition .
+      # If you change this, make sure to change the server.ports.rcon and server.config.rcon.port accordingly.
+      - name: rcon
+        port: 25575
+        protocol: UDP
+        targetPort: 25575
+  # -- (dict) Change the game server configuration.
+  # If you change those, make sure to change the service.ports and server.ports accordingly.
+  # Those are directly connected with the container image, providing multiple environment variables to the scripts.
+  # @notationType -- bigValue
+  config:
+    # -- Additional annotations to the resources
+    annotations: { }
+    # -- Additional labels to the resources
+    labels: { }
+    puid: 1000
+    pgid: 1000
+    port: 8211
+    # -- (string) The query port of the game.
+    query_port: 27015
+    # -- The max number of players supported.
+    max_players: 16
+    # -- (bool) Enables the multithreading, allowing the usage of up to 4 cores (needs citation)
+    multithreading: true
+    # -- (dict) Remote connection configuration.
+    # Allows the remote connection and management for the server.
+    # Those are directly connected with the container image, providing multiple environment variables to the scripts.
+    # @notationType -- bigValue
+    rcon:
+      # -- (bool) Enables/disables the rcon port.
+      enable: true
+      # -- (string) The port for rcon. If you change this, make sure to change the service.ports and server.ports accordingly.
+      port: 25575
+      # -- (string) If not provided, a random password will be generated and stored on the secret.
+      password: ""
+    community:
+      # -- (bool) Enables/disables the visibility of this server on Steam community servers list.
+      enable: true
+      # -- (string) If not provided, a random password will be generated and stored on the secret.
+      password: ""
+      # -- (string) If not provided, a random server name will be generated with the "palworld_" prefix.
+    server_name: ""
+    # -- (string) The timezone used for time stamping backup server. Use the IANA TZ format with Area/Location
+    # See the [list of TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations)
+    timezone: "UTC"
+    # -- (string) You can manually specify the global IP address of the network on which the server running.
+    # If not specified, it will be detected automatically. If it does not work well, try manual configuration.
+    public_ip: ""
+    # -- (string) You can manually specify the port number of the network on which the server running.
+    # If not specified, it will be detected automatically. If it does not work well, try manual configuration.
+    public_port: ""
+    # -- (string) Your server description to be shown in game
+    server_description: ""
+    # -- (string) Update/Install the server when the container starts.
+    # THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER
+    update_on_boot: true
+    # -- (object) Configures the game world settings.
+    # The key:values here should represent in game accepted values.
+    # Wrap all values with quotes here to avoid validation issues.
+    # @notationType -- bigValue
+    world_parameters:
+      DAYTIME_SPEEDRATE: "1.000000"
+      NIGHTTIME_SPEEDRATE: "1.000000"
+      EXP_RATE: "1.000000"
+      PAL_CAPTURE_RATE: "1.000000"
+      PAL_SPAWN_NUM_RATE: "1.000000"
+      PAL_DAMAGE_RATE_ATTACK: "1.000000"
+      PAL_DAMAGE_RATE_DEFENSE: "1.000000"
+      PLAYER_DAMAGE_RATE_ATTACK: "1.000000"
+      PLAYER_DAMAGE_RATE_DEFENSE: "1.000000"
+      PLAYER_STOMACH_DECREASE_RATE: "1.000000"
+      PLAYER_STAMINA_DECREASE_RATE: "1.000000"
+      PLAYER_AUTO_HP_REGEN_RATE: "1.000000"
+      PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP: "1.000000"
+      PAL_STOMACH_DECREASE_RATE: "1.000000"
+      PAL_STAMINA_DECREASE_RATE: "1.000000"
+      PAL_AUTO_HP_REGEN_RATE: "1.000000"
+      PAL_AUTO_HP_REGEN_RATE_IN_SLEEP: "1.000000"
+      BUILD_OBJECT_DAMAGE_RATE: "1.000000"
+      BUILD_OBJECT_DETERIORATION_DAMAGE_RATE: "1.000000"
+      COLLECTION_DROP_RATE: "1.000000"
+      COLLECTION_OBJECT_HP_RATE: "1.000000"
+      COLLECTION_OBJECT_RESPAWN_SPEED_RATE: "1.000000"
+      ENEMY_DROP_ITEM_RATE: "1.000000"
+      DEATH_PENALTY: "All"
+      ENABLE_PLAYER_TO_PLAYER_DAMAGE: "False"
+      ENABLE_FRIENDLY_FIRE: "False"
+      ENABLE_INVADER_ENEMY: "True"
+      ACTIVE_UNKO: "True"
+      ENABLE_AIM_ASSIST_PAD: "True"
+      ENABLE_AIM_ASSIST_KEYBOARD: "False"
+      DROP_ITEM_MAX_NUM: "3000"
+      DROP_ITEM_MAX_NUM_UNKO: "1000"
+      BASE_CAMP_MAX_NUM: "128"
+      BASE_CAMP_WORKER_MAXNUM: "15"
+      DROP_ITEM_ALIVE_MAX_HOURS: "1.000000"
+      AUTO_RESET_GUILD_NO_ONLINE_PLAYERS: "False"
+      AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS: "72.000000"
+      GUILD_PLAYER_MAX_NUM: "3"
+      PAL_EGG_DEFAULT_HATCHING_TIME: "72.000000"
+      WORK_SPEED_RATE: "1.000000"
+      IS_MULTIPLAY: "False"
+      IS_PVP: "False"
+      CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP: "False"
+      ENABLE_NON_LOGIN_PENALTY: "True"
+      ENABLE_FAST_TRAVEL: "True"
+      IS_START_LOCATION_SELECT_BY_MAP: "True"
+      EXIST_PLAYER_AFTER_LOGOUT: "False"
+      ENABLE_DEFENSE_OTHER_GUILD_PLAYER: "False"
+      COOP_PLAYER_MAX_NUM: "4"
+      REGION: ""
+      USEAUTH: "True"
+      BAN_LIST_URL: "https://api.palworldgame.com/api/banlist.txt"
