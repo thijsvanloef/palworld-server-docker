@@ -71,6 +71,14 @@ server:
     labels: { }
     # -- (string) The type of service to be created.
     type: LoadBalancer
+    # -- (dict) The "healthz" definition .
+    # Use if you need to create a TCP health check for load balancers on cloud services.
+    healthz:
+      enabled: false
+      name: healthz
+      port: 80
+      protocol: TCP
+      targetPort: 80
     # -- (dict) Change the ports to be mapped to the service.
     # If you change those, make sure to change the server.config and server.ports accordingly.
     # @notationType -- bigValue
@@ -93,12 +101,6 @@ server:
         port: 25575
         protocol: UDP
         targetPort: 25575
-      # -- (dict) The "healthz" port definition .
-      # Used only to create a health check for load balancers on cloud services.
-      - name: healthz
-        port: 80
-        protocol: TCP
-        targetPort: 80
   # -- (dict) Change the game server configuration.
   # If you change those, make sure to change the service.ports and server.ports accordingly.
   # Those are directly connected with the container image, providing multiple environment variables to the scripts.
