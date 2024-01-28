@@ -1,0 +1,28 @@
+apiVersion: v1
+entries:
+  palworld:
+  - apiVersion: v2
+    appVersion: latest
+    created: "2024-01-28T21:10:54.580479514Z"
+    description: This chart will provide a Palworld server installation on a kubernetes
+      cluster.
+    digest: 033e4e1f4dddddb4b9af0700d63d292b76023820f9eccada15e24c3f96afcf5a
+    home: https://github.com/thijsvanloef/palworld-server-docker
+    icon: https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg
+    keywords:
+    - palworld
+    - server
+    - kubernetes
+    - helm
+    maintainers:
+    - email: filipe.souza@mestre8d.com
+      name: Filipe Souza
+      url: https://github.com/Filipe-Souza
+    name: palworld
+    sources:
+    - https://github.com/thijsvanloef/palworld-server-docker
+    type: application
+    urls:
+    - https://github.com/thijsvanloef/palworld-server-docker/releases/download/chart-0.0.2/palworld-0.0.2.tgz
+    version: 0.0.2
+generated: "2024-01-28T21:10:54.580486306Z"
