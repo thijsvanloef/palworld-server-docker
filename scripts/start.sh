@@ -6,22 +6,6 @@ if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
 fi
 
-if [ -n "${PLAYERS}" ]; then
-    STARTCOMMAND+=("-players=${PLAYERS}")
-fi
-
-if [ "${COMMUNITY}" = true ]; then
-    STARTCOMMAND+=("EpicApp=PalServer")
-fi
-
-if [ -n "${PUBLIC_IP}" ]; then
-    STARTCOMMAND+=("-publicip=${PUBLIC_IP}")
-fi
-
-if [ -n "${PUBLIC_PORT}" ]; then
-    STARTCOMMAND+=("-publicport=${PUBLIC_PORT}")
-fi
-
 if [ -n "${SERVER_NAME}" ]; then
     STARTCOMMAND+=("-servername=${SERVER_NAME}")
 fi
@@ -40,6 +24,10 @@ fi
 
 if [ -n "${QUERY_PORT}" ]; then
     STARTCOMMAND+=("-queryport=${QUERY_PORT}")
+fi
+
+if [ "${COMMUNITY}" = true ]; then
+    STARTCOMMAND+=("EpicApp=PalServer")
 fi
 
 if [ "${MULTITHREADING}" = true ]; then
@@ -63,6 +51,18 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
+if [ -n "${PLAYERS}" ]; then
+    echo "PLAYERS=${PLAYERS}"
+     sed -E -i "s/ServerPlayerMaxNum=[0-9]*/ServerPlayerMaxNum=$PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
+if [ -n "${PUBLIC_IP}" ]; then
+    echo "PUBLIC_IP=${PUBLIC_IP}"
+    sed -E -i "s/PublicIP=\"[^\"]*\"/PublicIP=\"$PUBLIC_IP\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
+if [ -n "${PUBLIC_PORT}" ]; then
+    echo "PUBLIC_PORT=${PUBLIC_PORT}"
+    sed -E -i "s/PublicPort=[0-9]*/PublicPort=$PUBLIC_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
 if [ -n "${DIFFICULTY}" ]; then
     echo "DIFFICULTY=$DIFFICULTY"
     sed -E -i "s/Difficulty=[a-zA-Z]*/Difficulty=$DIFFICULTY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
