@@ -157,6 +157,7 @@ functions = [
 ############################## Settings ###############################
 #######################################################################
 def _parseIni():
+    # config = configparser.ConfigParser(encoding='utf-8')
     config = configparser.ConfigParser()
     config.read(PATH_DEFAULT_PALWORLD_SETTINGS_INI)
     option_settings = config.get('/Script/Pal.PalGameWorldSettings', 'OptionSettings')
@@ -172,8 +173,10 @@ def _parseIni():
     return settings_dict
 
 def _bindJsonToIni(palGameWorldSettings):
+    # config = configparser.ConfigParser(encoding='utf-8')
     config = configparser.ConfigParser()
     config.read(PATH_DEFAULT_PALWORLD_SETTINGS_INI)
+
     # palGameWorldSettings
     # [
     #     {
@@ -208,7 +211,7 @@ def toRequiredFormat(settings_dict):
 
 
 def _parseDescription():
-    with open(PATH_DESCRIPTION_JSON, 'r') as f:
+    with open(PATH_DESCRIPTION_JSON, 'r', encoding='utf-8') as f:
         descriptions = json.load(f)
     return descriptions
 
@@ -220,15 +223,15 @@ def _createDefaultPalWorldSettingsJson():
 
 def _loadDefaultPalWorldSettingsJson():
     if os.path.exists(PATH_DEFAULT_PALWORLD_SETTINGS_JSON):
-        with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'r') as f:
+        with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'r', encoding='utf-8') as f:
             defaultPalWorldSettingsJson = json.load(f)
     else:
         defaultPalWorldSettingsJson = {}
     return defaultPalWorldSettingsJson
 
 def _saveDefaultPalWorldSettingsJson(defaultPalWorldSettingsJson):
-    with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'w') as f:
-        json.dump(defaultPalWorldSettingsJson, f, indent=4)
+    with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'w', encoding='utf-8') as f:
+        json.dump(defaultPalWorldSettingsJson, f, indent=4, ensure_ascii=False)
 
 
 
