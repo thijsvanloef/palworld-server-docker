@@ -293,8 +293,8 @@ if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
     
     # Assuming BACKUP_CRON_EXPRESSION is set and is valid
-    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup  >/dev/null 2>&1" > "/home/steam/server/crontab"
-    crontab "/home/steam/server/crontab"
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" > "/home/steam/server/crontab"
+    supercronic "/home/steam/server/crontab" &
 fi
 
 # Configure RCON settings
