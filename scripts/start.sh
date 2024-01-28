@@ -85,6 +85,6 @@ default:
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-echo "bash -c '${STARTCOMMAND[@]}'"
+echo "bash -c '${STARTCOMMAND[*]}'"
 "${STARTCOMMAND[@]}"
 
