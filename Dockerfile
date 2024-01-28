@@ -5,18 +5,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-user-dirs=0.17-2 \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
-    && apt-get install -y cron \
+    cron \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN wget -q https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz -O - | tar -xz && \
     mv rcon-0.10.3-amd64_linux/rcon /usr/bin/rcon-cli && \
-    rmdir /tmp/dumps
-
-RUN rm -f /var/run/crond.pid
-COPY ./scripts/backup.sh /usr/local/bin/backup
-RUN chmod +x /usr/local/bin/backup
+    rmdir /tmp/dumps && \
+    rm -f /var/run/crond.pid
 
 ENV PORT= \
     PUID=1000 \
@@ -34,7 +31,7 @@ ENV PORT= \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
     TZ=UTC \
-    SERVER_DESCRIPTION=
+    SERVER_DESCRIPTION= \
     BACKUP_ENABLED=false \
     DAYS_TO_KEEP= \
     BACKUP_CRON_EXPRESSION=
