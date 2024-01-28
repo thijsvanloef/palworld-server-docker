@@ -127,13 +127,13 @@ if [ -n "${PAL_STAMINA_DECREASE_RATE}" ]; then
     echo "PAL_STAMINA_DECREASE_RATE=$PAL_STAMINA_DECREASE_RATE"
     sed -E -i "s/PalStaminaDecreaceRate=[+-]?([0-9]*[.])?[0-9]+/PalStaminaDecreaceRate=$PAL_STAMINA_DECREASE_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
-if [ -n "${PAL_AUTO_HP_REGENE_RATE}" ]; then
-    echo "PAL_AUTO_HP_REGENE_RATE=$PAL_AUTO_HP_REGENE_RATE"
-    sed -E -i "s/PalAutoHPRegeneRate=[+-]?([0-9]*[.])?[0-9]+/PalAutoHPRegeneRate=$PAL_AUTO_HP_REGENE_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+if [ -n "${PAL_AUTO_HP_REGEN_RATE}" ]; then
+    echo "PAL_AUTO_HP_REGEN_RATE=$PAL_AUTO_HP_REGEN_RATE"
+    sed -E -i "s/PalAutoHPRegeneRate=[+-]?([0-9]*[.])?[0-9]+/PalAutoHPRegeneRate=$PAL_AUTO_HP_REGEN_RATE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
-if [ -n "${PAL_AUTO_HP_REGENE_RATE_IN_SLEEP}" ]; then
-    echo "PAL_AUTO_HP_REGENE_RATE_IN_SLEEP=$PAL_AUTO_HP_REGENE_RATE_IN_SLEEP"
-    sed -E -i "s/PalAutoHpRegeneRateInSleep=[+-]?([0-9]*[.])?[0-9]+/PalAutoHpRegeneRateInSleep=$PAL_AUTO_HP_REGENE_RATE_IN_SLEEP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+if [ -n "${PAL_AUTO_HP_REGEN_RATE_IN_SLEEP}" ]; then
+    echo "PAL_AUTO_HP_REGEN_RATE_IN_SLEEP=$PAL_AUTO_HP_REGEN_RATE_IN_SLEEP"
+    sed -E -i "s/PalAutoHpRegeneRateInSleep=[+-]?([0-9]*[.])?[0-9]+/PalAutoHpRegeneRateInSleep=$PAL_AUTO_HP_REGEN_RATE_IN_SLEEP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${BUILD_OBJECT_DAMAGE_RATE}" ]; then
     echo "BUILD_OBJECT_DAMAGE_RATE=$BUILD_OBJECT_DAMAGE_RATE"
