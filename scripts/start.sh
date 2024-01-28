@@ -51,17 +51,23 @@ cd /palworld || exit
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
 # shellcheck disable=SC2143
-if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+if [ "${ENHANCED_PALWORLD_SETTINGS}" != true ]; then
+    if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
-    printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
+        printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
-    # Server will generate all ini files after first run.
-    su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
+        # Server will generate all ini files after first run.
+        su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
 
-    # Wait for shutdown
-    sleep 5
-    cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+        # Wait for shutdown
+        sleep 5
+        cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    fi
+else
+    # Execute enhanced settings script
+    ./palworld_settings/palworld_settings.sh
 fi
+
 
 if [ -n "${RCON_ENABLED}" ]; then
     echo "RCON_ENABLED=${RCON_ENABLED}"
