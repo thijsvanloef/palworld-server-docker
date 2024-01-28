@@ -137,3 +137,17 @@ server:
       password: ""
       # -- (string) If not provided, a random server name will be generated with the "palworld_" prefix.
     server_name: ""
+    # -- (string) The timezone used for time stamping backup server. Use the IANA TZ format with Area/Location
+    # See the [list of TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations)
+    timezone: "UTC"
+    # -- (string) You can manually specify the global IP address of the network on which the server running.
+    # If not specified, it will be detected automatically. If it does not work well, try manual configuration.
+    public_ip: ""
+    # -- (string) You can manually specify the port number of the network on which the server running.
+    # If not specified, it will be detected automatically. If it does not work well, try manual configuration.
+    public_port: ""
+    # -- (string) Your server description to be shown in game
+    server_description: ""
+    # -- (string) Update/Install the server when the container starts.
+    # THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER
+    update_on_boot: true

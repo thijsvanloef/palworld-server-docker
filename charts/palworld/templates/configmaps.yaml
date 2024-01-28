@@ -38,3 +38,9 @@ data:
   {{ else }}
   SERVER_NAME: {{ printf "%s_%s" "palworld" (randAlphaNum 6 | nospace) }}
   {{ end }}
+  TZ: {{ .Values.server.config.timezone }}
+  PUBLIC_IP: {{ .Values.server.config.public_ip | quote }}
+  PUBLIC_PORT: {{ .Values.server.config.public_port | quote }}
+  SERVER_DESCRIPTION: {{ .Values.server.config.server_description }}
+  UPDATE_ON_BOOT: {{ .Values.server.config.update_on_boot | quote }}
+  QUERY_PORT: {{ .Values.server.config.query_port | quote }}
