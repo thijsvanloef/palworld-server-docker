@@ -289,16 +289,12 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-if [ -n $BACKUP_ENABLED ]; then
+if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
-
-    if [ $BACKUP_ENABLED = true ]; then
-        CRON_EXPRESSION=$([[ -n $BACKUP_CRON_EXPRESSION ]] && echo "$BACKUP_CRON_EXPRESSION" || echo "0 0 * * *")
-        echo "CRON_EXPRESSION=${CRON_EXPRESSION}"
-        echo "${CRON_EXPRESSION} root bash /usr/loca/bin/backup" > /etc/cron.d/backups-cron
-        chmod 0644 /etc/cron.d/backups-cron
-        cron /etc/cron.d/backups-cron
-    fi
+    
+    # Assuming BACKUP_CRON_EXPRESSION is set and is valid
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup  >/dev/null 2>&1" > "/home/steam/server/crontab"
+    crontab "/home/steam/server/crontab"
 fi
 
 # Configure RCON settings

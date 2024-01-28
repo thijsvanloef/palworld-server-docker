@@ -12,8 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN wget -q https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz -O - | tar -xz && \
     mv rcon-0.10.3-amd64_linux/rcon /usr/bin/rcon-cli && \
-    rmdir /tmp/dumps && \
-    rm -f /var/run/crond.pid
+    rmdir /tmp/dumps
 
 ENV PORT= \
     PUID=1000 \

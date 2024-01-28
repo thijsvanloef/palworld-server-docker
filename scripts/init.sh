@@ -22,6 +22,10 @@ term_handler() {
     tail --pid=$killpid -f 2>/dev/null
 }
 
+if [ "${BACKUP_ENABLED}" = true ]; then
+    service cron start
+fi
+
 trap 'term_handler' SIGTERM
 
 su steam -c ./start.sh &
