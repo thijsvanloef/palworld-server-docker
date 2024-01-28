@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "${RCON_ENABLED}" = true ]; then
+        rcon-cli save
+fi
+
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
 DESTINATION_PATH="/palworld/backups"
 FILE_PATH="${DESTINATION_PATH}/backup_palworld_${DATE}.tar.gz"
@@ -12,6 +16,11 @@ fi
 cd /palworld/Pal/ || exit
 
 tar -zcf "$FILE_PATH" "Saved/"
+
+if [ "$(id -u)" -eq 0 ]; then
+        chown steam:steam "$FILE_PATH"
+fi
+
 echo "backup created at $FILE_PATH"
 
 if [[ -n "${DAYS_TO_KEEP}" && "${DAYS_TO_KEEP}" =~ ^[0-9]+$ ]]; then

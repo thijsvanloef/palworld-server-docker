@@ -9,8 +9,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget -q https://github.com/itzg/rcon-cli/releases/download/1.6.4/rcon-cli_1.6.4_linux_amd64.tar.gz -O - | tar -xz
-RUN mv rcon-cli /usr/bin/rcon-cli
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN wget -q https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz -O - | tar -xz && \
+    mv rcon-0.10.3-amd64_linux/rcon /usr/bin/rcon-cli && \
+    rmdir /tmp/dumps
 
 RUN rm -f /var/run/crond.pid
 COPY ./scripts/backup.sh /usr/local/bin/backup
@@ -32,14 +34,14 @@ ENV PORT= \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
     TZ=UTC \
+    SERVER_DESCRIPTION=
     BACKUP_ENABLED=false \
     DAYS_TO_KEEP= \
     BACKUP_CRON_EXPRESSION=
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh
-
-RUN mv /home/steam/server/backup.sh /usr/local/bin/backup
+RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
+    mv /home/steam/server/backup.sh /usr/local/bin/backup
 
 WORKDIR /home/steam/server
 
