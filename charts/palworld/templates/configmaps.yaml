@@ -44,3 +44,8 @@ data:
   SERVER_DESCRIPTION: {{ .Values.server.config.server_description }}
   UPDATE_ON_BOOT: {{ .Values.server.config.update_on_boot | quote }}
   QUERY_PORT: {{ .Values.server.config.query_port | quote }}
+  {{ if .Values.server.config.world_parameters }}
+  {{- with .Values.server.config.world_parameters }}
+  {{- toYaml . | nindent 2  }}
+  {{- end }}
+  {{ end }}
