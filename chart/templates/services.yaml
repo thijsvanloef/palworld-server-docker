@@ -22,6 +22,12 @@ spec:
   selector:
     app.kubernetes.io/component: "{{ .Release.Name }}-server"
   ports:
+    {{ if .Values.server.service.healthz.enabled }}
+    - name: {{ .Values.server.service.healthz.name }}
+      port: {{ .Values.server.service.healthz.port }}
+      protocol: {{ .Values.server.service.healthz.protocol }}
+      targetPort: {{ .Values.server.service.healthz.targetPort }}
+    {{ end }}
     {{- with .Values.server.service.ports }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

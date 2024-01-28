@@ -6,6 +6,8 @@ metadata:
   name: palworld-server
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: palworld-server
@@ -37,13 +39,7 @@ spec:
           volumeMounts:
             - mountPath: /palworld
               name: datadir
-            - name: palworld-settings
-              mountPath: /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-              subPath: PalWorldSettings.ini
       volumes:
       - name: datadir
         persistentVolumeClaim:
           claimName: palworld-server-datadir
-      - name: palworld-settings
-        configMap:
-          name: palworld-settings

@@ -8,6 +8,8 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/component: "{{ .Release.Name }}-server"
+  strategy:
+    type: "{{ .Values.server.strategy }}"
   template:
     metadata:
       annotations:
@@ -26,6 +28,7 @@ spec:
         {{- end }}
     spec:
       containers:
+        {{ if .Values.server.service.healthz.enabled }}
         - name: healthz
           image: "chussenot/tiny-server:latest"
           imagePullPolicy: {{ .Values.server.image.imagePullPolicy }}
@@ -33,6 +36,7 @@ spec:
             - name: healthz
               containerPort: 80
               protocol: TCP
+        {{ end }}
         - name: server
           image: "{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.server.image.imagePullPolicy }}
