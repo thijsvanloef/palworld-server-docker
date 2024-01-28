@@ -42,7 +42,7 @@ ENV PORT= \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \
-    BACKUP_CRON_EXPRESSION=0 0 * * *
+    BACKUP_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
