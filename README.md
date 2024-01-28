@@ -264,7 +264,7 @@ The server will run a save before the backup if rcon is enabled.
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
-Any changes made while the server is live will be overwritten.
+Any changes made while the server is live will be overwritten when the server stops.
 
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
 
