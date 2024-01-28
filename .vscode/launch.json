@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Python: Palworld Settings",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/scripts/palworld_settings/palworld_settings.py",
+            "args": [
+                "--workpath=.",
+                "--default-palworld-settings-ini=sample/DefaultPalWorldSettings.ini",
+                "--default-palworld-settings-json=sample/DefaultPalWorldSettings.json",
+                "--palworld-settings-ini=sample/PalWorldSettings.ini",
+                "--description-json=description.json",
+                "--description-lang=ko"
+            ],
+            "console": "internalConsole",
+            "cwd": "${workspaceFolder}/scripts/palworld_settings"
+        }
+    ]
+}
