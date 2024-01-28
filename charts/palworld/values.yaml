@@ -151,6 +151,10 @@ server:
     # -- (string) Update/Install the server when the container starts.
     # THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER
     update_on_boot: true
+    # -- (object) Configures the game world settings.
+    # The key:values here should represent in game accepted values.
+    # Wrap all values with quotes here to avoid validation issues.
+    # @notationType -- bigValue
     world_parameters:
       DAYTIME_SPEEDRATE: "1.000000"
       NIGHTTIME_SPEEDRATE: "1.000000"

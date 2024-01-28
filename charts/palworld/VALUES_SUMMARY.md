@@ -40,6 +40,7 @@ This chart will provide a Palworld server installation on a kubernetes cluster.
 | server.config.server_description | string | `""` | Your server description to be shown in game |
 | server.config.timezone | string | `"UTC"` | The timezone used for time stamping backup server. Use the IANA TZ format with Area/Location See the [list of TZ database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
 | server.config.update_on_boot | string | `true` | Update/Install the server when the container starts. THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER |
+| server.config.world_parameters | object |  | Configures the game world settings. The key:values here should represent in game accepted values. Wrap all values with quotes here to avoid validation issues. |
 | server.image | dict |  | Define the parameters for the server image container |
 | server.image.imagePullPolicy | string | `"IfNotPresent"` | Define the pull policy for the server image. |
 | server.image.name | string | `"thijsvanloef/palworld-server-docker"` | Name of the image, without the tag. |
