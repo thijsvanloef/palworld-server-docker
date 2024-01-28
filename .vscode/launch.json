@@ -21,9 +21,10 @@
                 "--workpath=.",
                 "--default-palworld-settings-ini=sample/DefaultPalWorldSettings.ini",
                 "--default-palworld-settings-json=sample/DefaultPalWorldSettings.json",
-                "--palworld-settings-ini=sample/PalWorldSettings.ini",
+                "--palworld-settings-ini=sample/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini",
                 "--description-json=description.json",
-                "--description-lang=ko"
+                "--description-lang=ko",
+                "--write-json-file-always=true"
             ],
             "console": "internalConsole",
             "cwd": "${workspaceFolder}/scripts/palworld_settings"

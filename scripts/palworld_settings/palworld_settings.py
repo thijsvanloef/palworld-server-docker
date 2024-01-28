@@ -274,8 +274,12 @@ def _convertDefaultPalWorldSettingsJsonToIni(defaultPalWorldSettingsJson):
     return _bindJsonToIni(defaultPalWorldSettingsJson.get(palGameWorldSettings.__name__, {}))
 
 def _saveDefaultPalWorldSettingsIni(config):
-    with open(PATH_PALWORLD_SETTINGS_INI, 'w') as f:
-        config.write(f)
+    dir_path = os.path.dirname(PATH_PALWORLD_SETTINGS_INI)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    with open(PATH_PALWORLD_SETTINGS_INI, 'w', encoding='utf-8') as f:
+        config.write(f, space_around_delimiters=False)
 
 #######################################################################
 ############################## Main ###################################

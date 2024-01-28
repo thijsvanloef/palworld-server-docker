@@ -1,0 +1,376 @@
+{
+    "palGameWorldSettings": [
+        {
+            "key": "Difficulty",
+            "value": "None",
+            "hint": "[None, Casual, Normal, Hard]",
+            "description": "난이도"
+        },
+        {
+            "key": "DayTimeSpeedRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "낮 시간 속도 (0.1 ~ 5)"
+        },
+        {
+            "key": "NightTimeSpeedRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "밤 시간 속도 (0.1 ~ 5)"
+        },
+        {
+            "key": "ExpRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "경험치 비율 (0.1 ~ 20)"
+        },
+        {
+            "key": "PalCaptureRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 포획률 (0.5 ~ 2)"
+        },
+        {
+            "key": "PalSpawnNumRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 출현 비율 (0.5 ~ 3)"
+        },
+        {
+            "key": "PalDamageRateAttack",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal로부터 받는 피해 배율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PalDamageRateDefense",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal에게 주는 피해 배율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerDamageRateAttack",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어로부터 받는 피해 배율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerDamageRateDefense",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어에게 주는 피해 배율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerStomachDecreaceRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어 배고픔 감소율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerStaminaDecreaceRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어 스태미나 감소율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerAutoHPRegeneRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어 자동 HP 회복률 (0.1 ~ 5)"
+        },
+        {
+            "key": "PlayerAutoHpRegeneRateInSleep",
+            "value": "1.000000",
+            "hint": null,
+            "description": "플레이어 수면 중 HP 회복률 (0.1 ~ 5)"
+        },
+        {
+            "key": "PalStomachDecreaceRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 배고픔 감소율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PalStaminaDecreaceRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 스태미나 감소율 (0.1 ~ 5)"
+        },
+        {
+            "key": "PalAutoHPRegeneRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 자동 HP 회복률 (0.1 ~ 5)"
+        },
+        {
+            "key": "PalAutoHpRegeneRateInSleep",
+            "value": "1.000000",
+            "hint": null,
+            "description": "Pal 수면 중 건강 회복률 (Palbox 내) (0.1 ~ 5)"
+        },
+        {
+            "key": "BuildObjectDamageRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "구조물 피해 배율 (0.1 ~ 3)"
+        },
+        {
+            "key": "BuildObjectDeteriorationDamageRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "구조물 열화 피해율 (0 ~ 10)"
+        },
+        {
+            "key": "CollectionDropRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "수집 가능 아이템 배율 (0.5 ~ 3)"
+        },
+        {
+            "key": "CollectionObjectHpRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "수집 가능 오브젝트 HP 배율 (0.5 ~ 3)"
+        },
+        {
+            "key": "CollectionObjectRespawnSpeedRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "수집 가능 오브젝트 리스폰 간격 (0.5 ~ 3)"
+        },
+        {
+            "key": "EnemyDropItemRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "적 드롭 아이템 배율 (0.5 ~ 3)"
+        },
+        {
+            "key": "DeathPenalty",
+            "value": "All",
+            "hint": "[None, Item, ItemAndEquipment, All]",
+            "description": "사망 패널티 -> None : 손실 없음, Item : 장비를 제외한 아이템 손실, ItemAndEquipment : 아이템 및 장비 손실, All : 모든 아이템, 장비, 인벤토리 내 Pal 손실"
+        },
+        {
+            "key": "bEnablePlayerToPlayerDamage",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bEnablePlayerToPlayerDamage in lang: ko"
+        },
+        {
+            "key": "bEnableFriendlyFire",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bEnableFriendlyFire in lang: ko"
+        },
+        {
+            "key": "bEnableInvaderEnemy",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bEnableInvaderEnemy in lang: ko"
+        },
+        {
+            "key": "bActiveUNKO",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bActiveUNKO in lang: ko"
+        },
+        {
+            "key": "bEnableAimAssistPad",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bEnableAimAssistPad in lang: ko"
+        },
+        {
+            "key": "bEnableAimAssistKeyboard",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bEnableAimAssistKeyboard in lang: ko"
+        },
+        {
+            "key": "DropItemMaxNum",
+            "value": "3000",
+            "hint": null,
+            "description": "0 ~ 5000"
+        },
+        {
+            "key": "DropItemMaxNum_UNKO",
+            "value": "100",
+            "hint": null,
+            "description": "No description for key: DropItemMaxNum_UNKO in lang: ko"
+        },
+        {
+            "key": "BaseCampMaxNum",
+            "value": "128",
+            "hint": null,
+            "description": "No description for key: BaseCampMaxNum in lang: ko"
+        },
+        {
+            "key": "BaseCampWorkerMaxNum",
+            "value": "15",
+            "hint": null,
+            "description": "1~20"
+        },
+        {
+            "key": "DropItemAliveMaxHours",
+            "value": "1.000000",
+            "hint": null,
+            "description": "No description for key: DropItemAliveMaxHours in lang: ko"
+        },
+        {
+            "key": "bAutoResetGuildNoOnlinePlayers",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bAutoResetGuildNoOnlinePlayers in lang: ko"
+        },
+        {
+            "key": "AutoResetGuildTimeNoOnlinePlayers",
+            "value": "72.000000",
+            "hint": null,
+            "description": "No description for key: AutoResetGuildTimeNoOnlinePlayers in lang: ko"
+        },
+        {
+            "key": "GuildPlayerMaxNum",
+            "value": "20",
+            "hint": null,
+            "description": "길드 최대 플레이어 수 (1 ~ 100)"
+        },
+        {
+            "key": "PalEggDefaultHatchingTime",
+            "value": "72.000000",
+            "hint": null,
+            "description": "Pal 알 부화 기본 시간 (시간) (0 ~ 240)"
+        },
+        {
+            "key": "WorkSpeedRate",
+            "value": "1.000000",
+            "hint": null,
+            "description": "No description for key: WorkSpeedRate in lang: ko"
+        },
+        {
+            "key": "bIsMultiplay",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bIsMultiplay in lang: ko"
+        },
+        {
+            "key": "bIsPvP",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bIsPvP in lang: ko"
+        },
+        {
+            "key": "bCanPickupOtherGuildDeathPenaltyDrop",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bCanPickupOtherGuildDeathPenaltyDrop in lang: ko"
+        },
+        {
+            "key": "bEnableNonLoginPenalty",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bEnableNonLoginPenalty in lang: ko"
+        },
+        {
+            "key": "bEnableFastTravel",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bEnableFastTravel in lang: ko"
+        },
+        {
+            "key": "bIsStartLocationSelectByMap",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bIsStartLocationSelectByMap in lang: ko"
+        },
+        {
+            "key": "bExistPlayerAfterLogout",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bExistPlayerAfterLogout in lang: ko"
+        },
+        {
+            "key": "bEnableDefenseOtherGuildPlayer",
+            "value": "False",
+            "hint": null,
+            "description": "No description for key: bEnableDefenseOtherGuildPlayer in lang: ko"
+        },
+        {
+            "key": "CoopPlayerMaxNum",
+            "value": "4",
+            "hint": null,
+            "description": "No description for key: CoopPlayerMaxNum in lang: ko"
+        },
+        {
+            "key": "ServerPlayerMaxNum",
+            "value": "32",
+            "hint": null,
+            "description": "서버에 참여할 수 있는 최대 인원 수"
+        },
+        {
+            "key": "ServerName",
+            "value": "\"Default Palworld Server\"",
+            "hint": null,
+            "description": "서버 이름"
+        },
+        {
+            "key": "ServerDescription",
+            "value": "\"\"",
+            "hint": null,
+            "description": "서버 설명"
+        },
+        {
+            "key": "AdminPassword",
+            "value": "\"\"",
+            "hint": null,
+            "description": "관리자 비밀번호"
+        },
+        {
+            "key": "ServerPassword",
+            "value": "\"\"",
+            "hint": null,
+            "description": "서버 비밀번호 설정"
+        },
+        {
+            "key": "PublicPort",
+            "value": "8211",
+            "hint": null,
+            "description": "공용 포트 번호"
+        },
+        {
+            "key": "PublicIP",
+            "value": "\"\"",
+            "hint": null,
+            "description": "공용 IP"
+        },
+        {
+            "key": "RCONEnabled",
+            "value": "False",
+            "hint": null,
+            "description": "RCON 활성화"
+        },
+        {
+            "key": "RCONPort",
+            "value": "25575",
+            "hint": null,
+            "description": "RCON 포트 번호"
+        },
+        {
+            "key": "Region",
+            "value": "\"\"",
+            "hint": null,
+            "description": "No description for key: Region in lang: ko"
+        },
+        {
+            "key": "bUseAuth",
+            "value": "True",
+            "hint": null,
+            "description": "No description for key: bUseAuth in lang: ko"
+        },
+        {
+            "key": "BanListURL",
+            "value": "\"https://api.palworldgame.com/api/banlist.txt\"",
+            "hint": null,
+            "description": "No description for key: BanListURL in lang: ko"
+        }
+    ]
+}
