@@ -238,7 +238,7 @@ send discord message with docker run:
 ```sh
 -e DISCORD_WEBHOOK="https://discord.com/api/webhooks/xxxx/xxxxx" \
 -e DISCORD_PRE_INIT_MESSAGE="Server initializing" \
--e PRE_INIT_HOOK='curl -sfSL -X POST -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$DISCORD_PRE_INIT_MESSAGE\"}" "$DISCORD_WEBHOOK"'
+-e PRE_INIT_HOOK='curl -sfSL -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$DISCORD_PRE_INIT_MESSAGE\"}" "$DISCORD_WEBHOOK"'
 ```
 
 send discord message with docker compose:
@@ -246,7 +246,7 @@ send discord message with docker compose:
 ```yaml
 - DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxx/xxxxx
 - DISCORD_PRE_INIT_MESSAGE="Server initializing..."
-- 'PRE_INIT_HOOK=curl -sfSL -X POST -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$$(eval echo $$DISCORD_PRE_INIT_MESSAGE)\"}" $$DISCORD_WEBHOOK'
+- 'PRE_INIT_HOOK=curl -sfSL -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$$(eval echo $$DISCORD_PRE_INIT_MESSAGE)\"}" $$DISCORD_WEBHOOK'
 ```
 
 ## Reporting Issues/Feature Requests
