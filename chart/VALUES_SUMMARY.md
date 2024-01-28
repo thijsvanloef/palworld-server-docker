@@ -1,8 +1,8 @@
 # palworld
 
-![Version: 0.0.0](https://img.shields.io/badge/Version-0.0.0-informational?style=flat-square)
-![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
-![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
+![Version: 0.0.0](https://img.shields.io/badge/Version-0.0.0-informational)
+![Type: application](https://img.shields.io/badge/Type-application-informational)
+![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational)
 
 This chart can provide an rAthena emulator installation on a Kubernetes cluster.
 
@@ -50,18 +50,18 @@ This chart can provide an rAthena emulator installation on a Kubernetes cluster.
 | server.service | dict |  | Change the service configuration. If you change those, make sure to change the server.config and server.ports accordingly. |
 | server.service.annotations | object | `{}` | Additional annotations to the resources |
 | server.service.enabled | bool | `true` | Enables the creation of the service component. |
+| server.service.healthz | dict | `{"enabled":false,"name":"healthz","port":80,"protocol":"TCP","targetPort":80}` | The "healthz" definition . Use if you need to create a TCP health check for load balancers on cloud services. |
 | server.service.labels | object | `{}` | Additional labels to the resources |
 | server.service.ports | dict |  | Change the ports to be mapped to the service. If you change those, make sure to change the server.config and server.ports accordingly. |
 | server.service.ports[0] | dict | `{"name":"game","port":8211,"protocol":"UDP","targetPort":8211}` | The "game" port definition. If you change this, make sure to change the server.ports.game and server.config.port accordingly. |
 | server.service.ports[1] | dict | `{"name":"query","port":27015,"protocol":"UDP","targetPort":27015}` | The "query" port definition . If you change this, make sure to change the server.ports.query and server.config.query_port accordingly. |
 | server.service.ports[2] | dict | `{"name":"rcon","port":25575,"protocol":"UDP","targetPort":25575}` | The "rcon" port definition . If you change this, make sure to change the server.ports.rcon and server.config.rcon.port accordingly. |
-| server.service.ports[3] | dict | `{"name":"healthz","port":80,"protocol":"TCP","targetPort":80}` | The "healthz" port definition . Used only to create a health check for load balancers on cloud services. |
 | server.service.type | string | `"LoadBalancer"` | The type of service to be created. |
-| server.storage | dict | `{"external":false,"externalName":"","preventDelete":false,"size":"10Gi","storageClassName":""}` | Define some parameters for the storage volume |
+| server.storage | dict | `{"external":false,"externalName":"","preventDelete":false,"size":"12Gi","storageClassName":""}` | Define some parameters for the storage volume |
 | server.storage.external | bool | `false` | Define if it will use an existing PVC containing the installation data. |
 | server.storage.externalName | bool | `""` | The external PVC name to use. |
 | server.storage.preventDelete | bool | `false` | Keeps helm from deleting the PVC. By default, helm does not delete pvcs. |
-| server.storage.size | string | `"10Gi"` | The size of the pvc storage. |
+| server.storage.size | string | `"12Gi"` | The size of the pvc storage. |
 | server.storage.storageClassName | string | `""` | The storage class name. |
 
 ----------------------------------------------
