@@ -150,11 +150,16 @@ def autoBroadcastMessage():
     # TODO
     pass
 
+def debugLog():
+    # TODO print ini file to log
+    pass
+
 functions = [
     palGameWorldSettings, 
     # serverBackupSchedule, 
     # autoRestartForMemoryLeak, 
-    # autoBroadcastMessage
+    # autoBroadcastMessage,
+    # debugLog,
 ]
 
 #######################################################################
