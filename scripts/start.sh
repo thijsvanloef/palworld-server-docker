@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "${UPDATE_ON_BOOT}" = true ]; then
+    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+    /home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+fi
+
 STARTCOMMAND=("./PalServer.sh")
 
 if [ -n "${PORT}" ]; then
@@ -56,7 +61,7 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
 
     # Server will generate all ini files after first run.
-    su steam -c "timeout --preserve-status 15s ./PalServer.sh 1> /dev/null "
+    timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
 
     # Wait for shutdown
     sleep 5
@@ -80,6 +85,6 @@ default:
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-echo "bash -c '${STARTCOMMAND[*]}'"
-su steam -c "bash -c '${STARTCOMMAND[*]}'"
+echo "${STARTCOMMAND[*]}"
+"${STARTCOMMAND[@]}"
 
