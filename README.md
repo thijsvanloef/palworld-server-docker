@@ -141,6 +141,8 @@ It is highly recommended you set the following environment values before startin
 | RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                                 |
 | RCON_PORT          | RCON port to connect to                                                                                                                                                                             | 25575          | 1024-65535                                                                                                 |
 | QUERY_PORT         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015          | 1024-65535                                                                                                 |
+| BACKUP_CRON_EXPRESSION  | Setting affects frequency of automatic backups. | 0 0 * * * | Needs a Cron-Expression - See [Cron expression](#Configuring-Automatic-Backups-with-Cron) |
+| BACKUP_ENABLED | Enables automatic backups | true | true/false |
 
 *highly recommended to set
 
@@ -201,38 +203,18 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
-## Setting Up Automatic Backups with Cron
+## Configuring Automatic Backups with Cron
 
-Setting Up Automatic Backups with Cron
-
-### Environment Variables
-
-**DAYS_TO_KEEP:**
-
-Description: This environment variable represents the number of days to retain backup files. 
-It is used in the cleanup process to remove backup files older than the specified duration.
-
-Example Usage: If set to 7, backup files older than 7 days will be deleted during the cleanup.
-
-**BACKUP_CRON_EXPRESSION:**
-
-Description: This environment variable defines the cron expression for scheduling automatic backups. 
-It determines when the backup script should run at specific intervals.
+The server is automatically backed up everynight at midnight according to the timezone set with TZ
 
 Example Usage: If set to 0 2 * * *, the backup script will run every day at 2:00 AM.
+
+In a Cron-Expression, you define an interval for when to run jobs. This image uses Supercronic for crons, see https://github.com/aptible/supercronic#crontab-format or https://crontab-generator.org
 
 **BACKUP_ENABLED:**
 
 Description: This environment variable indicates whether automatic backups are enabled or not. 
 If set to a non-empty value, automatic backups will be disabled.
-
-Example:
-
-```bash
-DAYS_TO_KEEP=7
-BACKUP_CRON_EXPRESSION="0 2 * * *"
-BACKUP_ENABLED=true
-```
 
 ## Editing Server Settings
 
