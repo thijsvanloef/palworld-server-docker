@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "${UPDATE_ON_BOOT}" = true ]; then
+    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+    /home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+fi
+
 STARTCOMMAND=("./PalServer.sh")
 
 if [ -n "${PORT}" ]; then
@@ -80,6 +85,6 @@ default:
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-echo "${STARTCOMMAND[*]}"
+echo "bash -c '${STARTCOMMAND[*]}'"
 "${STARTCOMMAND[@]}"
 

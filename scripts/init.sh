@@ -6,12 +6,6 @@ if ! [[[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]]; then
 fi
 
 mkdir -p /palworld/backups
-#chown -R steam:steam /palworld
-
-if [ "${UPDATE_ON_BOOT}" = true ]; then
-    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
-    /home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
-fi
 
 term_handler() {
     if [ "${RCON_ENABLED}" = true ]; then
@@ -25,6 +19,7 @@ term_handler() {
 
 trap 'term_handler' SIGTERM
 
-./start.sh &
+su steam -c ./start.sh &
+# Process ID of su
 killpid="$!"
 wait $killpid
