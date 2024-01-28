@@ -15,4 +15,3 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 echo "backup created at $FILE_PATH"
-
