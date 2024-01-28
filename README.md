@@ -99,7 +99,8 @@ docker run -d \
 ```
 
 > [!TIP]
-> If you want to stop the container with a custom stop grace period then run: `docker stop --name palworld-server --time 30`
+> If you want to stop the container with a custom stop grace period then run:
+> `docker stop --name palworld-server --time 30`
 
 ### Kubernetes
 
