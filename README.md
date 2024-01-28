@@ -48,6 +48,7 @@ services:
       image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
+      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
@@ -96,6 +97,10 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest
 
 ```
+
+> [!TIP]
+> If you want to stop the container with a custom stop grace period then run:
+> `docker stop --name palworld-server --time 30`
 
 ### Kubernetes
 
