@@ -232,7 +232,7 @@ if [ -n "${RCON_PORT}" ]; then
     echo "RCON_PORT=${RCON_PORT}"
 fi
 
-# Value used in sed
+# Values used in sed
 PLAYERS="${PLAYERS:-\1}"
 PUBLIC_IP="${PUBLIC_IP:-\1}"
 PUBLIC_PORT="${PUBLIC_PORT:-\1}"
@@ -291,7 +291,6 @@ USEAUTH="${USEAUTH:-\1}"
 BAN_LIST_URL="${BAN_LIST_URL:-\1}"
 RCON_ENABLED="${RCON_ENABLED:-\1}"
 RCON_PORT="${RCON_PORT:-\1}"
-
 
 # Requires all non number values to be declared as those expressions need updating to use a replacement
 sed -E  \
