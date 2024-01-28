@@ -21,5 +21,7 @@ services:
          - SERVER_NAME="World of Pals"
          - SERVER_DESCRIPTION=""
          - ENHANCED_PALWORLD_SETTINGS=false
+         - ENHANCED_PALWORLD_SETTINGS_LANG="en" # ko, en supported
+
       volumes:
          - ./palworld:/palworld/

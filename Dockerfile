@@ -30,6 +30,7 @@ ENV PORT= \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     ENHANCED_PALWORLD_SETTINGS=false \
+    ENHANCED_PALWORLD_SETTINGS_LANG=en
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
