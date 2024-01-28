@@ -1,6 +1,6 @@
 # using standard library for simplicity
+import re
 import json
-import inspect
 import argparse
 import configparser
 import os
@@ -120,7 +120,10 @@ def palGameWorldSettings():
                 if element['lang'] == 'en':
                     description = element
                     break
-        else: descriptionForKey = description.get('description', {}).get(key, FALLBACK_DESCRIPTION.format(key, description['lang']))
+        else: 
+            descriptionForKey = description.get('description', {}).get(key)
+            if descriptionForKey is None or descriptionForKey == '' or descriptionForKey == '""':
+                descriptionForKey = FALLBACK_DESCRIPTION.format(key, description['lang'])
         
         resultPalWorldSettings.append({
             'key': key,
@@ -149,7 +152,6 @@ functions = [
     # autoRestartForMemoryLeak, 
     # autoBroadcastMessage
 ]
-palGameWorldSettingsName = inspect.getfunction(palGameWorldSettings).__name__
 
 #######################################################################
 ############################## Settings ###############################
@@ -157,8 +159,53 @@ palGameWorldSettingsName = inspect.getfunction(palGameWorldSettings).__name__
 def _parseIni():
     config = configparser.ConfigParser()
     config.read(PATH_DEFAULT_PALWORLD_SETTINGS_INI)
-    settings = dict(config['/Script/Pal.PalGameWorldSettings'])
-    return settings
+    option_settings = config.get('/Script/Pal.PalGameWorldSettings', 'OptionSettings')
+    option_settings_match = re.search(r'\((.*?)\)', option_settings)
+    if option_settings_match:
+        option_settings_value = option_settings_match.group(1)
+        settings_list = option_settings_value.split(",")
+
+        settings_dict = {}
+        for setting in settings_list:
+            key, value = setting.split("=")
+            settings_dict[key.strip()] = value.strip()
+    return settings_dict
+
+def _bindJsonToIni(palGameWorldSettings):
+    config = configparser.ConfigParser()
+    config.read(PATH_DEFAULT_PALWORLD_SETTINGS_INI)
+    # palGameWorldSettings
+    # [
+    #     {
+    #         "key": "Difficulty",
+    #         "value": "None"
+    #         "hint": "[None, Casual, Normal, Hard]"
+    #         "discrption": "난이도를 설정합니다."
+    #     },
+    #     {
+    #         "key": "DayTimeSpeedRate",
+    #         "value": "1.0",
+    #         "discrption": "낮 경과 속도 (0.1 ~ 5)",
+    #         "default": "1.0"
+    #     }
+    #     ...
+    # ]
+    # to settings_dict
+    # {Difficulty=Normal, DayTimeSpeedRate=1.0, ...}
+    settings_dict = {}
+    for setting in palGameWorldSettings:
+        settings_dict[setting['key']] = setting['value']
+
+    # config['/Script/Pal.PalGameWorldSettings']['OptionSettings'] = toRequiredFormat(settings_dict)
+    config.set('/Script/Pal.PalGameWorldSettings', 'OptionSettings', toRequiredFormat(settings_dict))
+    return config
+
+def toRequiredFormat(settings_dict):
+    settings_list = []
+    for key, value in settings_dict.items():
+        settings_list.append(f"{key}={value}")
+    return f"({','.join(settings_list)})"
+
 
 def _parseDescription():
     with open(PATH_DESCRIPTION_JSON, 'r') as f:
@@ -166,11 +213,9 @@ def _parseDescription():
     return descriptions
 
 def _createDefaultPalWorldSettingsJson():
-    defaultPalWorldSettingsJson = []
+    defaultPalWorldSettingsJson = {}
     for function in functions:
-        defaultPalWorldSettingsJson.append({
-            inspect.getfunction(function).__name__ : function(),
-        })
+        defaultPalWorldSettingsJson[function.__name__] = function()
     return defaultPalWorldSettingsJson
 
 def _loadDefaultPalWorldSettingsJson():
@@ -178,7 +223,7 @@ def _loadDefaultPalWorldSettingsJson():
         with open(PATH_DEFAULT_PALWORLD_SETTINGS_JSON, 'r') as f:
             defaultPalWorldSettingsJson = json.load(f)
     else:
-        defaultPalWorldSettingsJson = []
+        defaultPalWorldSettingsJson = {}
     return defaultPalWorldSettingsJson
 
 def _saveDefaultPalWorldSettingsJson(defaultPalWorldSettingsJson):
@@ -189,23 +234,23 @@ def _saveDefaultPalWorldSettingsJson(defaultPalWorldSettingsJson):
 
 # using REGACY_TO_NEW, KEEP_INVALID_SETTINGS
 def _fixInvalidKeysFromJson(defaultInit, currentJson):
-    # check if the function name is changed
-    for item in currentJson:
-        for key, value in item.items():
-            if key in REGACY_TO_NEW:
-    # if the function name is changed then change the key
-                item[REGACY_TO_NEW[key]] = value
-                del item[key]
-            elif key not in defaultInit and not KEEP_INVALID_SETTINGS:
-    # if the function is removed and KEEP_INVALID_SETTINGS is False then remove the key
-                del item[key]
-    # check if the function is added
-    for item in defaultInit:
-        for key, value in item.items():
-            if key not in currentJson:
-                currentJson.append(item)
+    for key in list(currentJson.keys()):
+        if key not in defaultInit:
+            if not KEEP_INVALID_SETTINGS:
+                currentJson.pop(key)
+            else:
+                # fix invalid key
+                if key in REGACY_TO_NEW:
+                    currentJson[REGACY_TO_NEW[key]] = currentJson.pop(key)
+        
+    for key in defaultInit.keys():
+        if key not in currentJson:
+            currentJson[key] = defaultInit[key]
+    
 
 def _updateHintsAndDescriptions(defaultJson, currentJson):
+    palGameWorldSettingsName = palGameWorldSettings.__name__
+
     # update the hints and descriptions
     for defaultItem in defaultJson.get(palGameWorldSettingsName, []):
         for currentItem in currentJson.get(palGameWorldSettingsName, []):
@@ -214,15 +259,7 @@ def _updateHintsAndDescriptions(defaultJson, currentJson):
                 currentItem['description'] = defaultItem['description']
 
 def _convertDefaultPalWorldSettingsJsonToIni(defaultPalWorldSettingsJson):
-    config = _parseIni()
-    # clear the default '/Script/Pal.PalGameWorldSettings'
-    config['/Script/Pal.PalGameWorldSettings'] = {}
-
-    # add default settings
-    for item in defaultPalWorldSettingsJson.get(palGameWorldSettingsName, []):
-        for key, value in item.items():
-            config['/Script/Pal.PalGameWorldSettings'][key] = value
-    return config
+    return _bindJsonToIni(defaultPalWorldSettingsJson.get(palGameWorldSettings.__name__, {}))
 
 def _saveDefaultPalWorldSettingsIni(config):
     with open(PATH_PALWORLD_SETTINGS_INI, 'w') as f:
