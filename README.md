@@ -268,6 +268,7 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 
 > [!IMPORTANT]
 > Changes can only be made to `PalWorldSettings.ini` while the server is off.
+> 
 > Any changes made while the server is live will be overwritten when the server stops.
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
