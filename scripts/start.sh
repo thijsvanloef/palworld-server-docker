@@ -297,7 +297,7 @@ sed -E  \
     -e "s/ServerPlayerMaxNum=([0-9]*)/ServerPlayerMaxNum=$PLAYERS/" \
     -e "s/PublicIP=\"[^\"]*\"/PublicIP=\"$PUBLIC_IP\"/" \
     -e "s/PublicPort=([0-9]*)/PublicPort=$PUBLIC_PORT/" \
-    -e "s/Difficulty=[a-zA-Z]*/Difficulty=$DIFFICULTY/" \
+    -e "s/Difficulty=([a-zA-Z]*)/Difficulty=$DIFFICULTY/" \
     -e "s/DayTimeSpeedRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/DayTimeSpeedRate=$DAYTIME_SPEEDRATE/" \
     -e "s/NightTimeSpeedRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/NightTimeSpeedRate=$NIGHTTIME_SPEEDRATE/" \
     -e "s/ExpRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/ExpRate=$EXP_RATE/" \
@@ -321,36 +321,36 @@ sed -E  \
     -e "s/CollectionObjectHpRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/CollectionObjectHpRate=$COLLECTION_OBJECT_HP_RATE/" \
     -e "s/CollectionObjectRespawnSpeedRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/CollectionObjectRespawnSpeedRate=$COLLECTION_OBJECT_RESPAWN_SPEED_RATE/" \
     -e "s/EnemyDropItemRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/EnemyDropItemRate=$ENEMY_DROP_ITEM_RATE/" \
-    -e "s/DeathPenalty=[a-zA-Z]*/DeathPenalty=$DEATH_PENALTY/" \
-    -e "s/bEnablePlayerToPlayerDamage=[a-zA-Z]*/bEnablePlayerToPlayerDamage=$ENABLE_PLAYER_TO_PLAYER_DAMAGE/" \
-    -e "s/bEnableFriendlyFire=[a-zA-Z]*/bEnableFriendlyFire=$ENABLE_FRIENDLY_FIRE/" \
-    -e "s/bEnableInvaderEnemy=[a-zA-Z]*/bEnableInvaderEnemy=$ENABLE_INVADER_ENEMY/" \
-    -e "s/bActiveUNKO=[a-zA-Z]*/bActiveUNKO=$ACTIVE_UNKO/" \
-    -e "s/bEnableAimAssistPad=[a-zA-Z]*/bEnableAimAssistPad=$ENABLE_AIM_ASSIST_PAD/" \
-    -e "s/bEnableAimAssistKeyboard=[a-zA-Z]*/bEnableAimAssistKeyboard=$ENABLE_AIM_ASSIST_KEYBOARD/" \
+    -e "s/DeathPenalty=([a-zA-Z]*)/DeathPenalty=$DEATH_PENALTY/" \
+    -e "s/bEnablePlayerToPlayerDamage=([a-zA-Z]*)/bEnablePlayerToPlayerDamage=$ENABLE_PLAYER_TO_PLAYER_DAMAGE/" \
+    -e "s/bEnableFriendlyFire=([a-zA-Z]*)/bEnableFriendlyFire=$ENABLE_FRIENDLY_FIRE/" \
+    -e "s/bEnableInvaderEnemy=([a-zA-Z]*)/bEnableInvaderEnemy=$ENABLE_INVADER_ENEMY/" \
+    -e "s/bActiveUNKO=([a-zA-Z]*)/bActiveUNKO=$ACTIVE_UNKO/" \
+    -e "s/bEnableAimAssistPad=([a-zA-Z]*)/bEnableAimAssistPad=$ENABLE_AIM_ASSIST_PAD/" \
+    -e "s/bEnableAimAssistKeyboard=([a-zA-Z]*)/bEnableAimAssistKeyboard=$ENABLE_AIM_ASSIST_KEYBOARD/" \
     -e "s/DropItemMaxNum=([0-9]*)/DropItemMaxNum=$DROP_ITEM_MAX_NUM/" \
     -e "s/DropItemMaxNum_UNKO=([0-9]*)/DropItemMaxNum_UNKO=$DROP_ITEM_MAX_NUM_UNKO/" \
     -e "s/BaseCampMaxNum=([0-9]*)/BaseCampMaxNum=$BASE_CAMP_MAX_NUM/" \
     -e "s/BaseCampWorkerMaxNum=([0-9]*)/BaseCampWorkerMaxNum=$BASE_CAMP_WORKER_MAXNUM/" \
     -e "s/DropItemAliveMaxHours=[+-]?([0-9]*[.][0-9]+|[0-9]+)/DropItemAliveMaxHours=$DROP_ITEM_ALIVE_MAX_HOURS/" \
-    -e "s/bAutoResetGuildNoOnlinePlayers=[a-zA-Z]*/bAutoResetGuildNoOnlinePlayers=$AUTO_RESET_GUILD_NO_ONLINE_PLAYERS/" \
+    -e "s/bAutoResetGuildNoOnlinePlayers=([a-zA-Z]*)/bAutoResetGuildNoOnlinePlayers=$AUTO_RESET_GUILD_NO_ONLINE_PLAYERS/" \
     -e "s/AutoResetGuildTimeNoOnlinePlayers=[+-]?([0-9]*[.][0-9]+|[0-9]+)/AutoResetGuildTimeNoOnlinePlayers=$AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS/" \
     -e "s/GuildPlayerMaxNum=([0-9]*)/GuildPlayerMaxNum=$GUILD_PLAYER_MAX_NUM/" \
     -e "s/PalEggDefaultHatchingTime=[+-]?([0-9]*[.][0-9]+|[0-9]+)/PalEggDefaultHatchingTime=$PAL_EGG_DEFAULT_HATCHING_TIME/" \
     -e "s/WorkSpeedRate=[+-]?([0-9]*[.][0-9]+|[0-9]+)/WorkSpeedRate=$WORK_SPEED_RATE/" \
-    -e "s/bIsMultiplay=[a-zA-Z]*/bIsMultiplay=$IS_MULTIPLAY/" \
-    -e "s/bIsPvP=[a-zA-Z]*/bIsPvP=$IS_PVP/" \
-    -e "s/bCanPickupOtherGuildDeathPenaltyDrop=[a-zA-Z]*/bCanPickupOtherGuildDeathPenaltyDrop=$CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP/" \
-    -e "s/bEnableNonLoginPenalty=[a-zA-Z]*/bEnableNonLoginPenalty=$ENABLE_NON_LOGIN_PENALTY/" \
-    -e "s/bEnableFastTravel=[a-zA-Z]*/bEnableFastTravel=$ENABLE_FAST_TRAVEL/" \
-    -e "s/bIsStartLocationSelectByMap=[a-zA-Z]*/bIsStartLocationSelectByMap=$IS_START_LOCATION_SELECT_BY_MAP/" \
-    -e "s/bExistPlayerAfterLogout=[a-zA-Z]*/bExistPlayerAfterLogout=$EXIST_PLAYER_AFTER_LOGOUT/" \
-    -e "s/bEnableDefenseOtherGuildPlayer=[a-zA-Z]*/bEnableDefenseOtherGuildPlayer=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER/" \
+    -e "s/bIsMultiplay=([a-zA-Z]*)/bIsMultiplay=$IS_MULTIPLAY/" \
+    -e "s/bIsPvP=([a-zA-Z]*)/bIsPvP=$IS_PVP/" \
+    -e "s/bCanPickupOtherGuildDeathPenaltyDrop=([a-zA-Z]*)/bCanPickupOtherGuildDeathPenaltyDrop=$CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP/" \
+    -e "s/bEnableNonLoginPenalty=([a-zA-Z]*)/bEnableNonLoginPenalty=$ENABLE_NON_LOGIN_PENALTY/" \
+    -e "s/bEnableFastTravel=([a-zA-Z]*)/bEnableFastTravel=$ENABLE_FAST_TRAVEL/" \
+    -e "s/bIsStartLocationSelectByMap=([a-zA-Z]*)/bIsStartLocationSelectByMap=$IS_START_LOCATION_SELECT_BY_MAP/" \
+    -e "s/bExistPlayerAfterLogout=([a-zA-Z]*)/bExistPlayerAfterLogout=$EXIST_PLAYER_AFTER_LOGOUT/" \
+    -e "s/bEnableDefenseOtherGuildPlayer=([a-zA-Z]*)/bEnableDefenseOtherGuildPlayer=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER/" \
     -e "s/CoopPlayerMaxNum=([0-9]*)/CoopPlayerMaxNum=$COOP_PLAYER_MAX_NUM/" \
     -e "s/Region=\"[^\"]*\"/Region=\"$REGION\"/" \
-    -e "s/bUseAuth=[a-zA-Z]*/bUseAuth=$USEAUTH/" \
+    -e "s/bUseAuth=([a-zA-Z]*)/bUseAuth=$USEAUTH/" \
     -e "s~BanListURL=\"[^\"]*\"~BanListURL=\"$BAN_LIST_URL\"~" \
-    -e "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=$RCON_ENABLED/" \
+    -e "s/RCONEnabled=([a-zA-Z]*)/RCONEnabled=$RCON_ENABLED/" \
     -e "s/RCONPort=([0-9]*)/RCONPort=$RCON_PORT/" \
     /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 
