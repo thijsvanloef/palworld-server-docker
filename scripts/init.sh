@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -n "$PRE_INIT_HOOK" ]; then
+    echo "PRE_INIT_HOOK: $PRE_INIT_HOOK"
+    eval "$PRE_INIT_HOOK"
+fi
+
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
     printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
     usermod -o -u "${PUID}" steam
@@ -18,6 +23,11 @@ if [ "${UPDATE_ON_BOOT}" = true ]; then
 fi
 
 term_handler() {
+    if [ -n "$PRE_SHUTDOWN_HOOK" ]; then
+        echo "PRE_SHUTDOWN_HOOK: $PRE_SHUTDOWN_HOOK"
+        eval "$PRE_SHUTDOWN_HOOK"
+    fi
+
     if [ "${RCON_ENABLED}" = true ]; then
         rcon-cli save
         rcon-cli "shutdown 1"
@@ -25,9 +35,19 @@ term_handler() {
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
     tail --pid=$killpid -f 2>/dev/null
+
+    if [ -n "$POST_SHUTDOWN_HOOK" ]; then
+        echo "POST_SHUTDOWN_HOOK: $POST_SHUTDOWN_HOOK"
+        eval "$POST_SHUTDOWN_HOOK"
+    fi
 }
 
 trap 'term_handler' SIGTERM
+
+if [ -n "$POST_INIT_HOOK" ]; then
+    echo "POST_INIT_HOOK: $POST_INIT_HOOK"
+    eval "$POST_INIT_HOOK"
+fi
 
 ./start.sh &
 killpid="$!"

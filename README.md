@@ -115,24 +115,30 @@ It is highly recommended you set the following environment values before startin
 * PUID
 * PGID
 
-| Variable         | Info                                                                                                                                                                                               | Default Values | Allowed Values                                                                                             |
-|------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------|
-| TZ               | Timezone used for time stamping backup server                                                                                                                                                      | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
-| PLAYERS*         | Max amount of players that are able to join the server                                                                                                                                             | 16             | 1-32                                                                                                       |
-| PORT*            | UDP port that the server will expose                                                                                                                                                               | 8211           | 1024-65535                                                                                                 |
-| PUID*            | The uid of the user the server should run as                                                                                                                                                       | 1000           | !0                                                                                                         |
-| PGID*            | The gid of the group the server should run as                                                                                                                                                      | 1000           | !0                                                                                                         |
-| MULTITHREADING** | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.             | false          | true/false                                                                                                 |
-| COMMUNITY        | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                      | false          | true/false                                                                                                 |
-| PUBLIC_IP        | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x                                                                                                    |
-| PUBLIC_PORT      | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | 1024-65535                                                                                                 |
-| SERVER_NAME      | A name for your server               |                | "string"                                                                                                   |
-| SERVER_PASSWORD  | Secure your community server with a password                                                                                                                                                       |                | "string"                                                                                                   |
-| ADMIN_PASSWORD   | Secure administration access in the server with a password                                                                                                                                         |                | "string"                                                                                                   |
-| UPDATE_ON_BOOT** | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                           | true           | true/false                                                                                                 |
-| RCON_ENABLED***  | Enable RCON for the Palworld server                                                                                                                                                                | true           | true/false                                                                                                 |
-| RCON_PORT        | RCON port to connect to                                                                                                                                                                            | 25575          | 1024-65535                                                                                                 |
-| QUERY_PORT       | Query port used to communicate with Steam servers                                                                                                                                                  | 27015          | 1024-65535                                                                                                 |
+| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------|
+| TZ                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
+| PLAYERS*           | Max amount of players that are able to join the server                                                                                                                                              | 16             | 1-32                                                                                   |
+| PORT*              | UDP port that the server will expose                                                                                                                                                                | 8211           | 1024-65535                                                                             |
+| PUID*              | The uid of the user the server should run as                                                                                                                                                        | 1000           | !0                                                                                     |
+| PGID*              | The gid of the group the server should run as                                                                                                                                                       | 1000           | !0                                                                                     |
+| MULTITHREADING**   | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false          | true/false                                                                                  |
+| COMMUNITY          | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false          | true/false                                                                                  |
+| PUBLIC_IP          | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x                                                                                      |
+| PUBLIC_PORT        | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | 1024-65535                                                                             |
+| SERVER_NAME        | A name for your server                                                                                                                                                                              |                | "string"                                                                               |
+| SERVER_PASSWORD    | Secure your community server with a password                                                                                                                                                        |                | "string"                                                                               |
+| ADMIN_PASSWORD     | Secure administration access in the server with a password                                                                                                                                          |                | "string"                                                                               |
+| UPDATE_ON_BOOT**   | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true           | true/false                                                                                  |
+| RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                  |
+| RCON_PORT          | RCON port to connect to                                                                                                                                                                             | 25575          | 1024-65535                                                                             |
+| QUERY_PORT         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015          | 1024-65535                                                                             |
+| PRE_INIT_HOOK      | You can add a custom sh commands before initializing                                                                                                                                                |                | sh command                                                                                |
+| POST_INIT_HOOK     | You can add a custom sh commands after initializing                                                                                                                                                 |                | sh command                                                                                |
+| PRE_BACKUP_HOOK    | You can add a custom sh commands before a backup is created                                                                                                                                         |                | sh command                                                                                |
+| POST_BACKUP_HOOK   | You can add a custom sh commands after a backup is created                                                                                                                                          |                | sh command                                                                                |
+| PRE_SHUTDOWN_HOOK  | You can add a custom sh commands before pid is killed                                                                                                                                               |                | sh command                                                                                |
+| POST_SHUTDOWN_HOOK | You can add a custom sh commands after pid is killed                                                                                                                                                |                | sh command                                                                                |
 
 *highly recommended to set
 
@@ -202,6 +208,46 @@ Any changes made there will be applied to the Server on next boot.
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+
+## Using sh hooks
+
+### Create a backup
+
+Backup the server whenever it is gracefully shut down.
+
+docker run:
+
+```sh
+-e POST_SHUTDOWN_HOOK=backup
+```
+
+docker compose:
+
+```yaml
+- POST_SHUTDOWN_HOOK=backup
+```
+
+### Send discord webhooks
+
+1. Generate a webhook url for your discord server in your discord's server settings.
+
+2. You can use the discord webhook in the pre init hook like so:
+
+send discord message with docker run:
+
+```sh
+-e DISCORD_WEBHOOK="https://discord.com/api/webhooks/xxxx/xxxxx" \
+-e DISCORD_PRE_INIT_MESSAGE="Server initializing" \
+-e PRE_INIT_HOOK='curl -sfSL -X POST -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$DISCORD_PRE_INIT_MESSAGE\"}" "$DISCORD_WEBHOOK"'
+```
+
+send discord message with docker compose:
+
+```yaml
+- DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxx/xxxxx
+- DISCORD_PRE_INIT_MESSAGE="Server initializing..."
+- 'PRE_INIT_HOOK=curl -sfSL -X POST -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$$(eval echo $$DISCORD_PRE_INIT_MESSAGE)\"}" $$DISCORD_WEBHOOK'
+```
 
 ## Reporting Issues/Feature Requests
 
