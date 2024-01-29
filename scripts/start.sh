@@ -11,22 +11,6 @@ if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
 fi
 
-if [ -n "${SERVER_NAME}" ]; then
-    STARTCOMMAND+=("-servername=${SERVER_NAME}")
-fi
-
-if [ -n "${SERVER_DESCRIPTION}" ]; then
-    STARTCOMMAND+=("-serverdescription=${SERVER_DESCRIPTION}")
-fi
-
-if [ -n "${SERVER_PASSWORD}" ]; then
-    STARTCOMMAND+=("-serverpassword=${SERVER_PASSWORD}")
-fi
-
-if [ -n "${ADMIN_PASSWORD}" ]; then
-    STARTCOMMAND+=("-adminpassword=${ADMIN_PASSWORD}")
-fi
-
 if [ -n "${QUERY_PORT}" ]; then
     STARTCOMMAND+=("-queryport=${QUERY_PORT}")
 fi
