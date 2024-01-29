@@ -292,7 +292,15 @@ fi
 if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
     
-    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" > "/home/steam/server/crontab"
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+fi
+
+if [ "${UPDATE_ENABLED}" = true ]; then
+    echo "UPDATE_ENABLED=${UPDATE_ENABLED}"
+    echo "$UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
+fi
+
+if [ "${UPDATE_ENABLED}" = true ] || [ "${BACKUP_ENABLED}" = true ]; then
     supercronic "/home/steam/server/crontab" &
 fi
 
