@@ -35,12 +35,6 @@ def initArgs():
         help='set the path of "PalWorldSettings.ini" under workpath (default: Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)'
     )
     parser.add_argument(
-        '--description-json', 
-        type=str, 
-        default='palworld_settings/description.json', 
-        help='set the path of "description.json" under workpath (default: palworld_settings/description.json)'
-    )
-    parser.add_argument(
         '--description-lang',
         type=str, 
         default=os.getenv('ENHANCED_PALWORLD_SETTINGS_LANG', 'en'), 
@@ -58,7 +52,12 @@ def initArgs():
         default=os.getenv('WRITE_JSON_FILE_ALWAYS', False),
         help='if true, the "PalWorldSettings.json" will be written always (default: False)'
     )
-
+    parser.add_argument(
+        '--description-json', 
+        type=str, 
+        default='/home/steam/server/palworld_settings/description.json', 
+        help='set the path of "description.json" (default: /home/steam/server/palworld_settings/description.json)'
+    )
     args = parser.parse_args()
 
 # define paths with workpath
@@ -81,7 +80,17 @@ def initEnv():
     PATH_DEFAULT_PALWORLD_SETTINGS_INI = WORKPATH + args.default_palworld_settings_ini
     PATH_DEFAULT_PALWORLD_SETTINGS_JSON = WORKPATH + args.default_palworld_settings_json
     PATH_PALWORLD_SETTINGS_INI = WORKPATH + args.palworld_settings_ini
-    PATH_DESCRIPTION_JSON = WORKPATH + args.description_json
+    
+    PATH_DESCRIPTION_JSON = args.description_json
+
+    print('workpath: {}'.format(WORKPATH))
+    # exist + path
+    print('default-palworld-settings-ini[{}] : {}'.format(os.path.exists(PATH_DEFAULT_PALWORLD_SETTINGS_INI), PATH_DEFAULT_PALWORLD_SETTINGS_INI))
+    print('default-palworld-settings-json[{}] : {}'.format(os.path.exists(PATH_DEFAULT_PALWORLD_SETTINGS_JSON), PATH_DEFAULT_PALWORLD_SETTINGS_JSON))
+    print('palworld-settings-ini[{}] : {}'.format(os.path.exists(PATH_PALWORLD_SETTINGS_INI), PATH_PALWORLD_SETTINGS_INI))
+    print('description-json[{}] : {}'.format(os.path.exists(PATH_DESCRIPTION_JSON), PATH_DESCRIPTION_JSON))
+    print('')
+
 
 #######################################################################
 ############################## Config #################################
@@ -97,10 +106,11 @@ REGACY_TO_NEW = {
 #######################################################################
 ############################## Functions ##############################
 #######################################################################
-MESSAGE_FOR_NO_LANG = 'No description for lang: {}. will use "en" as fallback'
-FALLBACK_DESCRIPTION = 'No description for key: {} in lang: {}'
+# MESSAGE_FOR_NO_LANG = 'No description for lang[{}] at key[{}]. will use "en" as fallback'
+FALLBACK_DESCRIPTION = 'No description for key: {}'
 
 def palGameWorldSettings():
+    print('DefaultPalWorldSettings.json')
     # parse the palworld settings
     defaultPalWorldSettings = _parseIni()
     # parse the description.json
@@ -118,16 +128,16 @@ def palGameWorldSettings():
                 break
         
         # If not found, use 'en' as fallback
-        if description is None:
-            print(MESSAGE_FOR_NO_LANG.format(ENHANCED_PALWORLD_SETTINGS_LANG))
+        if description is None or description.get('description', {}).get(key) in [None, '', '""']:
+            # print(MESSAGE_FOR_NO_LANG.format(ENHANCED_PALWORLD_SETTINGS_LANG, key))
             for element in descriptions.get('descriptions', []):
                 if element['lang'] == 'en':
                     description = element
                     break
-        else: 
-            descriptionForKey = description.get('description', {}).get(key)
-            if descriptionForKey is None or descriptionForKey == '' or descriptionForKey == '""':
-                descriptionForKey = FALLBACK_DESCRIPTION.format(key, description['lang'])
+        
+        descriptionForKey = description.get('description', {}).get(key)
+        if descriptionForKey is None or descriptionForKey == '' or descriptionForKey == '""':
+            descriptionForKey = FALLBACK_DESCRIPTION.format(key)
         
         resultPalWorldSettings.append({
             'key': key,
@@ -135,6 +145,8 @@ def palGameWorldSettings():
             'hint': descriptions.get('hint', {}).get(key),
             'description': descriptionForKey,
         })
+
+        print('- {}={} -> {}'.format(key, value, descriptionForKey))
 
     return resultPalWorldSettings
 
@@ -276,9 +288,9 @@ def _checkAndFixInvalidValue(defaultItem, currentItem):
     if currentItem.get('hint') is None:
         return
 
-    hints = currentItem['hint'].replace('[', '').replace(']', '').split(',')
+    hints = [hint.strip() for hint in currentItem['hint'].replace('[', '').replace(']', '').split(',')]
     if currentItem['value'] not in hints:
-        print('invalid value: {} for key. will use default value: {}'.format(currentItem['value'], defaultItem['value']))
+        print('invalid value: "{}" for key. will use default value: "{}"'.format(currentItem['value'], defaultItem['value']))
         print('check the hint: {}'.format(currentItem['hint']))
         currentItem['value'] = defaultItem['value']
 
