@@ -151,6 +151,17 @@ server:
     # -- (string) Update/Install the server when the container starts.
     # THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER
     update_on_boot: true
+    daily_reboot:
+    # -- (bool) Enable daily reboot.
+    # Disabled by default
+      enable: false
+      # -- (string) The time (UTC) the server will perform the reboot.
+      # By default, this schedules the restart at 9:30am UTC. Please note, this is using cron syntax.
+      time: "30 9 * * *"
+      # -- (string) The name of the role performing the daily reboot.
+      role: "daily-reboot"
+      # -- (string) The name of the Service Account used to perform the reboot.
+      serviceAccount: "daily-reboot"
     # -- (object) Configures the game world settings.
     # The key:values here should represent in game accepted values.
     # Wrap all values with quotes here to avoid validation issues.
