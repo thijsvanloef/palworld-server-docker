@@ -35,7 +35,7 @@ ENV PORT= \
     ENHANCED_PALWORLD_SETTINGS_LANG=en
 
 COPY ./scripts/ /home/steam/server
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
+RUN find /home/steam/server -type f -exec chmod +x {} \; && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup
 
 WORKDIR /home/steam/server
