@@ -12,19 +12,19 @@ if [ -n "${PORT}" ]; then
 fi
 
 if [ -n "${SERVER_NAME}" ]; then
-    STARTCOMMAND+=("-servername=${SERVER_NAME}")
+    STARTCOMMAND+=("-servername=\"${SERVER_NAME}\"")
 fi
 
 if [ -n "${SERVER_DESCRIPTION}" ]; then
-    STARTCOMMAND+=("-serverdescription=${SERVER_DESCRIPTION}")
+    STARTCOMMAND+=("-serverdescription=\"${SERVER_DESCRIPTION}\"")
 fi
 
 if [ -n "${SERVER_PASSWORD}" ]; then
-    STARTCOMMAND+=("-serverpassword=${SERVER_PASSWORD}")
+    STARTCOMMAND+=("-serverpassword=\"${SERVER_PASSWORD}\"")
 fi
 
 if [ -n "${ADMIN_PASSWORD}" ]; then
-    STARTCOMMAND+=("-adminpassword=${ADMIN_PASSWORD}")
+    STARTCOMMAND+=("-adminpassword=\"${ADMIN_PASSWORD}\"")
 fi
 
 if [ -n "${QUERY_PORT}" ]; then
