@@ -48,4 +48,42 @@ data:
   {{- with .Values.server.config.world_parameters }}
   {{- toYaml . | nindent 2  }}
   {{- end }}
+  {{ if .Values.server.config.daily_reboot.enable }}
+  restart-deployment.sh:  |
+    #!/bin/bash
+    cont=$(kubectl -n {{ .Values.namespace }} get pods -o=jsonpath='{.items[?(@.metadata.labels.app.kubernetes.io/name=="{{ .Release.Name }}-server")].metadata.name}')
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Saving_Server_Data..."
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli save
+    sleep 30
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Backing_up_Server_Data..."
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont backup
+    sleep 30
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Backup_Complete!_Rebooting_in_30_seconds..."
+    sleep 15
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_15_seconds..."
+    sleep 5
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_10_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_9_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_8_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_7_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_6_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_5_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_4_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_3_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_2_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Broadcast Rebooting_in_1_seconds..."
+    sleep 1
+    kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "Shutdown 1"
+    sleep 30
+    kubectl -n {{ .Values.namespace }} rollout restart deployment/{{ .Release.Name }}-server
+  {{ end }}
   {{ end }}
