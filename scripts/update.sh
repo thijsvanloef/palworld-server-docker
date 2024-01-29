@@ -12,8 +12,8 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
     if [ "${RCON_ENABLED}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
-        rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${WARN_MINUTES}_Minutes"
-        sleep "${WARN_MINUTES}m"
+        rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
+        sleep "${AUTO_UPDATE_WARN_MINUTES}m"
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else
