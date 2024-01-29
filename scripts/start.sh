@@ -11,22 +11,6 @@ if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
 fi
 
-if [ -n "${SERVER_NAME}" ]; then
-    STARTCOMMAND+=("-servername=${SERVER_NAME}")
-fi
-
-if [ -n "${SERVER_DESCRIPTION}" ]; then
-    STARTCOMMAND+=("-serverdescription=${SERVER_DESCRIPTION}")
-fi
-
-if [ -n "${SERVER_PASSWORD}" ]; then
-    STARTCOMMAND+=("-serverpassword=${SERVER_PASSWORD}")
-fi
-
-if [ -n "${ADMIN_PASSWORD}" ]; then
-    STARTCOMMAND+=("-adminpassword=${ADMIN_PASSWORD}")
-fi
-
 if [ -n "${QUERY_PORT}" ]; then
     STARTCOMMAND+=("-queryport=${QUERY_PORT}")
 fi
@@ -56,9 +40,25 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
+if [ -n "${SERVER_NAME}" ]; then
+    echo "SERVER_NAME=${SERVER_NAME}"
+    sed -E -i "s/ServerName=\"[^\"]*\"/ServerName=$SERVER_NAME/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
+if [ -n "${SERVER_DESCRIPTION}" ]; then
+    echo "SERVER_DESCRIPTION=${SERVER_DESCRIPTION}"
+    sed -E -i "s/ServerDescription=\"[^\"]*\"/ServerDescription=$SERVER_DESCRIPTION/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
+if [ -n "${SERVER_PASSWORD}" ]; then
+    echo "SERVER_PASSWORD=${SERVER_PASSWORD}"
+    sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=$SERVER_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
+if [ -n "${ADMIN_PASSWORD}" ]; then
+    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" 
+    sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=$ADMIN_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+fi
 if [ -n "${PLAYERS}" ]; then
     echo "PLAYERS=${PLAYERS}"
-     sed -E -i "s/ServerPlayerMaxNum=[0-9]*/ServerPlayerMaxNum=$PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerPlayerMaxNum=[0-9]*/ServerPlayerMaxNum=$PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PUBLIC_IP}" ]; then
     echo "PUBLIC_IP=${PUBLIC_IP}"
