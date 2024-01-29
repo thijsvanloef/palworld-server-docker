@@ -192,12 +192,12 @@ def _bindJsonToIni(palGameWorldSettings):
     #         "key": "Difficulty",
     #         "value": "None"
     #         "hint": "[None, Casual, Normal, Hard]"
-    #         "discrption": "난이도를 설정합니다."
+    #         "description": "난이도를 설정합니다."
     #     },
     #     {
     #         "key": "DayTimeSpeedRate",
     #         "value": "1.0",
-    #         "discrption": "낮 경과 속도 (0.1 ~ 5)",
+    #         "description": "낮 경과 속도 (0.1 ~ 5)",
     #         "default": "1.0"
     #     }
     #     ...

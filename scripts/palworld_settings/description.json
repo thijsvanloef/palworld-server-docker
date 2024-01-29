@@ -1,7 +1,11 @@
 {
     "hint" : {
         "Difficulty": "[None, Casual, Normal, Hard]",
-        "DeathPenalty": "[None, Item, ItemAndEquipment, All]"
+        "DeathPenalty": "[None, Item, ItemAndEquipment, All]",
+        "bEnableInvaderEnemy": "[True, False]",
+        "bEnablePlayerToPlayerDamange": "[True, False]",
+        "bEnableFriendlyFire": "[True, False]",
+        "blsPvP": "[True, False]"
     },
     "descriptions": [
         {
