@@ -141,7 +141,7 @@ It is highly recommended you set the following environment values before startin
 | RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                                 |
 | RCON_PORT          | RCON port to connect to                                                                                                                                                                             | 25575          | 1024-65535                                                                                                 |
 | QUERY_PORT         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015          | 1024-65535                                                                                                 |
-| BACKUP_CRON_EXPRESSION  | Setting affects frequency of automatic backups. | 0 0 * * * | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#Configuring-Automatic-Backups-with-Cron) |
+| BACKUP_CRON_EXPRESSION  | Setting affects frequency of automatic backups. | 0 0 * * * | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | BACKUP_ENABLED | Enables automatic backups | true | true/false |
 
 *highly recommended to set
