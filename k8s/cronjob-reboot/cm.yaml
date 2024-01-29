@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restart-deployment-configmap
+  namespace:  palworld
+data:
+  restart-deployment.sh:  |
+    #!/bin/bash
+    cont=$(kubectl -n palworld get pods -o=jsonpath='{.items[?(@.metadata.labels.app=="palworld-server")].metadata.name}')
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Saving_Server_Data..."
+    kubectl exec -n palworld -i pod/$cont rcon-cli save
+    sleep 30
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Backing_up_Server_Data..."
+    kubectl exec -n palworld -i pod/$cont backup
+    sleep 30
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Backup_Complete!_Rebooting_in_30_seconds..."
+    sleep 15
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_15_seconds..."
+    sleep 5
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_10_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_9_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_8_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_7_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_6_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_5_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_4_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_3_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_2_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Broadcast Rebooting_in_1_seconds..."
+    sleep 1
+    kubectl exec -n palworld -i pod/$cont rcon-cli "Shutdown 1"
+    sleep 30
+    kubectl -n palworld rollout restart deployment/palworld-server
+

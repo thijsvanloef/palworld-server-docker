@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+    name: restart-deployment
+    namespace: palworld
+rules:
+    - apiGroups: ["apps", "extensions"]
+      resources: ["deployments", "pods"]
+        #resourceNames: ["palworld-server"]
+      verbs: ["get", "patch", "list", "watch"]
+    - apiGroups:  [""]
+      resources:  ["pods/exec", "pods"]
+      verbs:  ["get", "list", "create"]
