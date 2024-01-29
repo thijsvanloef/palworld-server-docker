@@ -214,7 +214,7 @@ This image uses Supercronic for crons, see [supercronic](https://github.com/apti
 
 **BACKUP_ENABLED:**
 
-Description: This environment variable indicates whether automatic backups are enabled or not. 
+Description: This environment variable indicates whether automatic backups are enabled or not.
 If set to a non-empty value, automatic backups will be disabled.
 
 ## Editing Server Settings
