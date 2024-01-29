@@ -8,7 +8,7 @@ fi
 CURRENTBUILD=$(awk '/buildid/{ print $2 }' < /palworld/steamapps/appmanifest_2394010.acf)
 TARGETBUILD=$(curl https://api.steamcmd.net/v1/info/2394010 --silent | grep -P '"public": {"buildid": "\d+"' -o | sed -r 's/.*("[0-9]+")$/\1/')
 
-if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
+if [ -n "$TARGETBUILD" ] && [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
     if [ "${RCON_ENABLED}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
