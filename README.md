@@ -207,15 +207,13 @@ The server will run a save before the backup if rcon is enabled.
 
 The server is automatically backed up everynight at midnight according to the timezone set with TZ
 
-Example Usage: If set to 0 2 * * *, the backup script will run every day at 2:00 AM.
+Set BACKUP_ENABLED enable or disable automatic backups (Default is enabled)
 
-In a Cron-Expression, you define an interval for when to run jobs.
+BACKUP_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
 This image uses Supercronic for crons, see [supercronic](https://github.com/aptible/supercronic#crontab-format) or [Crontab Generat](https://crontab-generator.org).
+Set BACKUP_CRON_EXPRESSION to change the default schedule.
 
-**BACKUP_ENABLED:**
-
-Description: This environment variable indicates whether automatic backups are enabled or not.
-If set to a non-empty value, automatic backups will be disabled.
+Example Usage: If BACKUP_CRON_EXPRESSION to 0 2 * * *, the backup script will run every day at 2:00 AM.
 
 ## Editing Server Settings
 
