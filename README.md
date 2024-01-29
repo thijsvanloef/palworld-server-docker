@@ -119,8 +119,8 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest
 ```
 
-As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. 
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the 
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
 correct values. Change your docker run command to this:
 
 ```bash
