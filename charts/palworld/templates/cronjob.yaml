@@ -1,0 +1,37 @@
+{{ if .Values.server.config.daily_reboot.enable }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ .Values.server.config.daily_reboot.serviceAccount }}"
+  namespace:  {{ .Values.namespace }}
+spec:
+  concurrencyPolicy:  Forbid
+  schedule: "{{ .Values.server.config.daily_reboot.time }}"
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds:  600
+      template:
+        spec:
+          serviceAccountName: "{{ .Values.server.config.daily_reboot.serviceAccount }}"
+          restartPolicy:  Never
+          containers:
+            - name: kubectl
+              image:  bitnami/kubectl
+              command:
+              - /bin/sh
+              - -c
+              - /restart-script/restart-deployment.sh
+              volumeMounts:
+              - name: restart-script
+                mountPath:  "/restart-script"
+                readOnly: true
+          volumes:
+          - name: restart-script
+            configMap:
+              name: "{{ .Release.Name }}-env-config"
+              defaultMode:  0777
+              items:
+              - key:  "restart-deployment.sh"
+                path: "restart-deployment.sh"
+{{ end }}
