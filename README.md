@@ -36,12 +36,42 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 
 ## How to use
 
-Copy the file [.env.example](.env.example) to a new file called **.env** file. Modify it to your needs, check out the
-[environment variables](#environment-variables) section to check the correct values.
+Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
 ### Docker Compose
 
 This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
+
+```yml
+services:
+   palworld:
+      image: thijsvanloef/palworld-server-docker:latest
+      restart: unless-stopped
+      container_name: palworld-server
+      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+      ports:
+        - 8211:8211/udp
+        - 27015:27015/udp
+      environment:
+         - PUID=1000
+         - PGID=1000
+         - PORT=8211 # Optional but recommended
+         - PLAYERS=16 # Optional but recommended
+         - SERVER_PASSWORD="worldofpals" # Optional but recommended
+         - MULTITHREADING=true
+         - RCON_ENABLED=true
+         - RCON_PORT=25575
+         - TZ=UTC
+         - ADMIN_PASSWORD="adminPasswordHere"
+         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         - SERVER_NAME="World of Pals"
+         - SERVER_DESCRIPTION="Awesome World of Pal"
+      volumes:
+         - ./palworld:/palworld/
+```
+
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. Modify it to your needs, check out the
+[environment variables](#environment-variables) section to check the correct values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 
 ```yml
 services:
@@ -66,12 +96,39 @@ Change every <> to your own configuration
 ```bash
 docker run -d \
     --name palworld-server \
-    --stop-timeout 30 \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./<palworld-folder>:/palworld/ \
-    --env-file .env.example \
+    -e PUID=1000 \
+    -e PGID=1000 \
+    -e PORT=8211 \
+    -e PLAYERS=16 \
+    -e MULTITHREADING=true \
+    -e RCON_ENABLED=true \
+    -e RCON_PORT=25575 \
+    -e TZ=UTC \
+    -e ADMIN_PASSWORD="adminPasswordHere" \
+    -e SERVER_PASSWORD="worldofpals" \
+    -e COMMUNITY=false \
+    -e SERVER_NAME="World of Pals" \
+    -e SERVER_DESCRIPTION="Awesome World of Pal" \
     --restart unless-stopped \
+    --stop-timeout 30 \
+    thijsvanloef/palworld-server-docker:latest
+```
+
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. Modify it to your needs, check out the
+[environment variables](#environment-variables) section to check the correct values. Change your docker run command to this:
+
+```bash
+docker run -d \
+    --name palworld-server \
+    -p 8211:8211/udp \
+    -p 27015:27015/udp \
+    -v ./<palworld-folder>:/palworld/ \
+    --env-file .env \
+    --restart unless-stopped \
+    --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
 ```
 
