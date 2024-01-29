@@ -36,7 +36,7 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 
 ## How to use
 
-Copy the file [.env.example](.env.example) to a new file called **.env** file. Modify it to your needs, check out the 
+Copy the file [.env.example](.env.example) to a new file called **.env** file. Modify it to your needs, check out the
 [environment variables](#environment-variables) section to check the correct values.
 
 ### Docker Compose
@@ -145,7 +145,7 @@ docker exec -it palworld-server rcon-cli "<command> <value>"
 
 For example, you can broadcast a message to everyone in the server with the following command:
 
-```
+```bash
 docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 ```
 
