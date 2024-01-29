@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "${RCON_ENABLED}" = true ]; then
-        rcon-cli save
+        rcon-cli -c /home/steam/server/rcon.yaml save
 fi
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
