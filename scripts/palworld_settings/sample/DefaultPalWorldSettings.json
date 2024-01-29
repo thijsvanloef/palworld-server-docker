@@ -159,13 +159,13 @@
         {
             "key": "bEnableFriendlyFire",
             "value": "False",
-            "hint": null,
+            "hint": "[True, False]",
             "description": "No description for key: bEnableFriendlyFire in lang: ko"
         },
         {
             "key": "bEnableInvaderEnemy",
             "value": "True",
-            "hint": null,
+            "hint": "[True, False]",
             "description": "No description for key: bEnableInvaderEnemy in lang: ko"
         },
         {
