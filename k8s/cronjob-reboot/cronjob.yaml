@@ -2,7 +2,6 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: restart-deployment
-  namespace:  palworld
 spec:
   concurrencyPolicy:  Forbid
   schedule: '30 9 * * *'
