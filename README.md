@@ -270,7 +270,12 @@ To be able to use automatic Updates with this Server the following environment v
 * RCON_ENABLED
 * UPDATE_ON_BOOT
 
-you will also need to use the restart policy `always` or `unless-stopped`. The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
+> [!IMPORTANT]
+> 
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted. 
+> 
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
 
 Set AUTO_UPDATE_ENABLED enable or disable automatic backups (Default is disabled)
 
