@@ -26,7 +26,7 @@
                 "--description-lang=ko",
                 "--write-json-file-always=true"
             ],
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "cwd": "${workspaceFolder}/scripts/palworld_settings"
         }
     ]
