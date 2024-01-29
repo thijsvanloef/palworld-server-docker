@@ -14,10 +14,10 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${WARN_MINUTES}_Minutes"
         sleep "${WARN_MINUTES}m"
-        rcon-cli -c /home/steam/server/rcon.yaml save
+        backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else
-        kill -SIGTERM "$(pidof PalServer-Linux-Test)"
+        echo "An update is available however auto updating without rcon is not supported"
     fi
 else
     echo "The Server is up to date!"

@@ -266,6 +266,7 @@ Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will 
 ## Configuring Automatic Updates with Cron
 
 To be able to use automatic Updates with this Server the following environment variables **have** to be set to `true`:
+
 * RCON_ENABLED
 * UPDATE_ON_BOOT
 
