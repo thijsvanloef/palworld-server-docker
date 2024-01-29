@@ -209,7 +209,8 @@ The server is automatically backed up everynight at midnight according to the ti
 
 Example Usage: If set to 0 2 * * *, the backup script will run every day at 2:00 AM.
 
-In a Cron-Expression, you define an interval for when to run jobs. This image uses Supercronic for crons, see https://github.com/aptible/supercronic#crontab-format or https://crontab-generator.org
+In a Cron-Expression, you define an interval for when to run jobs.
+This image uses Supercronic for crons, see [supercronic](https://github.com/aptible/supercronic#crontab-format) or [Crontab Generat](https://crontab-generator.org).
 
 **BACKUP_ENABLED:**
 
