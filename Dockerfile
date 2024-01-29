@@ -42,11 +42,15 @@ ENV PORT= \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \
-    BACKUP_CRON_EXPRESSION="0 0 * * *"
+    BACKUP_CRON_EXPRESSION="0 0 * * *" \
+    UPDATE_ENABLED=true \
+    UPDATE_CRON_EXPRESSION="0 * * * *" \
+    WARN_MINUTES=15
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
-    mv /home/steam/server/backup.sh /usr/local/bin/backup
+RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh && \
+    mv /home/steam/server/backup.sh /usr/local/bin/backup && \
+    mv /home/steam/server/update.sh /usr/local/bin/update
 
 WORKDIR /home/steam/server
 
