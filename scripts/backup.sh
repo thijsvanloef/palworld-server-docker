@@ -18,5 +18,5 @@ echo "backup created at $FILE_PATH"
 
 if [ "${DELETE_OLD_BACKUPS}" = true ]; then
         echo "removing backups older than ${OLD_BACKUP_DAYS:=30} days"
-        find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+$OLD_BACKUP_DAYS" -print -delete
+        find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+${OLD_BACKUP_DAYS}" -print -delete
 fi
