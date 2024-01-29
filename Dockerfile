@@ -45,7 +45,7 @@ ENV PORT= \
     BACKUP_CRON_EXPRESSION="0 0 * * *" \
     UPDATE_ENABLED=true \
     UPDATE_CRON_EXPRESSION="0 * * * *" \
-    WARN_MINUTES=15
+    WARN_MINUTES=30
 
 COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh && \
