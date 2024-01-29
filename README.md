@@ -15,7 +15,7 @@
 [English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
 
 > [!TIP]
-> Unsure how to get started? Check out the [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
+> Unsure how to get started? Check out [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
 
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
@@ -23,7 +23,7 @@ This is a Docker container to help you get started with hosting your own
 This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
 
 > [!IMPORTANT]
-> At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+> At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
 >
 > They will need to join players using the invite code and are limited to sessions of 4 players max.
 
@@ -33,7 +33,7 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 |----------|---------|------------------------------------------|
 | CPU      | 4 cores | 4+ cores                                 |
 | RAM      | 16GB    | Recommend over 32GB for stable operation |
-| Storage  | 4GB     | 12GB                                     |
+| Storage  | 8GB     | 20GB                                     |
 
 ## How to use
 
@@ -41,7 +41,7 @@ Keep in mind that you'll need to change the [environment variables](#environment
 
 ### Docker Compose
 
-This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to setup your server.
+This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
 
 ```yml
 services:
@@ -71,6 +71,26 @@ services:
          - ./palworld:/palworld/
 ```
 
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct
+values. Modify your [docker-compose.yml](docker-compose.yml) to this:
+
+```yml
+services:
+   palworld:
+      image: thijsvanloef/palworld-server-docker:latest
+      restart: unless-stopped
+      container_name: palworld-server
+      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+      ports:
+        - 8211:8211/udp
+        - 27015:27015/udp
+      env_file:
+         -  .env
+      volumes:
+         - ./palworld:/palworld/
+```
+
 ### Docker Run
 
 Change every <> to your own configuration
@@ -95,13 +115,25 @@ docker run -d \
     -e SERVER_NAME="World of Pals" \
     -e SERVER_DESCRIPTION="Awesome World of Pal" \
     --restart unless-stopped \
+    --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
-
 ```
 
-> [!TIP]
-> If you want to stop the container with a custom stop grace period then run:
-> `docker stop --name palworld-server --time 30`
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
+correct values. Change your docker run command to this:
+
+```bash
+docker run -d \
+    --name palworld-server \
+    -p 8211:8211/udp \
+    -p 27015:27015/udp \
+    -v ./<palworld-folder>:/palworld/ \
+    --env-file .env \
+    --restart unless-stopped \
+    --stop-timeout 30 \
+    thijsvanloef/palworld-server-docker:latest
+```
 
 ### Kubernetes
 
@@ -154,7 +186,7 @@ It is highly recommended you set the following environment values before startin
 *** Required for docker stop to save and gracefully close the server
 
 > [!IMPORTANT]
-> Boolean values used in environment variables are case sensitive because they are used in the shell script.
+> Boolean values used in environment variables are case-sensitive because they are used in the shell script.
 >
 > They must be set using exactly `true` or `false` for the option to take effect.
 
@@ -172,7 +204,13 @@ RCON is enabled by default for the palworld-server-docker image.
 Opening the RCON CLI is quite easy:
 
 ```bash
-docker exec -it palworld-server rcon-cli
+docker exec -it palworld-server rcon-cli "<command> <value>"
+```
+
+For example, you can broadcast a message to everyone in the server with the following command:
+
+```bash
+docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 ```
 
 This will open a CLI that uses RCON to write commands to the Palworld Server.
@@ -229,7 +267,8 @@ Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will 
 
 > [!IMPORTANT]
 >
-> These Environment Variables/Settings are subject to change since the game is still in beta
+> These Environment Variables/Settings are subject to change since the game is still in beta.
+> Check out the [official webpage for the supported parameters.](https://tech.palworldgame.com/optimize-game-balance)
 
 | Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
