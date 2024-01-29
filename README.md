@@ -70,8 +70,9 @@ services:
          - ./palworld:/palworld/
 ```
 
-As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. Modify it to your needs, check out the
-[environment variables](#environment-variables) section to check the correct values. Modify your [docker-compose.yml](docker-compose.yml) to this:
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct
+values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 
 ```yml
 services:
@@ -117,8 +118,9 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest
 ```
 
-As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. Modify it to your needs, check out the
-[environment variables](#environment-variables) section to check the correct values. Change your docker run command to this:
+As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file. 
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the 
+correct values. Change your docker run command to this:
 
 ```bash
 docker run -d \
