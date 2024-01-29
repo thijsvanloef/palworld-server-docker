@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-user-dirs=0.17-2 \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    python3=3.9.* \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -33,7 +34,7 @@ ENV PORT= \
     ENHANCED_PALWORLD_SETTINGS=false \
     ENHANCED_PALWORLD_SETTINGS_LANG=en
 
-COPY ./scripts/* /home/steam/server/
+COPY ./scripts/ /home/steam/server
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup
 

@@ -43,8 +43,18 @@ cd /palworld || exit
 
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
+returnCode=0
+if [ "${ENHANCED_PALWORLD_SETTINGS}" == true ]; then
+    # Execute enhanced settings script
+    /home/steam/server/palworld_settings/palworld_settings.sh
+    returnCode=$?
+    if [ "$returnCode" -ne 0 ]; then
+        printf "\e[0;31m*****ENHANCED PALWORLD SETTINGS FAILED [EXIT CODE: $returnCode]*****\e[0m\n"
+    fi
+fi
+
 # shellcheck disable=SC2143
-if [ "${ENHANCED_PALWORLD_SETTINGS}" != true ]; then
+if [[ "${ENHANCED_PALWORLD_SETTINGS}" != true ]] || [[ "$returnCode" -ne 0 ]]; then
     if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
         printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
@@ -56,9 +66,6 @@ if [ "${ENHANCED_PALWORLD_SETTINGS}" != true ]; then
         sleep 5
         cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
     fi
-else
-    # Execute enhanced settings script
-    ./palworld_settings/palworld_settings.sh
 fi
 
 if [ -n "${PLAYERS}" ]; then

@@ -1,14 +1,20 @@
 #!/bin/sh
 
 echo "Now running Enhanced Palworld Settings script."
-# install python if not installed
-if ! command -v python &> /dev/null
-then
-    echo "Python is not installed. Installing Python..."
-    sudo apt-get update && sudo apt-get install -y python
-    echo "Python is installed."
+if ! [ -x "$(command -v python3)" ]; then
+    echo "Python is not installed."
+    exit 1
 fi
 
+
+
 echo "Running palworld_settings.py..."
-# run palworld_settings.py
-python palworld_settings.py
+python3 /home/steam/server/palworld_settings/palworld_settings.py
+returnCode=$?
+
+if [ $returnCode -ne 0 ]; then
+    echo "Error occurred while running palworld_settings.py with exit code: $returnCode"
+    exit $returnCode
+fi
+
+exit 0
