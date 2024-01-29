@@ -6,7 +6,6 @@ metadata:
 rules:
     - apiGroups: ["apps", "extensions"]
       resources: ["deployments", "pods"]
-        #resourceNames: ["palworld-server"]
       verbs: ["get", "patch", "list", "watch"]
     - apiGroups:  [""]
       resources:  ["pods/exec", "pods"]
