@@ -269,6 +269,20 @@ def _updateHintsAndDescriptions(defaultJson, currentJson):
             if defaultItem['key'] == currentItem['key']:
                 currentItem['hint'] = defaultItem['hint']
                 currentItem['description'] = defaultItem['description']
+                _checkAndFixInvalidValue(defaultItem, currentItem)
+
+def _checkAndFixInvalidValue(defaultItem, currentItem):
+    # ex) currentItem['hint'] = "[None, Casual, Normal, Hard]"
+    if currentItem.get('hint') is None:
+        return
+
+    hints = currentItem['hint'].replace('[', '').replace(']', '').split(',')
+    if currentItem['value'] not in hints:
+        print('invalid value: {} for key. will use default value: {}'.format(currentItem['value'], defaultItem['value']))
+        print('check the hint: {}'.format(currentItem['hint']))
+        currentItem['value'] = defaultItem['value']
+
+
 
 def _convertDefaultPalWorldSettingsJsonToIni(defaultPalWorldSettingsJson):
     return _bindJsonToIni(defaultPalWorldSettingsJson.get(palGameWorldSettings.__name__, {}))
