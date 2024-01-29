@@ -142,6 +142,8 @@ It is highly recommended you set the following environment values before startin
 | RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                                 |
 | RCON_PORT          | RCON port to connect to                                                                                                                                                                             | 25575          | 1024-65535                                                                                                 |
 | QUERY_PORT         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015          | 1024-65535                                                                                                 |
+| BACKUP_CRON_EXPRESSION  | Setting affects frequency of automatic backups. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
+| BACKUP_ENABLED | Enables automatic backups | true | true/false |
 | DELETE_OLD_BACKUPS | Delete backups after a certain number of days                                                                                                                                                       | false          | true/false                                                                                                 |
 | OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
 
@@ -203,6 +205,23 @@ docker exec palworld-server backup
 This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
+
+## Configuring Automatic Backups with Cron
+
+The server is automatically backed up everynight at midnight according to the timezone set with TZ
+
+Set BACKUP_ENABLED enable or disable automatic backups (Default is enabled)
+
+BACKUP_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+
+> [!TIP]
+> This image uses Supercronic for crons
+> see [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> or
+> [Crontab Generat](https://crontab-generator.org).
+
+Set BACKUP_CRON_EXPRESSION to change the default schedule.
+Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will run every day at 2:00 AM.
 
 ## Editing Server Settings
 

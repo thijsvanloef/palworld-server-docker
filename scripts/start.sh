@@ -289,6 +289,13 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
+if [ "${BACKUP_ENABLED}" = true ]; then
+    echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
+    
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" > "/home/steam/server/crontab"
+    supercronic "/home/steam/server/crontab" &
+fi
+
 # Configure RCON settings
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
