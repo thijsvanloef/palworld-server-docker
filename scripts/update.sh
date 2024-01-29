@@ -5,7 +5,7 @@ if [ "${UPDATE_ON_BOOT}" = false ]; then
     exit 1
 fi
 
-CURRENTBUILD=$(awk '/buildid/{ print $2 }' < palworld/steamapps/appmanifest_2394010.acf)
+CURRENTBUILD=$(awk '/buildid/{ print $2 }' < /palworld/steamapps/appmanifest_2394010.acf)
 TARGETBUILD=$(curl https://api.steamcmd.net/v1/info/2394010 --silent | grep -P '"public": {"buildid": "\d+"' -o | sed -r 's/.*("[0-9]+")$/\1/')
 
 if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
