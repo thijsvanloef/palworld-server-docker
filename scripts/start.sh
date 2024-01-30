@@ -100,7 +100,6 @@ fi
 
 fileExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
-isExecutable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 
 escape_sed() {
     printf '%s\n' "$1" | sed -e 's:[][\/.^$*]:\\&:g'
