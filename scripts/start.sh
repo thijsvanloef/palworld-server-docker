@@ -23,20 +23,7 @@ if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
-
-# shellcheck disable=SC2143
-if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-
-    printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
-
-    # Server will generate all ini files after first run.
-    timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
-
-    # Wait for shutdown
-    sleep 5
-    cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-fi
+printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
 
 ./compile-settings.sh
 
