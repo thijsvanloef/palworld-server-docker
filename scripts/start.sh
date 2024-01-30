@@ -42,19 +42,22 @@ fi
 
 if [ -n "${SERVER_NAME}" ]; then
     echo "SERVER_NAME=${SERVER_NAME}"
-    sed -E -i "s/ServerName=\"[^\"]*\"/ServerName=$SERVER_NAME/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerName=\"[^\"]*\"/ServerName=\"$SERVER_NAME\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
+
 if [ -n "${SERVER_DESCRIPTION}" ]; then
     echo "SERVER_DESCRIPTION=${SERVER_DESCRIPTION}"
-    sed -E -i "s/ServerDescription=\"[^\"]*\"/ServerDescription=$SERVER_DESCRIPTION/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerDescription=\"[^\"]*\"/ServerDescription=\"$SERVER_DESCRIPTION\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
+
 if [ -n "${SERVER_PASSWORD}" ]; then
     echo "SERVER_PASSWORD=${SERVER_PASSWORD}"
-    sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=$SERVER_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=\"$SERVER_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
+
 if [ -n "${ADMIN_PASSWORD}" ]; then
-    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" 
-    sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=$ADMIN_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}"
+    sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=\"$ADMIN_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PLAYERS}" ]; then
     echo "PLAYERS=${PLAYERS}"
