@@ -51,7 +51,7 @@ data:
   {{ if .Values.server.config.daily_reboot.enable }}
   restart-deployment.sh:  |
     #!/bin/bash
-    cont=$(kubectl -n {{ .Values.namespace }} get pods -o=jsonpath='{.items[?(@.metadata.labels.app.kubernetes.io/name=="{{ .Release.Name }}-server")].metadata.name}')
+    cont=$(kubectl -n {{ .Values.namespace }} get pods -o=jsonpath='{.items[?(@.metadata.labels.app\.kubernetes\.io/name=="{{ .Release.Name }}-server")].metadata.name}')
     
     function exec_rcon_cmd() {
       kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "$1"
