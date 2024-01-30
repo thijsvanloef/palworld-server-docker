@@ -44,7 +44,7 @@ dirExists "/palworld"
 isWritable "/palworld"
 isExecutable "/palworld"
 
-cd /palworld
+cd /palworld || exit 6
 
 if [ "${UPDATE_ON_BOOT}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
