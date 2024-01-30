@@ -178,7 +178,7 @@ It is highly recommended you set the following environment values before startin
 | DELETE_OLD_BACKUPS | Delete backups after a certain number of days                                                                                                                                                       | false          | true/false                                                                                                 |
 | OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
 | AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
-| AUTO_UPDATE_ENABLED | Enables automatic updates | true | true/false |
+| AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
 | AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
 
 *highly recommended to set
@@ -271,10 +271,10 @@ To be able to use automatic Updates with this Server the following environment v
 * UPDATE_ON_BOOT
 
 > [!IMPORTANT]
-> 
+>
 > If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
-> manually restarted. 
-> 
+> manually restarted.
+>
 > The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
 
 Set AUTO_UPDATE_ENABLED enable or disable automatic backups (Default is disabled)
