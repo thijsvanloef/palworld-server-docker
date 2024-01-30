@@ -31,3 +31,4 @@ annotations:
   artifacthub.io/images: |
     - name: palworld-server-docker
       image: thijsvanloef/palworld-server-docker:latest
+  artifacthub.io/screenshots: https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg
