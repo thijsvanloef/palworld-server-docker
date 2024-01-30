@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ "$(id -u)" -eq 0 ]] || [[ "$(id -g)" -eq 0 ]]; then
-   printf "\033[31mRunning as root is not supported, please fix your PUID and PGID!\n"
+   printf "\033[31mRunning as root is not supported, please fix your user!\n"
    exit 1
 fi
 
