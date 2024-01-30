@@ -18,5 +18,9 @@ echo "backup created at $FILE_PATH"
 
 if [ "${DELETE_OLD_BACKUPS}" = true ]; then
         echo "removing backups older than ${OLD_BACKUP_DAYS:=30} days"
-        find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+${OLD_BACKUP_DAYS}" -print -delete
+        if [ "$(id -u)" -eq 0 ]; then
+                su steam -c "find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+${OLD_BACKUP_DAYS}" -type f -name 'palworld-save-*.tar.gz' -print -delete"
+        else
+                find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+${OLD_BACKUP_DAYS}" -type f -name 'palworld-save-*.tar.gz' -print -delete
+        fi
 fi
