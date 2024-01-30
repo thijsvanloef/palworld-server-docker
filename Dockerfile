@@ -42,6 +42,7 @@ ENV PORT= \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \
+    OLD_BACKUP_DAYS=30 \
     BACKUP_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
