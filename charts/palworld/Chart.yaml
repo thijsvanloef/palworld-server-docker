@@ -26,7 +26,7 @@ annotations:
   artifacthub.io/links: |
     - name: Chart source
       url: https://github.com/thijsvanloef/palworld-server-docker/tree/main/charts/palworld
-    - name: Image source
+    - name: Docker image source
       url: https://github.com/thijsvanloef/palworld-server-docker
   artifacthub.io/images: |
     - name: palworld-server-docker
