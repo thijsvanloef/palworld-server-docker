@@ -1,15 +1,13 @@
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:user
-      build:
-         dockerfile: Dockerfile
-      # restart: unless-stopped
-      container_name: palworld-server-user
-      # Works if you set to 1000:1000 (default of steam user)
+      image: thijsvanloef/palworld-server-docker:latest
+      restart: unless-stopped
+      container_name: palworld-server
+      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
       user: 5000:5000
       ports:
         - 8212:8211/udp
-        #- 27015:27015/udp # Required if you want your server to show up in the community servers tab 
+        - 27015:27015/udp # Required if you want your server to show up in the community servers tab 
       environment:
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended

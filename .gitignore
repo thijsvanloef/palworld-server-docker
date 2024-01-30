@@ -1,4 +1,5 @@
 palworld
 .idea
+!charts/*
 values*.yaml
-!chart/values.yaml
+.env

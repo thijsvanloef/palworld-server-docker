@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "${RCON_ENABLED}" = true ]; then
-        rcon-cli save
+        rcon-cli -c /home/steam/server/rcon.yaml save
 fi
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -15,3 +15,8 @@ if [ "$(id -u)" -eq 0 ]; then
 fi
 
 echo "backup created at $FILE_PATH"
+
+if [ "${DELETE_OLD_BACKUPS}" = true ]; then
+        echo "removing backups older than ${OLD_BACKUP_DAYS:=30} days"
+        find /palworld/backups/ -mindepth 1 -maxdepth 1 -mtime "+${OLD_BACKUP_DAYS}" -print -delete
+fi
