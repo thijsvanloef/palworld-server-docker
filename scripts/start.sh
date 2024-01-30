@@ -1,11 +1,70 @@
 #!/bin/bash
 
+dirExists(){
+    local path=$1
+    if ! [ -d "${path}" ]; then
+        echo "${path} does not exist."
+        exit 2
+    else
+        return true
+    fi
+}
+
+fileExists(){
+    local path=$1
+    if ! [ -e "${path}" ]; then
+        echo "${path} does not exist."
+        exit 3
+    else
+        return true
+    fi
+}
+
+isReadable(){
+    local path=$1
+    if ! [ -e "${path}" ]; then
+        echo "${path} does not readable."
+        exit 4
+    else
+        return true
+    fi
+}
+
+isWritable(){
+    local path=$1
+    if ! [ -w "${path}" ]; then
+        echo "${path} does not writable."
+        exit 5
+    else
+        return true
+    fi
+}
+
+isExecutable(){
+    local path=$1
+    if ! [ -x "${path}" ]; then
+        echo "${path} does not executable."
+        exit 6
+    else
+        return true
+    fi
+}
+
+dirExists "/palworld"
+isWritable "/palworld"
+isExecutable "/palworld"
+
+cd /palworld
+
 if [ "${UPDATE_ON_BOOT}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
     /home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 fi
 
 STARTCOMMAND=("./PalServer.sh")
+
+fileExists "${STARTCOMMAND[0]}"
+isExecutable "${STARTCOMMAND[0]}"
 
 if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
@@ -23,8 +82,6 @@ if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-cd /palworld || exit
-
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
 # shellcheck disable=SC2143
@@ -39,6 +96,10 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     sleep 5
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
+
+dirExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+isExecutable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 
 if [ -n "${SERVER_NAME}" ]; then
     echo "SERVER_NAME=${SERVER_NAME}"
@@ -306,4 +367,4 @@ EOL
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
-
+exit 0

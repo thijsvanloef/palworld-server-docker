@@ -28,3 +28,4 @@ su steam -c ./start.sh &
 # Process ID of su
 killpid="$!"
 wait $killpid
+exit "$?"
