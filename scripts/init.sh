@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# if ! [[[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]]; then
-#    printf "\033[31mRunning as root is not supported, please fix your PUID and PGID!\n"
-#    exit 1
-# fi
+if ! [[[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]]; then
+   printf "\033[31mRunning as root is not supported, please fix your PUID and PGID!\n"
+   exit 1
+fi
 
 mkdir -p /palworld/backups
 
