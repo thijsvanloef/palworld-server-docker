@@ -1,8 +1,6 @@
 # palworld
 
-![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational)
-![Type: application](https://img.shields.io/badge/Type-application-informational)
-![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational)
+![Version: 0.0.2](https://img.shields.io/badge/Version-0.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: latest](https://img.shields.io/badge/AppVersion-latest-informational?style=flat-square)
 
 This chart will provide a Palworld server installation on a kubernetes cluster.
 
@@ -29,6 +27,10 @@ This chart will provide a Palworld server installation on a kubernetes cluster.
 | server.config.annotations | object | `{}` | Additional annotations to the resources |
 | server.config.community.enable | bool | `true` | Enables/disables the visibility of this server on Steam community servers list. |
 | server.config.community.password | string | `""` | If not provided, a random password will be generated and stored on the secret. |
+| server.config.daily_reboot.enable | bool | `false` | Enable daily reboot. Disabled by default |
+| server.config.daily_reboot.role | string | `"daily-reboot"` | The name of the role performing the daily reboot. |
+| server.config.daily_reboot.serviceAccount | string | `"daily-reboot"` | The name of the Service Account used to perform the reboot. |
+| server.config.daily_reboot.time | string | `"30 9 * * *"` | The time (UTC) the server will perform the reboot. By default, this schedules the restart at 9:30am UTC. Please note, this is using cron syntax. |
 | server.config.labels | object | `{}` | Additional labels to the resources |
 | server.config.max_players | int | `16` | The max number of players supported. |
 | server.config.multithreading | bool | `true` | Enables the multithreading, allowing the usage of up to 4 cores (needs citation) |
