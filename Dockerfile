@@ -14,6 +14,17 @@ RUN wget -q https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.
     mv rcon-0.10.3-amd64_linux/rcon /usr/bin/rcon-cli && \
     rmdir /tmp/dumps
 
+# Latest releases available at https://github.com/aptible/supercronic/releases
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.29/supercronic-linux-amd64 \
+    SUPERCRONIC=supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b
+
+RUN wget -q "$SUPERCRONIC_URL" \
+ && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+ && chmod +x "$SUPERCRONIC" \
+ && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+
 ENV PORT= \
     PUID=1000 \
     PGID=1000 \
@@ -30,7 +41,9 @@ ENV PORT= \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
     TZ=UTC \
-    SERVER_DESCRIPTION=
+    SERVER_DESCRIPTION= \
+    BACKUP_ENABLED=true \
+    BACKUP_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts /home/steam/server/
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/compile-settings.sh /home/steam/server/start.sh /home/steam/server/backup.sh && \
