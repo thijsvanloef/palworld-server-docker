@@ -5,8 +5,6 @@ dirExists(){
     if ! [ -d "${path}" ]; then
         echo "${path} does not exist."
         exit 2
-    else
-        return true
     fi
 }
 
@@ -15,8 +13,6 @@ fileExists(){
     if ! [ -e "${path}" ]; then
         echo "${path} does not exist."
         exit 3
-    else
-        return true
     fi
 }
 
@@ -25,8 +21,6 @@ isReadable(){
     if ! [ -e "${path}" ]; then
         echo "${path} is not readable."
         exit 4
-    else
-        return true
     fi
 }
 
@@ -35,8 +29,6 @@ isWritable(){
     if ! [ -w "${path}" ]; then
         echo "${path} is not writable."
         exit 5
-    else
-        return true
     fi
 }
 
@@ -45,8 +37,6 @@ isExecutable(){
     if ! [ -x "${path}" ]; then
         echo "${path} is not executable."
         exit 6
-    else
-        return true
     fi
 }
 
