@@ -1,20 +1,33 @@
 apiVersion: v2
 name: palworld
 version: 0.0.2
-description: This chart will provide a Palworld server installation on a kubernetes cluster.
+description: This chart will provide a Palworld server installation on a kubernetes cluster
 type: application
 keywords:
-  - palworld
-  - server
-  - kubernetes
-  - helm
+- palworld
+- server
+- kubernetes
+- helm
 home: https://github.com/thijsvanloef/palworld-server-docker
 sources:
-  - https://github.com/thijsvanloef/palworld-server-docker
+- https://github.com/thijsvanloef/palworld-server-docker
 maintainers:
-  - name: Filipe Souza
-    email: filipe.souza@mestre8d.com
-    url: https://github.com/Filipe-Souza
+- name: Filipe Souza
+  email: filipe.souza@mestre8d.com
+  url: https://github.com/Filipe-Souza
+- name: Twinki
+  url: https://github.com/Twinki14
 icon: https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg
 appVersion: "latest"
 deprecated: false
+annotations:
+  artifacthub.io/alternativeName: palworld-server
+  artifacthub.io/license: MIT
+  artifacthub.io/links: |
+    - name: Chart source
+      url: https://github.com/thijsvanloef/palworld-server-docker/tree/main/charts/palworld
+    - name: Image source
+      url: https://github.com/thijsvanloef/palworld-server-docker
+  artifacthub.io/images: |
+    - name: palworld-server-docker
+      image: thijsvanloef/palworld-server-docker:latest
