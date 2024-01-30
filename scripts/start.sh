@@ -101,27 +101,36 @@ dirExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 isExecutable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 
+escape_sed() {
+    printf '%s\n' "$1" | sed -e 's:[][\/.^$*]:\\&:g'
+}
+
 if [ -n "${SERVER_NAME}" ]; then
+    SERVER_NAME=$(escape_sed "$SERVER_NAME" | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/")
     echo "SERVER_NAME=${SERVER_NAME}"
-    sed -E -i "s/ServerName=\"[^\"]*\"/ServerName=$SERVER_NAME/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerName=\"[^\"]*\"/ServerName=\"$SERVER_NAME\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${SERVER_DESCRIPTION}" ]; then
+    SERVER_DESCRIPTION=$(escape_sed "$SERVER_DESCRIPTION" | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/")
     echo "SERVER_DESCRIPTION=${SERVER_DESCRIPTION}"
-    sed -E -i "s/ServerDescription=\"[^\"]*\"/ServerDescription=$SERVER_DESCRIPTION/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerDescription=\"[^\"]*\"/ServerDescription=\"$SERVER_DESCRIPTION\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${SERVER_PASSWORD}" ]; then
+    SERVER_PASSWORD=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$SERVER_PASSWORD")
     echo "SERVER_PASSWORD=${SERVER_PASSWORD}"
-    sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=$SERVER_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=\"$SERVER_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${ADMIN_PASSWORD}" ]; then
+    ADMIN_PASSWORD=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$ADMIN_PASSWORD")
     echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" 
-    sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=$ADMIN_PASSWORD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=\"$ADMIN_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PLAYERS}" ]; then
     echo "PLAYERS=${PLAYERS}"
     sed -E -i "s/ServerPlayerMaxNum=[0-9]*/ServerPlayerMaxNum=$PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PUBLIC_IP}" ]; then
+    PUBLIC_IP=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$PUBLIC_IP")
     echo "PUBLIC_IP=${PUBLIC_IP}"
     sed -E -i "s/PublicIP=\"[^\"]*\"/PublicIP=\"$PUBLIC_IP\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
@@ -330,6 +339,7 @@ if [ -n "${COOP_PLAYER_MAX_NUM}" ]; then
     sed -E -i "s/CoopPlayerMaxNum=[0-9]*/CoopPlayerMaxNum=$COOP_PLAYER_MAX_NUM/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${REGION}" ]; then
+    REGION=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$REGION")
     echo "REGION=$REGION"
     sed -E -i "s/Region=\"[^\"]*\"/Region=\"$REGION\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
@@ -338,6 +348,7 @@ if [ -n "${USEAUTH}" ]; then
     sed -E -i "s/bUseAuth=[a-zA-Z]*/bUseAuth=$USEAUTH/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${BAN_LIST_URL}" ]; then
+    BAN_LIST_URL=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$BAN_LIST_URL")
     echo "BAN_LIST_URL=$BAN_LIST_URL"
     sed -E -i "s~BanListURL=\"[^\"]*\"~BanListURL=\"$BAN_LIST_URL\"~" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi

@@ -57,15 +57,15 @@ services:
          - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD="worldofpals" # Optional but recommended
+         - SERVER_PASSWORD=worldofpals # Optional but recommended
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
          - TZ=UTC
-         - ADMIN_PASSWORD="adminPasswordHere"
+         - ADMIN_PASSWORD=adminPasswordHere
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME="World of Pals"
-         - SERVER_DESCRIPTION="Awesome World of Pal"
+         - SERVER_NAME=World of Pals
+         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
       volumes:
          - ./palworld:/palworld/
 ```
@@ -108,11 +108,11 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
-    -e ADMIN_PASSWORD="adminPasswordHere" \
-    -e SERVER_PASSWORD="worldofpals" \
+    -e ADMIN_PASSWORD=adminPasswordHere \
+    -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
-    -e SERVER_DESCRIPTION="Awesome World of Pal" \
+    -e SERVER_NAME=World of Pals \
+    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
