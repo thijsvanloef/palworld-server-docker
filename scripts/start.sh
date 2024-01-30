@@ -64,6 +64,7 @@ fi
 STARTCOMMAND=("./PalServer.sh")
 
 fileExists "${STARTCOMMAND[0]}"
+isReadable "${STARTCOMMAND[0]}"
 isExecutable "${STARTCOMMAND[0]}"
 
 if [ -n "${PORT}" ]; then
