@@ -98,7 +98,7 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-dirExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+fileExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 isExecutable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 
