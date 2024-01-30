@@ -23,7 +23,7 @@ fileExists(){
 isReadable(){
     local path=$1
     if ! [ -e "${path}" ]; then
-        echo "${path} does not readable."
+        echo "${path} is not readable."
         exit 4
     else
         return true
@@ -33,7 +33,7 @@ isReadable(){
 isWritable(){
     local path=$1
     if ! [ -w "${path}" ]; then
-        echo "${path} does not writable."
+        echo "${path} is not writable."
         exit 5
     else
         return true
@@ -43,7 +43,7 @@ isWritable(){
 isExecutable(){
     local path=$1
     if ! [ -x "${path}" ]; then
-        echo "${path} does not executable."
+        echo "${path} is not executable."
         exit 6
     else
         return true
