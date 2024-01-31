@@ -293,7 +293,7 @@ if [ -n "${BAN_LIST_URL}" ]; then
 fi
 if [ -n "${RCON_ENABLED}" ]; then
     echo "RCON_ENABLED=${RCON_ENABLED}"
-    if [ "${RCON_ENABLED}" = true ]; then
+    if [ "${RCON_ENABLED,,}" = true ]; then
         sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=True/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
     else
         sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=False/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
