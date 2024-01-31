@@ -10,7 +10,7 @@ dirExists(){
 
 fileExists(){
     local path=$1
-    if ! [ -e "${path}" ]; then
+    if ! [ -f "${path}" ]; then
         echo "${path} does not exist."
         exit 3
     fi
