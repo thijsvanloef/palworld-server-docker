@@ -25,6 +25,8 @@ RUN wget -q "$SUPERCRONIC_URL" \
  && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
 
 ENV PORT= \
+    PUID=1000 \
+    PGID=1000 \
     PLAYERS= \
     MULTITHREADING=false \
     COMMUNITY=false \
@@ -55,5 +57,4 @@ HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT} ${RCON_PORT}
-USER steam
 ENTRYPOINT ["/home/steam/server/init.sh"]

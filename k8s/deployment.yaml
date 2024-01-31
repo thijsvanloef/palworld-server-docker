@@ -20,9 +20,6 @@ spec:
         - name: palworld-server
           image: thijsvanloef/palworld-server-docker
           imagePullPolicy: IfNotPresent
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
           ports:
             - containerPort: 8211
               name: server
