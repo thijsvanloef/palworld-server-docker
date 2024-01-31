@@ -247,6 +247,19 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
+## Restore a backup
+
+To restore a backup, use the command:
+
+```bash
+docker exec palworld-server restore
+```
+
+The container must be restarted after the recovery progresses.
+
+> [!IMPORTANT]
+> It is recommended that RCON is enabled for safe recovery.
+
 ## Configuring Automatic Backups with Cron
 
 The server is automatically backed up everynight at midnight according to the timezone set with TZ

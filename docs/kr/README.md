@@ -188,7 +188,7 @@ docker exec -it palworld-server rcon-cli
 
 ## 백업 만들기
 
-현재 시점의 게임 세이브 백업을 생성하려면 다음 명령을 사용합니다.
+현재 시점의 게임 세이브 백업을 생성하려면 다음 명령을 사용합니다:
 
 ```bash
 docker exec palworld-server backup
@@ -197,6 +197,19 @@ docker exec palworld-server backup
 다음 위치에 백업이 생성됩니다. `/palworld/backups/`
 
 rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
+
+## 백업 파일 복원 하기
+
+백업을 복원하려면 다음 명령을 사용합니다:
+
+```bash
+docker exec palworld-server restore
+```
+
+복구가 진행된 후 컨테이너를 다시 시작해야 합니다.
+
+> [!IMPORTANT]
+> 안전한 복구를 위해 RCON을 활성화하는 것을 권장합니다.
 
 ## 서버 설정 편집
 
