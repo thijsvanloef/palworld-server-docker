@@ -97,13 +97,13 @@ docker run -d \
 
 ### Kubernetes
 
-将此容器部署到 Kubernetes 的所有文件都位于[此文件夹中](k8s/)。
+将此容器部署到 Kubernetes 的所有文件都位于[此文件夹中](/k8s/)。
 
-请按照 [此处](k8s/readme.md) 进行部署。
+请按照 [此处](/readme.md) 进行部署。
 
 #### 使用 helm 部署
 
-请按照 [此处](./chart/README.md) 进行部署。
+请按照 [此处](/chart/README.md) 进行部署。
 
 ### 环境变量
 
