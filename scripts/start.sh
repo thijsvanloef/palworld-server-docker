@@ -59,7 +59,7 @@ dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
 
-cd /palworld || exit 6
+cd /palworld || exit
 
 if isBoolean "${UPDATE_ON_BOOT}"; then
     if [ "${UPDATE_ON_BOOT,,}" = true ]; then
