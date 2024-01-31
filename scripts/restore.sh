@@ -52,12 +52,13 @@ if [ -f "$BACKUP_FILE" ]; then
     # Shutdown server
     trap 'term_error_handler' ERR
 
-    printf "\e[0;32m*****SHUTDOWN SERVER*****\e[0m\n"
     if [ "${RCON_ENABLED}" = true ]; then
+        printf "\e[0;32m*****SHUTDOWN SERVER*****\e[0m\n"
         rcon-cli -c /home/steam/server/rcon.yaml save
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else
-        echo "RCON is not enabled. Please enable RCON to use this feature."
+        echo "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."
+        exit 1
     fi
     printf "\e[0;32mShutdown complete.\e[0m\n"
 
