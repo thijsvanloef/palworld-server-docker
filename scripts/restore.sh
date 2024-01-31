@@ -31,7 +31,7 @@ term_handler() {
 restore_error_handler() {
     printf "\033[0;31mAn error occurred during restore.\033[0m\n"
     if [ -d "./tmp_save/Saved" ]; then
-      read -p "I have a backup before recovery can proceed. Do you want to recovery it? (y/n): " RUN_ANSWER
+      read -rp "I have a backup before recovery can proceed. Do you want to recovery it? (y/n): " RUN_ANSWER
       if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
         rm -rf "$RESTORE_PATH/Saved"
         mv "./tmp_save/Saved" "$RESTORE_PATH"
@@ -109,7 +109,7 @@ done
 
 if [ -f "$BACKUP_DIRECTORY_PATH/$FILE_NAME" ]; then
   echo "Do you want to continue with the command?"
-  read -p "When you run it, the server will be stopped and the recovery will proceed. (y/n): " RUN_ANSWER
+  read -rp "When you run it, the server will be stopped and the recovery will proceed. (y/n): " RUN_ANSWER
   if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
     printf "\e[0;32m*****STARTING PROCESS*****\e[0m\n"
       start_restore

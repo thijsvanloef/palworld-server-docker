@@ -48,9 +48,6 @@ ENV PORT= \
     AUTO_UPDATE_WARN_MINUTES=30
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh && \
-    mv /home/steam/server/backup.sh /usr/local/bin/backup && \
-    mv /home/steam/server/update.sh /usr/local/bin/update
 
 RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh /home/steam/server/restore.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
