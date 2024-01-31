@@ -5,7 +5,7 @@ dirExists() {
     local return_val=0
     if ! [ -d "${path}" ]; then
         echo "${path} does not exist."
-        return_val=2
+        return_val=1
     fi
     return "$return_val"
 }
@@ -15,7 +15,7 @@ fileExists() {
     local return_val=0
     if ! [ -f "${path}" ]; then
         echo "${path} does not exist."
-        return_val=3
+        return_val=1
     fi
     return "$return_val"
 }
@@ -25,7 +25,7 @@ isReadable() {
     local return_val=0
     if ! [ -e "${path}" ]; then
         echo "${path} is not readable."
-        return_val=4
+        return_val=1
     fi
     return "$return_val"
 }
@@ -35,7 +35,7 @@ isWritable() {
     local return_val=0
     if ! [ -w "${path}" ]; then
         echo "${path} is not writable."
-        return_val=5
+        return_val=1
     fi
     return "$return_val"
 }
@@ -45,7 +45,7 @@ isExecutable() {
     local return_val=0
     if ! [ -x "${path}" ]; then
         echo "${path} is not executable."
-        return_val=6
+        return_val=1
     fi
     return "$return_val"
 }
