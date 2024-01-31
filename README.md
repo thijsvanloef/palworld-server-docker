@@ -258,7 +258,7 @@ docker exec palworld-server restore
 The container must be restarted after the recovery progresses.
 
 > [!IMPORTANT]
-> It is recommended that RCON is enabled for safe recovery.
+> The `RCON_ENABLED` environment variable must be `true` to use this command.
 
 ## Configuring Automatic Backups with Cron
 

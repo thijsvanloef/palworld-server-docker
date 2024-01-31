@@ -209,7 +209,7 @@ docker exec palworld-server restore
 복구가 진행된 후 컨테이너를 다시 시작해야 합니다.
 
 > [!IMPORTANT]
-> 안전한 복구를 위해 RCON을 활성화하는 것을 권장합니다.
+> 복원 명령어를 사용하려면 `RCON_ENABLED` 환경 변수가 `true`여야 합니다.
 
 ## 서버 설정 편집
 
