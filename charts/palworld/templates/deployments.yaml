@@ -40,6 +40,18 @@ spec:
         - name: server
           image: "{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.server.image.imagePullPolicy }}
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c"]
+                args:
+                  - |
+                    cont=$(kubectl -n {{ .Values.namespace }} get pods -o=jsonpath='{.items[?(@.metadata.labels.app\.kubernetes\.io/name=="{{ .Release.Name }}-server")].metadata.name}')
+                    function exec_rcon_cmd() {
+                      kubectl exec -n {{ .Values.namespace }} -i pod/$cont rcon-cli "$1"
+                    }
+                    exec_rcon_cmd save
+                    exec_rcon_cmd backup
           resources:
             {{- with .Values.server.resources }}
               {{- toYaml . | nindent 12 }}
