@@ -1,0 +1,11 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+    name: restart-deployment
+rules:
+    - apiGroups: ["apps", "extensions"]
+      resources: ["deployments", "pods"]
+      verbs: ["get", "patch", "list", "watch"]
+    - apiGroups:  [""]
+      resources:  ["pods/exec", "pods"]
+      verbs:  ["get", "list", "create"]

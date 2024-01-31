@@ -13,14 +13,14 @@
 
 [English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
 
-> [!팁]
+> [!Tip]
 > 어떻게 시작해야 할지 모르시나요? [제가 작성한 이 가이드](https://tice.tips/containerization/palworld-server-docker/)를 확인해 보세요
 
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) 전용 서버 호스팅을 시작하는 데 도움이 되는 Docker 컨테이너입니다.
 
 이 도커 컨테이너는 테스트되었으며 Linux(Ubuntu/Debian) 및 Windows 10 모두에서 작동합니다.
 
-> [!중요]
+> [!Important]
 > 현재 Xbox Gamepass/Xbox 콘솔 플레이어는 전용 서버에 참여할 수 없습니다.
 >
 > 초대 코드를 통해 다른 플레이어들과 함께 게임을 즐길 수 있으며, 게임은 최대 4명의 플레이어로 제한됩니다.
@@ -102,13 +102,13 @@ docker run -d \
 
 ### Kubernetes
 
-쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](k8s/)에 있습니다.
+쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](/k8s/)에 있습니다.
 
-[README.md](k8s/readme.md) 에 있는 지침을 따라 배포를 진행해주세요.
+[README.md](/k8s/readme.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
 #### Using helm chart
 
-[README.md](./chart/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
+[README.md](/charts/palworld/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
 ### 환경 변수
 
@@ -202,7 +202,7 @@ rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
 
 ### 환경 변수 사용 설정
 
-> [!중요]
+> [!Important]
 >
 > 게임이 아직 베타버전이므로 이러한 환경 변수/설정은 변경될 수 있습니다
 
@@ -276,7 +276,7 @@ rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
 
 서버 설정에 대한 자세한 설명 목록을 보려면 다음을 참조하세요: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-> [!팁]
+> [!Tip]
 > 만약 `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` 파일 내부가 비어 있으면,
 > 파일을 삭제하고 서버를 다시 시작하면 콘텐츠가 포함된 새 파일이 생성됩니다.
 
