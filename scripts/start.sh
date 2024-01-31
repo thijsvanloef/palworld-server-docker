@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # shellcheck disable=SC2317
-dirExists(){
+dirExists() {
     local path="$1"
     local return_val=0
     if ! [ -d "${path}" ]; then
@@ -12,7 +12,7 @@ dirExists(){
 }
 
 # shellcheck disable=SC2317
-fileExists(){
+fileExists() {
     local path="$1"
     local return_val=0
     if ! [ -f "${path}" ]; then
@@ -23,7 +23,7 @@ fileExists(){
 }
 
 # shellcheck disable=SC2317
-isReadable(){
+isReadable() {
     local path="$1"
     local return_val=0
     if ! [ -e "${path}" ]; then
@@ -34,7 +34,7 @@ isReadable(){
 }
 
 # shellcheck disable=SC2317
-isWritable(){
+isWritable() {
     local path="$1"
     local return_val=0
     if ! [ -w "${path}" ]; then
@@ -45,7 +45,7 @@ isWritable(){
 }
 
 # shellcheck disable=SC2317
-isExecutable(){
+isExecutable() {
     local path="$1"
     local return_val=0
     if ! [ -x "${path}" ]; then
