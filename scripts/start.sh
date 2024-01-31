@@ -29,6 +29,22 @@ printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
 
 cd /palworld || exit
 
+rm -f "/home/steam/server/crontab"
+if [ "${BACKUP_ENABLED}" = true ]; then
+    echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
+
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+fi
+
+if [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
+    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED}"
+    echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
+fi
+
+if { [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; } || [ "${BACKUP_ENABLED}" = true ]; then
+    supercronic "/home/steam/server/crontab" &
+fi
+
 # Configure RCON settings
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
