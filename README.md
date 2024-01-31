@@ -142,25 +142,31 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 ### Running without root
 
-This is only recommended for advance users
+This is only for advanced users
 
-It is possible to run this container and [override the default user](https://docs.docker.com/engine/reference/run/#user) which is root in this image.
+It is possible to run this container and 
+[override the default user](https://docs.docker.com/engine/reference/run/#user) which is root in this image.
+
+Because you are specifiying the user and group `PUID` and `PGID` are ignored.
 
 If you want to find your UID: `id -u`
 If you want to find your GID: `id -g`
 
 You must set user to `NUMBERICAL_UID:NUMBERICAL_GID`.
 
-* In docker run add `--user 1000:1000 \` above the last line.
-* In docker compose add `user: 1000:1000` above ports.
-* In k8s add the following above the ports in deployment.yaml 
+Below we assume your UID is 1000 and your GID is 1001
+* In docker run add `--user 1000:1001 \` above the last line.
+* In docker compose add `user: 1000:1001` above ports.
+* In k8s add the following above the ports in deployment.yaml
+
    ```
    securityContext:
       runAsUser: 1000
-      runAsGroup: 1000
+      runAsGroup: 1001
    ```
 
-If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that is being bind: `chown UID:GID palworld/`
+If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that
+is being bind: `chown UID:GID palworld/`
 or by changing the permissions for all other: `chmod o=rwx palworld/`
 
 #### Using helm chart
