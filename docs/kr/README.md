@@ -108,7 +108,7 @@ docker run -d \
 
 #### Using helm chart
 
-[README.md](/chart/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
+[README.md](/charts/palworld/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
 ### 환경 변수
 
