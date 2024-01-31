@@ -10,6 +10,7 @@ RESTORE_PATH="/palworld/Pal"
 term_error_handler() {
     echo "An error occurred during server shutdown."
     exit 1
+}
 
 # shellcheck disable=SC2317
 restore_error_handler() {
