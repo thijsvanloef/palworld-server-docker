@@ -99,11 +99,9 @@ if [ -f "$BACKUP_FILE" ]; then
 
       printf "\e[0;32mRestore complete!!!! Please restart the Docker container\e[0m\n"
       
-      trap - ERR
       exit 0
     else 
       echo "The selected backup file does not exist."
-      trap - ERR
       exit 1
     fi
   else
