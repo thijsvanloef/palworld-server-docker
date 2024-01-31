@@ -1,7 +1,8 @@
 #!/bin/bash
 
+# shellcheck disable=SC2317
 dirExists(){
-    local path=$1
+    local path="$1"
     local return_val=0
     if ! [ -d "${path}" ]; then
         echo "${path} does not exist."
@@ -10,8 +11,9 @@ dirExists(){
     return "$return_val"
 }
 
+# shellcheck disable=SC2317
 fileExists(){
-    local path=$1
+    local path="$1"
     local return_val=0
     if ! [ -f "${path}" ]; then
         echo "${path} does not exist."
@@ -20,8 +22,9 @@ fileExists(){
     return "$return_val"
 }
 
+# shellcheck disable=SC2317
 isReadable(){
-    local path=$1
+    local path="$1"
     local return_val=0
     if ! [ -e "${path}" ]; then
         echo "${path} is not readable."
@@ -30,8 +33,9 @@ isReadable(){
     return "$return_val"
 }
 
+# shellcheck disable=SC2317
 isWritable(){
-    local path=$1
+    local path="$1"
     local return_val=0
     if ! [ -w "${path}" ]; then
         echo "${path} is not writable."
@@ -40,8 +44,9 @@ isWritable(){
     return "$return_val"
 }
 
+# shellcheck disable=SC2317
 isExecutable(){
-    local path=$1
+    local path="$1"
     local return_val=0
     if ! [ -x "${path}" ]; then
         echo "${path} is not executable."
