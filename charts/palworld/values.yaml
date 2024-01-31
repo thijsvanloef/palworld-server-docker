@@ -70,7 +70,9 @@ server:
     # -- Additional labels to the resources
     labels: { }
     # -- (string) The type of service to be created.
-    type: LoadBalancer
+    # For minikube, set this to NodePort, elsewhere use LoadBalancer
+    # Use ClusterIP if your setup includes ingress controller
+    type: ClusterIP
     # -- (dict) The "healthz" definition .
     # Use if you need to create a TCP health check for load balancers on cloud services.
     healthz:
