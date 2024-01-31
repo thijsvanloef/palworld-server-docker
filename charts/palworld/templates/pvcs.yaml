@@ -27,5 +27,10 @@ spec:
   resources:
     requests:
       storage: {{ .Values.server.storage.size }}
+{{- if .Values.server.storage.storageClassName }}
+{{- if (eq "-" .Values.server.storage.storageClassName) }}
+  storageClassName: ""
+{{- else }}
   storageClassName: {{ .Values.server.storage.storageClassName }}
-{{ end }}
+{{- end }}
+{{- end }}

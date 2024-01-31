@@ -26,7 +26,14 @@ server:
     # -- The size of the pvc storage.
     size: 12Gi
     # -- The storage class name.
-    storageClassName: ""
+    ## data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClassName>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClassName: "-"
   # -- (dict) Define the parameters for the server image container
   # @notationType -- bigValue
   image:
