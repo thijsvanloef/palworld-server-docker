@@ -23,7 +23,7 @@ fileExists() {
 isReadable() {
     local path="$1"
     local return_val=0
-    if ! [ -e "${path}" ]; then
+    if ! [ -r "${path}" ]; then
         echo "${path} is not readable."
         return_val=1
     fi
