@@ -12,7 +12,6 @@ fi
 mkdir -p /palworld/backups
 chown -R steam:steam /palworld /home/steam/
 
-# shellcheck disable=SC2317
 term_handler() {
     if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
@@ -20,13 +19,13 @@ term_handler() {
     else # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
-    tail --pid="$killpid" -f 2>/dev/null
+    tail --pid=$killpid -f 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
 
 su steam -c ./start.sh &
 # Process ID of su
-killpid="$!"
+killpid=$!
 wait $killpid
-exit "$?"
+exit $?
