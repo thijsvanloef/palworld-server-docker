@@ -68,7 +68,7 @@ This chart will provide a Palworld server installation on a kubernetes cluster.
 | server.storage.externalName | bool | `""` | The external PVC name to use. |
 | server.storage.preventDelete | bool | `false` | Keeps helm from deleting the PVC. By default, helm does not delete pvcs. |
 | server.storage.size | string | `"12Gi"` | The size of the pvc storage. |
-| server.storage.storageClassName | string | `""` | The storage class name. |
+| server.storage.storageClassName | string | `nil` | The storage class name. |
 | server.strategy | string | `"Recreate"` | Change the deployment strategy |
 
 ----------------------------------------------
