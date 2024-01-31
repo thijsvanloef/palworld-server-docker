@@ -1,7 +1,7 @@
 OptionSettings=(
 Difficulty=$DIFFICULTY,
-DayTimeSpeedRate=$DAY_TIME_SPEED_RATE,
-NightTimeSpeedRate=$NIGHT_TIME_SPEED_RATE,
+DayTimeSpeedRate=$DAYTIME_SPEEDRATE,
+NightTimeSpeedRate=$NIGHTTIME_SPEEDRATE,
 ExpRate=$EXP_RATE,
 PalCaptureRate=$PAL_CAPTURE_RATE,
 PalSpawnNumRate=$PAL_SPAWN_NUM_RATE,
@@ -59,6 +59,6 @@ PublicIP=$PUBLIC_IP,
 RCONEnabled=$RCON_ENABLED,
 RCONPort=$RCON_PORT,
 Region=$REGION,
-bUseAuth=$USE_AUTH,
+bUseAuth=$USEAUTH,
 BanListURL=$BAN_LIST_URL
 )
