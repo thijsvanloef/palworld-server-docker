@@ -18,7 +18,7 @@
 
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) 전용 서버 호스팅을 시작하는 데 도움이 되는 Docker 컨테이너입니다.
 
-이 도커 컨테이너는 테스트되었으며 Linux(Ubuntu/Debian) 및 Windows 10 모두에서 작동합니다.
+이 도커 컨테이너는 테스트되었으며 Linux(Ubuntu/Debian), Windows 10 및 macOS (Apple Silicon 포함) 모두에서 작동합니다.
 
 > [!중요]
 > 현재 Xbox Gamepass/Xbox 콘솔 플레이어는 전용 서버에 참여할 수 없습니다.
