@@ -131,5 +131,5 @@ echo "====Debug===="
 mkdir -p /palworld/Pal/Saved/Config/LinuxServer
 cat > /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini <<EOF
 [/Script/Pal.PalGameWorldSettings]
-$(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n")
+$(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
 EOF
