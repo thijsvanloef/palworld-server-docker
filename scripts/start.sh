@@ -2,47 +2,57 @@
 
 dirExists(){
     local path=$1
+    local return_val=0
     if ! [ -d "${path}" ]; then
         echo "${path} does not exist."
-        exit 2
+        return_val=2
     fi
+    return "$return_val"
 }
 
 fileExists(){
     local path=$1
+    local return_val=0
     if ! [ -f "${path}" ]; then
         echo "${path} does not exist."
-        exit 3
+        return_val=3
     fi
+    return "$return_val"
 }
 
 isReadable(){
     local path=$1
+    local return_val=0
     if ! [ -e "${path}" ]; then
         echo "${path} is not readable."
-        exit 4
+        return_val=4
     fi
+    return "$return_val"
 }
 
 isWritable(){
     local path=$1
+    local return_val=0
     if ! [ -w "${path}" ]; then
         echo "${path} is not writable."
-        exit 5
+        return_val=5
     fi
+    return "$return_val"
 }
 
 isExecutable(){
     local path=$1
+    local return_val=0
     if ! [ -x "${path}" ]; then
         echo "${path} is not executable."
-        exit 6
+        return_val=6
     fi
+    return "$return_val"
 }
 
-dirExists "/palworld"
-isWritable "/palworld"
-isExecutable "/palworld"
+dirExists "/palworld" || exit
+isWritable "/palworld" || exit
+isExecutable "/palworld" || exit
 
 cd /palworld || exit 6
 
@@ -53,9 +63,9 @@ fi
 
 STARTCOMMAND=("./PalServer.sh")
 
-fileExists "${STARTCOMMAND[0]}"
-isReadable "${STARTCOMMAND[0]}"
-isExecutable "${STARTCOMMAND[0]}"
+fileExists "${STARTCOMMAND[0]}" || exit
+isReadable "${STARTCOMMAND[0]}" || exit
+isExecutable "${STARTCOMMAND[0]}" || exit
 
 if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
@@ -88,8 +98,8 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
-fileExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
-isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+fileExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
+isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
 
 escape_sed() {
     printf '%s\n' "$1" | sed -e 's:[][\/.^$*]:\\&:g'
