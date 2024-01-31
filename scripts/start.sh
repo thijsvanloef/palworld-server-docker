@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# shellcheck disable=SC2317
 dirExists() {
     local path="$1"
     local return_val=0
@@ -11,7 +10,6 @@ dirExists() {
     return "$return_val"
 }
 
-# shellcheck disable=SC2317
 fileExists() {
     local path="$1"
     local return_val=0
@@ -22,7 +20,6 @@ fileExists() {
     return "$return_val"
 }
 
-# shellcheck disable=SC2317
 isReadable() {
     local path="$1"
     local return_val=0
@@ -33,7 +30,6 @@ isReadable() {
     return "$return_val"
 }
 
-# shellcheck disable=SC2317
 isWritable() {
     local path="$1"
     local return_val=0
@@ -44,7 +40,6 @@ isWritable() {
     return "$return_val"
 }
 
-# shellcheck disable=SC2317
 isExecutable() {
     local path="$1"
     local return_val=0
