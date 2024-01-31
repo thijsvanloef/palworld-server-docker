@@ -60,7 +60,7 @@ if [ -f "$BACKUP_FILE" ]; then
         echo "RCON is not enabled. Please enable RCON to use this feature."
     fi
     printf "\e[0;32mShutdown complete.\e[0m\n"
-    
+
     trap - ERR
 
     trap 'restore_error_handler' ERR
@@ -98,13 +98,14 @@ if [ -f "$BACKUP_FILE" ]; then
       rm -rf "./tmp_save"
 
       printf "\e[0;32mRestore complete!!!! Please restart the Docker container\e[0m\n"
-
+      
+      trap - ERR
       exit 0
     else 
       echo "The selected backup file does not exist."
+      trap - ERR
       exit 1
     fi
-    trap - ERR
   else
       echo "Abort the recovery."
       exit 1
