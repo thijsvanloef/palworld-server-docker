@@ -102,13 +102,13 @@ docker run -d \
 
 ### Kubernetes
 
-쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](k8s/)에 있습니다.
+쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](/k8s/)에 있습니다.
 
-[README.md](k8s/readme.md) 에 있는 지침을 따라 배포를 진행해주세요.
+[README.md](/k8s/readme.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
 #### Using helm chart
 
-[README.md](./chart/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
+[README.md](/chart/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
 ### 환경 변수
 
