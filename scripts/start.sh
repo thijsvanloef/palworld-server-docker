@@ -58,7 +58,7 @@ cd /palworld || exit 6
 
 if [ "${UPDATE_ON_BOOT}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
-    /home/steam/steamcmd/steamcmd.sh +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 fi
 
 STARTCOMMAND=("./PalServer.sh")
@@ -361,10 +361,19 @@ if [ -n "${RCON_PORT}" ]; then
     sed -i "s/RCONPort=[0-9]*/RCONPort=$RCON_PORT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 
+rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
     
-    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" > "/home/steam/server/crontab"
+    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+fi
+
+if [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
+    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED}"
+    echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
+fi
+
+if { [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; } || [ "${BACKUP_ENABLED}" = true ]; then
     supercronic "/home/steam/server/crontab" &
 fi
 
