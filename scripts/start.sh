@@ -50,15 +50,24 @@ isExecutable() {
     return "$return_val"
 }
 
+isBoolean() {
+    local bool="$1"
+    [ "${bool,,}" = true ] || [ "${bool,,}" = false ]
+}
+
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
 
 cd /palworld || exit 6
 
-if [ "${UPDATE_ON_BOOT,,}" = true ]; then
-    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
-    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+if isBoolean "${UPDATE_ON_BOOT}"; then
+    if [ "${UPDATE_ON_BOOT,,}" = true ]; then
+        printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+        /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+    fi
+else
+    echo "UPDATE_ON_BOOT is not true/false, assuming false"
 fi
 
 STARTCOMMAND=("./PalServer.sh")
@@ -75,12 +84,19 @@ if [ -n "${QUERY_PORT}" ]; then
     STARTCOMMAND+=("-queryport=${QUERY_PORT}")
 fi
 
-if [ "${COMMUNITY,,}" = true ]; then
-    STARTCOMMAND+=("EpicApp=PalServer")
+if isBoolean "${COMMUNITY}"; then
+    if [ "${COMMUNITY,,}" = true ]; then
+        STARTCOMMAND+=("EpicApp=PalServer")
+    fi
+else
+    echo "COMMUNITY is not true/false, assuming false"
 fi
-
-if [ "${MULTITHREADING,,}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+if isBoolean "${MULTITHREADING}"; then
+    if [ "${MULTITHREADING,,}" = true ]; then
+        STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    fi
+else
+    echo "MULTITHREADING is not true/false, assuming false"
 fi
 
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
@@ -240,27 +256,51 @@ if [ -n "${DEATH_PENALTY}" ]; then
 fi
 if [ -n "${ENABLE_PLAYER_TO_PLAYER_DAMAGE}" ]; then
     echo "ENABLE_PLAYER_TO_PLAYER_DAMAGE=$ENABLE_PLAYER_TO_PLAYER_DAMAGE"
-    sed -E -i "s/bEnablePlayerToPlayerDamage=[a-zA-Z]*/bEnablePlayerToPlayerDamage=$ENABLE_PLAYER_TO_PLAYER_DAMAGE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_PLAYER_TO_PLAYER_DAMAGE}"; then
+        sed -E -i "s/bEnablePlayerToPlayerDamage=[a-zA-Z]*/bEnablePlayerToPlayerDamage=$ENABLE_PLAYER_TO_PLAYER_DAMAGE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_PLAYER_TO_PLAYER_DAMAGE is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_FRIENDLY_FIRE}" ]; then
     echo "ENABLE_FRIENDLY_FIRE=$ENABLE_FRIENDLY_FIRE"
-    sed -E -i "s/bEnableFriendlyFire=[a-zA-Z]*/bEnableFriendlyFire=$ENABLE_FRIENDLY_FIRE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_FRIENDLY_FIRE}"; then
+        sed -E -i "s/bEnableFriendlyFire=[a-zA-Z]*/bEnableFriendlyFire=$ENABLE_FRIENDLY_FIRE/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_FRIENDLY_FIRE is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_INVADER_ENEMY}" ]; then
     echo "ENABLE_INVADER_ENEMY=$ENABLE_INVADER_ENEMY"
-    sed -E -i "s/bEnableInvaderEnemy=[a-zA-Z]*/bEnableInvaderEnemy=$ENABLE_INVADER_ENEMY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_INVADER_ENEMY}"; then
+        sed -E -i "s/bEnableInvaderEnemy=[a-zA-Z]*/bEnableInvaderEnemy=$ENABLE_INVADER_ENEMY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_INVADER_ENEMY is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ACTIVE_UNKO}" ]; then
     echo "ACTIVE_UNKO=$ACTIVE_UNKO"
-    sed -E -i "s/bActiveUNKO=[a-zA-Z]*/bActiveUNKO=$ACTIVE_UNKO/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ACTIVE_UNKO}"; then
+        sed -E -i "s/bActiveUNKO=[a-zA-Z]*/bActiveUNKO=$ACTIVE_UNKO/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ACTIVE_UNKO is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_AIM_ASSIST_PAD}" ]; then
     echo "ENABLE_AIM_ASSIST_PAD=$ENABLE_AIM_ASSIST_PAD"
-    sed -E -i "s/bEnableAimAssistPad=[a-zA-Z]*/bEnableAimAssistPad=$ENABLE_AIM_ASSIST_PAD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_AIM_ASSIST_PAD}"; then
+        sed -E -i "s/bEnableAimAssistPad=[a-zA-Z]*/bEnableAimAssistPad=$ENABLE_AIM_ASSIST_PAD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_AIM_ASSIST_PAD is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_AIM_ASSIST_KEYBOARD}" ]; then
     echo "ENABLE_AIM_ASSIST_KEYBOARD=$ENABLE_AIM_ASSIST_KEYBOARD"
-    sed -E -i "s/bEnableAimAssistKeyboard=[a-zA-Z]*/bEnableAimAssistKeyboard=$ENABLE_AIM_ASSIST_KEYBOARD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_AIM_ASSIST_KEYBOARD}"; then
+        sed -E -i "s/bEnableAimAssistKeyboard=[a-zA-Z]*/bEnableAimAssistKeyboard=$ENABLE_AIM_ASSIST_KEYBOARD/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_AIM_ASSIST_KEYBOARD is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${DROP_ITEM_MAX_NUM}" ]; then
     echo "DROP_ITEM_MAX_NUM=$DROP_ITEM_MAX_NUM"
@@ -284,7 +324,11 @@ if [ -n "${DROP_ITEM_ALIVE_MAX_HOURS}" ]; then
 fi
 if [ -n "${AUTO_RESET_GUILD_NO_ONLINE_PLAYERS}" ]; then
     echo "AUTO_RESET_GUILD_NO_ONLINE_PLAYERS=$AUTO_RESET_GUILD_NO_ONLINE_PLAYERS"
-    sed -E -i "s/bAutoResetGuildNoOnlinePlayers=[a-zA-Z]*/bAutoResetGuildNoOnlinePlayers=$AUTO_RESET_GUILD_NO_ONLINE_PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${AUTO_RESET_GUILD_NO_ONLINE_PLAYERS}"; then
+        sed -E -i "s/bAutoResetGuildNoOnlinePlayers=[a-zA-Z]*/bAutoResetGuildNoOnlinePlayers=$AUTO_RESET_GUILD_NO_ONLINE_PLAYERS/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "AUTO_RESET_GUILD_NO_ONLINE_PLAYERS is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS}" ]; then
     echo "AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS=$AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS"
@@ -304,35 +348,67 @@ if [ -n "${WORK_SPEED_RATE}" ]; then
 fi
 if [ -n "${IS_MULTIPLAY}" ]; then
     echo "IS_MULTIPLAY=$IS_MULTIPLAY"
-    sed -E -i "s/bIsMultiplay=[a-zA-Z]*/bIsMultiplay=$IS_MULTIPLAY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${IS_MULTIPLAY}"; then
+        sed -E -i "s/bIsMultiplay=[a-zA-Z]*/bIsMultiplay=$IS_MULTIPLAY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "IS_MULTIPLAY is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${IS_PVP}" ]; then
     echo "IS_PVP=$IS_PVP"
-    sed -E -i "s/bIsPvP=[a-zA-Z]*/bIsPvP=$IS_PVP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${IS_PVP}"; then
+        sed -E -i "s/bIsPvP=[a-zA-Z]*/bIsPvP=$IS_PVP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "IS_PVP is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP}" ]; then
     echo "CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP=$CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP"
-    sed -E -i "s/bCanPickupOtherGuildDeathPenaltyDrop=[a-zA-Z]*/bCanPickupOtherGuildDeathPenaltyDrop=$CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP}"; then
+        sed -E -i "s/bCanPickupOtherGuildDeathPenaltyDrop=[a-zA-Z]*/bCanPickupOtherGuildDeathPenaltyDrop=$CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_NON_LOGIN_PENALTY}" ]; then
     echo "ENABLE_NON_LOGIN_PENALTY=$ENABLE_NON_LOGIN_PENALTY"
-    sed -E -i "s/bEnableNonLoginPenalty=[a-zA-Z]*/bEnableNonLoginPenalty=$ENABLE_NON_LOGIN_PENALTY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_NON_LOGIN_PENALTY}"; then
+        sed -E -i "s/bEnableNonLoginPenalty=[a-zA-Z]*/bEnableNonLoginPenalty=$ENABLE_NON_LOGIN_PENALTY/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_NON_LOGIN_PENALTY is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_FAST_TRAVEL}" ]; then
     echo "ENABLE_FAST_TRAVEL=$ENABLE_FAST_TRAVEL"
-    sed -E -i "s/bEnableFastTravel=[a-zA-Z]*/bEnableFastTravel=$ENABLE_FAST_TRAVEL/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_FAST_TRAVEL}"; then
+        sed -E -i "s/bEnableFastTravel=[a-zA-Z]*/bEnableFastTravel=$ENABLE_FAST_TRAVEL/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_FAST_TRAVEL is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${IS_START_LOCATION_SELECT_BY_MAP}" ]; then
     echo "IS_START_LOCATION_SELECT_BY_MAP=$IS_START_LOCATION_SELECT_BY_MAP"
-    sed -E -i "s/bIsStartLocationSelectByMap=[a-zA-Z]*/bIsStartLocationSelectByMap=$IS_START_LOCATION_SELECT_BY_MAP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${IS_START_LOCATION_SELECT_BY_MAP}"; then
+        sed -E -i "s/bIsStartLocationSelectByMap=[a-zA-Z]*/bIsStartLocationSelectByMap=$IS_START_LOCATION_SELECT_BY_MAP/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "IS_START_LOCATION_SELECT_BY_MAP is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${EXIST_PLAYER_AFTER_LOGOUT}" ]; then
     echo "EXIST_PLAYER_AFTER_LOGOUT=$EXIST_PLAYER_AFTER_LOGOUT"
-    sed -E -i "s/bExistPlayerAfterLogout=[a-zA-Z]*/bExistPlayerAfterLogout=$EXIST_PLAYER_AFTER_LOGOUT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${EXIST_PLAYER_AFTER_LOGOUT}"; then
+        sed -E -i "s/bExistPlayerAfterLogout=[a-zA-Z]*/bExistPlayerAfterLogout=$EXIST_PLAYER_AFTER_LOGOUT/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "EXIST_PLAYER_AFTER_LOGOUT is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${ENABLE_DEFENSE_OTHER_GUILD_PLAYER}" ]; then
     echo "ENABLE_DEFENSE_OTHER_GUILD_PLAYER=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER"
-    sed -E -i "s/bEnableDefenseOtherGuildPlayer=[a-zA-Z]*/bEnableDefenseOtherGuildPlayer=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${ENABLE_DEFENSE_OTHER_GUILD_PLAYER}"; then
+        sed -E -i "s/bEnableDefenseOtherGuildPlayer=[a-zA-Z]*/bEnableDefenseOtherGuildPlayer=$ENABLE_DEFENSE_OTHER_GUILD_PLAYER/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "ENABLE_DEFENSE_OTHER_GUILD_PLAYER is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${COOP_PLAYER_MAX_NUM}" ]; then
     echo "COOP_PLAYER_MAX_NUM=$COOP_PLAYER_MAX_NUM"
@@ -345,7 +421,11 @@ if [ -n "${REGION}" ]; then
 fi
 if [ -n "${USEAUTH}" ]; then
     echo "USEAUTH=$USEAUTH"
-    sed -E -i "s/bUseAuth=[a-zA-Z]*/bUseAuth=$USEAUTH/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if isBoolean "${USEAUTH}"; then
+        sed -E -i "s/bUseAuth=[a-zA-Z]*/bUseAuth=$USEAUTH/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        echo "USEAUTH is not true/false, unable to change value"
+    fi
 fi
 if [ -n "${BAN_LIST_URL}" ]; then
     BAN_LIST_URL=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$BAN_LIST_URL")
@@ -362,10 +442,15 @@ if [ -n "${RCON_PORT}" ]; then
 fi
 
 rm -f  "/home/steam/server/crontab"
-if [ "${BACKUP_ENABLED,,}" = true ]; then
-    echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
-    
-    echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+
+if isBoolean "${BACKUP_ENABLED}"; then
+    if [ "${BACKUP_ENABLED,,}" = true ]; then
+        echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
+        
+        echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+    fi
+else
+    echo "BACKUP_ENABLED is not true/false, assuming false"
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; then
