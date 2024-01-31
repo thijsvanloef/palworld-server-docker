@@ -301,7 +301,7 @@ if [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
 fi
 
-if ([ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]) || [ "${BACKUP_ENABLED}" = true ]; then
+if { [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; } || [ "${BACKUP_ENABLED}" = true ]; then
     supercronic "/home/steam/server/crontab" &
 fi
 
