@@ -74,7 +74,7 @@ STARTCOMMAND=("./PalServer.sh")
 
 fileExists "${STARTCOMMAND[0]}"
 if [ $? -ne 0 ]; then
-    echo "${STARTCOMMAND[0]} does not exists, try restarting with UPDATE_ON_BOOT=true"
+    echo "Try restarting with UPDATE_ON_BOOT=true"
 fi
 isReadable "${STARTCOMMAND[0]}" || exit
 isExecutable "${STARTCOMMAND[0]}" || exit
