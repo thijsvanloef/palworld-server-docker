@@ -16,14 +16,11 @@ term_handler() {
 
   printf "\e[0;32m*****SHUTDOWN SERVER*****\e[0m\n"
   if [ "${RCON_ENABLED}" = true ]; then
-      rcon-cli save
-      rcon-cli "shutdown 1"
+      rcon-cli -c /home/steam/server/rcon.yaml save
+      rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
   else
-      kill -SIGTERM "$(pidof PalServer-Linux)"
+      echo "RCON is not enabled. Please enable RCON to use this feature."
   fi
-  # 프로세스가 종료될 때까지 대기
-  tail --pid="$(pidof PalServer-Linux)" -f 2>/dev/null
-
   printf "\e[0;32mShutdown complete.\e[0m\n"
   trap - ERR
 }
@@ -48,11 +45,11 @@ restore_error_handler() {
 start_restore() {
   trap 'restore_error_handler' ERR
   # Shutdown server
-  # term_handler
+  term_handler
   printf "\e[0;32m*****START RESTORE*****\e[0m\n"
 
   # Recheck the backup file
-  if [ -f "$BACKUP_DIRECTORY_PATH/$FILE_NAME" ]; then
+  if [ -f "$BACKUP_FILE" ]; then
     ls
     # Copy the save file before restore
       if [ -d "$RESTORE_PATH/Saved" ]; then
@@ -73,7 +70,7 @@ start_restore() {
     mkdir -p "./tmp"
      
     # Decompress the backup file in tmp directory
-    tar -zxvf "$BACKUP_DIRECTORY_PATH/$FILE_NAME" -C "./tmp"
+    tar -zxvf "$BACKUP_FILE" -C "./tmp"
 
     # Move the backup file to the restore directory
     \cp -rf -f "./tmp/Saved/" "$RESTORE_PATH"
@@ -93,21 +90,23 @@ start_restore() {
   trap - ERR
 }
 
-# Go to backup file directory
-cd "$BACKUP_DIRECTORY_PATH"
+if [ "${RCON_ENABLED}" != true ]; then
+  echo "RCON is not enabled. Please enable RCON to use this feature."
+  exit 1
+fi
 
 # Show up backup list
 echo "Backup List:"
-select FILE_NAME in *; do
-    if [ -n "$FILE_NAME" ]; then
-        echo "Selected backup: $FILE_NAME"
+select BACKUP_FILE in "$BACKUP_DIRECTORY_PATH"/*; do
+    if [ -n "$BACKUP_FILE" ]; then
+        echo "Selected backup: $BACKUP_FILE"
         break
     else
         echo "Invalid selection. Please try again."
     fi
 done
 
-if [ -f "$BACKUP_DIRECTORY_PATH/$FILE_NAME" ]; then
+if [ -f "$BACKUP_FILE" ]; then
   echo "Do you want to continue with the command?"
   read -rp "When you run it, the server will be stopped and the recovery will proceed. (y/n): " RUN_ANSWER
   if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
