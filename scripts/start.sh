@@ -32,7 +32,6 @@ cd /palworld || exit
 rm -f "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
-
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
