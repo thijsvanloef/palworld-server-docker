@@ -55,24 +55,6 @@ isBoolean() {
     [ "${bool,,}" = true ] || [ "${bool,,}" = false ]
 }
 
-# Future use
-isUint() {
-    local bool="$1"
-    [[ "${bool}" =~ ^[0-9]+$ ]]
-}
-
-# Future use
-isNetworkPort() {
-    local bool="$1"
-    isUint "${bool}" && [ "${bool}" -ge 0 ] && [ "${bool}" -le 65535 ]
-}
-
-# Future use
-isUFloat() {
-    local bool="$1"
-    [[ "${bool}" =~ ^[0-9]+([.][0-9]+)?$ ]]
-}
-
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
