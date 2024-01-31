@@ -293,7 +293,11 @@ if [ -n "${BAN_LIST_URL}" ]; then
 fi
 if [ -n "${RCON_ENABLED}" ]; then
     echo "RCON_ENABLED=${RCON_ENABLED}"
-    sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=$RCON_ENABLED/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    if [ "${RCON_ENABLED}" = true ]; then
+        sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=True/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    else
+        sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=False/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    fi
 fi
 if [ -n "${RCON_PORT}" ]; then
     echo "RCON_PORT=${RCON_PORT}"
