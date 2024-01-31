@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${UPDATE_ON_BOOT}" = false ]; then
+if [ "${UPDATE_ON_BOOT,,}" = false ]; then
     echo "Update on Boot needs to be enabled for auto updating"
     exit 0
 fi
@@ -24,7 +24,7 @@ fi
 
 if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
-    if [ "${RCON_ENABLED}" = true ]; then
+    if [ "${RCON_ENABLED,,}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
