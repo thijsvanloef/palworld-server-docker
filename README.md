@@ -38,12 +38,6 @@ This Docker container has been tested and will work on both Linux (Ubuntu/Debian
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
-> [!IMPORTANT]
-> You must set user to `YOUR_UID:YOUR_GID`
-> To find your UID run `id -u` & to find your GID run `id -g`. In the examples they are listed as 1000:1000.
-> If you wish to run it as a different UID/GID this can by done by changing the ownership: `chown UID:GID palworld/`
-> or by changing the permissions for all other: `chmod o=rwx palworld/`
-
 ### Docker Compose
 
 This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
@@ -55,11 +49,12 @@ services:
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      user: 1000:1000
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
+         - PUID=1000
+         - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
          - SERVER_PASSWORD="worldofpals" # Optional but recommended
@@ -86,7 +81,6 @@ services:
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      user: 1000:1000
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
@@ -103,10 +97,11 @@ Change every <> to your own configuration
 ```bash
 docker run -d \
     --name palworld-server \
-    --user 1000:1000 \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./<palworld-folder>:/palworld/ \
+    -e PUID=1000 \
+    -e PGID=1000 \
     -e PORT=8211 \
     -e PLAYERS=16 \
     -e MULTITHREADING=true \
@@ -130,7 +125,6 @@ correct values. Change your docker run command to this:
 ```bash
 docker run -d \
     --name palworld-server \
-    --user 1000:1000 \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./<palworld-folder>:/palworld/ \
@@ -146,6 +140,29 @@ All files you will need to deploy this container to kubernetes are located in th
 
 Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
+### Running without root
+
+This is only recommended for advance users
+
+It is possible to run this container and [override the default user](https://docs.docker.com/engine/reference/run/#user) which is root in this image.
+
+If you want to find your UID: `id -u`
+If you want to find your GID: `id -g`
+
+You must set user to `NUMBERICAL_UID:NUMBERICAL_GID`.
+
+* In docker run add `--user 1000:1000 \` above the last line.
+* In docker compose add `user: 1000:1000` above ports.
+* In k8s add the following above the ports in deployment.yaml 
+   ```
+   securityContext:
+      runAsUser: 1000
+      runAsGroup: 1000
+   ```
+
+If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that is being bind: `chown UID:GID palworld/`
+or by changing the permissions for all other: `chmod o=rwx palworld/`
+
 #### Using helm chart
 
 Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
@@ -157,12 +174,16 @@ It is highly recommended you set the following environment values before startin
 
 * PLAYERS
 * PORT
+* PUID
+* PGID
 
 | Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values                                                                                             |
 |--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------|
 | TZ                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
 | PLAYERS*           | Max amount of players that are able to join the server                                                                                                                                              | 16             | 1-32                                                                                                       |
 | PORT*              | UDP port that the server will expose                                                                                                                                                                | 8211           | 1024-65535                                                                                                 |
+| PUID*              | The uid of the user the server should run as                                                                                                                                                        | 1000           | !0                                                                                                         |
+| PGID*              | The gid of the group the server should run as                                                                                                                                                       | 1000           | !0                                                                                                         |
 | MULTITHREADING**   | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false          | true/false                                                                                                 |
 | COMMUNITY          | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false          | true/false                                                                                                 |
 | PUBLIC_IP          | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x                                                                                                    |
