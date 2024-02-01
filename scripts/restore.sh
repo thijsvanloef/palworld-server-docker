@@ -40,7 +40,8 @@ fi
 
 # Show up backup list
 echo "Backup List:"
-select BACKUP_FILE in "$BACKUP_DIRECTORY_PATH"/*; do
+mapfile -t BACKUP_FILES < <(find "$BACKUP_DIRECTORY_PATH" -type f -name "*.tar.gz" | sort)
+select BACKUP_FILE in "${BACKUP_FILES[@]}"; do
     if [ -n "$BACKUP_FILE" ]; then
         echo "Selected backup: $BACKUP_FILE"
         break
