@@ -99,8 +99,7 @@ if [ -f "$BACKUP_FILE" ]; then
             \cp -rf -f "$TMP_PATH/Saved/" "$RESTORE_PATH"
 
             echo "Clean up the temporary directory."
-            rm -rf "$TMP_PATH"
-            rm -rf "$TMP_SAVE_PATH"
+            rm -rf "$TMP_PATH" "$TMP_SAVE_PATH"
 
             printf "\e[0;32mRestore complete!!!! Please restart the Docker container\e[0m\n"
             
