@@ -4,10 +4,11 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
+[![Static Badge](https://img.shields.io/badge/readme-0.19.1-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
-[![Static Badge](https://img.shields.io/badge/README-0.16.0-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
 
-[View on Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
@@ -57,15 +58,15 @@ services:
          - PGID=1000
          - PORT=8211 # Optional but recommended
          - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD="worldofpals" # Optional but recommended
+         - SERVER_PASSWORD=worldofpals # Optional but recommended
          - MULTITHREADING=true
          - RCON_ENABLED=true
          - RCON_PORT=25575
          - TZ=UTC
-         - ADMIN_PASSWORD="adminPasswordHere"
+         - ADMIN_PASSWORD=adminPasswordHere
          - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME="World of Pals"
-         - SERVER_DESCRIPTION="Awesome World of Pal"
+         - SERVER_NAME=World of Pals
+         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
       volumes:
          - ./palworld:/palworld/
 ```
@@ -108,11 +109,11 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
-    -e ADMIN_PASSWORD="adminPasswordHere" \
-    -e SERVER_PASSWORD="worldofpals" \
+    -e ADMIN_PASSWORD=adminPasswordHere \
+    -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
-    -e SERVER_DESCRIPTION="Awesome World of Pal" \
+    -e SERVER_NAME=World of Pals \
+    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
@@ -207,6 +208,9 @@ It is highly recommended you set the following environment values before startin
 | BACKUP_ENABLED | Enables automatic backups | true | true/false |
 | DELETE_OLD_BACKUPS | Delete backups after a certain number of days                                                                                                                                                       | false          | true/false                                                                                                 |
 | OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
+| AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
 
 *highly recommended to set
 
@@ -289,6 +293,32 @@ BACKUP_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an 
 
 Set BACKUP_CRON_EXPRESSION to change the default schedule.
 Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will run every day at 2:00 AM.
+
+## Configuring Automatic Updates with Cron
+
+To be able to use automatic Updates with this Server the following environment variables **have** to be set to `true`:
+
+* RCON_ENABLED
+* UPDATE_ON_BOOT
+
+> [!IMPORTANT]
+>
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
+
+Set AUTO_UPDATE_ENABLED enable or disable automatic backups (Default is disabled)
+
+AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+
+> [!TIP]
+> This image uses Supercronic for crons
+> see [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> or
+> [Crontab Generat](https://crontab-generator.org).
+
+Set AUTO_UPDATE_CRON_EXPRESSION to change the default schedule.
 
 ## Editing Server Settings
 
