@@ -99,8 +99,6 @@ if [ -f "$BACKUP_FILE" ]; then
             # Move the backup file to the restore directory
             \cp -rf -f "$TMP_PATH/Saved/" "$RESTORE_PATH"
 
-            restore_error_handler
-
             echo "Clean up the temporary directory."
             rm -rf "$TMP_PATH"
             rm -rf "$TMP_SAVE_PATH"
