@@ -6,6 +6,9 @@ BACKUP_DIRECTORY_PATH="/palworld/backups"
 # Resotre path
 RESTORE_PATH="/palworld/Pal"
 
+# Copy the save file before restore temporary path
+TMP_SAVE_PATH="/palworld/backups/restore-"$(date +"%Y-%m-%d_%H-%M-%S")
+
 # shellcheck disable=SC2317
 term_error_handler() {
     echo "An error occurred during server shutdown."
@@ -15,17 +18,18 @@ term_error_handler() {
 # shellcheck disable=SC2317
 restore_error_handler() {
     printf "\033[0;31mAn error occurred during restore.\033[0m\n"
-    if [ -d "./tmp_save/Saved" ]; then
+    if [ -d "$TMP_SAVE_PATH/Saved" ]; then
         read -rp "I have a backup before recovery can proceed. Do you want to recovery it? (y/n): " RUN_ANSWER
         if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
             rm -rf "$RESTORE_PATH/Saved"
-            mv "./tmp_save/Saved" "$RESTORE_PATH"
+            mv "$TMP_SAVE_PATH/Saved" "$RESTORE_PATH"
             printf "\e[0;32mRecovery complete.\e[0m\n"
         fi
     fi
 
-    rm -rf "./tmp"
-    rm -rf "./tmp_save"
+    echo "Clean up the temporary directory."
+    rm -rf "$TMP_PATH"
+    rm -rf "$TMP_SAVE_PATH"
 
     exit 1
 }
@@ -75,11 +79,11 @@ if [ -f "$BACKUP_FILE" ]; then
             # Copy the save file before restore
             if [ -d "$RESTORE_PATH/Saved" ]; then
                 echo "Saves the current state before the restore proceeds."
-                rm -rf "./tmp_save"
-                mkdir -p "./tmp_save"
-                \cp -rf "$RESTORE_PATH/Saved" "./tmp_save/Saved"
+                echo "$TMP_SAVE_PATH"
+                mkdir -p "$TMP_SAVE_PATH"
+                \cp -rf "$RESTORE_PATH/Saved" "$TMP_SAVE_PATH/Saved"
 
-                while [ ! -d "./tmp_save/Saved" ]; do
+                while [ ! -d "$TMP_SAVE_PATH/Saved" ]; do
                     sleep 1
                 done
 
@@ -87,18 +91,19 @@ if [ -f "$BACKUP_FILE" ]; then
             fi
             
             # Create tmp directory
-            rm -rf "./tmp"
-            mkdir -p "./tmp"
+            TMP_PATH=$(mktemp -d -p "/palworld/backups")
             
             # Decompress the backup file in tmp directory
-            tar -zxvf "$BACKUP_FILE" -C "./tmp"
+            tar -zxvf "$BACKUP_FILE" -C "$TMP_PATH"
 
             # Move the backup file to the restore directory
-            \cp -rf -f "./tmp/Saved/" "$RESTORE_PATH"
+            \cp -rf -f "$TMP_PATH/Saved/" "$RESTORE_PATH"
 
-            # Remove tmp directory
-            rm -rf "./tmp"
-            rm -rf "./tmp_save"
+            restore_error_handler
+
+            echo "Clean up the temporary directory."
+            rm -rf "$TMP_PATH"
+            rm -rf "$TMP_SAVE_PATH"
 
             printf "\e[0;32mRestore complete!!!! Please restart the Docker container\e[0m\n"
             
