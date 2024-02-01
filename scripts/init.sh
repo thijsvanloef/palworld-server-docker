@@ -29,8 +29,10 @@ su steam -c ./start.sh &
 killpid="$!"
 wait $killpid
 
-echo "Waiting for backup to finish"
 backup_pids=($(pgrep backup))
-for pid in "${backup_pids[@]}"; do
-    tail --pid=$pid -f 2>/dev/null
-done
+if [ "${#backup_pids[@]}" -ne 0 ]; then
+    echo "Waiting for backup to finish"
+    for pid in "${backup_pids[@]}"; do
+        tail --pid=$pid -f 2>/dev/null
+    done
+fi
