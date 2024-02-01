@@ -1,8 +1,19 @@
 #!/bin/bash
 
+
+
 if [ "${UPDATE_ON_BOOT}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+
+    if [ -n "$DISCORD_PRE_UPDATE_JSON" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_UPDATE_JSON &
+    fi
+
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+
+    if [ -n "$DISCORD_POST_UPDATE_JSON" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_UPDATE_JSON &
+    fi
 fi
 
 STARTCOMMAND=("./PalServer.sh")
@@ -61,7 +72,7 @@ if [ -n "${SERVER_PASSWORD}" ]; then
 fi
 if [ -n "${ADMIN_PASSWORD}" ]; then
     ADMIN_PASSWORD=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$ADMIN_PASSWORD")
-    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" 
+    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}"
     sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=\"$ADMIN_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PLAYERS}" ]; then
@@ -303,7 +314,6 @@ fi
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
-    
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
@@ -324,6 +334,11 @@ default:
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
+if [ -n "$DISCORD_PRE_START_JSON" ]; then
+    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_START_JSON &
+fi
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
-
+if [ -n "$DISCORD_POST_START_JSON" ]; then
+    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_START_JSON &
+fi

@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if [ -n "$PRE_INIT_HOOK" ]; then
-    echo "PRE_INIT_HOOK: $PRE_INIT_HOOK"
-    eval "$PRE_INIT_HOOK"
-fi
-
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
     printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
     usermod -o -u "${PUID}" steam
@@ -18,9 +13,8 @@ mkdir -p /palworld/backups
 chown -R steam:steam /palworld /home/steam/
 
 term_handler() {
-    if [ -n "$PRE_SHUTDOWN_HOOK" ]; then
-        echo "PRE_SHUTDOWN_HOOK: $PRE_SHUTDOWN_HOOK"
-        eval "$PRE_SHUTDOWN_HOOK"
+    if [ -n "$DISCORD_WEBHOOK_ID" ]; then
+        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_JSON" &
     fi
 
     if [ "${RCON_ENABLED}" = true ]; then
@@ -31,18 +25,12 @@ term_handler() {
     fi
     tail --pid=$killpid -f 2>/dev/null
 
-    if [ -n "$POST_SHUTDOWN_HOOK" ]; then
-        echo "POST_SHUTDOWN_HOOK: $POST_SHUTDOWN_HOOK"
-        eval "$POST_SHUTDOWN_HOOK"
+    if [ -n "$DISCORD_WEBHOOK_ID" ]; then
+        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_JSON" &
     fi
 }
 
 trap 'term_handler' SIGTERM
-
-if [ -n "$POST_INIT_HOOK" ]; then
-    echo "POST_INIT_HOOK: $POST_INIT_HOOK"
-    eval "$POST_INIT_HOOK"
-fi
 
 su steam -c ./start.sh &
 # Process ID of su
