@@ -20,7 +20,7 @@
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
-This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
+This Docker container has been tested and will work on Linux (Ubuntu/Debian), Windows 10 and macOS (including Apple Silicon).
 
 > [!IMPORTANT]
 > At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
