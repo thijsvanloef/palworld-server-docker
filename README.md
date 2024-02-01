@@ -247,7 +247,7 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
-## Manually restore from a backup.
+## Manually restore from a backup
 
 Locate the backup you want to restore in `/palworld/backups/` and decompress it.
 
@@ -257,7 +257,7 @@ Copy the contents of the decompressed `Saved\SaveGames\0\<new_hash_value>` to `p
 
 Replace the DedicatedServerName inside `palworld\Pal\Saved\Config\LinuxServer\GameUserSettings.ini` with the new folder name.
 
-```
+```ini
 DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
 ```
 
