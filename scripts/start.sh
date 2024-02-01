@@ -320,7 +320,7 @@ fi
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
-  password: ${ADMIN_PASSWORD}
+  password: '${ADMIN_PASSWORD}'
 EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
