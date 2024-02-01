@@ -28,8 +28,7 @@ restore_error_handler() {
     fi
 
     echo "Clean up the temporary directory."
-    rm -rf "$TMP_PATH"
-    rm -rf "$TMP_SAVE_PATH"
+    rm -rf "$TMP_PATH" "$TMP_SAVE_PATH"
 
     exit 1
 }
