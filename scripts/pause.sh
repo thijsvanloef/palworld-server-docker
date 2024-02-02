@@ -19,8 +19,10 @@ fi
 monitor_traffic() {
     touch "$LOCKFILE"
     cleanup() {
+        # shellcheck disable=SC2317
         rm -f "$LOCKFILE"
     }
+    trap 'cleanup' EXIT
     while true; do
         packet_capture=$(tcpdump -n -c 1 -i any port "$1" 2>/dev/null)
         if [ -n "$packet_capture" ]; then
@@ -30,7 +32,7 @@ monitor_traffic() {
         fi
         sleep 1
     done
-    trap 'cleanup' EXIT
+    exit 0
 }
 
 if [ "$PID_STATE" != "stopped" ]; then
