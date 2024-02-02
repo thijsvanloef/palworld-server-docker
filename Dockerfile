@@ -2,6 +2,7 @@ FROM cm2network/steamcmd:root
 LABEL maintainer="thijs@loef.dev"
 
 ARG ARCH=amd64
+ARG OS=linux
 
 # if the architecture is not supported, exit
 RUN if [ "$ARCH" != "amd64" ] && [ "$ARCH" != "arm64" ] ; then \
@@ -20,19 +21,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # set envs
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
-ENV SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
 ENV RCON_VERSION="0.10.3"
 ENV SUPERCRONIC_VERSION="0.2.29"
 
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-${ARCH}_linux.tar.gz -O rcon.tar.gz \
+RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-${ARCH}_${OS}.tar.gz -O rcon.tar.gz \
      && tar -xzvf rcon.tar.gz \
      && rm rcon.tar.gz \
-     && mv rcon-${RCON_VERSION}-${ARCH}_linux/rcon /usr/bin/rcon-cli \
+     && mv rcon-${RCON_VERSION}-${ARCH}_${OS}/rcon /usr/bin/rcon-cli \
      && rmdir /tmp/dumps \
      && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${ARCH} -O supercronic \
-     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
      && chmod +x supercronic \
      && mv supercronic /usr/local/bin/supercronic
 
