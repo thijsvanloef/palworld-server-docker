@@ -25,6 +25,7 @@ ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398" \
 
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-amd64_linux.tar.gz -O rcon.tar.gz \
      && echo "${RCON_MD5SUM}" rcon.tar.gz | md5sum -c - \
      && tar -xzvf rcon.tar.gz \
@@ -60,12 +61,17 @@ ENV PORT= \
     BACKUP_CRON_EXPRESSION="0 0 * * *" \
     AUTO_UPDATE_ENABLED=false \
     AUTO_UPDATE_CRON_EXPRESSION="0 * * * *" \
-    AUTO_UPDATE_WARN_MINUTES=30
+    AUTO_UPDATE_WARN_MINUTES=30 \
+    AUTO_REBOOT_ENABLED=false \
+    AUTO_REBOOT_WARN_MINUTES=5 \
+    AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh && \
+
+RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
-    mv /home/steam/server/update.sh /usr/local/bin/update
+    mv /home/steam/server/update.sh /usr/local/bin/update && \
+    mv /home/steam/server/restore.sh /usr/local/bin/restore
 
 WORKDIR /home/steam/server
 
