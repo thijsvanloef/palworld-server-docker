@@ -252,7 +252,7 @@ The server will run a save before the backup if rcon is enabled.
 To restore a backup, use the command:
 
 ```bash
-docker exec palworld-server restore
+docker exec -i palworld-server restore
 ```
 
 The `RCON_ENABLED` environment variable must be set to `true` to use this command.
