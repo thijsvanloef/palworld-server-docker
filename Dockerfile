@@ -10,6 +10,7 @@ LABEL maintainer="thijs@loef.dev" \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    tcpdump=4.99.0-2+deb11u1 \
     xdg-user-dirs=0.17-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
