@@ -95,6 +95,21 @@ docker run -d \
 
 ```
 
+作为一个替代方案，你可以复制[.env.example](.env.example)文件，并把文件重命名为 **.env** 。
+根据您的需求，查看[environment variables](#environment-variables) 部分并调整。调整你的docker启动命令如下：
+
+```bash
+docker run -d \
+    --name palworld-server \
+    -p 8211:8211/udp \
+    -p 27015:27015/udp \
+    -v ./<palworld-folder>:/palworld/ \
+    --env-file .env \
+    --restart unless-stopped \
+    --stop-timeout 30 \
+    thijsvanloef/palworld-server-docker:latest
+```
+
 ### Kubernetes
 
 将此容器部署到 Kubernetes 的所有文件都位于[此文件夹中](/k8s/)。
