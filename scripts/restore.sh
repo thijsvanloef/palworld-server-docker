@@ -51,7 +51,8 @@ select BACKUP_FILE in "${BACKUP_FILES[@]}"; do
 done
 
 if [ -f "$BACKUP_FILE" ]; then
-    echo "Do you want to continue with the command?"
+    printf "\033[0;31mThis script has been designed to help you restore; however, I am not responsible for any data loss. It is recommended that you create a backup beforehand, and in the event of script failure, be prepared to restore it manually.\033[0m\n"
+    echo "Do you understand the above and would you like to proceed with this command?"
     read -rp "When you run it, the server will be stopped and the recovery will proceed. (y/n): " RUN_ANSWER
     if [[ ${RUN_ANSWER,,} == "y" ]]; then
         printf "\e[0;32m*****STARTING PROCESS*****\e[0m\n"
