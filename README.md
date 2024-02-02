@@ -245,9 +245,9 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
-## Restore a backup
+## Restore from a backup
 
-To restore a backup, use the command:
+To restore from a backup, use the command:
 
 ```bash
 docker exec -it palworld-server restore
