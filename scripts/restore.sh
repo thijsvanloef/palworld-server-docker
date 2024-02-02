@@ -20,7 +20,7 @@ restore_error_handler() {
     printf "\033[0;31mAn error occurred during restore.\033[0m\n"
     if [ -d "$TMP_SAVE_PATH/Saved" ]; then
         read -rp "I have a backup before recovery can proceed. Do you want to recovery it? (y/n): " RUN_ANSWER
-        if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
+        if [[ ${RUN_ANSWER,,} == "y" ]]; then
             rm -rf "$RESTORE_PATH/Saved"
             mv "$TMP_SAVE_PATH/Saved" "$RESTORE_PATH"
             printf "\e[0;32mRecovery complete.\e[0m\n"
@@ -53,7 +53,7 @@ done
 if [ -f "$BACKUP_FILE" ]; then
     echo "Do you want to continue with the command?"
     read -rp "When you run it, the server will be stopped and the recovery will proceed. (y/n): " RUN_ANSWER
-    if [[ $RUN_ANSWER == "y" ]] || [[ $RUN_ANSWER == "Y" ]]; then
+    if [[ ${RUN_ANSWER,,} == "y" ]]; then
         printf "\e[0;32m*****STARTING PROCESS*****\e[0m\n"
         # Shutdown server
         trap 'term_error_handler' ERR
