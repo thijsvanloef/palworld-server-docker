@@ -95,6 +95,9 @@ if [ -f "$BACKUP_FILE" ]; then
             
             # Create tmp directory
             TMP_PATH=$(mktemp -d -p "/palworld/backups")
+            if [ "$(id -u)" -eq 0 ]; then
+                chown steam:steam "$TMP_PATH"
+            fi
             
             # Decompress the backup file in tmp directory
             tar -zxvf "$BACKUP_FILE" -C "$TMP_PATH"
