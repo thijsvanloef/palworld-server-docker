@@ -203,7 +203,7 @@ rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
 백업을 복원하려면 다음 명령을 사용합니다:
 
 ```bash
-docker exec -i palworld-server restore
+docker exec -it palworld-server restore
 ```
 
 복원 명령어를 사용하려면 `RCON_ENABLED` 환경 변수가 `true`여야 합니다.
