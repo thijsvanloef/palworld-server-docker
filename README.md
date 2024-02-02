@@ -255,10 +255,12 @@ To restore a backup, use the command:
 docker exec palworld-server restore
 ```
 
-The container must be restarted after the recovery progresses.
-
+The `RCON_ENABLED` environment variable must be set to `true` to use this command.
 > [!IMPORTANT]
-> The `RCON_ENABLED` environment variable must be `true` to use this command.
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already uses the needed policy
 
 ## Configuring Automatic Backups with Cron
 
