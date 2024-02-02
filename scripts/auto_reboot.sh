@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${RCON_ENABLED}" = true ]; then
+if [ "${RCON_ENABLED,,}" = true ]; then
     if [ -z "${AUTO_REBOOT_WARN_MINUTES}" ]; then
         echo "Unable to auto reboot, AUTO_REBOOT_WARN_MINUTES is empty."
     elif [[ "${AUTO_REBOOT_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
