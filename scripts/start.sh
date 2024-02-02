@@ -291,8 +291,8 @@ if [ -n "${BAN_LIST_URL}" ]; then
     echo "BAN_LIST_URL=$BAN_LIST_URL"
     sed -E -i "s~BanListURL=\"[^\"]*\"~BanListURL=\"$BAN_LIST_URL\"~" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
-if [ -n "${RCON_ENABLED}" ]; then
-    echo "RCON_ENABLED=${RCON_ENABLED}"
+if [ -n "${RCON_ENABLED,,}" ]; then
+    echo "RCON_ENABLED=${RCON_ENABLED,,}"
     sed -i "s/RCONEnabled=[a-zA-Z]*/RCONEnabled=$RCON_ENABLED/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${RCON_PORT}" ]; then
@@ -302,13 +302,13 @@ fi
 
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
-    echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
+    echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
     
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
-    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED}"
+    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
 fi
 
