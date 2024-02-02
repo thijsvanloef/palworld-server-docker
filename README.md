@@ -242,6 +242,26 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
+## Manually restore from a backup
+
+Locate the backup you want to restore in `/palworld/backups/` and decompress it.
+
+Delete the old saved data folder located at `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
+
+Copy the contents of the newly decompressed saved data folder `Saved/SaveGames/0/<new_hash_value>` to `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`.
+
+Replace the DedicatedServerName inside `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` with the new folder name.
+
+```ini
+DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
+```
+
+Restart the game. (If you are using Docker Compose)
+
+```bash
+docker compose down && docker compose up -d
+```
+
 ## Configuring Automatic Backups with Cron
 
 The server is automatically backed up everynight at midnight according to the timezone set with TZ
