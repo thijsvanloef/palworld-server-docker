@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${RCON_ENABLED}" = true ]; then
+if [ "${RCON_ENABLED,,}" = true ]; then
     rcon-cli -c /home/steam/server/rcon.yaml save
 fi
 
@@ -17,7 +17,7 @@ fi
 
 echo "backup created at $FILE_PATH"
 
-if [ "${DELETE_OLD_BACKUPS}" = true ]; then
+if [ "${DELETE_OLD_BACKUPS,,}" = true ]; then
     if [ -z "${OLD_BACKUP_DAYS}" ]; then
         echo "Unable to deleted old backups, OLD_BACKUP_DAYS is empty."
     elif [[ "${OLD_BACKUP_DAYS}" =~ ^[0-9]+$ ]]; then

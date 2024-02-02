@@ -188,11 +188,6 @@ It is highly recommended you set the following environment values before startin
 
 *** Required for docker stop to save and gracefully close the server
 
-> [!IMPORTANT]
-> Boolean values used in environment variables are case-sensitive because they are used in the shell script.
->
-> They must be set using exactly `true` or `false` for the option to take effect.
-
 ### Game Ports
 
 | Port  | Info             |
@@ -259,7 +254,7 @@ BACKUP_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an 
 > This image uses Supercronic for crons
 > see [supercronic](https://github.com/aptible/supercronic#crontab-format)
 > or
-> [Crontab Generat](https://crontab-generator.org).
+> [Crontab Generator](https://crontab-generator.org).
 
 Set BACKUP_CRON_EXPRESSION to change the default schedule.
 Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will run every day at 2:00 AM.
@@ -286,7 +281,7 @@ AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you defin
 > This image uses Supercronic for crons
 > see [supercronic](https://github.com/aptible/supercronic#crontab-format)
 > or
-> [Crontab Generat](https://crontab-generator.org).
+> [Crontab Generator](https://crontab-generator.org).
 
 Set AUTO_UPDATE_CRON_EXPRESSION to change the default schedule.
 

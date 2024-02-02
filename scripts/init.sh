@@ -14,7 +14,7 @@ chown -R steam:steam /palworld /home/steam/
 
 # shellcheck disable=SC2317
 term_handler() {
-    if [ "${RCON_ENABLED}" = true ]; then
+    if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
         rcon-cli "shutdown 1"
     else # Does not save
