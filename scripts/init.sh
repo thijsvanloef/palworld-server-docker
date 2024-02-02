@@ -12,6 +12,7 @@ fi
 mkdir -p /palworld/backups
 chown -R steam:steam /palworld /home/steam/
 
+# shellcheck disable=SC2317
 term_handler() {
     if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
