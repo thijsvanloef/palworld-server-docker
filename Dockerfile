@@ -1,11 +1,16 @@
 FROM cm2network/steamcmd:root
-LABEL maintainer="thijs@loef.dev"
+LABEL maintainer="thijs@loef.dev" \
+      name="thijsvanloef/palworld-server-docker" \
+      github="https://github.com/thijsvanloef/palworld-server-docker" \
+      dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
+      org.opencontainers.image.authors="Thijs van Loef" \
+      org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    xdg-user-dirs=0.17-2 \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    xdg-user-dirs=0.17-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -13,10 +18,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398"
-ENV SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
-ENV RCON_VERSION="0.10.3"
-ENV SUPERCRONIC_VERSION="0.2.29"
+ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398" \
+    SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b" \
+    RCON_VERSION="0.10.3" \
+    SUPERCRONIC_VERSION="0.2.29"
 
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -25,8 +30,9 @@ RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/downloa
      && tar -xzvf rcon.tar.gz \
      && rm rcon.tar.gz \
      && mv rcon-${RCON_VERSION}-amd64_linux/rcon /usr/bin/rcon-cli \
-     && rmdir /tmp/dumps \
-     && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 -O supercronic \
+     && rmdir /tmp/dumps
+
+RUN wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 -O supercronic \
      && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
      && chmod +x supercronic \
      && mv supercronic /usr/local/bin/supercronic
