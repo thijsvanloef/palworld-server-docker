@@ -72,7 +72,8 @@ COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
-    mv /home/steam/server/restore.sh /usr/local/bin/restore
+    mv /home/steam/server/restore.sh /usr/local/bin/restore && \
+    mv /home/steam/server/pause.sh /usr/local/bin/pause
 
 WORKDIR /home/steam/server
 
