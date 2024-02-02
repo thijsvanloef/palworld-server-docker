@@ -15,6 +15,11 @@ elif [[ "$(id -u)" -eq 0 ]] || [[ "$(id -g)" -eq 0 ]]; then
    exit 1
 fi
 
+if ! [ -w "/palworld" ]; then
+    echo "/palworld is not writable."
+    exit 1
+fi
+
 mkdir -p /palworld/backups
 
 # shellcheck disable=SC2317
