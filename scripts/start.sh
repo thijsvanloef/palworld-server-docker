@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "${UPDATE_ON_BOOT}" = true ]; then
+if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 fi
@@ -15,11 +15,11 @@ if [ -n "${QUERY_PORT}" ]; then
     STARTCOMMAND+=("-queryport=${QUERY_PORT}")
 fi
 
-if [ "${COMMUNITY}" = true ]; then
+if [ "${COMMUNITY,,}" = true ]; then
     STARTCOMMAND+=("EpicApp=PalServer")
 fi
 
-if [ "${MULTITHREADING}" = true ]; then
+if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
@@ -301,18 +301,18 @@ if [ -n "${RCON_PORT}" ]; then
 fi
 
 rm -f  "/home/steam/server/crontab"
-if [ "${BACKUP_ENABLED}" = true ]; then
+if [ "${BACKUP_ENABLED,,}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED}"
     
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
-if [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
+if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
     echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED}"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
 fi
 
-if { [ "${AUTO_UPDATE_ENABLED}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; } || [ "${BACKUP_ENABLED}" = true ]; then
+if { [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; } || [ "${BACKUP_ENABLED,,}" = true ]; then
     supercronic "/home/steam/server/crontab" &
 fi
 

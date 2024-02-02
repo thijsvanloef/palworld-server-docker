@@ -188,11 +188,6 @@ It is highly recommended you set the following environment values before startin
 
 *** Required for docker stop to save and gracefully close the server
 
-> [!IMPORTANT]
-> Boolean values used in environment variables are case-sensitive because they are used in the shell script.
->
-> They must be set using exactly `true` or `false` for the option to take effect.
-
 ### Game Ports
 
 | Port  | Info             |
