@@ -245,6 +245,21 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
+## Restore from a backup
+
+To restore from a backup, use the command:
+
+```bash
+docker exec -it palworld-server restore
+```
+
+The `RCON_ENABLED` environment variable must be set to `true` to use this command.
+> [!IMPORTANT]
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already uses the needed policy
+
 ## Manually restore from a backup
 
 Locate the backup you want to restore in `/palworld/backups/` and decompress it.
