@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # set envs
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
+
+# NOTICE: edit SUPERCRONIC_SHA1SUM when using another arch binaries.
+ENV SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
 ENV RCON_VERSION="0.10.3"
 ENV SUPERCRONIC_VERSION="0.2.29"
 
@@ -32,6 +35,7 @@ RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/downloa
      && mv rcon-${RCON_VERSION}-${ARCH}_${OS}/rcon /usr/bin/rcon-cli \
      && rmdir /tmp/dumps \
      && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${ARCH} -O supercronic \
+     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
      && chmod +x supercronic \
      && mv supercronic /usr/local/bin/supercronic
 
