@@ -181,6 +181,9 @@ It is highly recommended you set the following environment values before startin
 | AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
 | AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
+| AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
 
 *highly recommended to set
 
@@ -304,6 +307,30 @@ AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you defin
 > [Crontab Generator](https://crontab-generator.org).
 
 Set AUTO_UPDATE_CRON_EXPRESSION to change the default schedule.
+
+## Configuring Automatic Reboots with Cron
+
+To be able to use automatic reboots with this server RCON_ENABLED enabled.
+
+> [!IMPORTANT]
+>
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
+
+Set AUTO_REBOOT_ENABLED enable or disable automatic backups (Default is disabled)
+
+AUTO_REBOOT_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+
+> [!TIP]
+> This image uses Supercronic for crons
+> see [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> or
+> [Crontab Generator](https://crontab-generator.org).
+
+Set AUTO_REBOOT_CRON_EXPRESSION to change the set the schedule, default is everynight at midnight according to the
+timezone set with TZ
 
 ## Editing Server Settings
 
