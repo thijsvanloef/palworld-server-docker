@@ -96,7 +96,7 @@ docker run -d \
 ```
 
 作为一个替代方案，你可以复制[.env.example](.env.example)文件，并把文件重命名为 **.env** 。
-根据您的需求，查看[environment variables](#environment-variables) 部分并调整。调整你的docker启动命令如下：
+根据您的需求，查看[环境变量](#环境变量) 部分并调整。调整你的docker启动命令如下：
 
 ```bash
 docker run -d \
