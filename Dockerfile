@@ -26,12 +26,12 @@ ENV SUPERCRONIC_VERSION="0.2.29"
 
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN wget https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-${ARCH}_linux.tar.gz -O rcon.tar.gz \
+RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-${ARCH}_linux.tar.gz -O rcon.tar.gz \
      && tar -xzvf rcon.tar.gz \
      && rm rcon.tar.gz \
      && mv rcon-${RCON_VERSION}-${ARCH}_linux/rcon /usr/bin/rcon-cli \
      && rmdir /tmp/dumps \
-     && wget https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${ARCH} -O supercronic \
+     && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${ARCH} -O supercronic \
      && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
      && chmod +x supercronic \
      && mv supercronic /usr/local/bin/supercronic
