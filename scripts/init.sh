@@ -24,7 +24,7 @@ term_handler() {
     else # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
-    tail --pid=$killpid -f 2>/dev/null
+    tail --pid="$killpid" -f 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
@@ -36,4 +36,12 @@ else
 fi
 # Process ID of su
 killpid="$!"
-wait $killpid
+wait "$killpid"
+
+mapfile -t backup_pids < <(pgrep backup)
+if [ "${#backup_pids[@]}" -ne 0 ]; then
+    echo "Waiting for backup to finish"
+    for pid in "${backup_pids[@]}"; do
+        tail --pid="$pid" -f 2>/dev/null
+    done
+fi
