@@ -13,7 +13,7 @@ mkdir -p /palworld/backups
 chown -R steam:steam /palworld /home/steam/
 
 term_handler() {
-    if [ "${RCON_ENABLED}" = true ]; then
+    if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
         rcon-cli "shutdown 1"
     else # Does not save
