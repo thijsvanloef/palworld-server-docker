@@ -47,7 +47,7 @@ spec:
                 args:
                   - |
                     rcon-cli save
-                    rcon-cli backup
+                    backup
           resources:
             {{- with .Values.server.resources }}
               {{- toYaml . | nindent 12 }}
