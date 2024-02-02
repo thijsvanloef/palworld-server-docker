@@ -1,11 +1,71 @@
 #!/bin/bash
 
+dirExists() {
+    local path="$1"
+    local return_val=0
+    if ! [ -d "${path}" ]; then
+        echo "${path} does not exist."
+        return_val=2
+    fi
+    return "$return_val"
+}
+
+fileExists() {
+    local path="$1"
+    local return_val=0
+    if ! [ -f "${path}" ]; then
+        echo "${path} does not exist."
+        return_val=3
+    fi
+    return "$return_val"
+}
+
+isReadable() {
+    local path="$1"
+    local return_val=0
+    if ! [ -e "${path}" ]; then
+        echo "${path} is not readable."
+        return_val=4
+    fi
+    return "$return_val"
+}
+
+isWritable() {
+    local path="$1"
+    local return_val=0
+    if ! [ -w "${path}" ]; then
+        echo "${path} is not writable."
+        return_val=5
+    fi
+    return "$return_val"
+}
+
+isExecutable() {
+    local path="$1"
+    local return_val=0
+    if ! [ -x "${path}" ]; then
+        echo "${path} is not executable."
+        return_val=6
+    fi
+    return "$return_val"
+}
+
+dirExists "/palworld" || exit
+isWritable "/palworld" || exit
+isExecutable "/palworld" || exit
+
+cd /palworld || exit 6
+
 if [ "${UPDATE_ON_BOOT}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 fi
 
 STARTCOMMAND=("./PalServer.sh")
+
+fileExists "${STARTCOMMAND[0]}" || exit
+isReadable "${STARTCOMMAND[0]}" || exit
+isExecutable "${STARTCOMMAND[0]}" || exit
 
 if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
@@ -23,8 +83,6 @@ if [ "${MULTITHREADING}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-cd /palworld || exit
-
 printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
 
 # shellcheck disable=SC2143
@@ -39,6 +97,9 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     sleep 5
     cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
+
+fileExists "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
+isWritable "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
 
 escape_sed() {
     printf '%s\n' "$1" | sed -e 's:[][\/.^$*]:\\&:g'
@@ -326,4 +387,4 @@ EOL
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
-
+exit 0
