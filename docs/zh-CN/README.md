@@ -19,7 +19,7 @@
 这是一个 [Docker](https://docs.docker.com/engine/install/) 容器，可帮助您创建自己的
 [幻兽帕鲁](https://store.steampowered.com/app/1623730/Palworld/) 专用服务器。
 
-此容器经测试可正常在 (Ubuntu/Debian) 和 Windows 10 上运行。
+此容器经测试可正常在 (Ubuntu/Debian)、 Windows 10 、macOS (包括使用 Silicon 芯片的 M1 设备，通过 Rosseta2 转译)。
 
 > [!IMPORTANT]
 > 目前，Xbox Game Pass/Xbox 主机玩家无法加入专用服务器。
@@ -93,6 +93,21 @@ docker run -d \
     --restart unless-stopped \
     thijsvanloef/palworld-server-docker:latest
 
+```
+
+作为一个替代方案，你可以复制[.env.example](.env.example)文件，并把文件重命名为 **.env** 。
+根据您的需求，查看[环境变量](#环境变量) 部分并调整。调整你的docker启动命令如下：
+
+```bash
+docker run -d \
+    --name palworld-server \
+    -p 8211:8211/udp \
+    -p 27015:27015/udp \
+    -v ./<palworld-folder>:/palworld/ \
+    --env-file .env \
+    --restart unless-stopped \
+    --stop-timeout 30 \
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 ### Kubernetes
