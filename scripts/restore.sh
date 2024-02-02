@@ -81,6 +81,9 @@ if [ -f "$BACKUP_FILE" ]; then
                 echo "Saves the current state before the restore proceeds."
                 echo "$TMP_SAVE_PATH"
                 mkdir -p "$TMP_SAVE_PATH"
+                if [ "$(id -u)" -eq 0 ]; then
+                    chown steam:steam "$TMP_SAVE_PATH"
+                fi
                 \cp -rf "$RESTORE_PATH/Saved" "$TMP_SAVE_PATH/Saved"
 
                 while [ ! -d "$TMP_SAVE_PATH/Saved" ]; do
