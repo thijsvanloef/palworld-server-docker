@@ -315,7 +315,7 @@ AUTO_REBOOT_CRON_EXPRESSION is a cron expression, in a Cron-Expression you defin
 > [Crontab Generat](https://crontab-generator.org).
 
 Set AUTO_REBOOT_CRON_EXPRESSION to change the set the schedule, default is everynight at midnight according to the
-timezone set with TZ 
+timezone set with TZ
 
 ## Editing Server Settings
 
