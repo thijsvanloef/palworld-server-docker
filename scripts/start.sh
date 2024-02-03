@@ -395,5 +395,6 @@ EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 echo "${STARTCOMMAND[*]}"
-"${STARTCOMMAND[@]}"
+sed -i "/^\[program:palworld\]/,/^$/ s|command=.*|command=${STARTCOMMAND[*]}|" /etc/supervisor/conf.d/supervisord.conf
+supervisorctl start palworld
 exit 0

@@ -10,6 +10,7 @@ LABEL maintainer="thijs@loef.dev" \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    supervisor=4.2.2-2 \
     xdg-user-dirs=0.17-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -67,6 +68,8 @@ ENV PORT= \
     AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
+# supervisord config
+COPY ./services/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
@@ -79,4 +82,4 @@ HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT} ${RCON_PORT}
-ENTRYPOINT ["/home/steam/server/init.sh"]
+ENTRYPOINT [ "/usr/bin/supervisord" ]

@@ -20,15 +20,10 @@ term_handler() {
     else # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
-    tail --pid="$killpid" -f 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
-
-su steam -c ./start.sh &
-# Process ID of su
-killpid="$!"
-wait "$killpid"
+/home/steam/server/start.sh
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then
