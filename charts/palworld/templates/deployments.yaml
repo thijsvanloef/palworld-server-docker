@@ -43,11 +43,10 @@ spec:
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c"]
-                args:
-                  - |
-                    rcon-cli save
-                    backup
+                command:
+                  - "sh"
+                  - "-c"
+                  - rcon-cli save && backup
           resources:
             {{- with .Values.server.resources }}
               {{- toYaml . | nindent 12 }}
