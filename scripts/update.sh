@@ -33,6 +33,9 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+        if [ -n "$DISCORD_POST_UPDATE_JSON" ]; then
+            discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_UPDATE_JSON &
+        fi
     else
         echo "An update is available however auto updating without rcon is not supported"
     fi

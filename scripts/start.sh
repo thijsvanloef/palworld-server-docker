@@ -59,14 +59,14 @@ cd /palworld || exit
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
 
-    if [ -n "$DISCORD_PRE_UPDATE_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_UPDATE_JSON &
+    if [ -n "$DISCORD_PRE_UPDATE_BOOT_JSON" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_UPDATE_BOOT_JSON &
     fi
 
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 
-    if [ -n "$DISCORD_POST_UPDATE_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_UPDATE_JSON &
+    if [ -n "$DISCORD_POST_UPDATE_BOOT_JSON" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_UPDATE_BOOT_JSON &
     fi
 fi
 

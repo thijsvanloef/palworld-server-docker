@@ -15,7 +15,7 @@ chown -R steam:steam /palworld /home/steam/
 # shellcheck disable=SC2317
 term_handler() {
     if [ -n "$DISCORD_WEBHOOK_ID" ]; then
-        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_JSON" &
+        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_SHUTDOWN_JSON" &
     fi
     if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
@@ -25,7 +25,7 @@ term_handler() {
     fi
     tail --pid="$killpid" -f 2>/dev/null
     if [ -n "$DISCORD_WEBHOOK_ID" ]; then
-        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_JSON" &
+        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_SHUTDOWN_JSON" &
     fi
 }
 
