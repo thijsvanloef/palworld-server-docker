@@ -4,7 +4,7 @@
 usage() {
 cat << EOH
 Usage: $0 [OPTION]... -d WEBHOOK_ID -t CONNECT_TIMEOUT -m MAX_TIMEOUT -j JSON
-Post a discord message via a discord webhook. By default uses a 30s connect-timeout. Webhook id an json are required. A good example for discord json formatting is located here: https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html
+Post a discord message via a discord webhook. By default uses a 30s connect-timeout and 30s max-timeout. Webhook id an json are required to send a discord webhook. A good example for discord json formatting is located here: https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html
 Package requirement: curl
 
 Examples:
