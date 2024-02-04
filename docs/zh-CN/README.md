@@ -210,6 +210,40 @@ docker exec palworld-server backup
 
 若启用了 RCON，服务器将在备份前进行保存。
 
+## 透过备份恢復数据
+
+要从备份中恢复，请使用以下命令：
+
+```bash
+docker exec -it palworld-server restore
+```
+
+必须将 `RCON_ENABLED` 环境变量设置为 `true` 以使用此命令。
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+## 手动从备份中恢复数据
+
+在 `/palworld/backups/` 中找到要恢复的备份并解压缩它。
+
+删除位于 `/palworld/Pal/Saved/SaveGames/0/<old_hash_value>` 的旧保存数据文件夹。
+
+将新解压缩的保存数据文件夹 `Saved/SaveGames/0/<new_hash_value>` 的内容复制到 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>` 。
+
+将 `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 中的 `DedicatedServerName` 替换为新文件夹名称。
+
+```ini
+DedicatedServerName=<new_hash_value>  # 替换为新的保存数据文件夹名称
+```
+
+重新启动游戏。（如果您正在使用 Docker Compose）
+
+```bash
+docker compose down && docker compose up -d
+```
+
 ## 使用 Cron 执行自动备份
 
 服务器将在每天午夜根据 TZ 设置的时区自动备份。
@@ -225,9 +259,52 @@ docker exec palworld-server backup
 > 或者
 > [Crontab Generat](https://crontab-generator.org).
 
-设置 `BACKUP_CRON_EXPRESSION` 来更改默认计划。
+设置 `BACKUP_CRON_EXPRESSION` 以更改默认时程。
 
-使用示例：如果 BACKUP_CRON_EXPRESSION 设置为 `0 2 * * *`，备份脚本将在每天凌晨 2:00 运行。
+使用示例：如果 `BACKUP_CRON_EXPRESSION` 设置为 `0 2 * * *`，备份脚本将在每天凌晨 2:00 运行。
+
+## 使用 Cron 执行自动更新
+
+如果要在伺服器上使用自动更新功能， **必须** 将以下环境变数设置为 `true`：
+
+* RCON_ENABLED
+* UPDATE_ON_BOOT
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动备份（默认为禁用）。
+
+`AUTO_UPDATE_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
+
+> [!TIP]
+> 这个镜像使用 Supercronic 来执行 cron 任务。
+> 查阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> 或者
+> [Crontab Generat](https://crontab-generator.org).
+
+設置 `AUTO_UPDATE_CRON_EXPRESSION` 以更改默認时程。
+
+## 使用 Cron 执行自动重启
+
+为了能够使用该服务器的自动重启功能，需要启用 `RCON_ENABLED` 。
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+设置 `AUTO_REBOOT_ENABLED` 以启用或禁用自动备份（默认为禁用）。
+
+`AUTO_REBOOT_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
+
+> [!TIP]
+> 该镜像使用 Supercronic 进行 cron 作业。
+> 请参阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> 或
+> [Crontab Generator](https://crontab-generator.org).
+
+设置 `AUTO_REBOOT_CRON_EXPRESSION` 以更改时程， 默认为每天午夜，根据设置的时区进行调整。
 
 ## 编辑服务器配置
 
