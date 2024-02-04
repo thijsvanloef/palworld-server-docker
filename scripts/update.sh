@@ -24,7 +24,7 @@ fi
 
 if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
-    if [ "${RCON_ENABLED}" = true ]; then
+    if [ "${RCON_ENABLED,,}" = true ]; then
         if [ -n "$DISCORD_PRE_UPDATE_JSON" ]; then
             discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_UPDATE_JSON &
         fi

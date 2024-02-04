@@ -1,28 +1,42 @@
 FROM cm2network/steamcmd:root
-LABEL maintainer="thijs@loef.dev"
+LABEL maintainer="thijs@loef.dev" \
+      name="thijsvanloef/palworld-server-docker" \
+      github="https://github.com/thijsvanloef/palworld-server-docker" \
+      dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
+      org.opencontainers.image.authors="Thijs van Loef" \
+      org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
+# update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    xdg-user-dirs=0.17-2 \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    xdg-user-dirs=0.17-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# set envs
+# SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
+# RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
+# NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
+ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398" \
+    SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b" \
+    RCON_VERSION="0.10.3" \
+    SUPERCRONIC_VERSION="0.2.29"
+
+# install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN wget -q https://github.com/gorcon/rcon-cli/releases/download/v0.10.3/rcon-0.10.3-amd64_linux.tar.gz -O - | tar -xz && \
-    mv rcon-0.10.3-amd64_linux/rcon /usr/bin/rcon-cli && \
-    rmdir /tmp/dumps
 
-# Latest releases available at https://github.com/aptible/supercronic/releases
-ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.29/supercronic-linux-amd64 \
-    SUPERCRONIC=supercronic-linux-amd64 \
-    SUPERCRONIC_SHA1SUM=cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b
+RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-amd64_linux.tar.gz -O rcon.tar.gz \
+     && echo "${RCON_MD5SUM}" rcon.tar.gz | md5sum -c - \
+     && tar -xzvf rcon.tar.gz \
+     && rm rcon.tar.gz \
+     && mv rcon-${RCON_VERSION}-amd64_linux/rcon /usr/bin/rcon-cli \
+     && rmdir /tmp/dumps
 
-RUN wget -q "$SUPERCRONIC_URL" \
-    && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
-    && chmod +x "$SUPERCRONIC" \
-    && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
-    && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+RUN wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 -O supercronic \
+     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
+     && chmod +x supercronic \
+     && mv supercronic /usr/local/bin/supercronic
 
 ENV PORT= \
     PUID=1000 \
@@ -42,15 +56,22 @@ ENV PORT= \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \
+    DELETE_OLD_BACKUPS=false \
+    OLD_BACKUP_DAYS=30 \
     BACKUP_CRON_EXPRESSION="0 0 * * *" \
     AUTO_UPDATE_ENABLED=false \
     AUTO_UPDATE_CRON_EXPRESSION="0 * * * *" \
-    AUTO_UPDATE_WARN_MINUTES=30
+    AUTO_UPDATE_WARN_MINUTES=30 \
+    AUTO_REBOOT_ENABLED=false \
+    AUTO_REBOOT_WARN_MINUTES=5 \
+    AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *"
 
 COPY ./scripts/* /home/steam/server/
-RUN chmod +x /home/steam/server/init.sh /home/steam/server/start.sh /home/steam/server/backup.sh /home/steam/server/update.sh && \
+
+RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
+    mv /home/steam/server/restore.sh /usr/local/bin/restore && \
     mv /home/steam/server/discord.sh /usr/local/bin/discord
 
 WORKDIR /home/steam/server
