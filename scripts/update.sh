@@ -26,7 +26,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
     if [ "${RCON_ENABLED,,}" = true ]; then
         if [ -n "$DISCORD_PRE_UPDATE_JSON" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_UPDATE_JSON &
+            discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_UPDATE_JSON &
         fi
         rm /palworld/steamapps/appmanifest_2394010.acf
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
@@ -34,7 +34,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
         if [ -n "$DISCORD_POST_UPDATE_JSON" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_UPDATE_JSON &
+            discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_UPDATE_JSON &
         fi
     else
         echo "An update is available however auto updating without rcon is not supported"

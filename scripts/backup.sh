@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -n "$DISCORD_PRE_BACKUP_JSON" ]; then
-    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_BACKUP_JSON &
+    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_BACKUP_JSON &
 fi
 
 if [ "${RCON_ENABLED,,}" = true ]; then
@@ -22,12 +22,12 @@ fi
 echo "backup created at ${FILE_PATH}"
 
 if [ -n "$DISCORD_POST_BACKUP_JSON" ]; then
-    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_BACKUP_JSON &
+    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_BACKUP_JSON &
 fi
 
 if [ "${DELETE_OLD_BACKUPS,,}" = true ]; then
     if [ -n "$DISCORD_PRE_BACKUP_DELETE_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_PRE_BACKUP_DELETE_JSON &
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_BACKUP_DELETE_JSON &
     fi
     if [ -z "${OLD_BACKUP_DAYS}" ]; then
         echo "Unable to deleted old backups, OLD_BACKUP_DAYS is empty."
@@ -38,6 +38,6 @@ if [ "${DELETE_OLD_BACKUPS,,}" = true ]; then
         echo "Unable to deleted old backups, OLD_BACKUP_DAYS is not an integer. OLD_BACKUP_DAYS=${OLD_BACKUP_DAYS}"
     fi
     if [ -n "$DISCORD_POST_BACKUP_DELETE_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_TIMEOUT -j $DISCORD_POST_BACKUP_DELETE_JSON &
+        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_BACKUP_DELETE_JSON &
     fi
 fi

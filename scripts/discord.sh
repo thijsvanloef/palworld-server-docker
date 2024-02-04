@@ -30,8 +30,8 @@ RED='\033[0;31m'
 NC='\033[0m'
 REQ=2
 REQ_FLAG=0
-TIMEOUT=30
-MAX_TIMEOUT=30
+DEFAULT_CONNECT_TIMEOUT=30
+DEFAULT_MAX_TIMEOUT=30
 
 # # Decimal Colors
 # INFO=1127128 # blue
@@ -91,6 +91,20 @@ if [ $REQ_FLAG -lt $REQ ]; then
     printf "%b\n" "${RED}webhook-id and json are required${NC}"
     usage
     exit 1
+fi
+
+if [ -n "${$CONNECT_TIMEOUT}" ] &&  [[ "${CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
+    CONNECT_TIMEOUT=$DISCORD_CONNECT_TIMEOUT
+else
+    echo "CONNECT_TIMEOUT is not an integer, using default ${$DEFAULT_CONNECT_TIMEOUT} seconds."
+    CONNECT_TIMEOUT=$DEFAULT_CONNECT_TIMEOUT
+fi
+
+if [ -n "${MAX_TIMEOUT}" ] && [[ "${MAX_TIMEOUT}" =~ ^[0-9]+$ ]]; then
+    MAX_TIMEOUT=$DISCORD_MAX_TIMEOUT
+else
+    echo "MAX_TIMEOUT is not an integer, using default ${DEFAULT_MAX_TIMEOUT} seconds."
+    MAX_TIMEOUT=$DEFAULT_MAX_TIMEOUT
 fi
 
 # Set discord webhook
