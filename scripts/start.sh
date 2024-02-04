@@ -54,6 +54,10 @@ dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
 
+printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
+
+./compile-settings.sh
+
 cd /palworld || exit
 
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
@@ -85,12 +89,6 @@ fi
 if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
-
-printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
-
-./compile-settings.sh
-
-cd /palworld || exit
 
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
