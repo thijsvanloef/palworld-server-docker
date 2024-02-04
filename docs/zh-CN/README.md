@@ -235,7 +235,7 @@ docker exec -it palworld-server restore
 将 `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 中的 `DedicatedServerName` 替换为新文件夹名称。
 
 ```ini
-DedicatedServerName=<new_hash_value>  # 替换为您的新保存数据文件夹名称
+DedicatedServerName=<new_hash_value>  # 替换为新的保存数据文件夹名称
 ```
 
 重新启动游戏。（如果您正在使用 Docker Compose）
