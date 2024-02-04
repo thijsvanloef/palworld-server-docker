@@ -81,13 +81,13 @@ set -- "${POSITIONAL[@]}"
 
 # Check required options
 if [ $REQ_FLAG -lt $REQ ]; then
-    printf "${RED}webhook-id and json are required${NC}\n"
+    printf "%s\n" "${RED}webhook-id and json are required${NC}"
     usage
     exit 1
 fi
 
 # Set discord webhook
-DISCORD_WEBHOOK = "https://discord.com/api/webhooks/$WEBHOOK_ID"
+DISCORD_WEBHOOK="https://discord.com/api/webhooks/$WEBHOOK_ID"
 echo "Sending Discord json: ${JSON}"
 curl -sfSL --connect-timeout "$TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_WEBHOOK"
 
