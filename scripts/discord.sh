@@ -88,7 +88,7 @@ set -- "${POSITIONAL[@]}"
 
 # Check required options
 if [ $REQ_FLAG -lt $REQ ]; then
-    printf "%s\n" "${RED}webhook-id and json are required${NC}"
+    printf "%b\n" "${RED}webhook-id and json are required${NC}"
     usage
     exit 1
 fi
