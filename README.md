@@ -20,7 +20,7 @@
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
-This Docker container has been tested and will work on both Linux (Ubuntu/Debian) and Windows 10.
+This Docker container has been tested and will work on Linux (Ubuntu/Debian), Windows 10 and macOS (including Apple Silicon).
 
 > [!IMPORTANT]
 > At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
@@ -181,17 +181,15 @@ It is highly recommended you set the following environment values before startin
 | AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
 | AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
+| AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
 
 *highly recommended to set
 
 ** Make sure you know what you are doing when running this option enabled
 
 *** Required for docker stop to save and gracefully close the server
-
-> [!IMPORTANT]
-> Boolean values used in environment variables are case-sensitive because they are used in the shell script.
->
-> They must be set using exactly `true` or `false` for the option to take effect.
 
 ### Game Ports
 
@@ -247,6 +245,41 @@ This will create a backup at `/palworld/backups/`
 
 The server will run a save before the backup if rcon is enabled.
 
+## Restore from a backup
+
+To restore from a backup, use the command:
+
+```bash
+docker exec -it palworld-server restore
+```
+
+The `RCON_ENABLED` environment variable must be set to `true` to use this command.
+> [!IMPORTANT]
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already uses the needed policy
+
+## Manually restore from a backup
+
+Locate the backup you want to restore in `/palworld/backups/` and decompress it.
+
+Delete the old saved data folder located at `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
+
+Copy the contents of the newly decompressed saved data folder `Saved/SaveGames/0/<new_hash_value>` to `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`.
+
+Replace the DedicatedServerName inside `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` with the new folder name.
+
+```ini
+DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
+```
+
+Restart the game. (If you are using Docker Compose)
+
+```bash
+docker compose down && docker compose up -d
+```
+
 ## Configuring Automatic Backups with Cron
 
 The server is automatically backed up everynight at midnight according to the timezone set with TZ
@@ -259,7 +292,7 @@ BACKUP_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an 
 > This image uses Supercronic for crons
 > see [supercronic](https://github.com/aptible/supercronic#crontab-format)
 > or
-> [Crontab Generat](https://crontab-generator.org).
+> [Crontab Generator](https://crontab-generator.org).
 
 Set BACKUP_CRON_EXPRESSION to change the default schedule.
 Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will run every day at 2:00 AM.
@@ -286,9 +319,33 @@ AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you defin
 > This image uses Supercronic for crons
 > see [supercronic](https://github.com/aptible/supercronic#crontab-format)
 > or
-> [Crontab Generat](https://crontab-generator.org).
+> [Crontab Generator](https://crontab-generator.org).
 
 Set AUTO_UPDATE_CRON_EXPRESSION to change the default schedule.
+
+## Configuring Automatic Reboots with Cron
+
+To be able to use automatic reboots with this server RCON_ENABLED enabled.
+
+> [!IMPORTANT]
+>
+> If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
+> manually restarted.
+>
+> The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
+
+Set AUTO_REBOOT_ENABLED enable or disable automatic reboots (Default is disabled)
+
+AUTO_REBOOT_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+
+> [!TIP]
+> This image uses Supercronic for crons
+> see [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> or
+> [Crontab Generator](https://crontab-generator.org).
+
+Set AUTO_REBOOT_CRON_EXPRESSION to change the set the schedule, default is everynight at midnight according to the
+timezone set with TZ
 
 ## Editing Server Settings
 

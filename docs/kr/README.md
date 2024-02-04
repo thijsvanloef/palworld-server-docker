@@ -13,14 +13,14 @@
 
 [English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
 
-> [!Tip]
+> [!TIP]
 > 어떻게 시작해야 할지 모르시나요? [제가 작성한 이 가이드](https://tice.tips/containerization/palworld-server-docker/)를 확인해 보세요
 
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) 전용 서버 호스팅을 시작하는 데 도움이 되는 Docker 컨테이너입니다.
 
-이 도커 컨테이너는 테스트되었으며 Linux(Ubuntu/Debian) 및 Windows 10 모두에서 작동합니다.
+이 도커 컨테이너는 테스트되었으며 Linux(Ubuntu/Debian), Windows 10 및 macOS (Apple Silicon 포함) 모두에서 작동합니다.
 
-> [!Important]
+> [!IMPORTANT]
 > 현재 Xbox Gamepass/Xbox 콘솔 플레이어는 전용 서버에 참여할 수 없습니다.
 >
 > 초대 코드를 통해 다른 플레이어들과 함께 게임을 즐길 수 있으며, 게임은 최대 4명의 플레이어로 제한됩니다.
@@ -188,7 +188,7 @@ docker exec -it palworld-server rcon-cli
 
 ## 백업 만들기
 
-현재 시점의 게임 세이브 백업을 생성하려면 다음 명령을 사용합니다.
+현재 시점의 게임 세이브 백업을 생성하려면 다음 명령을 사용합니다:
 
 ```bash
 docker exec palworld-server backup
@@ -198,11 +198,26 @@ docker exec palworld-server backup
 
 rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
 
+## 백업 복원 하기
+
+백업을 복원하려면 다음 명령을 사용합니다:
+
+```bash
+docker exec -it palworld-server restore
+```
+
+복원 명령어를 사용하려면 `RCON_ENABLED` 환경 변수가 `true`여야 합니다.
+
+> [!IMPORTANT]
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면 복원 이후 컨테이너가 종료되므로 수동으로 재시작 해야 합니다.
+>
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+
 ## 서버 설정 편집
 
 ### 환경 변수 사용 설정
 
-> [!Important]
+> [!IMPORTANT]
 >
 > 게임이 아직 베타버전이므로 이러한 환경 변수/설정은 변경될 수 있습니다
 
@@ -276,7 +291,7 @@ rcon이 활성화된 경우 서버는 백업 전에 저장을 실행합니다.
 
 서버 설정에 대한 자세한 설명 목록을 보려면 다음을 참조하세요: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-> [!Tip]
+> [!TIP]
 > 만약 `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` 파일 내부가 비어 있으면,
 > 파일을 삭제하고 서버를 다시 시작하면 콘텐츠가 포함된 새 파일이 생성됩니다.
 
