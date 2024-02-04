@@ -3,13 +3,13 @@
 # Command usage
 usage() {
 cat << EOH
-Usage: $0 [OPTION]... -d WEBHOOK_ID -t CONNECT_TIMEOUT -m MAX_TIMEOUT -j JSON
+Usage: $0 [OPTION]... -i WEBHOOK_ID -t CONNECT_TIMEOUT -m MAX_TIMEOUT -j JSON
 Post a discord message via a discord webhook. By default uses a 30s connect-timeout and 30s max-timeout. Webhook id an json are required to send a discord webhook. A good example for discord json formatting is located here: https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html
 Package requirement: curl
 
 Examples:
-    $0 -i 01234/56789 -t 30 -l info -j {"username":"Palworld","content":"Server starting..."}
-    $0 --webhook-id  01234/56789 --timeout 30 --level info --json {"username":"Palworld","content":"Server starting..."}
+    $0 -i 01234/56789 -t 30 -m 30 -j {"username":"Palworld","content":"Server starting..."}
+    $0 --webhook-id  01234/56789 --connect-timeout 30 --max-timeout 30 --json {"username":"Palworld","content":"Server starting..."}
 
 Options:
     -i, --webhook-id        The unique id that is used by discord to determine what server/channel/thread to post. ex: https://discord.com/api/webhooks/<your id>
