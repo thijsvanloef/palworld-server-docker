@@ -90,26 +90,3 @@ fi
 DISCORD_WEBHOOK="https://discord.com/api/webhooks/$WEBHOOK_ID"
 echo "Sending Discord json: ${JSON}"
 curl -sfSL --connect-timeout "$TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_WEBHOOK"
-
-# # Log into AWS CLI if not already logged in
-# check-aws-login
-
-# # Set AWS Profile for following aws commands
-# export AWS_PROFILE=$PROFILE
-
-# if [ -n "$SERVICE_NAME" ]; then
-#     # Get arn of service
-#     SERVICE_LIST=$(aws ecs describe-services --cluster $CLUSTER --services $SERVICE_NAME | jq --raw-output '.services[].serviceArn')
-# else
-#     # Get list of ECS service on cluster
-#     SERVICE_LIST=$(aws ecs list-services --cluster $CLUSTER | jq --raw-output '.serviceArns[]')
-# fi
-
-# for SERVICE in $SERVICE_LIST; do
-#     SERVICE_NAME=$(cut -d/ -f2 <<< $SERVICE)
-#     TASK_DEF=$(aws ecs describe-services --cluster $CLUSTER --services $SERVICE_NAME | jq --raw-output '.services[].taskDefinition')
-
-#     # Outputs the list of endpoints slightly formatted
-#     echo "Service $SERVICE_NAME:"
-#     aws ecs describe-task-definition --task-definition $TASK_DEF | jq -c '.taskDefinition.containerDefinitions[].environment[] | select(.value | contains("'$ELB_PREFIX'"))' | sed 's/{\"name\":\"/\t/; s/\",\"value\":\"/ = /; s/\"}//'
-# done
