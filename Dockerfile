@@ -1,10 +1,10 @@
 FROM cm2network/steamcmd:root
 LABEL maintainer="thijs@loef.dev" \
-      name="thijsvanloef/palworld-server-docker" \
-      github="https://github.com/thijsvanloef/palworld-server-docker" \
-      dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
-      org.opencontainers.image.authors="Thijs van Loef" \
-      org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
+    name="thijsvanloef/palworld-server-docker" \
+    github="https://github.com/thijsvanloef/palworld-server-docker" \
+    dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
+    org.opencontainers.image.authors="Thijs van Loef" \
+    org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -27,16 +27,16 @@ ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398" \
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-amd64_linux.tar.gz -O rcon.tar.gz \
-     && echo "${RCON_MD5SUM}" rcon.tar.gz | md5sum -c - \
-     && tar -xzvf rcon.tar.gz \
-     && rm rcon.tar.gz \
-     && mv rcon-${RCON_VERSION}-amd64_linux/rcon /usr/bin/rcon-cli \
-     && rmdir /tmp/dumps
+    && echo "${RCON_MD5SUM}" rcon.tar.gz | md5sum -c - \
+    && tar -xzvf rcon.tar.gz \
+    && rm rcon.tar.gz \
+    && mv rcon-${RCON_VERSION}-amd64_linux/rcon /usr/bin/rcon-cli \
+    && rmdir /tmp/dumps
 
 RUN wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 -O supercronic \
-     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
-     && chmod +x supercronic \
-     && mv supercronic /usr/local/bin/supercronic
+    && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
+    && chmod +x supercronic \
+    && mv supercronic /usr/local/bin/supercronic
 
 ENV PORT= \
     PUID=1000 \
