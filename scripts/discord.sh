@@ -3,7 +3,7 @@
 # Command usage
 usage() {
 cat << EOH
-Usage: $0 [OPTION]... -d WEBHOOK_ID -t TIMEOUT -j JSON
+Usage: $0 [OPTION]... -d WEBHOOK_ID -t CONNECT_TIMEOUT -m MAX_TIMEOUT -j JSON
 Post a discord message via a discord webhook. By default uses a 30s connect-timeout. Webhook id an json are required. A good example for discord json formatting is located here: https://birdie0.github.io/discord-webhooks-guide/discord_webhook.html
 Package requirement: curl
 
@@ -12,10 +12,11 @@ Examples:
     $0 --webhook-id  01234/56789 --timeout 30 --level info --json {"username":"Palworld","content":"Server starting..."}
 
 Options:
-    -i, --webhook-id    The unique id that is used by discord to determine what server/channel/thread to post. ex: https://discord.com/api/webhooks/<your id>
-    -t, --timeout       The timeout for connecting to the discord webhook (Default: 30)
-    -j, --json          The json message body sent to the discord webhook
-    -h, --help          Display help text and exit
+    -i, --webhook-id        The unique id that is used by discord to determine what server/channel/thread to post. ex: https://discord.com/api/webhooks/<your id>
+    -t, --connect-timeout   The timeout for connecting to the discord webhook (Default: 30)
+    -m, --max-timeout       The maximum time curl will wait for a response (Default: 30)
+    -j, --json              The json message body sent to the discord webhook
+    -h, --help              Display help text and exit
 EOH
 }
 
@@ -30,6 +31,7 @@ NC='\033[0m'
 REQ=2
 REQ_FLAG=0
 TIMEOUT=30
+MAX_TIMEOUT=30
 
 # # Decimal Colors
 # INFO=1127128 # blue
@@ -56,8 +58,13 @@ while [[ $# -gt 0 ]]; do
             shift
             shift
             ;;
-        -t|--timeout )
-            TIMEOUT="$2"
+        -t|--connect-timeout )
+            CONNECT_TIMEOUT="$2"
+            shift
+            shift
+            ;;
+        -m|--max-timeout )
+            MAX_TIMEOUT="$2"
             shift
             shift
             ;;
@@ -89,4 +96,4 @@ fi
 # Set discord webhook
 DISCORD_WEBHOOK="https://discord.com/api/webhooks/$WEBHOOK_ID"
 echo "Sending Discord json: ${JSON}"
-curl -sfSL --connect-timeout "$TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_WEBHOOK"
+curl -sfSL --connect-timeout "$CONNECT_TIMEOUT" --max-time "$MAX_TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_WEBHOOK"
