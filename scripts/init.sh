@@ -15,7 +15,7 @@ chown -R steam:steam /palworld /home/steam/
 # shellcheck disable=SC2317
 term_handler() {
     if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_SHUTDOWN_MESSAGE}" ]; then
-        su steam -c "discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m '$DISCORD_PRE_SHUTDOWN_MESSAGE' -l in-progress" &
+        su steam -c "/home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m '$DISCORD_PRE_SHUTDOWN_MESSAGE' -l in-progress" &
     fi
 
     if [ "${RCON_ENABLED,,}" = true ]; then

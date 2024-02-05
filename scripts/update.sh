@@ -3,7 +3,7 @@
 if [ "${UPDATE_ON_BOOT}" = false ]; then
     echo "Update on Boot needs to be enabled for auto updating"
     if [ -n "${DISCORD_WEBHOOK_ID}" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Update on Boot needs to be enabled for auto updating" -l "warn"
+        /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Update on Boot needs to be enabled for auto updating" -l "warn"
     fi
     exit 0
 fi
@@ -18,7 +18,7 @@ rm "$temp_file"
 if [ "$http_code" -ne 200 ]; then
     echo "There was a problem reaching the Steam api. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_ID}" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "There was a problem reaching the Steam api. Unable to check for updates!" -l "failure" &
+        /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "There was a problem reaching the Steam api. Unable to check for updates!" -l "failure" &
     fi
     exit 1
 fi
@@ -26,7 +26,7 @@ fi
 if [ -z "$TARGETBUILD" ]; then
     echo "The server response does not contain the expected BuildID. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_ID}" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "The server response does not contain the expected BuildID. Unable to check for updates!" -l "failure" &
+        /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "The server response does not contain the expected BuildID. Unable to check for updates!" -l "failure" &
     fi
     exit 1
 fi
@@ -36,7 +36,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     if [ "${RCON_ENABLED,,}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_UPDATE_MESSAGE}" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "The Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" -l "info" &
+            /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "The Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" -l "info" &
         fi
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
@@ -45,7 +45,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     else
         echo "An update is available however auto updating without rcon is not supported"
         if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_UPDATE_MESSAGE}" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "An update is available however auto updating without rcon is not supported" -l "warn"
+            /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "An update is available however auto updating without rcon is not supported" -l "warn"
         fi
     fi
 else

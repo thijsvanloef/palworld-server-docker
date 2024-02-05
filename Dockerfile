@@ -1,10 +1,10 @@
 FROM cm2network/steamcmd:root
 LABEL maintainer="thijs@loef.dev" \
-    name="thijsvanloef/palworld-server-docker" \
-    github="https://github.com/thijsvanloef/palworld-server-docker" \
-    dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
-    org.opencontainers.image.authors="Thijs van Loef" \
-    org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
+      name="thijsvanloef/palworld-server-docker" \
+      github="https://github.com/thijsvanloef/palworld-server-docker" \
+      dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
+      org.opencontainers.image.authors="Thijs van Loef" \
+      org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -79,8 +79,7 @@ COPY ./scripts/* /home/steam/server/
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
-    mv /home/steam/server/restore.sh /usr/local/bin/restore && \
-    mv /home/steam/server/discord.sh /usr/local/bin/discord
+    mv /home/steam/server/restore.sh /usr/local/bin/restore
 
 WORKDIR /home/steam/server
 
