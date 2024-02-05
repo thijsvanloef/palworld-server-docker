@@ -184,7 +184,7 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
-| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | https://discord.com/api/webhooks/<webhook_id> | |
+| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | `https://discord.com/api/webhooks/<webhook_id>` | |
 | DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
 | DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | |
