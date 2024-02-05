@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
-    printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
+    printf "\e[0;32m%s\e[0m\n" "*****EXECUTING USERMOD*****"
     usermod -o -u "${PUID}" steam
     groupmod -o -g "${PGID}" steam
 else
-    printf "\033[31mRunning as root is not supported, please fix your PUID and PGID!\n"
+    printf "\033[31m%s\n" "Running as root is not supported, please fix your PUID and PGID!"
     exit 1
 fi
 
@@ -14,19 +14,18 @@ chown -R steam:steam /palworld /home/steam/
 
 # shellcheck disable=SC2317
 term_handler() {
-    if [ -n "$DISCORD_WEBHOOK_ID" ]; then
-        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_SHUTDOWN_JSON" &
+    if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_SHUTDOWN_MESSAGE}" ]; then
+        su steam -c "discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m '$DISCORD_PRE_SHUTDOWN_MESSAGE' -l in-progress" &
     fi
+
     if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli save
         rcon-cli "shutdown 1"
     else # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
+
     tail --pid="$killpid" -f 2>/dev/null
-    if [ -n "$DISCORD_WEBHOOK_ID" ]; then
-        su steam -c "discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_SHUTDOWN_JSON" &
-    fi
 }
 
 trap 'term_handler' SIGTERM

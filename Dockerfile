@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
     xdg-user-dirs=0.17-2 \
+    jo=1.3-2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -66,7 +67,12 @@ ENV PORT= \
     AUTO_REBOOT_WARN_MINUTES=5 \
     AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *" \
     DISCORD_CONNECT_TIMEOUT=30 \
-    DISCORD_MAX_TIMEOUT=30
+    DISCORD_MAX_TIMEOUT=30 \
+    DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+    DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
+    DISCORD_PRE_START_MESSAGE="Server is started!" \
+    DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server is stopped!"
 
 COPY ./scripts/* /home/steam/server/
 

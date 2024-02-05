@@ -57,16 +57,16 @@ isExecutable "/palworld" || exit
 cd /palworld || exit
 
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
-    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+    printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
 
-    if [ -n "$DISCORD_PRE_UPDATE_BOOT_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_UPDATE_BOOT_JSON &
+    if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_PRE_UPDATE_BOOT_MESSAGE" -l "in-progress" &
     fi
 
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 
-    if [ -n "$DISCORD_POST_UPDATE_BOOT_JSON" ]; then
-        discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_UPDATE_BOOT_JSON &
+    if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
+        discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_POST_UPDATE_BOOT_MESSAGE" -l "success" &
     fi
 fi
 
@@ -95,12 +95,12 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
+printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
 
 # shellcheck disable=SC2143
 if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
-    printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
+    printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
 
     # Server will generate all ini files after first run.
     timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
@@ -376,7 +376,6 @@ fi
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
-
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
@@ -402,13 +401,16 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
-if [ -n "$DISCORD_PRE_START_JSON" ]; then
-    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_PRE_START_JSON &
+printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
+if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
+    discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_PRE_START_MESSAGE" -l "success" &
 fi
+
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
-if [ -n "$DISCORD_POST_START_JSON" ]; then
-    discord -i $DISCORD_WEBHOOK_ID -t $DISCORD_CONNECT_TIMEOUT -m $DISCORD_MAX_TIMEOUT -j $DISCORD_POST_START_JSON &
+
+if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_SHUTDOWN_MESSAGE}" ]; then
+    discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_POST_SHUTDOWN_MESSAGE" -l "failure"
 fi
+
 exit 0
