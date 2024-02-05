@@ -29,7 +29,7 @@ if [ "${DELETE_OLD_BACKUPS,,}" = true ]; then
     if [ -z "${OLD_BACKUP_DAYS}" ]; then
         echo "Unable to delete old backups, OLD_BACKUP_DAYS is empty."
         if [ -n "${DISCORD_WEBHOOK_ID}" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Unable to deleted old backups, OLD_BACKUP_DAYS is empty." -l "warn"
+            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Unable to delete old backups, OLD_BACKUP_DAYS is empty." -l "warn"
         fi
     elif [[ "${OLD_BACKUP_DAYS}" =~ ^[0-9]+$ ]]; then
         echo "Removing backups older than ${OLD_BACKUP_DAYS} days"
@@ -43,7 +43,7 @@ if [ "${DELETE_OLD_BACKUPS,,}" = true ]; then
     else
         echo "Unable to delete old backups, OLD_BACKUP_DAYS is not an integer. OLD_BACKUP_DAYS=${OLD_BACKUP_DAYS}"
         if [ -n "${DISCORD_WEBHOOK_ID}" ]; then
-            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Unable to deleted old backups, OLD_BACKUP_DAYS is not an integer. OLD_BACKUP_DAYS=${OLD_BACKUP_DAYS}" -l "failure"
+            discord -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "Unable to delete old backups, OLD_BACKUP_DAYS is not an integer. OLD_BACKUP_DAYS=${OLD_BACKUP_DAYS}" -l "failure"
         fi
     fi
 fi
