@@ -66,7 +66,7 @@ if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 
     if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" &
+        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
     fi
 fi
 
