@@ -14,14 +14,14 @@ DISCORD_GREEN=52224
 MESSAGE=$1
 LEVEL=$2
 
-if [ -n "${CONNECT_TIMEOUT}" ] && [[ "${CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
+if [ -n "${DISCORD_CONNECT_TIMEOUT}" ] && [[ "${DISCORD_CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
     CONNECT_TIMEOUT=$DISCORD_CONNECT_TIMEOUT
 else
     echo "CONNECT_TIMEOUT is not an integer, using default ${DEFAULT_CONNECT_TIMEOUT} seconds."
     CONNECT_TIMEOUT=$DEFAULT_CONNECT_TIMEOUT
 fi
 
-if [ -n "${MAX_TIMEOUT}" ] && [[ "${MAX_TIMEOUT}" =~ ^[0-9]+$ ]]; then
+if [ -n "${DISCORD_MAX_TIMEOUT}" ] && [[ "${DISCORD_MAX_TIMEOUT}" =~ ^[0-9]+$ ]]; then
     MAX_TIMEOUT=$DISCORD_MAX_TIMEOUT
 else
     echo "MAX_TIMEOUT is not an integer, using default ${DEFAULT_MAX_TIMEOUT} seconds."
