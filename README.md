@@ -184,12 +184,14 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
-| PRE_INIT_HOOK | You can add a custom sh commands before initializing | | sh command |
-| POST_INIT_HOOK | You can add a custom sh commands after initializing | | sh command |
-| PRE_BACKUP_HOOK | You can add a custom sh commands before a backup is created | | sh command |
-| POST_BACKUP_HOOK | You can add a custom sh commands after a backup is created | | sh command |
-| PRE_SHUTDOWN_HOOK | You can add a custom sh commands before pid is killed | | sh command |
-| POST_SHUTDOWN_HOOK | You can add a custom sh commands after pid is killed | | sh command |
+| DISCORD_WEBHOOK_ID | Discord webhook id found after creating a webhook on a discord server ex: discord.com/api/webhooks/<webhook_id> | 0123456789012345678/xxxxxxxxxxxxxxxxxxxxxx | |
+| DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | |
+| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | |
+| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | |
 
 *highly recommended to set
 
@@ -431,44 +433,24 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-## Using sh hooks
-
-### Create a backup
-
-Backup the server whenever it is gracefully shut down.
-
-docker run:
-
-```sh
--e POST_SHUTDOWN_HOOK=backup
-```
-
-docker compose:
-
-```yaml
-- POST_SHUTDOWN_HOOK=backup
-```
-
-### Send discord webhooks
+## Using discord webhooks
 
 1. Generate a webhook url for your discord server in your discord's server settings.
 
-2. You can use the discord webhook in the pre init hook like so:
+2. Set the environment variable with the unique token at the end of the discord webhook url example: discord.com/api/webhooks/<webhook_id>
 
-send discord message with docker run:
+send discord messages with docker run:
 
 ```sh
--e DISCORD_WEBHOOK="https://discord.com/api/webhooks/xxxx/xxxxx" \
--e DISCORD_PRE_INIT_MESSAGE="Server initializing" \
--e PRE_INIT_HOOK='curl -sfSL -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$DISCORD_PRE_INIT_MESSAGE\"}" "$DISCORD_WEBHOOK"'
+-e DISCORD_WEBHOOK="xxxx/xxxxx" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
 ```
 
-send discord message with docker compose:
+send discord messages with docker compose:
 
 ```yaml
-- DISCORD_WEBHOOK=https://discord.com/api/webhooks/xxxx/xxxxx
-- DISCORD_PRE_INIT_MESSAGE="Server initializing..."
-- 'PRE_INIT_HOOK=curl -sfSL -H "Content-Type: application/json" -d "{\"username\":\"Palworld\",\"content\":\"$$(eval echo $$DISCORD_PRE_INIT_MESSAGE)\"}" $$DISCORD_WEBHOOK'
+- DISCORD_WEBHOOK=xxxx/xxxxx
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
 
 ## Reporting Issues/Feature Requests
