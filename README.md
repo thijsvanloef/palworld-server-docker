@@ -311,7 +311,7 @@ To be able to use automatic Updates with this Server the following environment v
 >
 > The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
 
-Set AUTO_UPDATE_ENABLED enable or disable automatic backups (Default is disabled)
+Set AUTO_UPDATE_ENABLED enable or disable automatic updates (Default is disabled)
 
 AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
 
