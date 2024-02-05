@@ -60,13 +60,13 @@ if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
 
     if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_PRE_UPDATE_BOOT_MESSAGE" -l "in-progress" &
+        /home/steam/server/discord.sh "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" &
     fi
 
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 
     if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_POST_UPDATE_BOOT_MESSAGE" -l "success" &
+        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" &
     fi
 fi
 
@@ -403,14 +403,14 @@ EOL
 
 printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
 if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
-    /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_PRE_START_MESSAGE" -l "success" &
+    /home/steam/server/discord.sh "${DISCORD_PRE_START_MESSAGE}" "success" &
 fi
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
 
 if [ -n "${DISCORD_WEBHOOK_ID}" ] && [ -n "${DISCORD_POST_SHUTDOWN_MESSAGE}" ]; then
-    /home/steam/server/discord.sh -i $DISCORD_WEBHOOK_ID -c $DISCORD_CONNECT_TIMEOUT -M $DISCORD_MAX_TIMEOUT -m "$DISCORD_POST_SHUTDOWN_MESSAGE" -l "failure"
+    /home/steam/server/discord.sh "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
 fi
 
 exit 0
