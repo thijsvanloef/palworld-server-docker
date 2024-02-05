@@ -263,6 +263,11 @@ The `RCON_ENABLED` environment variable must be set to `true` to use this comman
 ## Manually restore from a backup
 
 Locate the backup you want to restore in `/palworld/backups/` and decompress it.
+Need to stop the server before task.
+
+```bash
+docker compose down
+```
 
 Delete the old saved data folder located at `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
 
@@ -277,7 +282,7 @@ DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
 Restart the game. (If you are using Docker Compose)
 
 ```bash
-docker compose down && docker compose up -d
+docker compose up -d
 ```
 
 ## Configuring Automatic Backups with Cron
