@@ -187,11 +187,11 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
-| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | |
-| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | |
-| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | |
-| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | |
-| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
 
 *highly recommended to set
 
