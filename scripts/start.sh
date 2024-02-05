@@ -122,8 +122,8 @@ if [ -n "${SERVER_PASSWORD}" ]; then
     SERVER_PASSWORD=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$SERVER_PASSWORD")
     echo "SERVER_PASSWORD=${SERVER_PASSWORD}"
     sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=\"$SERVER_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-elif [ -v "${SERVER_PASSWORD}" ]; then
-    echo "No SERVER_PASSWORD"
+elif [ -z "${SERVER_PASSWORD}" ]; then
+    printf "\033[0;31mNO SERVER_PASSWORD SET\033[0m\n"
     sed -E -i "s/ServerPassword=\"[^\"]*\"/ServerPassword=\"\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${ADMIN_PASSWORD}" ]; then
