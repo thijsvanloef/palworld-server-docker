@@ -97,7 +97,7 @@ fi
 if [ -n "${CONNECT_TIMEOUT}" ] && [[ "${CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
     CONNECT_TIMEOUT=$DISCORD_CONNECT_TIMEOUT
 else
-    echo "CONNECT_TIMEOUT is not an integer, using default ${$DEFAULT_CONNECT_TIMEOUT} seconds."
+    echo "CONNECT_TIMEOUT is not an integer, using default ${DEFAULT_CONNECT_TIMEOUT} seconds."
     CONNECT_TIMEOUT=$DEFAULT_CONNECT_TIMEOUT
 fi
 
