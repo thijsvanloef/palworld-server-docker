@@ -69,8 +69,8 @@ services:
       - ./palworld:/palworld/
 ```
 
-또 다른 방법으로, .env.example 파일을 .env라는 새 파일로 복사할 수 있습니다.
-필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. 아래와 같이 docker-compose.yml을 수정하세요:
+또 다른 방법으로, **.env.example** 파일을 **.env**라는 새 파일로 복사할 수 있습니다.
+필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. 아래와 같이 **docker-compose.yml**을 수정하세요:
 
 ```yml
 services:
@@ -247,7 +247,7 @@ docker exec -it palworld-server restore
 
 ## 수동으로 백업에서 복원하기
 
-/palworld/backups/에서 복원하고자 하는 백업을 찾아서 압축을 풉니다.
+`/palworld/backups/`에서 복원하고자 하는 백업을 찾아서 압축을 풉니다.
 작업을 시작하기 전에 서버를 중지해야 합니다.
 
 ```bash
@@ -258,7 +258,7 @@ docker compose down
 
 새롭게 압축 해제된 저장 데이터 폴더 `Saved/SaveGames/0/<new_hash_value>`의 내용을 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`로 복사합니다.
 
-`palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini`` 안의 DedicatedServerName을 새 폴더 이름으로 교체합니다.
+`palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 안의 DedicatedServerName을 새 폴더 이름으로 교체합니다.
 
 ```ini
 DedicatedServerName=<new_hash_value>  # 폴더 이름으로 교체하세요.
@@ -278,7 +278,7 @@ BACKUP_ENABLED를 설정하여 자동 백업을 활성화하거나 비활성화�
 
 BACKUP_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
-> [!팁]
+> [!TIP]
 > 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
 > [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
 > [Crontab Generator](https://crontab-generator.org)를 참조하세요.
@@ -290,21 +290,21 @@ BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 
 이 서버에서 자동 업데이트를 사용하려면 다음 환경 변수들을 `true`로 **설정해야 합니다**:
 
-* RCON_ENABLED
-* UPDATE_ON_BOOT
+- RCON_ENABLED
+- UPDATE_ON_BOOT
 
-> [!중요]
+> [!IMPORTANT]
 >
 > docker 재시작 정책이 `always` 또는 `unless-stopped`로 설정되어 있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#how-to-use)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
 
 AUTO_UPDATE_ENABLED를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
 AUTO_UPDATE_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
-> [!팁]
+> [!TIP]
 > 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
 > [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
 > [Crontab Generator](https://crontab-generator.org)를 참조하세요.
@@ -315,18 +315,18 @@ AUTO_UPDATE_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 
 이 서버에서 자동 재부팅을 사용하려면 RCON_ENABLED를 활성화해야 합니다.
 
-> [!중요]
+> [!IMPORTANT]
 >
 > docker 재시작 정책이 always 또는 unless-stopped로 설정되어 있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#how-to-use)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
 
 AUTO_REBOOT_ENABLED를 설정하여 자동 재부팅을 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
 AUTO_REBOOT_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
-> [!팁]
+> [!TIP]
 > 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
 > [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
 > [Crontab Generator](https://crontab-generator.org)를 참조하세요.
