@@ -26,6 +26,14 @@
 >
 > 초대 코드를 통해 다른 플레이어들과 함께 게임을 즐길 수 있으며, 게임은 최대 4명의 플레이어로 제한됩니다.
 
+## 스폰서
+
+다음 스폰서들에게 큰 박수를 보냅니다!
+
+<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+</p>
+
 ## 서버 요구 사양
 
 | 리소스 | 최소    | 추천                                |
@@ -61,7 +69,7 @@ services:
       - MULTITHREADING=true
       - RCON_ENABLED=true
       - RCON_PORT=25575
-      - TZ=KST
+      - TZ=Asia/Seoul
       - ADMIN_PASSWORD="adminPasswordHere"
       - COMMUNITY=false # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (USE WITH SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
       - SERVER_NAME="World of Pals"
@@ -69,8 +77,9 @@ services:
       - ./palworld:/palworld/
 ```
 
-또 다른 방법으로, **.env.example** 파일을 **.env**라는 새 파일로 복사할 수 있습니다.
-필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. 아래와 같이 **docker-compose.yml**을 수정하세요:
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요.
+[docker-compose.yml](/docker-compose.yml) 파일을 다음과 같이 수정하세요:
 
 ```yml
 services:
@@ -116,8 +125,8 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest
 ```
 
-또 다른 방법으로, .env.example 파일을 .env라는 새 파일로 복사할 수 있습니다.
-필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. docker run 명령어를 다음과 같이 변경하세요:
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요. docker run 명령어를 다음과 같이 변경하세요:
 
 ```bash
 docker run -d \
@@ -170,6 +179,24 @@ docker run -d \
 | RCON_ENABLED\*\*\* | Palworld RCON 활성화                                                                                                                                     | true   | true/false                                                                                             |
 | RCON_PORT          | RCON접속 포트                                                                                                                                            | 25575  | 1024-65535                                                                                             |
 | QUERY_PORT         | Steam 서버와 통신하는 데 사용되는 쿼리 포트                                                                                                              | 27015  | 1024-65535                                                                                             |
+| BACKUP_CRON_EXPRESSION  | 자동 백업 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 백업 설정](#cron을-이용한-자동-백업-설정) 참조 |
+| BACKUP_ENABLED | 자동 백업을 활성화 여부 | true | true/false |
+| DELETE_OLD_BACKUPS | 오래된 백업 파일 자동 삭제 여부                                                                                                                                                       | false          | true/false                                                                                                 |
+| OLD_BACKUP_DAYS    | 백업 보관 일수                                                                                                                                                                       | 30             | 임의의 양의 정수                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | 자동 업데이트 주기. | 0 \* \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 업데이트 설정](#cron을-이용한-자동-업데이트-설정) 참조 |
+| AUTO_UPDATE_ENABLED | 자동 업데이트 활성화 여부 | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | 업데이트 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 업데이트에 대한 알림을 받습니다 | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 자동 서버 재부팅 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 재부팅 설정](#cron을-이용한-자동-재부팅-설정) 참조 |
+| AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
+| DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 서버 업데이트 시작 시 전송되는 디스코드 메시지 | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 서버 업데이트 완료 시 전송되는 디스코드 메시지 | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | 서버가 시작될 때 전송되는 디스코드 메시지 | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
 
 *설정하는 것을 적극 권장합니다.
 
@@ -294,11 +321,10 @@ BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 - UPDATE_ON_BOOT
 
 > [!IMPORTANT]
->
-> docker 재시작 정책이 `always` 또는 `unless-stopped`로 설정되어 있지 않다면, 서버는 종료되고
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 
 AUTO_UPDATE_ENABLED를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
@@ -316,11 +342,10 @@ AUTO_UPDATE_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 이 서버에서 자동 재부팅을 사용하려면 RCON_ENABLED를 활성화해야 합니다.
 
 > [!IMPORTANT]
->
-> docker 재시작 정책이 always 또는 unless-stopped로 설정되어 있지 않다면, 서버는 종료되고
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 
 AUTO_REBOOT_ENABLED를 설정하여 자동 재부팅을 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
