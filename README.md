@@ -29,7 +29,7 @@ This Docker container has been tested and will work on Linux (Ubuntu/Debian), Wi
 
 ## Sponsors
 
-<!-- sponsors --><!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="60px" alt="Shubham Bhardwaj" /></a><a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="60px" alt="Andrew Nicholson" /></a><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="60px" alt="Ashish Thakur" /></a><a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="60px" alt="pabumake" /></a><!-- sponsors -->
 
 ## Server Requirements
 
