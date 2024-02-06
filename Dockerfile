@@ -71,9 +71,9 @@ ENV PORT= \
     DISCORD_MAX_TIMEOUT=30 \
     DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
     DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
-    DISCORD_PRE_START_MESSAGE="Server is started!" \
+    DISCORD_PRE_START_MESSAGE="Server has been started!" \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
-    DISCORD_POST_SHUTDOWN_MESSAGE="Server is stopped!"
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
 
 COPY ./scripts/* /home/steam/server/
 
