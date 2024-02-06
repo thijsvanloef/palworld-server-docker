@@ -179,6 +179,24 @@ docker run -d \
 | RCON_ENABLED\*\*\* | Palworld RCON 활성화                                                                                                                                     | true   | true/false                                                                                             |
 | RCON_PORT          | RCON접속 포트                                                                                                                                            | 25575  | 1024-65535                                                                                             |
 | QUERY_PORT         | Steam 서버와 통신하는 데 사용되는 쿼리 포트                                                                                                              | 27015  | 1024-65535                                                                                             |
+| BACKUP_CRON_EXPRESSION  | 자동 백업 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 백업 설정](#cron을-이용한-자동-백업-설정) 참조 |
+| BACKUP_ENABLED | 자동 백업을 활성화 여부 | true | true/false |
+| DELETE_OLD_BACKUPS | 오래된 백업 파일 자동 삭제 여부                                                                                                                                                       | false          | true/false                                                                                                 |
+| OLD_BACKUP_DAYS    | 백업 보관 일수                                                                                                                                                                       | 30             | 임의의 양의 정수                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | 자동 업데이트 주기. | 0 \* \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 업데이트 설정](#cron을-이용한-자동-업데이트-설정) 참조 |
+| AUTO_UPDATE_ENABLED | 자동 업데이트 활성화 여부 | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | 업데이트 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 업데이트에 대한 알림을 받습니다 | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 자동 서버 재부팅 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 재부팅 설정](#cron을-이용한-자동-재부팅-설정) 참조 |
+| AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
+| DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 서버 업데이트 시작 시 전송되는 디스코드 메시지 | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 서버 업데이트 완료 시 전송되는 디스코드 메시지 | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | 서버가 시작될 때 전송되는 디스코드 메시지 | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
 
 *설정하는 것을 적극 권장합니다.
 
