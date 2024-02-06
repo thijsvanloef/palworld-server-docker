@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,6 +41,6 @@ spec:
             - mountPath: /palworld
               name: datadir
       volumes:
-      - name: datadir
-        persistentVolumeClaim:
-          claimName: palworld-server-datadir
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: palworld-server-datadir
