@@ -321,11 +321,10 @@ BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 - UPDATE_ON_BOOT
 
 > [!IMPORTANT]
->
-> docker 재시작 정책이 `always` 또는 `unless-stopped`로 설정되어 있지 않다면, 서버는 종료되고
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 
 AUTO_UPDATE_ENABLED를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
@@ -343,11 +342,10 @@ AUTO_UPDATE_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 이 서버에서 자동 재부팅을 사용하려면 RCON_ENABLED를 활성화해야 합니다.
 
 > [!IMPORTANT]
->
-> docker 재시작 정책이 always 또는 unless-stopped로 설정되어 있지 않다면, 서버는 종료되고
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
 > 수동으로 다시 시작해야 합니다.
 >
-> [How to Use](#사용하기)에서 이미 필요한 정책을 사용하는 예시 docker run 명령어와 docker compose 파일이 있습니다.
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 
 AUTO_REBOOT_ENABLED를 설정하여 자동 재부팅을 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
