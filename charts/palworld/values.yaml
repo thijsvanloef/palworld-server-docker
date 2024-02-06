@@ -30,8 +30,8 @@ server:
   # -- (dict) Define the parameters for the server image container
   # @notationType -- bigValue
   image:
-    # -- Name of the image, without the tag.
-    name: thijsvanloef/palworld-server-docker
+    # -- Repository of the image, without the tag.
+    repository: thijsvanloef/palworld-server-docker
     # -- The tag of the image.
     tag: latest
     # -- Define the pull policy for the server image.

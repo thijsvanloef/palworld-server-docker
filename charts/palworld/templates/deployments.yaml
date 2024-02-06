@@ -38,7 +38,7 @@ spec:
               protocol: TCP
         {{ end }}
         - name: server
-          image: "{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.server.image.imagePullPolicy }}
           lifecycle:
             preStop:

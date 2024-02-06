@@ -4,10 +4,11 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
+[![Static Badge](https://img.shields.io/badge/readme-0.19.1-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
-[![Static Badge](https://img.shields.io/badge/README-0.16.0-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docs/kr/README.md?tab=readme-ov-file#palworld-dedicated-server-docker)
 
-[Docker Hub에서 보기](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
 [Discord에서 커뮤니티와 채팅하세요](https://discord.gg/UxBxStPAAE)
 
@@ -25,13 +26,21 @@
 >
 > 초대 코드를 통해 다른 플레이어들과 함께 게임을 즐길 수 있으며, 게임은 최대 4명의 플레이어로 제한됩니다.
 
+## 스폰서
+
+다음 스폰서들에게 큰 박수를 보냅니다!
+
+<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+</p>
+
 ## 서버 요구 사양
 
 | 리소스 | 최소    | 추천                                |
 | ------ | ------- | ----------------------------------- |
 | CPU    | 4 cores | 4+ cores                            |
 | RAM    | 16GB    | 안정적인 운영을 위해 32GB 이상 권장 |
-| 저장소 | 4GB     | 12GB                                |
+| 저장소 | 8GB     | 20GB                                |
 
 ## 사용하기
 
@@ -60,10 +69,30 @@ services:
       - MULTITHREADING=true
       - RCON_ENABLED=true
       - RCON_PORT=25575
-      - TZ=UTC
+      - TZ=Asia/Seoul
       - ADMIN_PASSWORD="adminPasswordHere"
       - COMMUNITY=false # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (USE WITH SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
       - SERVER_NAME="World of Pals"
+    volumes:
+      - ./palworld:/palworld/
+```
+
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요.
+[docker-compose.yml](/docker-compose.yml) 파일을 다음과 같이 수정하세요:
+
+```yml
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s # 컨테이너가 정상적으로 중지될 때까지 기다리는 시간을 설정합니다.
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp
+    env_file:
+      - .env
     volumes:
       - ./palworld:/palworld/
 ```
@@ -85,20 +114,31 @@ docker run -d \
     -e MULTITHREADING=true \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
-    -e TZ=UTC \
-    -e ADMIN_PASSWORD="adminPasswordHere" \
-    -e SERVER_PASSWORD="worldofpals" \
+    -e TZ=KST \
+    -e ADMIN_PASSWORD=adminPasswordHere \
+    -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
-    -e SERVER_DESCRIPTION="Awesome World of Pal" \
+    -e SERVER_NAME=World of Pals \
+    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
+    --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
-
 ```
 
-> [!TIP]
-> 사용자 지정 중지 유예 기간을 설정하여 컨테이너를 중지하려면 다음을 실행하세요:
-> `docker stop --name palworld-server --time 30`
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요. docker run 명령어를 다음과 같이 변경하세요:
+
+```bash
+docker run -d \
+    --name palworld-server \
+    -p 8211:8211/udp \
+    -p 27015:27015/udp \
+    -v ./<palworld-folder>:/palworld/ \
+    --env-file .env \
+    --restart unless-stopped \
+    --stop-timeout 30 \
+    thijsvanloef/palworld-server-docker:latest
+```
 
 ### Kubernetes
 
@@ -122,7 +162,7 @@ docker run -d \
 
 | 변수명             | 정보                                                                                                                                                     | 기본값 | 허용되는 값                                                                                            |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
-| TZ                 | 서버 백업에 사용되는 타임스템프 시간대                                                                                                                   | UTC    | [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
+| TZ                 | 서버 백업에 사용되는 타임스템프 시간대                                                                                                                   | KST    | [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
 | PLAYERS\*          | 서버에 참여할 수 있는 최대 플레이어 수                                                                                                                   | 16     | 1-32                                                                                                   |
 | PORT\*             | 서버에 사용되는 포트(UDP)                                                                                                                                | 8211   | 1024-65535                                                                                             |
 | PUID\*             | 서버를 실행할 사용자의 아이디입니다.                                                                                                                     | 1000   | !0                                                                                                     |
@@ -139,17 +179,30 @@ docker run -d \
 | RCON_ENABLED\*\*\* | Palworld RCON 활성화                                                                                                                                     | true   | true/false                                                                                             |
 | RCON_PORT          | RCON접속 포트                                                                                                                                            | 25575  | 1024-65535                                                                                             |
 | QUERY_PORT         | Steam 서버와 통신하는 데 사용되는 쿼리 포트                                                                                                              | 27015  | 1024-65535                                                                                             |
+| BACKUP_CRON_EXPRESSION  | 자동 백업 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 백업 설정](#cron을-이용한-자동-백업-설정) 참조 |
+| BACKUP_ENABLED | 자동 백업을 활성화 여부 | true | true/false |
+| DELETE_OLD_BACKUPS | 오래된 백업 파일 자동 삭제 여부                                                                                                                                                       | false          | true/false                                                                                                 |
+| OLD_BACKUP_DAYS    | 백업 보관 일수                                                                                                                                                                       | 30             | 임의의 양의 정수                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | 자동 업데이트 주기. | 0 \* \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 업데이트 설정](#cron을-이용한-자동-업데이트-설정) 참조 |
+| AUTO_UPDATE_ENABLED | 자동 업데이트 활성화 여부 | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | 업데이트 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 업데이트에 대한 알림을 받습니다 | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 자동 서버 재부팅 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 재부팅 설정](#cron을-이용한-자동-재부팅-설정) 참조 |
+| AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
+| DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 서버 업데이트 시작 시 전송되는 디스코드 메시지 | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 서버 업데이트 완료 시 전송되는 디스코드 메시지 | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | 서버가 시작될 때 전송되는 디스코드 메시지 | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
 
-\* 설정하는 것을 적극 권장합니다.
+*설정하는 것을 적극 권장합니다.
 
-\*\* 이 옵션을 활성화하여 실행할 때 주의해야 할 사항을 확인하세요.
+** 이 옵션을 활성화하여 실행할 때 주의해야 할 사항을 확인하세요.
 
-\*\*\* docker stop이 서버를 저장하고 정상적으로 종료하는 데 필요합니다.
-
-> [!IMPORTANT]
-> 환경 변수에 사용되는 부울(true/false) 값은 shell 스크립트에서 사용되므로 대소문자를 구분합니다.
->
-> 옵션이 적용되려면 정확히 `true` 또는 `false`를 사용하여 설정해야 합니다.
+*** docker stop이 서버를 저장하고 정상적으로 종료하는 데 필요합니다.
 
 ### 사용되는 포트
 
@@ -164,7 +217,13 @@ docker run -d \
 RCON은 palworld-server-docker 이미지에 기본적으로 활성화되어 있습니다. RCON CLI는 아주 쉽게 열 수 있습니다:
 
 ```bash
-docker exec -it palworld-server rcon-cli
+docker exec -it palworld-server rcon-cli "<command> <value>"
+```
+
+예를 들어, 다음 명령어를 사용하여 서버의 모든 사람에게 메시지를 방송할 수 있습니다:
+
+```bash
+docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 ```
 
 위 명령어를 사용 하면 RCON을 사용하여 Palworld 서버 명령어를 작성할 수 있는 CLI가 열립니다.
@@ -212,6 +271,92 @@ docker exec -it palworld-server restore
 > 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면 복원 이후 컨테이너가 종료되므로 수동으로 재시작 해야 합니다.
 >
 > [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+
+## 수동으로 백업에서 복원하기
+
+`/palworld/backups/`에서 복원하고자 하는 백업을 찾아서 압축을 풉니다.
+작업을 시작하기 전에 서버를 중지해야 합니다.
+
+```bash
+docker compose down
+```
+
+`palworld/Pal/Saved/SaveGames/0/<old_hash_value>`에 위치한 기존 저장 데이터 폴더를 삭제합니다.
+
+새롭게 압축 해제된 저장 데이터 폴더 `Saved/SaveGames/0/<new_hash_value>`의 내용을 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`로 복사합니다.
+
+`palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 안의 DedicatedServerName을 새 폴더 이름으로 교체합니다.
+
+```ini
+DedicatedServerName=<new_hash_value>  # 폴더 이름으로 교체하세요.
+```
+
+게임을 재시작합니다. (Docker Compose를 사용하는 경우)
+
+```bash
+docker compose up -d
+```
+
+## Cron을 이용한 자동 백업 설정
+
+서버는 TZ로 설정된 시간대에 따라 매일 자정에 자동으로 백업됩니다.
+
+BACKUP_ENABLED를 설정하여 자동 백업을 활성화하거나 비활성화합니다 (기본값은 활성화됨).
+
+BACKUP_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
+
+> [!TIP]
+> 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
+> [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+> [Crontab Generator](https://crontab-generator.org)를 참조하세요.
+
+BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
+예시: `0 2 * * *`로 BACKUP_CRON_EXPRESSION을 설정하면, 백업 스크립트는 매일 새벽 2시에 실행됩니다.
+
+## Cron을 이용한 자동 업데이트 설정
+
+이 서버에서 자동 업데이트를 사용하려면 다음 환경 변수들을 `true`로 **설정해야 합니다**:
+
+- RCON_ENABLED
+- UPDATE_ON_BOOT
+
+> [!IMPORTANT]
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
+> 수동으로 다시 시작해야 합니다.
+>
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+
+AUTO_UPDATE_ENABLED를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
+
+AUTO_UPDATE_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
+
+> [!TIP]
+> 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
+> [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+> [Crontab Generator](https://crontab-generator.org)를 참조하세요.
+
+AUTO_UPDATE_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
+
+## Cron을 이용한 자동 재부팅 설정
+
+이 서버에서 자동 재부팅을 사용하려면 RCON_ENABLED를 활성화해야 합니다.
+
+> [!IMPORTANT]
+> 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
+> 수동으로 다시 시작해야 합니다.
+>
+> [사용하기](#사용하기)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+
+AUTO_REBOOT_ENABLED를 설정하여 자동 재부팅을 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
+
+AUTO_REBOOT_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
+
+> [!TIP]
+> 이 이미지는 cron 작업을 위해 Supercronic을 사용합니다.
+> [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+> [Crontab Generator](https://crontab-generator.org)를 참조하세요.
+
+AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요. 기본 설정은 TZ로 설정된 시간대에 따라 매일 자정에 재부팅됩니다.
 
 ## 서버 설정 편집
 
