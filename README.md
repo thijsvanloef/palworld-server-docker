@@ -450,7 +450,7 @@ For a more detailed list of explanations of server settings go to: [shockbyte](h
 
 1. Generate a webhook url for your discord server in your discord's server settings.
 
-2. Set the environment variable with the unique token at the end of the discord webhook url example: https://discord.com/api/webhooks/1234567890/abcde
+2. Set the environment variable with the unique token at the end of the discord webhook url example: `https://discord.com/api/webhooks/1234567890/abcde`
 
 send discord messages with docker run:
 
