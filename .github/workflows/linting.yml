@@ -1,5 +1,6 @@
+---
 name: Linting
-on:
+on:  # yamllint disable-line rule:truthy
   pull_request:
 
 run-name: Pull request - ${{ github.event.pull_request.number }}
@@ -37,6 +38,17 @@ jobs:
         with:
           config: ".markdownlint.jsonc"
           globs: "**/*.md"
+
+  yamllint:
+    name: Lint - Yamllint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint - Yamllint
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yml
 
   test-build:
     name: Docker - Build

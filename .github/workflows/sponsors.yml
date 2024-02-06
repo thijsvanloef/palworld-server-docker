@@ -1,5 +1,6 @@
+---
 name: Generate Sponsors
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_dispatch:
   schedule:
     - cron: 0 0 * * *

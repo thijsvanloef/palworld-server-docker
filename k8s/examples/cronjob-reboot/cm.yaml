@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: restart-deployment-configmap
 data:
-  restart-deployment.sh:  |
+  restart-deployment.sh: |
     #!/bin/bash
     cont=$(kubectl -n palworld get pods -o=jsonpath='{.items[?(@.metadata.labels.app=="palworld-server")].metadata.name}')
 
