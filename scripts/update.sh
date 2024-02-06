@@ -26,7 +26,7 @@ fi
 if [ -z "$TARGETBUILD" ]; then
     echo "The server response does not contain the expected BuildID. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-        /home/steam/server/discord.sh "The server response does not contain the expected BuildID. Unable to check for updates!" "failure" &
+        /home/steam/server/discord.sh "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure" &
     fi
     exit 1
 fi
@@ -36,7 +36,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     if [ "${RCON_ENABLED,,}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-            /home/steam/server/discord.sh "The Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
+            /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
