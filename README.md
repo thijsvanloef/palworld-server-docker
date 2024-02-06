@@ -155,8 +155,8 @@ It is highly recommended you set the following environment values before startin
 * PUID
 * PGID
 
-| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values                                                                                             |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------|
+| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------|
 | TZ                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
 | PLAYERS*           | Max amount of players that are able to join the server                                                                                                                                              | 16             | 1-32                                                                                                       |
 | PORT*              | UDP port that the server will expose                                                                                                                                                                | 8211           | 1024-65535                                                                                                 |
@@ -184,6 +184,14 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
+| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
 
 *highly recommended to set
 
@@ -429,6 +437,26 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 > Any changes made while the server is live will be overwritten when the server stops.
 
 For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+
+## Using discord webhooks
+
+1. Generate a webhook url for your discord server in your discord's server settings.
+
+2. Set the environment variable with the unique token at the end of the discord webhook url example: discord.com/api/webhooks/<webhook_id>
+
+send discord messages with docker run:
+
+```sh
+-e DISCORD_WEBHOOK="xxxx/xxxxx" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+```
+
+send discord messages with docker compose:
+
+```yaml
+- DISCORD_WEBHOOK=xxxx/xxxxx
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
+```
 
 ## Reporting Issues/Feature Requests
 

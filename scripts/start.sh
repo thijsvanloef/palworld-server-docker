@@ -57,8 +57,17 @@ isExecutable "/palworld" || exit
 cd /palworld || exit
 
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
-    printf "\e[0;32m*****STARTING INSTALL/UPDATE*****\e[0m\n"
+    printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
+
+    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
+        /home/steam/server/discord.sh "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" &
+    fi
+
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+
+    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
+        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
+    fi
 fi
 
 STARTCOMMAND=("./PalServer.sh")
@@ -86,12 +95,12 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-printf "\e[0;32m*****CHECKING FOR EXISTING CONFIG*****\e[0m\n"
+printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
 
 # shellcheck disable=SC2143
 if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
 
-    printf "\e[0;32m*****GENERATING CONFIG*****\e[0m\n"
+    printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
 
     # Server will generate all ini files after first run.
     timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
@@ -128,7 +137,7 @@ elif [ -z "${SERVER_PASSWORD}" ]; then
 fi
 if [ -n "${ADMIN_PASSWORD}" ]; then
     ADMIN_PASSWORD=$(sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/" <<< "$ADMIN_PASSWORD")
-    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" 
+    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}"
     sed -E -i "s/AdminPassword=\"[^\"]*\"/AdminPassword=\"$ADMIN_PASSWORD\"/" /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
 fi
 if [ -n "${PLAYERS}" ]; then
@@ -370,7 +379,6 @@ fi
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
-    
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
@@ -396,7 +404,16 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
+printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
+if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
+    /home/steam/server/discord.sh "${DISCORD_PRE_START_MESSAGE}" "success" &
+fi
+
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
+
+if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_POST_SHUTDOWN_MESSAGE}" ]; then
+    /home/steam/server/discord.sh "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
+fi
+
 exit 0
