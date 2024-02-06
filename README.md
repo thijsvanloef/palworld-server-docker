@@ -27,6 +27,10 @@ This Docker container has been tested and will work on Linux (Ubuntu/Debian), Wi
 >
 > They will need to join players using the invite code and are limited to sessions of 4 players max.
 
+## Sponsors
+
+<!-- sponsors --><!-- sponsors -->
+
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
