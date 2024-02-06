@@ -77,8 +77,9 @@ services:
       - ./palworld:/palworld/
 ```
 
-또 다른 방법으로, **.env.example** 파일을 **.env**라는 새 파일로 복사할 수 있습니다.
-필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. 아래와 같이 **docker-compose.yml**을 수정하세요:
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요.
+[docker-compose.yml](/docker-compose.yml) 파일을 다음과 같이 수정하세요:
 
 ```yml
 services:
@@ -124,8 +125,8 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest
 ```
 
-또 다른 방법으로, .env.example 파일을 .env라는 새 파일로 복사할 수 있습니다.
-필요에 따라 수정하고, 올바른 값을 확인하려면 환경 변수 섹션을 확인하세요. docker run 명령어를 다음과 같이 변경하세요:
+환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
+환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요. docker run 명령어를 다음과 같이 변경하세요:
 
 ```bash
 docker run -d \
