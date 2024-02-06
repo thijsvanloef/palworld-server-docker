@@ -1,12 +1,13 @@
+---
 # -- Namespace where the resources will be created
 namespace: palworld
 # -- (dict) The server configuration
 # @notationType -- bigValue
 server:
   # -- Additional annotations to the resources
-  annotations: { }
+  annotations: {}
   # -- Additional labels to the resources
-  labels: { }
+  labels: {}
   # -- (dict) Resources limits for the container.
   resources:
     limits:
@@ -66,9 +67,9 @@ server:
     # -- (bool) Enables the creation of the service component.
     enabled: true
     # -- Additional annotations to the resources
-    annotations: { }
+    annotations: {}
     # -- Additional labels to the resources
-    labels: { }
+    labels: {}
     # -- (string) The type of service to be created.
     # For minikube, set this to NodePort, elsewhere use LoadBalancer
     # Use ClusterIP if your setup includes ingress controller
@@ -109,9 +110,9 @@ server:
   # @notationType -- bigValue
   config:
     # -- Additional annotations to the resources
-    annotations: { }
+    annotations: {}
     # -- Additional labels to the resources
-    labels: { }
+    labels: {}
     puid: 1000
     pgid: 1000
     port: 8211
@@ -154,8 +155,8 @@ server:
     # THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER
     update_on_boot: true
     daily_reboot:
-    # -- (bool) Enable daily reboot.
-    # Disabled by default
+      # -- (bool) Enable daily reboot.
+      # Disabled by default
       enable: false
       # -- (string) The time (UTC) the server will perform the reboot.
       # By default, this schedules the restart at 9:30am UTC. Please note, this is using cron syntax.

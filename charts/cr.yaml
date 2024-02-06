@@ -1,1 +1,2 @@
+---
 release-name-template: "chart-{{ .Version }}"
