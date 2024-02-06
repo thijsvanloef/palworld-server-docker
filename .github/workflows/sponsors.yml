@@ -1,23 +1,23 @@
-name: Generate Sponsors README
+name: Generate Sponsors
 on:
   workflow_dispatch:
   schedule:
     - cron: 0 0 * * *
 jobs:
-  deploy:
+  sponsors:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Generate Sponsors
+      - name: Sponsors - Generate
         uses: JamesIves/github-sponsors-readme-action@v1
         with:
           token: ${{ secrets.SPONSOR_PAT }}
           file: 'README.md'
           template: <a href="https://github.com/{{{ login }}}"><img src="https://github.com/{{{ login }}}.png" width="50px" alt="{{{ login }}}" /></a>&nbsp;&nbsp;
 
-      - name: Deploy to README
+      - name: Sponsors - Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: main
