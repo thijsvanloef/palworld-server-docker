@@ -95,7 +95,7 @@ docker run -d \
     -e MULTITHREADING=true \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
-    -e TZ=UTC \
+    -e TZ=Asia/Shanghai \
     -e ADMIN_PASSWORD=adminPasswordHere \
     -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
