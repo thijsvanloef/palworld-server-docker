@@ -30,7 +30,7 @@ annotations:
       url: https://github.com/thijsvanloef/palworld-server-docker
   artifacthub.io/images: |
     - name: palworld-server-docker
-      image: thijsvanloef/palworld-server-docker:0.24.1
+      image: thijsvanloef/palworld-server-docker:0.24.2
   artifacthub.io/screenshots: |
     - title: PalWorld
       url: https://cdn.akamai.steamstatic.com/steam/apps/1623730/header.jpg
