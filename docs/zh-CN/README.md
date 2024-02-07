@@ -6,8 +6,8 @@
 [![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 [![Static Badge](https://img.shields.io/badge/README-0.16.0-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
-
-在 [Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker) 查看
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
 加入我们的 [Discord](https://discord.gg/UxBxStPAAE)
 
@@ -26,13 +26,22 @@
 >
 > 他们只能通过邀请码加入，并且最多允许 4 人游玩。
 
+## 赞助商
+
+向以下赞助商致以衷心的感谢！
+
+<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+</p>
+
+
 ## 服务器配置需求
 
 | 资源   | 最小   | 推荐              |
 |------|------|-----------------|
 | CPU  | 4 核  | 4+ 核以上          |
 | 内存   | 16GB | 推荐 32GB 以上以稳定运行 |
-| 存储空间 | 4GB  | 12GB            |
+| 存储空间 | 8GB  | 20GB            |
 
 ## 开始使用
 
@@ -56,14 +65,15 @@ services:
       - PGID=1000
       - PORT=8211 # 可选但推荐
       - PLAYERS=16 # 可选但推荐
-      - SERVER_PASSWORD="worldofpals" # 可选但推荐
+      - SERVER_PASSWORD=worldofpals # 可选但推荐
       - MULTITHREADING=true
       - RCON_ENABLED=true
       - RCON_PORT=25575
       - TZ=Asia/Shanghai
-      - ADMIN_PASSWORD="adminPasswordHere"
+      - ADMIN_PASSWORD=adminPasswordHere
       - COMMUNITY=false  # 如果您希望服务器显示在社区服务器页中，请启用此选项（注意配置SERVER_PASSWORD!）
-      - SERVER_NAME="World of Pals"
+      - SERVER_NAME=World of Pals
+      - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
     volumes:
       - ./palworld:/palworld/
 ```
@@ -85,17 +95,18 @@ docker run -d \
     -e MULTITHREADING=true \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
-    -e TZ=Asia/Shanghai \
-    -e ADMIN_PASSWORD="adminPasswordHere" \
-    -e SERVER_PASSWORD="worldofpals" \
+    -e TZ=UTC \
+    -e ADMIN_PASSWORD=adminPasswordHere \
+    -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
+    -e SERVER_NAME=World of Pals \
+    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
+    --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
-
 ```
 
-作为一个替代方案，你可以复制[.env.example](.env.example)文件，并把文件重命名为 **.env** 。
+作为一个替代方案，你可以复制[.env.example](/.env.example)文件，并把文件重命名为 **.env** 。
 根据您的需求，查看[环境变量](#环境变量) 部分并调整。调整你的docker启动命令如下：
 
 ```bash
@@ -149,6 +160,24 @@ docker run -d \
 | RCON_ENABLED***  | 为服务器启用 RCON。                                     | true  | true/false                                                                    |
 | RCON_PORT        | RCON 连接端口。                                       | 25575 | 1024-65535                                                                    |
 | QUERY_PORT       | 用于与 Steam 服务器通信的查询端口。                            | 27015 | 1024-65535                                                                    |
+| BACKUP_CRON_EXPRESSION  | 自动备份的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](#使用-cron-执行自动备份)。 |
+| BACKUP_ENABLED | 启用自动备份。 | true | true/false |
+| DELETE_OLD_BACKUPS | 在一定天数后删除备份。     | false          | true/false                                                                                                 |
+| OLD_BACKUP_DAYS    | 保留备份的天数。                      | 30             | 任何正整数                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | 自动更新的频率。 | 0 \* \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](#使用-cron-执行自动更新)。 |
+| AUTO_UPDATE_ENABLED | 启用自动更新。 | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | 在通知玩家后等待多长时间更新服务器。 | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 设置自动重启的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](#使用-cron-执行自动重启)。 |
+| AUTO_REBOOT_ENABLED | 启用自动重启 | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | 在通知玩家后等待多长时间重启服务器。 | 5 | !0 |
+| DISCORD_WEBHOOK_URL | Discord 服务器上创建 Webhook 后的 Discord Webhook URL | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | Discord 命令初始连接超时 | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord 超时时间 | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 服务器开始更新时发送到 Discord 的消息 | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 服务器完成更新时发送到 Discord 的消息 | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | 服务器启动时发送到 Discord 的消息 | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | 服务器关闭时发送到 Discord 的消息 | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | 服务器停止时发送到 Discord 的消息 | Server is stopped! | "string" |
 
 * 强烈建议设置。
 
@@ -274,7 +303,7 @@ docker compose down && docker compose up -d
 > 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
 > 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
 
-设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动备份（默认为禁用）。
+设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动更新（默认为禁用）。
 
 `AUTO_UPDATE_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
 
@@ -382,6 +411,26 @@ docker compose down && docker compose up -d
 
 服务器配置文件参数相关说明，请在
 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看。
+
+## 使用 discord webhooks
+
+1. 在 Discord 的服务器设置中为你的 Discord 服务器生成一个 Webhook URL。
+ 
+2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL 的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
+
+使用 Docker run 命令发送 Discord 消息：
+
+```sh
+-e DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1234567890/abcde" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+```
+
+使用 Docker Compose 命令發送 Discord 消息：
+
+```yaml
+- DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
+```
 
 ## 报告问题/功能请求
 
