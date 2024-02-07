@@ -34,7 +34,6 @@
 <!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
-
 ## 服务器配置需求
 
 | 资源   | 最小   | 推荐              |
@@ -415,7 +414,7 @@ docker compose down && docker compose up -d
 ## 使用 discord webhooks
 
 1. 在 Discord 的服务器设置中为你的 Discord 服务器生成一个 Webhook URL。
- 
+
 2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL 的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
 
 使用 Docker run 命令发送 Discord 消息：
