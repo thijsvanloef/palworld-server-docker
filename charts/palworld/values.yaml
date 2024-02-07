@@ -34,7 +34,7 @@ server:
     # -- Repository of the image, without the tag.
     repository: thijsvanloef/palworld-server-docker
     # -- The tag of the image.
-    tag: latest
+    tag: 0.24.1
     # -- Define the pull policy for the server image.
     imagePullPolicy: IfNotPresent
 
