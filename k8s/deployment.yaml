@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: palworld-server
-          image: thijsvanloef/palworld-server-docker:0.24.1
+          image: thijsvanloef/palworld-server-docker:0.24.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8211
