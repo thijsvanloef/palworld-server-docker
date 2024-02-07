@@ -95,7 +95,7 @@ ENV PORT= \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
 
-COPY ./scripts/* /home/steam/server/
+COPY ./scripts /home/steam/server/
 
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
