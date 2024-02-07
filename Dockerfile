@@ -10,6 +10,7 @@ LABEL maintainer="thijs@loef.dev" \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:3.3.17-5 \
     wget=1.21-1+deb11u1 \
+    gettext-base=0.21-4 \
     xdg-user-dirs=0.17-2 \
     jo=1.3-2 \
     && apt-get clean \
@@ -75,7 +76,7 @@ ENV PORT= \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
 
-COPY ./scripts/* /home/steam/server/
+COPY ./scripts /home/steam/server/
 
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
