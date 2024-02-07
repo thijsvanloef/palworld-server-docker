@@ -274,7 +274,7 @@ docker compose down && docker compose up -d
 > 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
 > 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
 
-设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动备份（默认为禁用）。
+设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动更新（默认为禁用）。
 
 `AUTO_UPDATE_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
 
