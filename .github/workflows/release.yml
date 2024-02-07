@@ -69,7 +69,8 @@ jobs:
             type=semver,pattern=v{{version}}-arm64
             type=semver,pattern=v{{major}}.{{minor}}-arm64
             type=semver,pattern=v{{major}}-arm64
-          flavor: latest=true
+            type=raw,value=latest-arm64
+          flavor: latest=false
 
       - name: Docker - Build / Push
         id: docker_build
