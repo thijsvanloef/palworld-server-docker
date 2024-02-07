@@ -1,0 +1,103 @@
+# build rcon-cli for arm64-linux
+FROM arm64v8/golang:1.19.3-bullseye as rcon-cli_builder
+
+WORKDIR /build
+
+RUN apt-get update && \
+    apt-get install -y gcc libc-dev wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && tar -xzvf rcon.tar.gz \
+    && rm rcon.tar.gz \
+    && mv rcon-cli-${RCON_VERSION}/* ./ \
+    && rm -rf rcon-cli-${RCON_VERSION} \
+    && go get -v -t -d ./... && env GOARCH=arm64 GOOS=linux go build -v ./cmd/gorcon
+
+# main image
+FROM sonroyaalmerol/steamcmd:latest
+LABEL maintainer="thijs@loef.dev" \
+      name="thijsvanloef/palworld-server-docker" \
+      github="https://github.com/thijsvanloef/palworld-server-docker" \
+      dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
+      org.opencontainers.image.authors="Thijs van Loef" \
+      org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
+
+# update and install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    procps=2:3.3.17-5 \
+    wget=1.21-1+deb11u1 \
+    xdg-user-dirs=0.17-2 \
+    jo=1.3-2 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# set envs
+# SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
+# RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
+# NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
+ENV SUPERCRONIC_SHA1SUM="512f6736450c56555e01b363144c3c9d23abed4c" \
+    RCON_VERSION="0.10.3" \
+    SUPERCRONIC_VERSION="0.2.29"
+
+# install rcon and supercronic
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
+
+RUN wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-arm64 -O supercronic \
+    && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
+    && chmod +x supercronic \
+    && mv supercronic /usr/local/bin/supercronic
+
+ENV PORT= \
+    PUID=1000 \
+    PGID=1000 \
+    PLAYERS= \
+    MULTITHREADING=false \
+    COMMUNITY=false \
+    PUBLIC_IP= \
+    PUBLIC_PORT= \
+    SERVER_PASSWORD= \
+    SERVER_NAME= \
+    ADMIN_PASSWORD= \
+    UPDATE_ON_BOOT=true \
+    RCON_ENABLED=true \
+    RCON_PORT=25575 \
+    QUERY_PORT=27015 \
+    TZ=UTC \
+    SERVER_DESCRIPTION= \
+    BACKUP_ENABLED=true \
+    DELETE_OLD_BACKUPS=false \
+    OLD_BACKUP_DAYS=30 \
+    BACKUP_CRON_EXPRESSION="0 0 * * *" \
+    AUTO_UPDATE_ENABLED=false \
+    AUTO_UPDATE_CRON_EXPRESSION="0 * * * *" \
+    AUTO_UPDATE_WARN_MINUTES=30 \
+    AUTO_REBOOT_ENABLED=false \
+    AUTO_REBOOT_WARN_MINUTES=5 \
+    AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *" \
+    DISCORD_WEBHOOK_URL= \
+    DISCORD_CONNECT_TIMEOUT=30 \
+    DISCORD_MAX_TIMEOUT=30 \
+    DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+    DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
+    DISCORD_PRE_START_MESSAGE="Server has been started!" \
+    DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
+
+COPY ./scripts/* /home/steam/server/
+
+RUN chmod +x /home/steam/server/*.sh && \
+    mv /home/steam/server/backup.sh /usr/local/bin/backup && \
+    mv /home/steam/server/update.sh /usr/local/bin/update && \
+    mv /home/steam/server/restore.sh /usr/local/bin/restore
+
+WORKDIR /home/steam/server
+
+HEALTHCHECK --start-period=5m \
+    CMD pgrep "PalServer-Linux" > /dev/null || exit 1
+
+EXPOSE ${PORT} ${RCON_PORT}
+ENTRYPOINT ["/home/steam/server/init.sh"]
