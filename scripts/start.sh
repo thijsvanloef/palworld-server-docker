@@ -114,7 +114,11 @@ if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorld
     printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
 
     # Server will generate all ini files after first run.
-    timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
+    if [ "$architecture" == "arm64" ]; then
+        timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
+    else
+        timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
+    fi
 
     # Wait for shutdown
     sleep 5
