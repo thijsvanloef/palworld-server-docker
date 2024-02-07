@@ -2,16 +2,80 @@
 name: Developer image
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: [main]
+    branches: [unify-docker-tags]
+
+env:
+  TMP_LOCAL_IMAGE: localhost:5000/${{ github.repository }}
 
 jobs:
-  push-amd64:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - amd64
+          - arm64
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Docker - Login
+      - name: Prepare
+        run: |
+          mkdir -p /tmp/images
+          platform=linux/${{ matrix.platform }}
+          echo "TARFILE=${platform//\//-}.tar" >> $GITHUB_ENV
+          echo "TAG=${{ env.TMP_LOCAL_IMAGE }}:${platform//\//-}" >> $GITHUB_ENV
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile.${{ matrix.platform }}
+          platforms: linux/${{ matrix.platform }}
+          tags: ${{ env.TAG }}
+          outputs: type=docker,dest=/tmp/images/${{ env.TARFILE }}
+
+      - name: Upload image
+        uses: actions/upload-artifact@v4
+        with:
+          name: images
+          path: /tmp/images/${{ env.TARFILE }}
+          if-no-files-found: error
+          retention-days: 1
+  push:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+    steps:
+      - name: Download images
+        uses: actions/download-artifact@v4
+        with:
+          name: images
+          path: /tmp/images
+
+      - name: Load images
+        run: |
+          for image in /tmp/images/*.tar; do
+            docker load -i $image
+          done
+
+      - name: Push images to local registry
+        run: |
+          docker push -a ${{ env.TMP_LOCAL_IMAGE }}
+
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -25,43 +89,10 @@ jobs:
           tags: type=raw,value=dev
           flavor: latest=false
 
-      - name: Docker - Build / Push
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-
-  push-arm64:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Docker - Login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Docker - Metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ github.repository }}
-          tags: type=raw,value=dev-arm64
-          flavor: latest=false
-
-      - name: Docker - Build / Push
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile.arm64
-          platforms: linux/arm64
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
+      - name: Create manifest list and push
+        run: |
+          docker buildx imagetools create -t ${{ steps.meta.outputs.tags }} \
+            $(docker image ls --format '{{.Repository}}:{{.Tag}}' '${{ env.TMP_LOCAL_IMAGE }}' | tr '\n' ' ')
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ${{ steps.meta.outputs.tags }}
