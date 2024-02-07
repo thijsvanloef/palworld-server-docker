@@ -1,5 +1,6 @@
+---
 name: Generate Sponsors
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_dispatch:
   schedule:
     - cron: 0 0 * * *
@@ -8,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Sponsors - Generate
         uses: JamesIves/github-sponsors-readme-action@v1

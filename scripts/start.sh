@@ -74,7 +74,19 @@ if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     fi
 fi
 
-STARTCOMMAND=("./PalServer.sh")
+# Get the architecture using dpkg
+architecture=$(dpkg --print-architecture)
+# Check if the architecture is arm64
+if [ "$architecture" == "arm64" ]; then
+    # create an arm64 version of ./PalServer.sh
+    cp ./PalServer.sh ./PalServer-arm64.sh
+    # shellcheck disable=SC2016
+    sed -i 's|\("$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Test" Pal "$@"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:$LD_LIBRARY_PATH box64 \1|' ./PalServer-arm64.sh
+    chmod +x ./PalServer-arm64.sh
+    STARTCOMMAND=("./PalServer-arm64.sh")
+else
+    STARTCOMMAND=("./PalServer.sh")
+fi
 
 if ! fileExists "${STARTCOMMAND[0]}"; then
     echo "Try restarting with UPDATE_ON_BOOT=true"
