@@ -17,6 +17,9 @@ RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/archive/refs/tag
 
 # main image
 FROM sonroyaalmerol/steamcmd-arm64:latest
+
+USER root
+
 LABEL maintainer="thijs@loef.dev" \
       name="thijsvanloef/palworld-server-docker" \
       github="https://github.com/thijsvanloef/palworld-server-docker" \
