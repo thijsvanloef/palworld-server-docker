@@ -32,7 +32,7 @@ This Docker container has been tested and will work on Linux (Ubuntu/Debian), Wi
 Massive shoutout to the following sponsors!
 
 <p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Server Requirements
