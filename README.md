@@ -377,6 +377,16 @@ timezone set with TZ
 > These Environment Variables/Settings are subject to change since the game is still in beta.
 > Check out the [official webpage for the supported parameters.](https://tech.palworldgame.com/optimize-game-balance)
 
+Converting server settings to environment variables follow the same principles (with some exceptions):
+- all capital letters
+- split words by inserting an underscore
+- remove the single letter if the setting starts with one (like 'b')
+
+For example:
+Difficulty -> DIFFICULTY
+PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+bIsPvP -> IS_PVP
+
 | Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
 | DIFFICULTY                                | Game Difficulty                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
@@ -444,7 +454,8 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 >
 > Any changes made while the server is live will be overwritten when the server stops.
 
-For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
+For more detailed server settings explanations go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
 ## Using discord webhooks
 
