@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck source=scripts/helper_functions.sh
+# shellcheck source=/dev/null
 . "${SERVER_PATH}/helper_functions.sh"
 
 config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
