@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck source=scripts/helper_functions.sh
-source "${SERVER_PATH}/helper_functions.sh"
+. "${SERVER_PATH}/helper_functions.sh"
 
 config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 config_dir=$(dirname "$config_file")
