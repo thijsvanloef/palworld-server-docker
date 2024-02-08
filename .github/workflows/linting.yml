@@ -43,7 +43,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Lint - Markdown
         uses: DavidAnson/markdownlint-cli2-action@v15
         with:
@@ -75,8 +74,13 @@ jobs:
     name: Docker - Build (ARM64)
     runs-on: ubuntu-latest
     steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Docker - Build
         uses: docker/build-push-action@v5
         with:
           file: Dockerfile.arm64
+          platforms: linux/arm64
           push: false
