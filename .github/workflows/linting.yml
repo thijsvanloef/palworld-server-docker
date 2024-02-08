@@ -15,8 +15,8 @@ jobs:
       - name: Shellcheck
         uses: ludeeus/action-shellcheck@2.0.0
 
-  dockerlint:
-    name: Lint - Docker
+  dockerlint-amd64:
+    name: Lint - Docker (AMD64)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +24,18 @@ jobs:
 
       - uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile
+          dockerfile: Dockerfile.amd64
+  
+  dockerlint-arm64:
+    name: Lint - Docker (ARM64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile.arm64
 
   markdownlint:
     name: Lint - Markdown
@@ -50,11 +61,22 @@ jobs:
         with:
           config_file: .yamllint.yml
 
-  test-build:
-    name: Docker - Build
+  test-build-amd64:
+    name: Docker - Build (AMD64)
     runs-on: ubuntu-latest
     steps:
       - name: Docker - Build
         uses: docker/build-push-action@v5
         with:
+          file: Dockerfile.amd64
+          push: false
+
+  test-build-arm64:
+    name: Docker - Build (ARM64)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Docker - Build
+        uses: docker/build-push-action@v5
+        with:
+          file: Dockerfile.arm64
           push: false
