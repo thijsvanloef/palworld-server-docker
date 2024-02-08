@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck source=/dev/null
-. "${SERVER_PATH}/helper_functions.sh"
+source "/home/steam/server/helper_functions.sh"
 
 config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 config_dir=$(dirname "$config_file")

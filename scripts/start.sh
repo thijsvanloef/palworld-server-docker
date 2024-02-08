@@ -1,6 +1,6 @@
 #!/bin/bash
-# shellcheck source=scripts/helper_functions.sh
-. "${SERVER_PATH}/helper_functions.sh"
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
