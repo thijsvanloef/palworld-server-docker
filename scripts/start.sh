@@ -1,5 +1,5 @@
 #!/bin/bash
-source /home/steam/scripts/helper_functions.sh
+source /home/steam/server/helper_functions.sh
 
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
