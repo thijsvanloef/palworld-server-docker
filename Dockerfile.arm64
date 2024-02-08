@@ -26,12 +26,10 @@ RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/archive/refs/tag
     && go get -v -t -d ./... && env GOARCH=arm64 GOOS=linux go build -v ./cmd/gorcon
 
 # main image
-FROM sonroyaalmerol/steamcmd-arm64:latest
+FROM sonroyaalmerol/steamcmd-arm64:root
 
 ARG SUPERCRONIC_SHA1SUM
 ARG SUPERCRONIC_VERSION
-
-USER root
 
 LABEL maintainer="thijs@loef.dev" \
       name="thijsvanloef/palworld-server-docker" \
