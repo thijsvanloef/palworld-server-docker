@@ -6,7 +6,7 @@ config_dir=$(dirname "$config_file")
 
 mkdir -p "$config_dir" || exit
 # If file exists then check if it is writable
-if fileExists "$config_file" > /dev/null; then
+if [ -f "$config_file" ]; then
     if ! isWritable "$config_file"; then
         echo "Unable to create $config_file"
         exit 1
