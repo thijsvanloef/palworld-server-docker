@@ -8,7 +8,7 @@ mkdir -p "$config_dir" || exit
 # If file exists then check if it is writable
 if fileExists "$config_file" > /dev/null; then
     if ! isWritable "$config_file"; then
-        echo "Not writable"
+        echo "Unable to create $config_file"
         exit 1
     fi
 # If file does not exist then check if the directory is writable
