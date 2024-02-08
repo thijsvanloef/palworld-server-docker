@@ -18,7 +18,6 @@ fileExists() {
         echo "${path} does not exist."
         return_val=1
     fi
-    echo "Return code: $return_val"
     return "$return_val"
 }
 
