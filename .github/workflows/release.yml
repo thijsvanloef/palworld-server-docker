@@ -98,7 +98,7 @@ jobs:
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
             type=raw,value=latest
-          flavor: latest=false
+          flavor: latest=true
 
       - name: Create manifest list and push
         run: |

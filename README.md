@@ -54,7 +54,7 @@ This repository includes an example [docker-compose.yml](/docker-compose.yml) fi
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -86,7 +86,7 @@ values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -124,7 +124,7 @@ docker run -d \
     -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -140,7 +140,7 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 ### Kubernetes
