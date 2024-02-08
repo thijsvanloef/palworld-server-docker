@@ -7,7 +7,7 @@ isExecutable "/palworld" || exit
 
 printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
 
-./compile-settings.sh
+./compile-settings.sh || exit
 
 cd /palworld || exit
 
