@@ -74,8 +74,7 @@ ENV PORT= \
     DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
     DISCORD_PRE_START_MESSAGE="Server has been started!" \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
-    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
-    SERVER_PATH="/home/steam/server"
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
 
 COPY ./scripts /home/steam/server/
 
