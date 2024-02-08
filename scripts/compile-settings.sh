@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck source=/dev/null
+# shellcheck source-path=scripts
 source "/home/steam/server/helper_functions.sh"
 
 config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
