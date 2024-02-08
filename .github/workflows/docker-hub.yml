@@ -2,7 +2,7 @@
 name: Developer image
 on:  # yamllint disable-line rule:truthy
   push:
-    branches: [unify-docker-tags]
+    branches: [main]
 
 env:
   TMP_LOCAL_IMAGE: localhost:5000/${{ github.repository }}
