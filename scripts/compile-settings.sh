@@ -1,5 +1,8 @@
 #!/bin/bash
 
+config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+config_dir=$(dirname "$config_file")
+
 echo "Compiling PalWorldSettings.ini..."
 
 export DIFFICULTY=${DIFFICULTY:-None}
@@ -134,8 +137,8 @@ BAN_LIST_URL = $BAN_LIST_URL
 EOF
 fi
 
-mkdir -p /palworld/Pal/Saved/Config/LinuxServer
-cat > /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini <<EOF
+mkdir -p "$config_dir"
+cat > "$config_file" <<EOF
 [/Script/Pal.PalGameWorldSettings]
 $(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
 EOF
