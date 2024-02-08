@@ -20,7 +20,13 @@
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
-This Docker container has been tested and will work on Linux (Ubuntu/Debian), Windows 10 and macOS (including Apple Silicon).
+This Docker container has been tested and will work on the following OS:
+
+* Linux (Ubuntu/Debian)
+* Windows 10,11
+* MacOS (including Apple Silicon M1/M2/M3).
+
+This container has also been tested and will work on both `x64` and `ARM64` based CPU architecture.
 
 > [!IMPORTANT]
 > At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
@@ -46,6 +52,10 @@ Massive shoutout to the following sponsors!
 ## How to use
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
+
+> [!IMPORTANT]
+> If you use an ARM64 based CPU (Raspberry pi, M1,M2,M3 Mac, Oracle Cloud Free tier, etc.)
+> Please make sure you use the `:latest-arm64` image tag.
 
 ### Docker Compose
 
