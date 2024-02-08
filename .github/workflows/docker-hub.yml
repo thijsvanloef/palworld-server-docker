@@ -23,6 +23,10 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p /tmp/images
+          platform=${{ matrix.platform }}
+          echo "TARFILE=${{ matrix.platform }}.tar" >> $GITHUB_ENV
+          echo "TAG=${{ env.TMP_LOCAL_IMAGE }}:${{ matrix.platform }}" >> $GITHUB_ENV
+          echo "DOCKERFILE=Dockerfile.${{ matrix.platform }}" >> $GITHUB_ENV
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -34,16 +38,16 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: Dockerfile.${{ matrix.platform }}
+          file: ${{ env.DOCKERFILE }}
           platforms: linux/${{ matrix.platform }}
-          tags: ${{ env.TMP_LOCAL_IMAGE }}:${{ matrix.platform }}
-          outputs: type=docker,dest=/tmp/images/${{ matrix.platform }}.tar
+          tags: ${{ env.TAG }}
+          outputs: type=docker,dest=/tmp/images/${{ env.TARFILE }}
 
       - name: Upload image
         uses: actions/upload-artifact@v4
         with:
           name: images
-          path: /tmp/images/${{ matrix.platform }}.tar
+          path: /tmp/images/${{ env.TARFILE }}
           if-no-files-found: error
           retention-days: 1
   push:
