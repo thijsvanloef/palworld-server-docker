@@ -1,9 +1,22 @@
 #!/bin/bash
+source /home/steam/server/helper_functions.sh
 
 config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
 config_dir=$(dirname "$config_file")
 
 mkdir -p "$config_dir" || exit
+# If file exists then check if it is writable
+if fileExists "$config_file" > /dev/null; then
+    if ! isWritable "$config_file"; then
+        echo "Not writable"
+        exit 1
+    fi
+# If file does not exist then check if the directory is writable
+elif ! isWritable "$config_dir"; then
+    # Exiting since the file does not exist and the directory is not writable.
+    echo "Unable to create $config_file"
+    exit 1
+fi
 
 echo "Compiling PalWorldSettings.ini..."
 
