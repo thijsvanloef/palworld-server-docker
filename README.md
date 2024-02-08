@@ -47,6 +47,9 @@ Massive shoutout to the following sponsors!
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
+> [!IMPORTANT]
+> If you use an ARM64 based CPU (Raspberry pi, M1,M2,M3 Mac, Oracle Cloud Free tier, etc.) Please make sure you use the `:latest-arm64` image tag. 
+
 ### Docker Compose
 
 This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
