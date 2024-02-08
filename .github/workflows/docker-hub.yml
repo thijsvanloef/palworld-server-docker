@@ -23,7 +23,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p /tmp/images
-          echo "PLATFORM=linux/${{ matrix.platform }}"" >> $GITHUB_ENV
+          echo "PLATFORM=linux/${{ matrix.platform }}" >> $GITHUB_ENV
           echo "TARFILE=${{ matrix.platform }}.tar" >> $GITHUB_ENV
           echo "TAG=${{ env.TMP_LOCAL_IMAGE }}:${{ matrix.platform }}" >> $GITHUB_ENV
           echo "DOCKERFILE=Dockerfile.${{ matrix.platform }}" >> $GITHUB_ENV
