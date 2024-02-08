@@ -379,15 +379,15 @@ timezone set with TZ
 
 Converting server settings to environment variables follow the same principles (with some exceptions):
 
-- all capital letters
-- split words by inserting an underscore
-- remove the single letter if the setting starts with one (like 'b')
+* all capital letters
+* split words by inserting an underscore
+* remove the single letter if the setting starts with one (like 'b')
 
 For example:
 
-- Difficulty -> DIFFICULTY
-- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-- bIsPvP -> IS_PVP
+* Difficulty -> DIFFICULTY
+* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+* bIsPvP -> IS_PVP
 
 | Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
