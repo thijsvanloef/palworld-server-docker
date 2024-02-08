@@ -23,7 +23,7 @@ jobs:
       - name: Prepare
         run: |
           mkdir -p /tmp/images
-          platform=${{ matrix.platform }}
+          echo "PLATFORM=linux/${{ matrix.platform }}"" >> $GITHUB_ENV
           echo "TARFILE=${{ matrix.platform }}.tar" >> $GITHUB_ENV
           echo "TAG=${{ env.TMP_LOCAL_IMAGE }}:${{ matrix.platform }}" >> $GITHUB_ENV
           echo "DOCKERFILE=Dockerfile.${{ matrix.platform }}" >> $GITHUB_ENV
@@ -39,14 +39,14 @@ jobs:
         with:
           context: .
           file: ${{ env.DOCKERFILE }}
-          platforms: linux/${{ matrix.platform }}
+          platforms: ${{ env.PLATFORM }}
           tags: ${{ env.TAG }}
           outputs: type=docker,dest=/tmp/images/${{ env.TARFILE }}
 
       - name: Upload image
         uses: actions/upload-artifact@v4
         with:
-          name: images
+          name: images-${{ matrix.platform }}
           path: /tmp/images/${{ env.TARFILE }}
           if-no-files-found: error
           retention-days: 1
@@ -60,10 +60,16 @@ jobs:
         ports:
           - 5000:5000
     steps:
-      - name: Download images
+      - name: Download amd64 image
         uses: actions/download-artifact@v4
         with:
-          name: images
+          name: images-amd64
+          path: /tmp/images
+
+      - name: Download arm64 image
+        uses: actions/download-artifact@v4
+        with:
+          name: images-arm64
           path: /tmp/images
 
       - name: Load images
