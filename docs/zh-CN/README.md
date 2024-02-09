@@ -6,8 +6,8 @@
 [![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 [![Static Badge](https://img.shields.io/badge/README-0.16.0-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
-
-在 [Docker Hub](https://hub.docker.com/r/thijsvanloef/palworld-server-docker) 查看
+[![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
 加入我们的 [Discord](https://discord.gg/UxBxStPAAE)
 
@@ -19,12 +19,26 @@
 这是一个 [Docker](https://docs.docker.com/engine/install/) 容器，可帮助您创建自己的
 [幻兽帕鲁](https://store.steampowered.com/app/1623730/Palworld/) 专用服务器。
 
-此容器经测试可正常在 (Ubuntu/Debian)、 Windows 10 、macOS (包括使用 Silicon 芯片的 M1 设备，通过 Rosseta2 转译)。
+此 Docker 容器经过测试，可在以下操作系统上运作：
+
+* Linux (Ubuntu/Debian)
+* Windows 10,11
+* MacOS (包括 Apple Silicon M1/M2/M3).
+
+此容器也经过测试，可在 `x64` 和 `ARM64` 基于的 CPU 架构上运作。
 
 > [!IMPORTANT]
 > 目前，Xbox Game Pass/Xbox 主机玩家无法加入专用服务器。
 >
 > 他们只能通过邀请码加入，并且最多允许 4 人游玩。
+
+## 赞助商
+
+向以下赞助商致以衷心的感谢！
+
+<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+</p>
 
 ## 服务器配置需求
 
@@ -32,7 +46,7 @@
 |------|------|-----------------|
 | CPU  | 4 核  | 4+ 核以上          |
 | 内存   | 16GB | 推荐 32GB 以上以稳定运行 |
-| 存储空间 | 4GB  | 12GB            |
+| 存储空间 | 8GB  | 20GB            |
 
 ## 开始使用
 
@@ -56,14 +70,15 @@ services:
       - PGID=1000
       - PORT=8211 # 可选但推荐
       - PLAYERS=16 # 可选但推荐
-      - SERVER_PASSWORD="worldofpals" # 可选但推荐
+      - SERVER_PASSWORD=worldofpals # 可选但推荐
       - MULTITHREADING=true
       - RCON_ENABLED=true
       - RCON_PORT=25575
       - TZ=Asia/Shanghai
-      - ADMIN_PASSWORD="adminPasswordHere"
+      - ADMIN_PASSWORD=adminPasswordHere
       - COMMUNITY=false  # 如果您希望服务器显示在社区服务器页中，请启用此选项（注意配置SERVER_PASSWORD!）
-      - SERVER_NAME="World of Pals"
+      - SERVER_NAME=World of Pals
+      - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
     volumes:
       - ./palworld:/palworld/
 ```
@@ -86,16 +101,17 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=Asia/Shanghai \
-    -e ADMIN_PASSWORD="adminPasswordHere" \
-    -e SERVER_PASSWORD="worldofpals" \
+    -e ADMIN_PASSWORD=adminPasswordHere \
+    -e SERVER_PASSWORD=worldofpals \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
+    -e SERVER_NAME=World of Pals \
+    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
     --restart unless-stopped \
+    --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
-
 ```
 
-作为一个替代方案，你可以复制[.env.example](.env.example)文件，并把文件重命名为 **.env** 。
+作为一个替代方案，你可以复制[.env.example](/.env.example)文件，并把文件重命名为 **.env** 。
 根据您的需求，查看[环境变量](#环境变量) 部分并调整。调整你的docker启动命令如下：
 
 ```bash
@@ -149,6 +165,24 @@ docker run -d \
 | RCON_ENABLED***  | 为服务器启用 RCON。                                     | true  | true/false                                                                    |
 | RCON_PORT        | RCON 连接端口。                                       | 25575 | 1024-65535                                                                    |
 | QUERY_PORT       | 用于与 Steam 服务器通信的查询端口。                            | 27015 | 1024-65535                                                                    |
+| BACKUP_CRON_EXPRESSION  | 自动备份的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](#使用-cron-执行自动备份)。 |
+| BACKUP_ENABLED | 启用自动备份。 | true | true/false |
+| DELETE_OLD_BACKUPS | 在一定天数后删除备份。     | false          | true/false                                                                                                 |
+| OLD_BACKUP_DAYS    | 保留备份的天数。                      | 30             | 任何正整数                                                                                       |
+| AUTO_UPDATE_CRON_EXPRESSION  | 自动更新的频率。 | 0 \* \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](#使用-cron-执行自动更新)。 |
+| AUTO_UPDATE_ENABLED | 启用自动更新。 | false | true/false |
+| AUTO_UPDATE_WARN_MINUTES | 在通知玩家后等待多长时间更新服务器。 | 30 | !0 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 设置自动重启的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](#使用-cron-执行自动重启)。 |
+| AUTO_REBOOT_ENABLED | 启用自动重启 | false | true/false |
+| AUTO_REBOOT_WARN_MINUTES | 在通知玩家后等待多长时间重启服务器。 | 5 | !0 |
+| DISCORD_WEBHOOK_URL | Discord 服务器上创建 Webhook 后的 Discord Webhook URL | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | Discord 命令初始连接超时 | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord 超时时间 | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 服务器开始更新时发送到 Discord 的消息 | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 服务器完成更新时发送到 Discord 的消息 | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | 服务器启动时发送到 Discord 的消息 | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | 服务器关闭时发送到 Discord 的消息 | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | 服务器停止时发送到 Discord 的消息 | Server is stopped! | "string" |
 
 * 强烈建议设置。
 
@@ -210,6 +244,40 @@ docker exec palworld-server backup
 
 若启用了 RCON，服务器将在备份前进行保存。
 
+## 透过备份恢復数据
+
+要从备份中恢复，请使用以下命令：
+
+```bash
+docker exec -it palworld-server restore
+```
+
+必须将 `RCON_ENABLED` 环境变量设置为 `true` 以使用此命令。
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+## 手动从备份中恢复数据
+
+在 `/palworld/backups/` 中找到要恢复的备份并解压缩它。
+
+删除位于 `/palworld/Pal/Saved/SaveGames/0/<old_hash_value>` 的旧保存数据文件夹。
+
+将新解压缩的保存数据文件夹 `Saved/SaveGames/0/<new_hash_value>` 的内容复制到 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>` 。
+
+将 `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 中的 `DedicatedServerName` 替换为新文件夹名称。
+
+```ini
+DedicatedServerName=<new_hash_value>  # 替换为新的保存数据文件夹名称
+```
+
+重新启动游戏。（如果您正在使用 Docker Compose）
+
+```bash
+docker compose down && docker compose up -d
+```
+
 ## 使用 Cron 执行自动备份
 
 服务器将在每天午夜根据 TZ 设置的时区自动备份。
@@ -225,9 +293,52 @@ docker exec palworld-server backup
 > 或者
 > [Crontab Generat](https://crontab-generator.org).
 
-设置 `BACKUP_CRON_EXPRESSION` 来更改默认计划。
+设置 `BACKUP_CRON_EXPRESSION` 以更改默认时程。
 
-使用示例：如果 BACKUP_CRON_EXPRESSION 设置为 `0 2 * * *`，备份脚本将在每天凌晨 2:00 运行。
+使用示例：如果 `BACKUP_CRON_EXPRESSION` 设置为 `0 2 * * *`，备份脚本将在每天凌晨 2:00 运行。
+
+## 使用 Cron 执行自动更新
+
+如果要在伺服器上使用自动更新功能， **必须** 将以下环境变数设置为 `true`：
+
+* RCON_ENABLED
+* UPDATE_ON_BOOT
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动更新（默认为禁用）。
+
+`AUTO_UPDATE_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
+
+> [!TIP]
+> 这个镜像使用 Supercronic 来执行 cron 任务。
+> 查阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> 或者
+> [Crontab Generat](https://crontab-generator.org).
+
+設置 `AUTO_UPDATE_CRON_EXPRESSION` 以更改默認时程。
+
+## 使用 Cron 执行自动重启
+
+为了能够使用该服务器的自动重启功能，需要启用 `RCON_ENABLED` 。
+
+> [!IMPORTANT]
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+
+设置 `AUTO_REBOOT_ENABLED` 以启用或禁用自动备份（默认为禁用）。
+
+`AUTO_REBOOT_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
+
+> [!TIP]
+> 该镜像使用 Supercronic 进行 cron 作业。
+> 请参阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> 或
+> [Crontab Generator](https://crontab-generator.org).
+
+设置 `AUTO_REBOOT_CRON_EXPRESSION` 以更改时程， 默认为每天午夜，根据设置的时区进行调整。
 
 ## 编辑服务器配置
 
@@ -275,7 +386,7 @@ docker exec palworld-server backup
 | DROP_ITEM_MAX_NUM                         | 世界中最大掉落物品数量                                                                              | 3000                                                                                         | Integer                                |
 | DROP_ITEM_MAX_NUM_UNKO                    | 世界中最大 UNKO 掉落数量                                                                          | 100                                                                                          | Integer                                |
 | BASE_CAMP_MAX_NUM                         | 最大营地数量                                                                                   | 128                                                                                          | Integer                                |
-| BASE_CAMP_WORKER_MAXNUM                   | 营地最大工位数量                                                                                 | 15                                                                                           | Integer                                |
+| BASE_CAMP_WORKER_MAX_NUM                  | 营地最大工位数量                                                                                 | 15                                                                                           | Integer                                |
 | DROP_ITEM_ALIVE_MAX_HOURS                 | 掉落物品移除时间                                                                                 | 1.000000                                                                                     | Float                                  |
 | AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | 无玩家在线时自动重置公会                                                                             | False                                                                                        | Bool                                   |
 | AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | 无玩家在线时自动重置公会的时间                                                                          | 72.000000                                                                                    | Float                                  |
@@ -305,6 +416,26 @@ docker exec palworld-server backup
 
 服务器配置文件参数相关说明，请在
 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看。
+
+## 使用 discord webhooks
+
+1. 在 Discord 的服务器设置中为你的 Discord 服务器生成一个 Webhook URL。
+
+2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL 的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
+
+使用 Docker run 命令发送 Discord 消息：
+
+```sh
+-e DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1234567890/abcde" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+```
+
+使用 Docker Compose 命令發送 Discord 消息：
+
+```yaml
+- DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
+```
 
 ## 报告问题/功能请求
 

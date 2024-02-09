@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Think you encountered a bug or error? Use this issue template.
+name: Bug/issue report
+about: IF YOU ARE UNSURE, USE THIS ONE!
 title: ''
 labels: ''
 assignees: ''
@@ -9,7 +9,7 @@ assignees: ''
 
 ## Describe the bug
 
-A clear and concise description of what the bug is.
+<!-- A clear and concise description of what the bug is. -->
 
 ## To Reproduce
 
@@ -22,25 +22,39 @@ Steps to reproduce the behavior:
 
 ## Expected behavior
 
-A clear and concise description of what you expected to happen.
+<!-- A clear and concise description of what you expected to happen. -->
+
+## Actual behavior
+
+<!-- A clear and concise description of what you expected to happen. -->
 
 ## Screenshots
 
-If applicable, add screenshots to help explain your problem.
+<!-- If applicable, add screenshots to help explain your problem. -->
 
-## Desktop (please complete the following information)
+## OS information
 
-- OS: [e.g. Windows 10, Ubuntu, Debian]
-- Browser [e.g. chrome, safari]
-- Version [e.g. 22]
+- OS:  <!-- e.g. Windows 10, Ubuntu, Synology DSM -->
+- Palworld Version:  <!--e.g. 0.1.4.0 -->
+- Docker Image Version:  <!--e.g. 0.21.0 -->
+
+## Hardware information
+
+- CPU:  <!-- e.g. quad core Intel, duo core AMD -->
+- Memory:  <!-- e.g. 8GB, 16GB ddr3/4/5 -->
 
 ## docker-compose.yml contents
 
 ```yaml
+# docker-compose.yml contents here
 ```
 
 ## Container/Host Logs
 
+```log
+<!-- Insert logs here -->
+```
+
 ## Additional context
 
-Add any other context about the problem here.
+<!-- Add any other context about the problem here. -->

@@ -38,16 +38,15 @@ spec:
               protocol: TCP
         {{ end }}
         - name: server
-          image: "{{ .Values.server.image.name }}:{{ .Values.server.image.tag }}"
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag }}"
           imagePullPolicy: {{ .Values.server.image.imagePullPolicy }}
           lifecycle:
             preStop:
               exec:
-                command: ["/bin/sh", "-c"]
-                args:
-                  - |
-                    rcon-cli save
-                    backup
+                command:
+                  - "sh"
+                  - "-c"
+                  - rcon-cli save && backup
           resources:
             {{- with .Values.server.resources }}
               {{- toYaml . | nindent 12 }}
