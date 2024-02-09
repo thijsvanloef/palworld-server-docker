@@ -4,6 +4,9 @@ error_msg="Error: POST request to WorldOption generator failed with HTTP status 
 no_directory_msg="Saved game not found! This is expected if it is your first time running the container. Restart the container after it initializes the save folder to generate a WorldOption file."
 world_option_msg="WorldOption will not be generated. PalWorldSettings.ini will apply."
 
+# Remove existing WorldOption.sav
+rm -f /palworld/Pal/Saved/SaveGames/0/*/WorldOption.sav
+
 if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
     echo "Generating WorldOption.sav..."
 
@@ -19,9 +22,6 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
     target_directory=$(find "$savegames_directory" -mindepth 1 -maxdepth 1 -type d -print -quit)
 
     if [ -d "$savegames_directory" ] && [ -d "$target_directory" ]; then
-	# Delete existing WorldOption.sav to make sure the .ini config applies if generation fails.
-        rm -f "$target_directory/WorldOption.sav"
-
         # Temporary file to store response
         response_file=$(mktemp)
 
