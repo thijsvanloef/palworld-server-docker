@@ -56,6 +56,18 @@ isExecutable "/palworld" || exit
 
 cd /palworld || exit
 
+# Get the architecture using dpkg
+architecture=$(dpkg --print-architecture)
+
+# Get host kernel page size
+kernel_page_size=$(getconf PAGESIZE)
+
+# Check kernel page size for arm64 hosts before running steamcmd
+if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
+    echo "Only ARM64 hosts with 4k page size is supported."
+    exit 1
+fi
+
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
 
@@ -70,8 +82,6 @@ if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     fi
 fi
 
-# Get the architecture using dpkg
-architecture=$(dpkg --print-architecture)
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
