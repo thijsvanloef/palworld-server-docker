@@ -188,8 +188,6 @@ def load_palworldsettings(path: str) -> str:
     return config
 
 def convert_json_to_sav(json_data, output_path):
-    print(output_path)
-    print(json_data)
     print(f"WorldOption Generator: Compressing WorldOption to .sav")
     gvas_file = GvasFile.load(json_data)
     if (
@@ -203,5 +201,5 @@ def convert_json_to_sav(json_data, output_path):
         gvas_file.write(PALWORLD_CUSTOM_PROPERTIES), save_type
     )
     print(f"WorldOption Generator: Writing WorldOption.sav file to {output_path}")
-    with open(output_path, "wb") as f:
+    with open(f"{output_path}/WorldOption.sav", "wb") as f:
         f.write(sav_file)

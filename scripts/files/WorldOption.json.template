@@ -313,7 +313,7 @@
 								"value": "EPalOptionWorldDifficulty::Normal"
 							},
 							"type": "EnumProperty"
-						},
+						}
 					},
 					"type": "StructProperty"
 				}
