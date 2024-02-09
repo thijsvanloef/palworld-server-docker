@@ -9,13 +9,19 @@ from helper_functions import load_palworldsettings, parse_config, generate_json_
 try:
     print("Generating WorldOption.sav...")
 
+    first_time_error = "Saved game not found! This is expected if it is your first time running the container. Restart the container after it initializes the save folder to generate a WorldOption file."
+
     savegames_directory = "/palworld/Pal/Saved/SaveGames/0/"
+
+    if not os.path.exists(savegames_directory):
+        print(first_time_error)
+        raise Exception()
 
     # Find generated directory within /palworld/Pal/Saved/SaveGames/0/
     target_directory = next((os.path.join(savegames_directory, d) for d in os.listdir(savegames_directory) if os.path.isdir(os.path.join(savegames_directory, d))), None)
 
-    if not os.path.isdir(savegames_directory) or not os.path.isdir(target_directory):
-        print("Saved game not found! This is expected if it is your first time running the container. Restart the container after it initializes the save folder to generate a WorldOption file.")
+    if target_directory == None or not os.path.exists(target_directory):
+        print(first_time_error)
         raise Exception()
     
     worldoption = None
