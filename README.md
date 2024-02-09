@@ -161,7 +161,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
+The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
