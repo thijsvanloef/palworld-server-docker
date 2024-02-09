@@ -200,6 +200,7 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
 | DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
+| DISABLE_GENERATE_SETTINGS | Whether to automatically generate the PalWorldSettings.ini | false | true/false |
 
 *highly recommended to set
 
