@@ -118,7 +118,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     -e PUID=1000 \
     -e PGID=1000 \
     -e PORT=8211 \
@@ -146,7 +146,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
