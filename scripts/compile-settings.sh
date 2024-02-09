@@ -143,4 +143,6 @@ EOF
 
 echo "Compiling PalWorldSettings.ini done!"
 
-./generate-worldoption.sh "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
+    python ./worldoption/generator.py
+fi
