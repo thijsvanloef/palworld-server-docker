@@ -36,8 +36,6 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
     if [ -d "$savegames_directory" ] && [ -d "$target_directory" ]; then
         # Temporary file to store response
         response_file=$(mktemp)
-
-    	echo "$encoded_data"
     
     	curl_command="curl -s -X POST -H \"Content-Type: application/x-www-form-urlencoded\""
     
