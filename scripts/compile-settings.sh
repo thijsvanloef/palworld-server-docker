@@ -135,9 +135,13 @@ EOF
 fi
 
 mkdir -p /palworld/Pal/Saved/Config/LinuxServer
+palworld_settings=$(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
+
 cat > /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini <<EOF
 [/Script/Pal.PalGameWorldSettings]
-$(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
+$palworld_settings
 EOF
 
 echo "Compiling PalWorldSettings.ini done!"
+
+./generate-worldoption.sh "$palworld_settings"
