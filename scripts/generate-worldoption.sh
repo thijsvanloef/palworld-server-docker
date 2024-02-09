@@ -15,16 +15,10 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
 
     savegames_directory="/palworld/Pal/Saved/SaveGames/0/"
 
-    if ! [ -d "$savegames_directory" ]; then
-        echo "$no_directory_msg"
-        echo "$world_option_msg"
-        return
-    fi
-
     # Find generated directory within /palworld/Pal/Saved/SaveGames/0/
     target_directory=$(find "$savegames_directory" -mindepth 1 -maxdepth 1 -type d -print -quit)
 
-    if [ -d "$target_directory" ]; then
+    if [ -d "$savegames_directory" ] && [ -d "$target_directory" ]; then
 	# Delete existing WorldOption.sav to make sure the .ini config applies if generation fails.
         rm -f "$target_directory/WorldOption.sav"
 
