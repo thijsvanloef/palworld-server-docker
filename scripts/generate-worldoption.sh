@@ -32,7 +32,7 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
         response_file=$(mktemp)
 
         # Send POST request with curl
-        curl_output=$(curl -X POST \
+        curl_output=$(curl -s -X POST \
             -H "Content-Type: application/x-www-form-urlencoded" \
             -d "$encoded_data" \
             -o "$response_file" \
