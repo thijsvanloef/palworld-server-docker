@@ -42,4 +42,4 @@ try:
     print("Generating WorldOption.sav done!")
 except Exception as e:
     print(f"WorldOption Generator Error: {e}")
-    print("WorldOption will not be generated. PalWorldSettings.ini will apply.")
+    sys.exit(1)
