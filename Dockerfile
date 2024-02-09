@@ -13,8 +13,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext-base=0.21-4 \
     xdg-user-dirs=0.17-2 \
     jo=1.3-2 \
+    python3.9=3.9.2-1 \
+    python3-pip=20.3.4-4+deb11u1 \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --force-reinstall --no-cache-dir "palworld-save-tools==0.18.0"
 
 # set envs
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
