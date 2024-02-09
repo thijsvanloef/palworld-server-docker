@@ -1,54 +1,6 @@
 #!/bin/bash
-
-dirExists() {
-    local path="$1"
-    local return_val=0
-    if ! [ -d "${path}" ]; then
-        echo "${path} does not exist."
-        return_val=1
-    fi
-    return "$return_val"
-}
-
-fileExists() {
-    local path="$1"
-    local return_val=0
-    if ! [ -f "${path}" ]; then
-        echo "${path} does not exist."
-        return_val=1
-    fi
-    return "$return_val"
-}
-
-isReadable() {
-    local path="$1"
-    local return_val=0
-    if ! [ -e "${path}" ]; then
-        echo "${path} is not readable."
-        return_val=1
-    fi
-    return "$return_val"
-}
-
-isWritable() {
-    local path="$1"
-    local return_val=0
-    if ! [ -w "${path}" ]; then
-        echo "${path} is not writable."
-        return_val=1
-    fi
-    return "$return_val"
-}
-
-isExecutable() {
-    local path="$1"
-    local return_val=0
-    if ! [ -x "${path}" ]; then
-        echo "${path} is not executable."
-        return_val=1
-    fi
-    return "$return_val"
-}
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
@@ -56,7 +8,7 @@ isExecutable "/palworld" || exit
 
 printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
 
-./compile-settings.sh
+./compile-settings.sh || exit
 
 cd /palworld || exit
 

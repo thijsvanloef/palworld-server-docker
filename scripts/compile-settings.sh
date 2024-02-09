@@ -1,4 +1,23 @@
 #!/bin/bash
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
+
+config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+config_dir=$(dirname "$config_file")
+
+mkdir -p "$config_dir" || exit
+# If file exists then check if it is writable
+if [ -f "$config_file" ]; then
+    if ! isWritable "$config_file"; then
+        echo "Unable to create $config_file"
+        exit 1
+    fi
+# If file does not exist then check if the directory is writable
+elif ! isWritable "$config_dir"; then
+    # Exiting since the file does not exist and the directory is not writable.
+    echo "Unable to create $config_file"
+    exit 1
+fi
 
 echo "Compiling PalWorldSettings.ini..."
 
@@ -134,8 +153,7 @@ BAN_LIST_URL = $BAN_LIST_URL
 EOF
 fi
 
-mkdir -p /palworld/Pal/Saved/Config/LinuxServer
-cat > /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini <<EOF
+cat > "$config_file" <<EOF
 [/Script/Pal.PalGameWorldSettings]
 $(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
 EOF
