@@ -186,8 +186,8 @@ def load_palworldsettings(path: str) -> str:
     return config
 
 def convert_json_to_sav(json_data, output_path):
-    gvas_file = GvasFile.load(json_data)
     print(f"WorldOption Generator: Compressing WorldOption to .sav")
+    gvas_file = GvasFile.load(json_data)
     if (
         "Pal.PalWorldSaveGame" in gvas_file.header.save_game_class_name
         or "Pal.PalLocalWorldSaveGame" in gvas_file.header.save_game_class_name
