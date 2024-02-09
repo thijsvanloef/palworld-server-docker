@@ -146,5 +146,5 @@ echo "Compiling PalWorldSettings.ini done!"
 # WorldOption.sav generation
 rm -f /palworld/Pal/Saved/SaveGames/0/*/WorldOption.sav
 if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
-    python ./worldoption/generator.py
+    python3 ./worldoption/generator.py
 fi
