@@ -7,7 +7,7 @@ ARG RCON_VERSION="0.10.3"
 ARG SUPERCRONIC_VERSION="0.2.29"
 
 # build rcon-cli for arm64-linux
-FROM arm64v8/golang:1.19.3-bullseye as rcon-cli_builder
+FROM arm64v8/golang:1.22.0-bullseye as rcon-cli_builder
 
 ARG RCON_VERSION
 

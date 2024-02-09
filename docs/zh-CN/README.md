@@ -19,7 +19,13 @@
 这是一个 [Docker](https://docs.docker.com/engine/install/) 容器，可帮助您创建自己的
 [幻兽帕鲁](https://store.steampowered.com/app/1623730/Palworld/) 专用服务器。
 
-此容器经测试可正常在 (Ubuntu/Debian)、 Windows 10 、macOS (包括使用 Silicon 芯片的 M1 设备，通过 Rosseta2 转译)。
+此 Docker 容器经过测试，可在以下操作系统上运作：
+
+* Linux (Ubuntu/Debian)
+* Windows 10,11
+* MacOS (包括 Apple Silicon M1/M2/M3).
+
+此容器也经过测试，可在 `x64` 和 `ARM64` 基于的 CPU 架构上运作。
 
 > [!IMPORTANT]
 > 目前，Xbox Game Pass/Xbox 主机玩家无法加入专用服务器。
