@@ -54,31 +54,6 @@ dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
 
-
-if [ "${DISABLE_GENERATE_SETTINGS,,}" = false ]; then
-  printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
-  ./compile-settings.sh
-else
-  printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
-
-  # shellcheck disable=SC2143
-  if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-
-      printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
-
-      # Server will generate all ini files after first run.
-      if [ "$architecture" == "arm64" ]; then
-          timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
-      else
-          timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
-      fi
-
-      # Wait for shutdown
-      sleep 5
-      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-  fi
-fi
-
 cd /palworld || exit
 
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
@@ -130,6 +105,30 @@ fi
 
 if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+fi
+
+if [ "${DISABLE_GENERATE_SETTINGS,,}" = false ]; then
+  printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
+  /home/steam/server/compile-settings.sh
+else
+  printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
+
+  # shellcheck disable=SC2143
+  if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+
+      printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
+
+      # Server will generate all ini files after first run.
+      if [ "$architecture" == "arm64" ]; then
+          timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
+      else
+          timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
+      fi
+
+      # Wait for shutdown
+      sleep 5
+      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+  fi
 fi
 
 rm -f  "/home/steam/server/crontab"
