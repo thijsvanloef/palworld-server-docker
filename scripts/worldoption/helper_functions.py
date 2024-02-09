@@ -70,16 +70,18 @@ class ConfigOption:
                 else:
                     raise AttributeError(f"{value} is not a valid option for DeathPenalty")
             return {
-                self.struct.name: {
+                "id": None,
+                "value": {
                     "value": f"EPalOptionWorldDeathPenalty::{DEATHPENALTY_VALUES[index_value]}",
-                    "enum_type": "EPalOptionWorldDeathPenalty"
-                }
+                    "type": "EPalOptionWorldDeathPenalty"
+                },
+                "type": f"{self.struct.name}Property",
             }
         else:
             return {
-                self.struct.name: {
-                    "value": self._typecast(value)
-                }
+                "id": None,
+                "value": self._typecast(value),
+                "type": f"{self.struct.name}Property",
             }
 
 class SettingStructs:

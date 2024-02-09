@@ -35,8 +35,7 @@ try:
         raise Exception()
 
     parsed_config = parse_config(raw_config)
-    worldoption["root"]["properties"]["OptionWorldData"]["Struct"]["value"]["Struct"]["Settings"]["Struct"]["value"][
-        "Struct"] = generate_json_config(parsed_config)
+    worldoption["properties"]["OptionWorldData"]["value"]["Settings"]["value"] = generate_json_config(parsed_config)
 
     convert_json_to_sav(worldoption, target_directory)
 
