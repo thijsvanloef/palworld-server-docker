@@ -31,6 +31,7 @@ try:
     raw_config = load_palworldsettings("/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini")
 
     if raw_config == '':
+        print("WorldOption Generator: Raw config is empty.")
         raise Exception()
 
     parsed_config = parse_config(raw_config)
@@ -40,5 +41,6 @@ try:
     convert_json_to_sav(worldoption, target_directory)
 
     print("Generating WorldOption.sav done!")
-except:
+except Exception as e:
+    print(f"WorldOption Generator Error: ${e}")
     print("WorldOption will not be generated. PalWorldSettings.ini will apply.")
