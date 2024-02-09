@@ -13,8 +13,20 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
     # Take variables inside OptionSettings
     variables=$(echo "$1" | sed 's/OptionSettings=\(.*\)/\1/' | tr -d '()')
 
-    # Transforming variables into URL encoded form data
-    encoded_data=$(echo "$variables" | tr -d '"' | tr ',' '&' | sed 's/\([^=]*\)=\([^&]*\)/\1=\2/g')
+    # Transforming variables into splitable form
+    encoded_data=$(echo "$variables" | tr -d '"' | tr ',' '&')
+
+    # Split the string into an array using '&' as the delimiter
+    IFS='&' read -r -a settings_pairs <<< "$encoded_data"
+    
+    # Declare an associative array to store key-value pairs
+    declare -A settings_array
+    
+    # Iterate over the array of key-value pairs and populate the associative array
+    for pair in "${settings_pairs[@]}"; do
+        IFS='=' read -r key value <<< "$pair"
+        settings_array["$key"]="$value"
+    done
 
     savegames_directory="/palworld/Pal/Saved/SaveGames/0/"
 
@@ -25,13 +37,21 @@ if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
         # Temporary file to store response
         response_file=$(mktemp)
 
+    	echo "$encoded_data"
+    
+    	curl_command="curl -s -X POST -H \"Content-Type: application/x-www-form-urlencoded\""
+    
+        # Generate data for curl
+        for key in "${!settings_array[@]}"; do
+            # Replace boolean to integers
+            value=$(echo "${settings_array[$key]}" | sed 's/true/1/gI; s/false/0/gI')
+            curl_command+=" --data-urlencode \"$key=$value\""
+        done
+    
+    	curl_command+=" -o \"$response_file\" -w \"%{http_code}\""
+    	curl_command+=" \"https://palworldoptions.com/generate\""
         # Send POST request with curl
-        curl_output=$(curl -s -X POST \
-            -H "Content-Type: application/x-www-form-urlencoded" \
-            -d "$encoded_data" \
-            -o "$response_file" \
-            -w "%{http_code}" \
-            "https://palworldoptions.com/generate")
+        curl_output=$(eval "$curl_command")
 
         # Extract HTTP status code from curl output
         http_status_code=${curl_output: -3}
