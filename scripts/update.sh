@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "${DEPOT_MANIFEST_ID}" ]; then
+    echo "Version is locked based on DEPOT_MANIFEST_ID variable"
+    exit 0
+fi
+
 if [ "${UPDATE_ON_BOOT}" = false ]; then
     echo "Update on Boot needs to be enabled for auto updating"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
