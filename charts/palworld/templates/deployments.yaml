@@ -67,6 +67,10 @@ spec:
           volumeMounts:
             - mountPath: /palworld
               name: datadir
+      {{- with .Values.server.image.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: datadir
           persistentVolumeClaim:

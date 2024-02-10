@@ -37,6 +37,8 @@ server:
     tag: latest
     # -- Define the pull policy for the server image.
     imagePullPolicy: IfNotPresent
+    # -- Define the pull secrets for the server image.
+    imagePullSecrets: []
 
   # -- (dict) Change the ports to be mapped to the pod.
   # If you change those, make sure to change the service.ports and server.config accordingly.

@@ -1,7 +1,7 @@
 ---
 apiVersion: v2
 name: palworld
-version: 0.1.0
+version: 0.1.1
 description: This chart will provide a Palworld server installation on a kubernetes cluster
 type: application
 keywords:
