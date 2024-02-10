@@ -61,7 +61,7 @@ if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
 fi
 
-STARTCOMMAND=("./PalServer.sh")
+STARTCOMMAND=("/palworld/PalServer.sh")
 
 if ! fileExists "${STARTCOMMAND[0]}"; then
     echo "Try restarting with UPDATE_ON_BOOT=true"
@@ -395,6 +395,5 @@ EOL
 
 printf "\e[0;32m*****STARTING SERVER*****\e[0m\n"
 echo "${STARTCOMMAND[*]}"
-sed -i "/^\[program:palworld\]/,/^$/ s|command=.*|command=${STARTCOMMAND[*]}|" /etc/supervisor/conf.d/supervisord.conf
-supervisorctl start palworld
+sed -i "/^\[program:palworld\]/,/^$/ s|command=.*|command=${STARTCOMMAND[*]}|" "/etc/supervisor/conf.d/supervisord.conf"
 exit 0

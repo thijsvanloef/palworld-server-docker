@@ -82,4 +82,4 @@ HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT} ${RCON_PORT}
-ENTRYPOINT [ "/usr/bin/supervisord" ]
+ENTRYPOINT [ "/home/steam/server/init.sh" ]
