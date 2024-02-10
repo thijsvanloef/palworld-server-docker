@@ -118,7 +118,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     -e PUID=1000 \
     -e PGID=1000 \
     -e PORT=8211 \
@@ -127,11 +127,11 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
-    -e ADMIN_PASSWORD=adminPasswordHere \
-    -e SERVER_PASSWORD=worldofpals \
+    -e ADMIN_PASSWORD="adminPasswordHere" \
+    -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME=World of Pals \
-    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
+    -e SERVER_NAME="World of Pals" \
+    -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
@@ -146,7 +146,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
