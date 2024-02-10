@@ -492,10 +492,11 @@ send discord messages with docker compose:
 ```
 
 ## Locking Specific Game Version
-If **DEPOT_MANIFEST_ID** environment variable is set, UPDATE_ON_BOOT and AUTO_UPDATE_ENABLED are ignored. The version is locked to the specified manifest.
 
-Manifests can be found within the SteamCMD API or websites like SteamDB. 
-#### Version To Manifest ID Table
+If **DEPOT_MANIFEST_ID** environment variable is set, UPDATE_ON_BOOT and AUTO_UPDATE_ENABLED are ignored. The version is locked to the specified manifest.
+Manifests can be found within the SteamCMD API or websites like SteamDB.
+
+**Version To Manifest ID Table**
 | Version          | Manifest ID          |
 |------------------|----------------------|
 | 1.3.0            | 1354752814336157338  |
