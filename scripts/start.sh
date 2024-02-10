@@ -24,8 +24,28 @@ if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     exit 1
 fi
 
-if [ "${UPDATE_ON_BOOT,,}" = true ]; then
-    printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
+# Locked Version Install Based On Steam Depot Manifest ID
+if [ -n "${DEPOT_MANIFEST_ID}" ]; then
+    locked_manifest_id="${DEPOT_MANIFEST_ID}"
+    current_manifest_id=0
+    if [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
+      mapfile -t manifestIds < <(awk '/manifest/{ print $2 }' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
+      current_manifest_id=${manifestIds[1]} # 0 is steamworks SDK
+    fi
+    if [ "$locked_manifest_id" != "$current_manifest_id" ]; then
+      printf "\e[0;32m%s\e[0m\n" "*****Locking Game Version to Manifest ID $locked_manifest_id****"
+      /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$locked_manifest_id" +quit
+      cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
+      CreateACFFile "$locked_manifest_id"
+    fi
+fi
+
+if [ -z "${DEPOT_MANIFEST_ID}" ] && [ "${UPDATE_ON_BOOT,,}" = true ]; then
+    if [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
+      printf "\e[0;32m%s\e[0m\n" "*****UPDATING TO LATEST VERSION*****"
+    else
+      printf "\e[0;32m%s\e[0m\n" "*****INSTALLING LATEST VERSION*****"
+    fi
 
     if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
         /home/steam/server/discord.sh "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" &
