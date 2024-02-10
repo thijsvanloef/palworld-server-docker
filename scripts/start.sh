@@ -117,10 +117,7 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-if [ "${DISABLE_GENERATE_SETTINGS,,}" = false ]; then
-  printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
-  /home/steam/server/compile-settings.sh
-else
+if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
 
   # shellcheck disable=SC2143
@@ -139,6 +136,9 @@ else
       sleep 5
       cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
   fi
+else
+  printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
+  /home/steam/server/compile-settings.sh
 fi
 
 rm -f  "/home/steam/server/crontab"
