@@ -180,6 +180,7 @@ jobs:
         run: |
             docker run -d \
             --name palworld-server \
+            --platform linux/arm64 \
             -p 8211:8211/udp \
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
