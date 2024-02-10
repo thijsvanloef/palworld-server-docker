@@ -8,7 +8,7 @@ dirExists() {
     local path="$1"
     local return_val=0
     if ! [ -d "${path}" ]; then
-        echo "${path} does not exist."
+        LogInfo "${path} does not exist."
         return_val=1
     fi
     return "$return_val"
@@ -21,7 +21,7 @@ fileExists() {
     local path="$1"
     local return_val=0
     if ! [ -f "${path}" ]; then
-        echo "${path} does not exist."
+        LogInfo "${path} does not exist."
         return_val=1
     fi
     return "$return_val"
@@ -34,7 +34,7 @@ isReadable() {
     local path="$1"
     local return_val=0
     if ! [ -e "${path}" ]; then
-        echo "${path} is not readable."
+        LogInfo "${path} is not readable."
         return_val=1
     fi
     return "$return_val"
@@ -47,7 +47,7 @@ isWritable() {
     local path="$1"
     local return_val=0
     if ! [ -w "${path}" ]; then
-        echo "${path} is not writable."
+        LogInfo "${path} is not writable."
         return_val=1
     fi
     return "$return_val"
@@ -102,4 +102,49 @@ CreateACFFile() {
         }
   }
 EOL
+}
+
+#
+# Log Definitions
+#
+RESET='\033[0m'       # Text Reset
+
+# Regular Colors
+Black='\033[0;30m'        # Black
+Red='\033[0;31m'          # Red
+Green='\033[0;32m'        # Green
+Yellow='\033[0;33m'       # Yellow
+Blue='\033[0;34m'         # Blue
+Purple='\033[0;35m'       # Purple
+Cyan='\033[0;36m'         # Cyan
+White='\033[0;37m'        # White
+
+# Bold
+BlackBold='\033[1;30m'       # Black
+RedBold='\033[1;31m'         # Red
+GreenBold='\033[1;32m'       # Green
+YellowBold='\033[1;33m'      # Yellow
+BlueBold='\033[1;34m'        # Blue
+PurpleBold='\033[1;35m'      # Purple
+CyanBold='\033[1;36m'        # Cyan
+WhiteBold='\033[1;37m'       # White
+
+LogInfo() {
+  Log "$1" "$White"
+}
+LogError() {
+  Log "$1" "$RedBold"
+}
+LogSuccess() {
+  Log "$1" "$GreenBold"
+}
+LogAction() {
+  Log "$1" "$CyanBold" "****" "****"
+}
+Log() {
+  local message="$1"
+  local color="$2"
+  local prefix="$3"
+  local suffix="$4"
+  printf "$color%s$RESET\n" "$prefix$message$suffix"
 }
