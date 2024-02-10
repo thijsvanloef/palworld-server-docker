@@ -1,11 +1,12 @@
 #!/bin/bash
+source "/home/steam/server/helper_functions.sh"
 
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
-    printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
+    LogAction "EXECUTING USERMOD"
     usermod -o -u "${PUID}" steam
     groupmod -o -g "${PGID}" steam
 else
-    printf "\033[31m%s\n" "Running as root is not supported, please fix your PUID and PGID!"
+    LogError "Running as root is not supported, please fix your PUID and PGID!"
     exit 1
 fi
 
@@ -37,7 +38,7 @@ wait "$killpid"
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then
-    echo "Waiting for backup to finish"
+    LogInfo "Waiting for backup to finish"
     for pid in "${backup_pids[@]}"; do
         tail --pid="$pid" -f 2>/dev/null
     done
@@ -45,7 +46,7 @@ fi
 
 mapfile -t restore_pids < <(pgrep restore)
 if [ "${#restore_pids[@]}" -ne 0 ]; then
-    echo "Waiting for restore to finish"
+    LogInfo "Waiting for restore to finish"
     for pid in "${restore_pids[@]}"; do
         tail --pid="$pid" -f 2>/dev/null
     done

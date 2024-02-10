@@ -6,7 +6,7 @@ dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
 
-printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
+LogAction "GENERATING CONFIGS"
 
 ./compile-settings.sh || exit
 
@@ -20,7 +20,7 @@ kernel_page_size=$(getconf PAGESIZE)
 
 # Check kernel page size for arm64 hosts before running steamcmd
 if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
-    echo "Only ARM64 hosts with 4k page size is supported."
+    LogError "Only ARM64 hosts with 4k page size is supported."
     exit 1
 fi
 
@@ -29,14 +29,14 @@ if [ -n "${DEPOT_MANIFEST_ID}" ]; then
     locked_manifest_id="${DEPOT_MANIFEST_ID}"
     current_manifest_id=0
     if [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
-      mapfile -t manifestIds < <(awk '/manifest/{ print $2 }' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
-      current_manifest_id=${manifestIds[1]} # 0 is steamworks SDK
+      mapfile -t manifest_ids < <(awk '/manifest/{ print $2 }' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
+      current_manifest_id=${manifest_ids[1]} # 0 is steamworks SDK
     fi
     if [ "$locked_manifest_id" != "$current_manifest_id" ]; then
-      printf "\e[0;32m%s\e[0m\n" "*****Locking Game Version to Manifest ID $locked_manifest_id****"
+      LogAction "Locking Game Version to Manifest ID $locked_manifest_id"
       /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$locked_manifest_id" +quit
       if ! fileExists /home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/; then
-        printf "\033[1m\033[31m%s\033[0m\n" "DOWNLOAD OF REQUESTED MANIFEST ID $locked_manifest_id FAILED!"
+        LogError "DOWNLOAD OF REQUESTED MANIFEST ID $locked_manifest_id FAILED!"
         exit 1
       fi
 
@@ -47,9 +47,9 @@ fi
 
 if [ -z "${DEPOT_MANIFEST_ID}" ] && [ "${UPDATE_ON_BOOT,,}" = true ]; then
     if [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
-      printf "\e[0;32m%s\e[0m\n" "*****UPDATING TO LATEST VERSION*****"
+      LogAction "UPDATING TO LATEST VERSION"
     else
-      printf "\e[0;32m%s\e[0m\n" "*****INSTALLING LATEST VERSION*****"
+      LogAction "INSTALLING LATEST VERSION"
     fi
 
     if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
@@ -76,7 +76,7 @@ else
 fi
 
 if ! fileExists "${STARTCOMMAND[0]}"; then
-    echo "Try restarting with UPDATE_ON_BOOT=true"
+    LogError "Could Not Start Server. Try restarting with UPDATE_ON_BOOT=true"
     exit 1
 fi
 isReadable "${STARTCOMMAND[0]}" || exit
@@ -100,17 +100,17 @@ fi
 
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
-    echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
+    LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
-    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
+    LogInfo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
 fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
-    echo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
+    LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
 fi
 
@@ -126,7 +126,7 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
+LogAction "STARTING SERVER"
 if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
     /home/steam/server/discord.sh "${DISCORD_PRE_START_MESSAGE}" "success" &
 fi

@@ -1,12 +1,13 @@
 #!/bin/bash
+source "/home/steam/server/helper_functions.sh"
 
 if [ -z "${DEPOT_MANIFEST_ID}" ]; then
-    echo "Version is locked based on DEPOT_MANIFEST_ID variable"
+    LogInfo "Cannot Update - Version is locked based on DEPOT_MANIFEST_ID variable"
     exit 0
 fi
 
 if [ "${UPDATE_ON_BOOT}" = false ]; then
-    echo "Update on Boot needs to be enabled for auto updating"
+    LogError "Update on Boot needs to be enabled for auto updating"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
         /home/steam/server/discord.sh "Update on Boot needs to be enabled for auto updating" "warn"
     fi
@@ -21,7 +22,7 @@ TARGETBUILD=$(grep -P '"public": {"buildid": "\d+"' -o <"$temp_file" | sed -r 's
 rm "$temp_file"
 
 if [ "$http_code" -ne 200 ]; then
-    echo "There was a problem reaching the Steam api. Unable to check for updates!"
+    LogError "There was a problem reaching the Steam api. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
         /home/steam/server/discord.sh "There was a problem reaching the Steam api. Unable to check for updates!" "failure" &
     fi
@@ -29,7 +30,7 @@ if [ "$http_code" -ne 200 ]; then
 fi
 
 if [ -z "$TARGETBUILD" ]; then
-    echo "The server response does not contain the expected BuildID. Unable to check for updates!"
+    LogError "The server response does not contain the expected BuildID. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
         /home/steam/server/discord.sh "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure" &
     fi
@@ -37,7 +38,8 @@ if [ -z "$TARGETBUILD" ]; then
 fi
 
 if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
-    echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
+    LogAction "New Update was found."
+    LogInfo "Updating server build from $CURRENTBUILD to $TARGETBUILD."
     if [ "${RCON_ENABLED,,}" = true ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
@@ -48,11 +50,11 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else
-        echo "An update is available however auto updating without rcon is not supported"
+        LogError "An update is available however auto updating without rcon is not supported"
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             /home/steam/server/discord.sh "An update is available however auto updating without rcon is not supported" "warn"
         fi
     fi
 else
-    echo "The Server is up to date!"
+    LogSuccess "The Server is up to date!"
 fi
