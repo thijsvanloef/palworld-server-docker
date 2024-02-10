@@ -65,3 +65,41 @@ isExecutable() {
     fi
     return "$return_val"
 }
+
+CreateACFFile() {
+  local manifestId="$1"
+  cat >/palworld/steamapps/appmanifest_2394010.acf  <<EOL
+  "AppState" {
+        "appid"        			 "2394010"
+        "Universe"              "1"
+        "name"         			 "Palworld Dedicated Server"
+        "StateFlags"            "4"
+        "installdir"            "PalServer"
+        "StagingSize"           "0"
+        "buildid"               "13378465"
+        "UpdateResult"          "0"
+        "TargetBuildID"         "0"
+        "AutoUpdateBehavior"     "0"
+        "AllowOtherDownloadsWhileRunning"               "0"
+        "ScheduledAutoUpdate"           "0"
+        "InstalledDepots"
+        {
+                "1006"
+                {
+                        "manifest"      "4884950798805348056"
+                        "size"          "73781292"
+                }
+                "2394012"
+                {
+                        "manifest"      "${manifestId}"
+                }
+        }
+        "UserConfig"
+        {
+        }
+        "MountedConfig"
+        {
+        }
+  }
+EOL
+}
