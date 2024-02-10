@@ -35,6 +35,11 @@ if [ -n "${DEPOT_MANIFEST_ID}" ]; then
     if [ "$locked_manifest_id" != "$current_manifest_id" ]; then
       printf "\e[0;32m%s\e[0m\n" "*****Locking Game Version to Manifest ID $locked_manifest_id****"
       /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$locked_manifest_id" +quit
+      if ! fileExists /home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/; then
+        printf "\033[1m\033[31m%s\033[0m\n" "DOWNLOAD OF REQUESTED MANIFEST ID $locked_manifest_id FAILED!"
+        exit 1
+      fi
+
       cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
       CreateACFFile "$locked_manifest_id"
     fi
