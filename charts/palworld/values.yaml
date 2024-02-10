@@ -56,7 +56,7 @@ server:
     # If you change this, make sure to change the service.ports.rcon and server.config accordingly.
     - name: rcon
       containerPort: 25575
-      protocol: UDP
+      protocol: TCP
   # -- (string) Change the deployment strategy
   strategy: Recreate
 
@@ -102,7 +102,7 @@ server:
       # If you change this, make sure to change the server.ports.rcon and server.config.rcon.port accordingly.
       - name: rcon
         port: 25575
-        protocol: UDP
+        protocol: TCP
         targetPort: 25575
   # -- (dict) Change the game server configuration.
   # If you change those, make sure to change the service.ports and server.ports accordingly.
