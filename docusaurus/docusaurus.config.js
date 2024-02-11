@@ -152,6 +152,9 @@ const config = {
         disableSwitch: false,
         respectPrefersColorScheme: false,
       },
+      metadata: [
+        {name: 'keywords', content: 'palworld, palworld server docker, palworld docker'},
+      ],
     }),
 };
 
