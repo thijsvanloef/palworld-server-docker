@@ -100,6 +100,13 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'right',
           },
+          {
+            href: 'https://github.com/thijsvanloef/palworld-server-docker',
+            'aria-label': 'GitHub',
+            className: 'navbar__icon navbar__github',
+            position: 'right',
+            html: '<i class="fa fa-github"></i>',
+          },
         ],
       },
       footer: {
