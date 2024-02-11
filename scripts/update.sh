@@ -2,8 +2,8 @@
 # shellcheck source=/dev/null
 source "/home/steam/server/helper_functions.sh"
 
-updateRequired=$(UpdateRequired)
-
+UpdateRequired
+updateRequired=$?
 # Check if Update was actually required
 if [ "$updateRequired" != 0 ]; then
   exit 0

@@ -154,9 +154,9 @@ if [ -z "$TARGETBUILD" ]; then
 fi
 
 if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
-  LogAction "An Update Is Available."
+  LogInfo "An Update Is Available."
   LogInfo "Current Version: $CURRENTBUILD"
-  LogInfo "Target Version: $TARGETBUILD."
+  LogInfo "Latest Version: $TARGETBUILD."
   return 0
 fi
 
@@ -167,20 +167,14 @@ return 1
 
 InstallServer() {
   DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
-  SteamCMD +app_update 2394010 validate
+  /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate  +quit
   DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
-}
-
-#Steam Commands
-SteamCMD() {
-  local extraArgs="$1"
-  /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous "$extraArgs" +quit
 }
 
 # Returns 0 if game is installed
 # Returns 1 if game is not installed
 IsInstalled() {
-  if  [ -e palworld/Palworld.sh ] && [ -e palworld/steamapps/appmanifest_2394010.acf ]; then
+  if  [ -e /palworld/PalServer.sh ] && [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
     return 0
   fi
   return 1
