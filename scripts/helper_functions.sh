@@ -67,8 +67,8 @@ isExecutable() {
 }
 
 # Checks how many players are currently connected
-# Returns 0 if RCON is not enabled
-# Returns the player count if rcon is enabled
+# Outputs 0 if RCON is not enabled
+# Outputs the player count if rcon is enabled
 get_player_count() {
     if [ "${RCON_ENABLED,,}" != true ]; then
         echo 0
