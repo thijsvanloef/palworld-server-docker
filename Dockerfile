@@ -5,7 +5,7 @@ ARG RCON_VERSION="0.10.3"
 WORKDIR /build
 
 ENV CGO_ENABLED=0
-RUN wget https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
     && tar -xzvf rcon.tar.gz \
     && rm rcon.tar.gz \
     && mv rcon-cli-${RCON_VERSION}/* ./ \
@@ -55,7 +55,7 @@ RUN case ${TARGETARCH} in \
         "amd64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_AMD64} ;; \
         "arm64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_ARM64} ;; \
     esac \
-    && wget https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
+    && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
     && chmod +x supercronic \
     && mv supercronic /usr/local/bin/supercronic
