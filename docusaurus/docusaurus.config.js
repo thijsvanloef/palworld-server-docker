@@ -31,7 +31,18 @@ const config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en'],
+    locales: ['en', 'ko', 'zh'],
+    localeConfigs:{
+      en: {
+        label: 'English',
+      },
+      ko: {
+        label: 'Korean',
+      },
+      zh: {
+        label: 'Simplified Chinese',
+      },
+    }
   },
 
   presets: [
@@ -77,6 +88,11 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
+          {
+            type: 'localeDropdown',
+            sidebarId: 'tutorialSidebar',
+            position: 'right',
+          },
         ],
       },
       footer: {
@@ -87,7 +103,7 @@ const config = {
             items: [
               {
                 label: 'Getting started',
-                to: '/docs/intro',
+                to: '/docs/category/getting-started',
               },
             ],
           },
