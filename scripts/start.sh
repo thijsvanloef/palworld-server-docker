@@ -119,6 +119,7 @@ fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
+  printf "\e[0;32m%s\e[0m\n" "***Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!***"
 
   # shellcheck disable=SC2143
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
@@ -137,7 +138,8 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
       cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
   fi
 else
-  printf "\e[0;32m*****GENERATING CONFIGS*****\e[0m\n"
+  printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
+  printf "\e[0;32m%s\e[0m\n" "***Using Env vars to create PalWorldSettings.ini***"
   /home/steam/server/compile-settings.sh
 fi
 
