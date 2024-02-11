@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>USA-RedDragon/renovate-configs"
+  ],
+  "regexManagers": [
+    {
+        "fileMatch": [
+            ".*"
+        ],
+        "matchStrings": [
+            "# renovate: datasource=(?<datasource>.*?)(?:\\s+extractVersion=(?<extractVersion>.+?))?(?:\\s+versioning=(?<versioning>.+?))?\\s+depName=(?<depName>.+?)?\\s(?:\\s*.*_(?:version|VERSION)[:=]\\s*(?<currentValue>.*))?(?:\\s.*_(?:ref|REF):\\s+(?<currentDigest>.*))?"
+        ],
+        "versioningTemplate": "{{#if versioning}}{{versioning}}{{else}}semver-coerced{{/if}}"
+    }
+  ]
+}

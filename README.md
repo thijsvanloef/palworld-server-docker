@@ -1,22 +1,14 @@
 # Palworld Dedicated Server Docker
 
-[![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
-[![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![Image Size](https://img.shields.io/docker/image-size/thijsvanloef/palworld-server-docker/latest)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags)
-[![Static Badge](https://img.shields.io/badge/readme-0.19.1-blue?link=https%3A%2F%2Fgithub.com%2Fthijsvanloef%2Fpalworld-server-docker%2Fblob%2Fmain%2FREADME.md)](https://github.com/thijsvanloef/palworld-server-docker?tab=readme-ov-file#palworld-dedicated-server-docker)
-[![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
+> [!IMPORTANT]
+> This is a fork which has a bit stricter versioning enabled with [Renovate](https://github.com/apps/renovate) managing dependencies
+> and modified for my own use. If you've stumbled upon this repository, you probably want the upstream repository
+> which can be found at <https://github.com/thijsvanloef/palworld-server-docker>.
 
-[![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![GHCR](https://img.shields.io/badge/GHCR-palworld-blue?logo=docker)](https://github.com/thijsvanloef/palworld-server-docker/pkgs/container/palworld-server-docker)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld-server-chart)](https://artifacthub.io/packages/search?repo=palworld-server-chart)
-
-[Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
-
-[English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
+---
 
 > [!TIP]
-> Unsure how to get started? Check out [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
+> Unsure how to get started? Check out [this guide thijsvanloef wrote!](https://tice.tips/containerization/palworld-server-docker/)
 
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
@@ -33,14 +25,6 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 > At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
 >
 > They will need to join players using the invite code and are limited to sessions of 4 players max.
-
-## Sponsors
-
-Massive shoutout to the following sponsors!
-
-<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<!-- sponsors -->
-</p>
 
 ## Server Requirements
 
@@ -61,7 +45,7 @@ This repository includes an example [docker-compose.yml](/docker-compose.yml) fi
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest
+      image: ghcr.io/usa-reddragon/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -93,7 +77,7 @@ values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest
+      image: ghcr.io/usa-reddragon/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -131,7 +115,7 @@ docker run -d \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest
+    ghcr.io/usa-reddragon/palworld-server-docker:latest
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -147,18 +131,12 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest
+    ghcr.io/usa-reddragon/palworld-server-docker:latest
 ```
 
 ### Kubernetes
 
-All files you will need to deploy this container to kubernetes are located in the [k8s folder](k8s/).
-
-Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
-
-#### Using helm chart
-
-The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
+The official Helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
@@ -200,14 +178,6 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online. | false | true/false |
-| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
-| DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
-| DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
-| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | "string" |
-| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | "string" |
-| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
-| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
-| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
 | DISABLE_GENERATE_SETTINGS | Whether to automatically generate the PalWorldSettings.ini | false | true/false |
 
 *highly recommended to set
@@ -469,30 +439,6 @@ For a more detailed list of server settings go to: [Palworld Wiki](https://palwo
 
 For more detailed server settings explanations go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
-## Using discord webhooks
-
-1. Generate a webhook url for your discord server in your discord's server settings.
-
-2. Set the environment variable with the unique token at the end of the discord webhook url example: `https://discord.com/api/webhooks/1234567890/abcde`
-
-send discord messages with docker run:
-
-```sh
--e DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1234567890/abcde" \
--e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
-```
-
-send discord messages with docker compose:
-
-```yaml
-- DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
-- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
-```
-
 ## Reporting Issues/Feature Requests
 
-Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
-
-### Known Issues
-
-Known issues are listed in the [wiki](https://github.com/thijsvanloef/palworld-server-docker/wiki/Known-Issues)
+Issues/Feature requests can be submitted by using [this link](https://github.com/USA-RedDragon/palworld-server-docker/issues/new/choose).

@@ -23,15 +23,7 @@ fi
 if [ "${UPDATE_ON_BOOT,,}" = true ]; then
     printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
 
-    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" &
-    fi
-
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
-
-    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
-    fi
 fi
 
 # Check if the architecture is arm64
@@ -124,15 +116,8 @@ default:
 EOL
 
 printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
-if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
-    /home/steam/server/discord.sh "${DISCORD_PRE_START_MESSAGE}" "success" &
-fi
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
-
-if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_POST_SHUTDOWN_MESSAGE}" ]; then
-    /home/steam/server/discord.sh "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
-fi
 
 exit 0

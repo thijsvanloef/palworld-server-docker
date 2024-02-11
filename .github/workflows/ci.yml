@@ -1,0 +1,18 @@
+on:
+  pull_request:
+  push:
+    branches: ['main']
+    tags: ['v*']
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  docker:
+    permissions:
+      contents: read
+      packages: write
+    uses: USA-RedDragon/reusable-actions/.github/workflows/docker-ci.yaml@v1.0.5
+    with:
+      push: ${{ github.event_name != 'pull_request' }}
