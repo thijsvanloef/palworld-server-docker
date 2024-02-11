@@ -13,8 +13,8 @@ fi
 temp_file=$(mktemp)
 http_code=$(curl https://api.steamcmd.net/v1/info/2394010 --output "$temp_file" --silent --location --write-out "%{http_code}")
 
-CURRENTBUILD=$(awk '/buildid/{ print $2 }' < /palworld/steamapps/appmanifest_2394010.acf)
-TARGETBUILD=$(grep -P '"public": {"buildid": "\d+"' -o <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
+CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf)
+TARGET_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
 rm "$temp_file"
 
 if [ "$http_code" -ne 200 ]; then
@@ -25,15 +25,15 @@ if [ "$http_code" -ne 200 ]; then
     exit 1
 fi
 
-if [ -z "$TARGETBUILD" ]; then
+if [ -z "$TARGET_MANIFEST" ]; then
     echo "The server response does not contain the expected BuildID. Unable to check for updates!"
     if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
         /home/steam/server/discord.sh "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure" &
     fi
     exit 1
 fi
-
-if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
+echo "player count: $(get_player_count)"
+if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
     if [ "${RCON_ENABLED,,}" != true ]; then
         echo "An update is available however auto updating without rcon is not supported"
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
@@ -41,7 +41,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
         fi
         exit 0
     fi
-    echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
+    echo "New Build was found. Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
     rm /palworld/steamapps/appmanifest_2394010.acf
 
     if [ "$(get_player_count)" -gt 0 ]; then
