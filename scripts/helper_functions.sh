@@ -126,3 +126,62 @@ DiscordMessage() {
     /home/steam/server/discord.sh "$message" "$level" &
   fi
 }
+
+
+# Returns 0 if Update Required
+# Returns 1 if Update NOT Required
+# Returns 2 if Check Failed
+UpdateRequired() {
+LogAction "Checking for new update"
+
+temp_file=$(mktemp)
+http_code=$(curl https://api.steamcmd.net/v1/info/2394010 --output "$temp_file" --silent --location --write-out "%{http_code}")
+
+CURRENTBUILD=$(awk '/buildid/{ print $2 }' < /palworld/steamapps/appmanifest_2394010.acf)
+TARGETBUILD=$(grep -P '"public": {"buildid": "\d+"' -o <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
+rm "$temp_file"
+
+if [ "$http_code" -ne 200 ]; then
+    LogError "There was a problem reaching the Steam api. Unable to check for updates!"
+    DiscordMessage "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
+    return 2
+fi
+
+if [ -z "$TARGETBUILD" ]; then
+    LogError "The server response does not contain the expected BuildID. Unable to check for updates!"
+    DiscordMessage "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
+    return 2
+fi
+
+if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
+  LogAction "An Update Is Available."
+  LogInfo "Current Version: $CURRENTBUILD"
+  LogInfo "Target Version: $TARGETBUILD."
+  return 0
+fi
+
+LogSuccess "The Server is up to date!"
+return 1
+
+}
+
+InstallServer() {
+  DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
+  SteamCMD +app_update 2394010 validate
+  DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
+}
+
+#Steam Commands
+SteamCMD() {
+  local extraArgs="$1"
+  /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous "$extraArgs" +quit
+}
+
+# Returns 0 if game is installed
+# Returns 1 if game is not installed
+IsInstalled() {
+  if  [ -e palworld/Palworld.sh ] && [ -e palworld/steamapps/appmanifest_2394010.acf ]; then
+    return 0
+  fi
+  return 1
+}
