@@ -15,7 +15,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
 FROM cm2network/steamcmd:root as base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:latest as base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root as base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
@@ -37,8 +37,6 @@ LABEL maintainer="thijs@loef.dev" \
 ARG SUPERCRONIC_SHA1SUM_ARM64="512f6736450c56555e01b363144c3c9d23abed4c"
 ARG SUPERCRONIC_SHA1SUM_AMD64="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
 ARG SUPERCRONIC_VERSION="0.2.29"
-
-USER root
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
