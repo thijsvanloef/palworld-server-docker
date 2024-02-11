@@ -83,10 +83,16 @@ const config = {
             label: 'Getting started',
           },
           {
-            type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Docs',
+            label: 'Guides',
+            to: '/docs/category/guides' 
+          },
+          {
+            sidebarId: 'tutorialSidebar',
+            position: 'left',
+            label: 'Advanced',
+            to: '/docs/category/advanced' 
           },
           {
             type: 'localeDropdown',
@@ -104,6 +110,14 @@ const config = {
               {
                 label: 'Getting started',
                 to: '/docs/category/getting-started',
+              },
+              {
+                label: 'Guides',
+                to: '/docs/category/guides',
+              },
+              {
+                label: 'Advanced',
+                to: '/docs/category/advanced',
               },
             ],
           },
