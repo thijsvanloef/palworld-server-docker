@@ -71,8 +71,8 @@ isExecutable() {
 # Returns the player count if rcon is enabled
 get_player_count() {
     if [ "${RCON_ENABLED,,}" != true ]; then
-        return 0
+        echo 0
     fi
-    PLAYERLIST=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
-    return "$(echo -n "$PLAYERLIST" | wc -l)"
+    player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
+    echo -n "${player_list}" | wc -l
 }
