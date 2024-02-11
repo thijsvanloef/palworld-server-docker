@@ -18,6 +18,9 @@ FROM cm2network/steamcmd:root as base-amd64
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:latest as base-arm64
 
 ARG TARGETARCH
+# Ignoring the lack of a tag here because the tag is defined in the above FROM lines
+# and hadolint isn't aware of those.
+# hadolint ignore=DL3006
 FROM base-${TARGETARCH}
 
 LABEL maintainer="thijs@loef.dev" \
