@@ -50,6 +50,8 @@ else
     STARTCOMMAND=("./PalServer.sh")
 fi
 
+
+#Validate Installation
 if ! fileExists "${STARTCOMMAND[0]}"; then
     LogError "Server Not Installed Properly"
     exit 1
@@ -58,6 +60,7 @@ fi
 isReadable "${STARTCOMMAND[0]}" || exit
 isExecutable "${STARTCOMMAND[0]}" || exit
 
+# Prepare Arguments
 if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
 fi
