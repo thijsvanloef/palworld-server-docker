@@ -14,7 +14,7 @@ architecture=$(dpkg --print-architecture)
 # Get host kernel page size
 kernel_page_size=$(getconf PAGESIZE)
 
-# Check kernel page size for arm64 hosts before running steamcmdac
+# Check kernel page size for arm64 hosts before running steamcmd
 if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     LogError "Only ARM64 hosts with 4k page size is supported."
     exit 1
