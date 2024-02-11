@@ -1,0 +1,29 @@
+---
+name: Docs
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    name: Docusaurus - Test Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: './docusaurus/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci --prefix ./docusaurus
+      - name: Build website
+        run: npm run build --prefix ./docusaurus
