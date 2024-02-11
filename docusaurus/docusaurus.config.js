@@ -56,6 +56,7 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/thijsvanloef/palworld-server-docker',
+          routeBasePath: '/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -86,13 +87,13 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Guides',
-            to: '/docs/category/guides' 
+            to: '/category/guides' 
           },
           {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Advanced',
-            to: '/docs/category/advanced' 
+            to: '/category/advanced' 
           },
           {
             type: 'localeDropdown',
@@ -109,15 +110,15 @@ const config = {
             items: [
               {
                 label: 'Getting started',
-                to: '/docs/category/getting-started',
+                to: '/category/getting-started',
               },
               {
                 label: 'Guides',
-                to: '/docs/category/guides',
+                to: '/category/guides',
               },
               {
                 label: 'Advanced',
-                to: '/docs/category/advanced',
+                to: '/category/advanced',
               },
             ],
           },
