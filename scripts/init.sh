@@ -19,8 +19,8 @@ term_handler() {
   DiscordMessage "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
 
     if [ "${RCON_ENABLED,,}" = true ]; then
-        rcon-cli save
-        rcon-cli "shutdown 1"
+        RCON save
+        RCON "shutdown 1"
     else # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi

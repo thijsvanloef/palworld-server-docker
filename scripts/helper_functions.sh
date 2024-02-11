@@ -75,7 +75,7 @@ get_player_count() {
         echo 0
         return 0
     fi
-    player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
+    player_list=$(RCON "ShowPlayers")
     echo -n "${player_list}" | wc -l
 }
 
@@ -128,6 +128,11 @@ DiscordMessage() {
   fi
 }
 
+# RCON Call
+RCON() {
+  local args="$1"
+  echo rcon-cli -c /home/steam/server/rcon.yaml "$args"
+}
 
 
 # Returns 0 if Update Required
@@ -138,9 +143,9 @@ LogAction "Checking for new update"
 
 temp_file=$(mktemp)
 http_code=$(curl https://api.steamcmd.net/v1/info/2394010 --output "$temp_file" --silent --location --write-out "%{http_code}")
+TARGET_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
 
-CURRENTBUILD=$(awk '/buildid/{ print $2 }' < /palworld/steamapps/appmanifest_2394010.acf)
-TARGETBUILD=$(grep -P '"public": {"buildid": "\d+"' -o <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
+CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf)
 rm "$temp_file"
 
 if [ "$http_code" -ne 200 ]; then
@@ -149,16 +154,16 @@ if [ "$http_code" -ne 200 ]; then
     return 2
 fi
 
-if [ -z "$TARGETBUILD" ]; then
+if [ -z "$TARGET_MANIFEST" ]; then
     LogError "The server response does not contain the expected BuildID. Unable to check for updates!"
     DiscordMessage "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
     return 2
 fi
 
-if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
+if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
   LogInfo "An Update Is Available."
-  LogInfo "Current Version: $CURRENTBUILD"
-  LogInfo "Latest Version: $TARGETBUILD."
+  LogInfo "Current Version: $CURRENT_MANIFEST"
+  LogInfo "Latest Version: $TARGET_MANIFEST."
   return 0
 fi
 

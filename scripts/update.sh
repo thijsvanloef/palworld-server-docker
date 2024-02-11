@@ -24,10 +24,10 @@ fi
 if [ "$(get_player_count)" -gt 0 ]; then
   LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
   DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
-  rcon-cli -c /home/steam/server/rcon.yaml "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
+  RCON "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
   sleep "${AUTO_UPDATE_WARN_MINUTES}m"
 fi
 
 rm /palworld/steamapps/appmanifest_2394010.acf
 backup
-rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+RCON "shutdown 1"
