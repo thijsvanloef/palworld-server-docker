@@ -8,7 +8,7 @@
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld-server-chart)](https://artifacthub.io/packages/search?repo=palworld-server-chart)
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
@@ -161,7 +161,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
+The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
