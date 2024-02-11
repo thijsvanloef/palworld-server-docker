@@ -70,8 +70,10 @@ isExecutable() {
 # Outputs 0 if RCON is not enabled
 # Outputs the player count if rcon is enabled
 get_player_count() {
+    local player_list
     if [ "${RCON_ENABLED,,}" != true ]; then
         echo 0
+        return 0
     fi
     player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
     echo -n "${player_list}" | wc -l
