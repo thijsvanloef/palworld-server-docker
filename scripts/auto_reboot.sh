@@ -1,6 +1,15 @@
 #!/bin/bash
 
 if [ "${RCON_ENABLED,,}" = true ]; then
+    if [ "${AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE,,}" != true ]; then
+      players_count=$(rcon-cli -c /home/steam/server/rcon.yaml showplayers)
+
+      if [ "$(echo -n "$players_count" | wc -l)" -gt 0 ]; then
+          echo "There are ${players_count} players online. Skipping auto reboot."
+          exit 1
+      fi
+    fi
+
     if [ -z "${AUTO_REBOOT_WARN_MINUTES}" ]; then
         echo "Unable to auto reboot, AUTO_REBOOT_WARN_MINUTES is empty."
     elif [[ "${AUTO_REBOOT_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
