@@ -9,7 +9,7 @@
 
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![GHCR](https://img.shields.io/badge/GHCR-palworld-blue?logo=docker)](https://github.com/thijsvanloef/palworld-server-docker/pkgs/container/palworld-server-docker)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld-server-chart)](https://artifacthub.io/packages/search?repo=palworld-server-chart)
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
@@ -73,19 +73,19 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PUID=1000
-         - PGID=1000
-         - PORT=8211 # Optional but recommended
-         - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD=worldofpals # Optional but recommended
-         - MULTITHREADING=true
-         - RCON_ENABLED=true
-         - RCON_PORT=25575
-         - TZ=UTC
-         - ADMIN_PASSWORD=adminPasswordHere
-         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME=World of Pals
-         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
+         PUID: 1000
+         PGID: 1000
+         PORT: 8211 # Optional but recommended
+         PLAYERS: 16 # Optional but recommended
+         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         MULTITHREADING: true
+         RCON_ENABLED: true
+         RCON_PORT: 25575
+         TZ: "UTC"
+         ADMIN_PASSWORD: "adminPasswordHere"
+         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         SERVER_NAME: "World of Pals"
+         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -162,7 +162,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
+The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
@@ -203,6 +203,7 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online. | false | true/false |
 | DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
