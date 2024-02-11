@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 source "/home/steam/server/helper_functions.sh"
 
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then

@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck source=/dev/null
 source "/home/steam/server/helper_functions.sh"
 
 # Backup file directory path
