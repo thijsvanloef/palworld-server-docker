@@ -7,6 +7,11 @@ slug: /
 
 Let's get you on your way with the Palworld Dedicated server!
 
+:::warning
+At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+
+They will need to join players using the invite code and are limited to sessions of 4 players max.
+:::
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
@@ -17,7 +22,7 @@ Let's get you on your way with the Palworld Dedicated server!
 
 ## Docker Compose
 
-This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
+This repository includes an example [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) file you can use to set up your server.
 
 ```yml
 services:
@@ -47,9 +52,9 @@ services:
          - ./palworld:/palworld/
 ```
 
-As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
 Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct
-values. Modify your [docker-compose.yml](docker-compose.yml) to this:
+values. Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
 
 ```yml
 services:
@@ -93,7 +98,7 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
 
-As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
 Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
 correct values. Change your docker run command to this:
 
@@ -108,3 +113,12 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
+## Starting the server
+
+Use `docker compose up -d` to start the server in the background
+
+## Stopping the server
+
+Use `docker compose stop` to stop the server
+
+Use `docker compose down --rmi all` to stop and remove the server and remove the docker image from your computer
