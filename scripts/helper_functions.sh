@@ -78,6 +78,7 @@ get_player_count() {
     player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
     echo -n "${player_list}" | wc -l
 }
+
 #
 # Log Definitions
 #
@@ -126,6 +127,7 @@ DiscordMessage() {
     /home/steam/server/discord.sh "$message" "$level" &
   fi
 }
+
 
 
 # Returns 0 if Update Required
