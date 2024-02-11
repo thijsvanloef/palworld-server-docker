@@ -12,6 +12,7 @@ At the moment, Xbox Gamepass/Xbox Console players will not be able to join a ded
 
 They will need to join players using the invite code and are limited to sessions of 4 players max.
 :::
+
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
@@ -22,7 +23,9 @@ They will need to join players using the invite code and are limited to sessions
 
 ## Docker Compose
 
-This repository includes an example [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) file you can use to set up your server.
+This repository includes an example
+[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+file you can use to set up your server.
 
 ```yml
 services:
@@ -51,9 +54,9 @@ services:
       volumes:
          - ./palworld:/palworld/
 ```
-
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct
+<!-- markdownlint-disable-next-line -->
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
+Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct <!-- markdownlint-disable-next-line -->
 values. Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
 
 ```yml
@@ -97,8 +100,8 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
-
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
+<!-- markdownlint-disable-next-line -->
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
 Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
 correct values. Change your docker run command to this:
 
@@ -113,6 +116,7 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
+
 ## Starting the server
 
 Use `docker compose up -d` to start the server in the background

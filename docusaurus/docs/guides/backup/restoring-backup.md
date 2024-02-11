@@ -14,9 +14,11 @@ docker exec -it palworld-server restore
 
 The `RCON_ENABLED` environment variable must be set to `true` to use this command.
 :::warning
-If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be manually restarted.
+If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and
+will need to be manually restarted.
 
-The example docker run command and docker compose file in [How to Use](#how-to-use) already uses the needed policy
+The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
+already uses the needed policy
 :::
 
 ## Manually restore from a backup

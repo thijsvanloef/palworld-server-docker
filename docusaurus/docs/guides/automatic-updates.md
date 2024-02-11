@@ -15,7 +15,7 @@ To be able to use automatic Updates with this Server the following environment v
 If docker restart is not set to policy `always` or `unless-stopped`
 then the server will shutdown and will need to be manually restarted.
 
-The example docker run command and docker compose file in [How to Use](#how-to-use)
+The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
 already use the needed policy
 :::
 
