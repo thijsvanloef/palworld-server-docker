@@ -13,6 +13,8 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && go build -v ./cmd/gorcon
 
 FROM cm2network/steamcmd:root as base-amd64
+# Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
+# hadolint ignore=DL3029
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:latest as base-arm64
 
 ARG TARGETARCH
