@@ -73,8 +73,8 @@ const config = {
       navbar: {
         title: 'palworld-server-docker',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Palworld Logo',
+          src: 'img/palworld.png',
         },
         items: [
           {
