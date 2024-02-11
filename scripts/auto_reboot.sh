@@ -1,10 +1,12 @@
 #!/bin/bash
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 if [ "${RCON_ENABLED,,}" = true ]; then
     if [ "${AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE,,}" != true ]; then
-      players_count=$(rcon-cli -c /home/steam/server/rcon.yaml showplayers)
+      players_count=$(get_player_count)
 
-      if [ "$(echo -n "$players_count" | wc -l)" -gt 0 ]; then
+      if [ "$players_count" -gt 0 ]; then
           echo "There are ${players_count} players online. Skipping auto reboot."
           exit 1
       fi

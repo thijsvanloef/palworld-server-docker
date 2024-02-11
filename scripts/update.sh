@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 if [ "${UPDATE_ON_BOOT}" = false ]; then
     echo "Update on Boot needs to be enabled for auto updating"
@@ -42,8 +44,7 @@ if [ "$CURRENTBUILD" != "$TARGETBUILD" ]; then
     echo "New Build was found. Updating the server from $CURRENTBUILD to $TARGETBUILD."
     rm /palworld/steamapps/appmanifest_2394010.acf
 
-    PLAYERLIST=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
-    if [ "$(echo -n "$PLAYERLIST" | wc -l)" -gt 0 ]; then
+    if [ "$(get_player_count)" -gt 0 ]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
         /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
