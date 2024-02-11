@@ -54,10 +54,6 @@ Massive shoutout to the following sponsors!
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
-> [!IMPORTANT]
-> If you use an ARM64 based CPU (Raspberry pi, M1,M2,M3 Mac, Oracle Cloud Free tier, etc.)
-> Please make sure you use the `:latest-arm64` image tag.
-
 ### Docker Compose
 
 This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
@@ -65,7 +61,7 @@ This repository includes an example [docker-compose.yml](/docker-compose.yml) fi
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -97,7 +93,7 @@ values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -135,7 +131,7 @@ docker run -d \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -151,7 +147,7 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 ### Kubernetes
