@@ -72,19 +72,19 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PUID=1000
-         - PGID=1000
-         - PORT=8211 # Optional but recommended
-         - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD=worldofpals # Optional but recommended
-         - MULTITHREADING=true
-         - RCON_ENABLED=true
-         - RCON_PORT=25575
-         - TZ=UTC
-         - ADMIN_PASSWORD=adminPasswordHere
-         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME=World of Pals
-         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
+         PUID: 1000
+         PGID: 1000
+         PORT: 8211 # Optional but recommended
+         PLAYERS: 16 # Optional but recommended
+         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         MULTITHREADING: true
+         RCON_ENABLED: true
+         RCON_PORT: 25575
+         TZ: "UTC"
+         ADMIN_PASSWORD: "adminPasswordHere"
+         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         SERVER_NAME: "World of Pals"
+         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
 ```
