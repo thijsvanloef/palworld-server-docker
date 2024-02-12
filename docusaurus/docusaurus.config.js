@@ -175,7 +175,7 @@ const config = {
         appId: 'MVCUXHA7XU',
   
         // Public API key: it is safe to commit it
-        apiKey: 'b7e35eb305f1beef4ba2217366cf471a',
+        apiKey: 'ad6126a58694472f7bf477ca386697b0',
   
         indexName: 'palworld-server-ker',
   
