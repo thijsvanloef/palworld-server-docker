@@ -34,14 +34,14 @@ sidebar_position: 1
 | RCON_ENABLED***  | 为服务器启用 RCON。                                     | true  | true/false                                                                    |
 | RCON_PORT        | RCON 连接端口。                                       | 25575 | 1024-65535                                                                    |
 | QUERY_PORT       | 用于与 Steam 服务器通信的查询端口。                            | 27015 | 1024-65535                                                                    |
-| BACKUP_CRON_EXPRESSION  | 自动备份的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](#使用-cron-执行自动备份)。 |
+| BACKUP_CRON_EXPRESSION  | 自动备份的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](https://palworld-server-docker.loef.dev/zh/guides/backup/automated-backup/)。 |
 | BACKUP_ENABLED | 启用自动备份。 | true | true/false |
 | DELETE_OLD_BACKUPS | 在一定天数后删除备份。     | false          | true/false                                                                                                 |
 | OLD_BACKUP_DAYS    | 保留备份的天数。                      | 30             | 任何正整数                                                                                       |
-| AUTO_UPDATE_CRON_EXPRESSION  | 自动更新的频率。 | 0 \* \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](#使用-cron-执行自动更新)。 |
+| AUTO_UPDATE_CRON_EXPRESSION  | 自动更新的频率。 | 0 \* \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](https://palworld-server-docker.loef.dev/zh/guides/automatic-updates)。 |
 | AUTO_UPDATE_ENABLED | 启用自动更新。 | false | true/false |
 | AUTO_UPDATE_WARN_MINUTES | 在通知玩家后等待多长时间更新服务器。 | 30 | !0 |
-| AUTO_REBOOT_CRON_EXPRESSION  | 设置自动重启的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](#使用-cron-执行自动重启)。 |
+| AUTO_REBOOT_CRON_EXPRESSION  | 设置自动重启的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](https://palworld-server-docker.loef.dev/zh/guides/automatic-reboots)。 |
 | AUTO_REBOOT_ENABLED | 启用自动重启 | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | 在通知玩家后等待多长时间重启服务器。 | 5 | !0 |
 | DISCORD_WEBHOOK_URL | Discord 服务器上创建 Webhook 后的 Discord Webhook URL | | `https://discord.com/api/webhooks/<webhook_id>` |
@@ -52,7 +52,6 @@ sidebar_position: 1
 | DISCORD_PRE_START_MESSAGE | 服务器启动时发送到 Discord 的消息 | Server is started! | "string" |
 | DISCORD_PRE_SHUTDOWN_MESSAGE | 服务器关闭时发送到 Discord 的消息 | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | 服务器停止时发送到 Discord 的消息 | Server is stopped! | "string" |
-
 
 * 强烈建议设置
 

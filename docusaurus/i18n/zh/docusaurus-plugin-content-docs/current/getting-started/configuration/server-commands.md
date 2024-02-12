@@ -31,13 +31,13 @@ docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 
 | 命令                         | 信息             |
 |----------------------------|----------------|
-| Shutdown {秒} {信息}          | 服务器将在{秒}后关闭    |
+| Shutdown (秒) (信息)          | 服务器将在(秒)后关闭    |
 | DoExit                     | 强制关闭服务器。       |
 | Broadcast                  | 向服务器中所有玩家发送消息。 |
-| KickPlayer {SteamID}       | 从服务器中踢出玩家。     |
-| BanPlayer {SteamID}        | 从服务器中封禁玩家。     |
-| TeleportToPlayer {SteamID} | 传送到目标玩家。       |
-| TeleportToMe {SteamID}     | 将目标玩家传送到身边。    |
+| KickPlayer (SteamID)       | 从服务器中踢出玩家。     |
+| BanPlayer (SteamID)        | 从服务器中封禁玩家。     |
+| TeleportToPlayer (SteamID) | 传送到目标玩家。       |
+| TeleportToMe (SteamID)     | 将目标玩家传送到身边。    |
 | ShowPlayers                | 显示所有已连接玩家信息。   |
 | Info                       | 显示服务器信息。       |
 | Save                       | 保存游戏。          |

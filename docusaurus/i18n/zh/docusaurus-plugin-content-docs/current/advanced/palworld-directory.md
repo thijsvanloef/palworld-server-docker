@@ -19,6 +19,7 @@ sidebar_position: 1
 ## 将数据目录附加到主机文件系统
 
 将 palworld 文件夹附加到主机系统的最简单方法是使用 docker-compose.yml 文件中给出的示例：
+
 ```yml
       volumes:
          - ./palworld:/palworld/

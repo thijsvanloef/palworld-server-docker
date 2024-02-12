@@ -50,7 +50,7 @@ sidebar_position: 2
 | COLLECTION_OBJECT_HP_RATE                 | 多人游戏中对象生命比率                                                                              | 1.000000                                                                                     | Float                                  |
 | COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | 可获取对象的刷新速度 - 更小的值代表更快的刷新速度                                                               | 1.000000                                                                                     | Float                                  |
 | ENEMY_DROP_ITEM_RATE                      | 多人游戏中敌人掉落道具的比率                                                                           | 1.000000                                                                                     | Float                                  |
-| DEATH_PENALTY                             | 死亡惩罚</br>None: 没有死亡惩罚</br>Item: 更高几率掉落道具</br>ItemAndEquipment: 掉落所有道具</br>All: 掉落所有道具和帕鲁 | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
+| DEATH_PENALTY                             | 死亡惩罚 None: 没有死亡惩罚 Item: 更高几率掉落道具 ItemAndEquipment: 掉落所有道具 All: 掉落所有道具和帕鲁 | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
 | ENABLE_PLAYER_TO_PLAYER_DAMAGE            | 允许 PVP 伤害                                                                                | False                                                                                        | Boolean                                |
 | ENABLE_FRIENDLY_FIRE                      | 允许队友伤害                                                                                   | False                                                                                        | Boolean                                |
 | ENABLE_INVADER_ENEMY                      | 启用营地入侵                                                                                   | True                                                                                         | Boolean                                |
@@ -79,7 +79,6 @@ sidebar_position: 2
 | REGION                                    | 地区                                                                                       |                                                                                              | String                                 |
 | USEAUTH                                   | 使用授权验证                                                                                   | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | 使用禁用列表                                                                                   | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
-
 
 ### 手动设置
 
