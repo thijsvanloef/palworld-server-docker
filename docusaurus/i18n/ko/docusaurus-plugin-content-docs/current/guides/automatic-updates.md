@@ -2,31 +2,28 @@
 sidebar_position: 5
 ---
 
-# Automatic Updates
+# 자동 업데이트
 
-## Configuring Automatic Updates with Cron
+## Cron을 이용한 자동 업데이트 설정
 
-To be able to use automatic Updates with this Server the following environment variables **have** to be set to `true`:
+이 서버에서 자동 업데이트를 사용하려면 다음 환경 변수들을 `true`로 **설정해야 합니다**:
 
-* `RCON_ENABLED`
-* `UPDATE_ON_BOOT`
+- `RCON_ENABLED`
+- `UPDATE_ON_BOOT`
 
 :::warning
-If docker restart is not set to policy `always` or `unless-stopped`
-then the server will shutdown and will need to be manually restarted.
+도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고 수동으로 다시 시작해야 합니다.
 
-The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
-already use the needed policy
+[빠른 설정](https://palworld-server-docker.loef.dev/ko/)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 :::
 
-Set `AUTO_UPDATE_ENABLED` enable or disable automatic updates (Default is disabled)
+`AUTO_UPDATE_ENABLED`를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).
 
-`AUTO_UPDATE_CRON_EXPRESSION` is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+`AUTO_UPDATE_CRON_EXPRESSION`은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
 :::tip
-This image uses Supercronic for crons
-see [supercronic](https://github.com/aptible/supercronic#crontab-format)
-or [Crontab Generator](https://crontab-generator.org).
+이 이미지는 cron 작업을 위해 Supercronic을 사용합니다. [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+[Crontab Generator](https://crontab-generator.org)를 참조하세요.
 :::
 
-Set `AUTO_UPDATE_CRON_EXPRESSION` to change the default schedule.
+`AUTO_UPDATE_CRON_EXPRESSION`을 설정하여 기본 스케줄을 변경합니다.

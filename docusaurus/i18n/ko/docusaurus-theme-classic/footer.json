@@ -1,26 +1,26 @@
 {
   "link.title.Docs": {
-    "message": "Docs",
+    "message": "문서",
     "description": "The title of the footer links column with title=Docs in the footer"
   },
   "link.title.Community": {
-    "message": "Community",
+    "message": "커뮤니티",
     "description": "The title of the footer links column with title=Community in the footer"
   },
   "link.title.More": {
-    "message": "More",
+    "message": "더보기",
     "description": "The title of the footer links column with title=More in the footer"
   },
   "link.item.label.Getting started": {
-    "message": "Getting started",
+    "message": "시작하기",
     "description": "The label of footer link with label=Getting started linking to /category/getting-started"
   },
   "link.item.label.Guides": {
-    "message": "Guides",
+    "message": "가이드",
     "description": "The label of footer link with label=Guides linking to /category/guides"
   },
   "link.item.label.Advanced": {
-    "message": "Advanced",
+    "message": "고급",
     "description": "The label of footer link with label=Advanced linking to /category/advanced"
   },
   "link.item.label.Discord": {
