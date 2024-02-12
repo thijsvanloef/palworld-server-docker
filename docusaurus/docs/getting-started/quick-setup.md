@@ -56,7 +56,7 @@ services:
 ```
 <!-- markdownlint-disable-next-line -->
 As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct <!-- markdownlint-disable-next-line -->
+Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the correct <!-- markdownlint-disable-next-line -->
 values. Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
 
 ```yml
@@ -102,7 +102,7 @@ docker run -d \
 ```
 <!-- markdownlint-disable-next-line -->
 As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
+Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the
 correct values. Change your docker run command to this:
 
 ```bash

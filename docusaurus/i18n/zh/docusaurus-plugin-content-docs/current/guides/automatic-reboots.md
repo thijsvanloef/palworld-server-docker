@@ -2,29 +2,27 @@
 sidebar_position: 4
 ---
 
-# Automatic Reboots
+# 自动重启
 
-## Configuring Automatic Reboots with Cron
+## 使用 Cron 执行自动重启
 
-To be able to use automatic reboots with this server `RCON_ENABLED` enabled.
+为了能够使用该服务器的自动重启功能，需要启用 `RCON_ENABLED` 。
 
 :::warning
 
-If docker restart is not set to policy `always` or `unless-stopped`
-then the server will shutdown and will need to be manually restarted.
+如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
 
-The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
-already use the needed policy
+在 [开始使用](https://palworld-server-docker.loef.dev/zh/) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
 :::
 
-Set `AUTO_REBOOT_ENABLED` enable or disable automatic reboots (Default is disabled)
+设置 `AUTO_REBOOT_ENABLED` 以启用或禁用自动备份（默认为禁用）。
 
-`AUTO_REBOOT_CRON_EXPRESSION` is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+`AUTO_REBOOT_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
 
 :::tip
-This image uses Supercronic for crons
-see [supercronic](https://github.com/aptible/supercronic#crontab-format)
-or [Crontab Generator](https://crontab-generator.org).
+该镜像使用 Supercronic 进行 cron 作业。
+请参阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+或 [Crontab Generator](https://crontab-generator.org).
 :::
-Set `AUTO_REBOOT_CRON_EXPRESSION` to change the set the schedule, default is everynight at midnight according to the
-timezone set with TZ
+
+设置 `AUTO_REBOOT_CRON_EXPRESSION` 以更改时程， 默认为每天午夜，根据设置的时区进行调整。

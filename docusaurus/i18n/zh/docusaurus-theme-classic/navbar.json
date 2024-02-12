@@ -8,15 +8,15 @@
     "description": "The alt text of navbar logo"
   },
   "item.label.Getting started": {
-    "message": "Getting started",
+    "message": "入门",
     "description": "Navbar item with label Getting started"
   },
   "item.label.Guides": {
-    "message": "Guides",
+    "message": "指南",
     "description": "Navbar item with label Guides"
   },
   "item.label.Advanced": {
-    "message": "Advanced",
+    "message": "高级配置",
     "description": "Navbar item with label Advanced"
   }
 }
