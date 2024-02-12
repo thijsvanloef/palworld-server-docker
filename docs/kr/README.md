@@ -57,7 +57,7 @@
 ```yml
 services:
   palworld:
-    image: thijsvanloef/palworld-server-docker:latest # arm64 환경에서는 latest-arm64 태그를 사용합니다.
+    image: thijsvanloef/palworld-server-docker:latest
     restart: unless-stopped
     container_name: palworld-server
     stop_grace_period: 30s # 컨테이너가 정상적으로 중지될 때까지 기다리는 시간을 설정합니다.
@@ -88,7 +88,7 @@ services:
 ```yml
 services:
   palworld:
-    image: thijsvanloef/palworld-server-docker:latest # arm64 환경에서는 latest-arm64 태그를 사용합니다.
+    image: thijsvanloef/palworld-server-docker:latest
     restart: unless-stopped
     container_name: palworld-server
     stop_grace_period: 30s # 컨테이너가 정상적으로 중지될 때까지 기다리는 시간을 설정합니다.
