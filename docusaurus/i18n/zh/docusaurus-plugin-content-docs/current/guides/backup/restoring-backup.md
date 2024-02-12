@@ -2,45 +2,44 @@
 sidebar_position: 2
 ---
 
-# Restoring a backup
+# 透过备份恢復数据
 
-## Interactively restore from a backup
+## 透过脚本恢復数据
 
-To restore from a backup, use the command:
+要从备份中恢复，请使用以下命令：
 
 ```bash
 docker exec -it palworld-server restore
 ```
 
-The `RCON_ENABLED` environment variable must be set to `true` to use this command.
-:::warning
-If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and
-will need to be manually restarted.
+必须将 `RCON_ENABLED` 环境变量设置为 `true` 以使用此命令。
 
-The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
-already uses the needed policy
+:::warning
+如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+
+在 [开始使用](https://palworld-server-docker.loef.dev/zh/) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
 :::
 
-## Manually restore from a backup
+## 手动从备份中恢复数据
 
-Locate the backup you want to restore in `/palworld/backups/` and decompress it.
-Need to stop the server before task.
+在 `/palworld/backups/` 中找到要恢复的备份并解压缩它。
+在执行任务之前需要停止服务器。
 
 ```bash
 docker compose down
 ```
 
-Delete the old saved data folder located at `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
+删除位于 `/palworld/Pal/Saved/SaveGames/0/<old_hash_value>` 的旧保存数据文件夹。
 
-Copy the contents of the newly decompressed saved data folder `Saved/SaveGames/0/<new_hash_value>` to `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`.
+将新解压缩的保存数据文件夹 `Saved/SaveGames/0/<new_hash_value>` 的内容复制到 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>` 。
 
-Replace the DedicatedServerName inside `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` with the new folder name.
+将 `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 中的 `DedicatedServerName` 替换为新文件夹名称。
 
 ```ini
-DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
+DedicatedServerName=<new_hash_value>  # 替换为新的保存数据文件夹名称
 ```
 
-Restart the game. (If you are using Docker Compose)
+重新启动游戏。（如果您正在使用 Docker Compose）
 
 ```bash
 docker compose up -d

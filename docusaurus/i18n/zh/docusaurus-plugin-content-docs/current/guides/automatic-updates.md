@@ -2,31 +2,29 @@
 sidebar_position: 5
 ---
 
-# Automatic Updates
+# 自动更新
 
-## Configuring Automatic Updates with Cron
+## 使用 Cron 执行自动更新
 
-To be able to use automatic Updates with this Server the following environment variables **have** to be set to `true`:
+如果要在伺服器上使用自动更新功能， **必须** 将以下环境变数设置为 `true`：
 
 * `RCON_ENABLED`
 * `UPDATE_ON_BOOT`
 
 :::warning
-If docker restart is not set to policy `always` or `unless-stopped`
-then the server will shutdown and will need to be manually restarted.
+如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
 
-The example docker run command and docker compose file in [the Quicksetup](https://palworld-server-docker.loef.dev/)
-already use the needed policy
+在 [开始使用](https://palworld-server-docker.loef.dev/zh/) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
 :::
 
-Set `AUTO_UPDATE_ENABLED` enable or disable automatic updates (Default is disabled)
+设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动更新（默认为禁用）。
 
-`AUTO_UPDATE_CRON_EXPRESSION` is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
+`AUTO_UPDATE_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
 
-:::tip
-This image uses Supercronic for crons
-see [supercronic](https://github.com/aptible/supercronic#crontab-format)
-or [Crontab Generator](https://crontab-generator.org).
-:::
+> [!TIP]
+> 这个镜像使用 Supercronic 来执行 cron 任务。
+> 查阅 [supercronic](https://github.com/aptible/supercronic#crontab-format)
+> 或者
+> [Crontab Generat](https://crontab-generator.org).
 
-Set `AUTO_UPDATE_CRON_EXPRESSION` to change the default schedule.
+設置 `AUTO_UPDATE_CRON_EXPRESSION` 以更改默認时程。

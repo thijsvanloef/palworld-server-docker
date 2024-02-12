@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Kubernetes
 
-All files you will need to deploy this container to kubernetes are located in the [k8s folder](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s).
+部署此容器到 Kubernetes 所需的所有文件都位于 [k8s folder](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s)。
 
-## Setup Palworld in kubernetes
+## 在 Kubernetes 中设置 Palworld
 
-Use the following commands to setup this Palworld container in Kubernetes:
+使用以下命令在 Kubernetes 中设置 Palworld 容器：
 
 * `kubectl apply -f pvc.yaml`
 * `kubectl apply -f configmap.yaml`
@@ -16,6 +16,6 @@ Use the following commands to setup this Palworld container in Kubernetes:
 * `kubectl apply -f service.yaml`
 * `kubectl apply -f deployment.yaml`
 
-## Using helm chart
+## 使用 Helm Chart
 
-The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
+官方 Helm Chart 可在单独的存储库, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart) 找到。
