@@ -67,6 +67,12 @@ if [ -f "$BACKUP_FILE" ]; then
             echo "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."
             exit 1
         fi
+
+        while [ -n "$(pidof PalServer-Linux-Test)" ] 
+        do
+            echo "Waiting for Palworld to exit.."
+            sleep 1
+        done
         printf "\e[0;32mShutdown complete.\e[0m\n"
 
         trap - ERR
@@ -102,6 +108,8 @@ if [ -f "$BACKUP_FILE" ]; then
             
             # Decompress the backup file in tmp directory
             tar -zxvf "$BACKUP_FILE" -C "$TMP_PATH"
+
+            rm -rf "$RESTORE_PATH/Saved/"
 
             # Move the backup file to the restore directory
             \cp -rf -f "$TMP_PATH/Saved/" "$RESTORE_PATH"
