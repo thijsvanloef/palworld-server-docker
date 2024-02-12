@@ -55,11 +55,15 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/thijsvanloef/palworld-server-docker',
+            'https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus',
           routeBasePath: '/',
         },
         theme: {
           customCss: './src/css/custom.css',
+        },
+        gtag: {
+          trackingID: 'G-5HL20GQK0X',
+          anonymizeIP: true,
         },
       }),
     ],
