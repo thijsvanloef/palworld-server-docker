@@ -55,7 +55,7 @@ services:
 <!-- markdownlint-disable-next-line -->
 환경 변수를 설정하는 또 다른 방법으로 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 파일을 **.env** 라는 새로운 파일에 복사할 수 있습니다.
 <!-- markdownlint-disable-next-line -->
-필요에 맞게 수정하고 [환경 변수](#environment-variables) 섹션에서 올바른 값을 확인해보세요. [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)을 다음과 같이 수정합니다:
+필요에 맞게 수정하고 [환경 변수](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) 섹션에서 올바른 값을 확인해보세요. [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)을 다음과 같이 수정합니다:
 
 ```yml
 services:
@@ -101,7 +101,7 @@ docker run -d \
 <!-- markdownlint-disable-next-line -->
 환경 변수를 설정하는 또 다른 방법으로 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 파일을 **.env** 라는 새로운 파일에 복사할 수 있습니다.
 <!-- markdownlint-disable-next-line -->
-필요에 맞게 수정하고 [환경 변수](#environment-variables) 섹션에서 올바른 값을 확인해보세요. docker run 명령어를 다음과 같이 변경합니다:
+필요에 맞게 수정하고 [환경 변수](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) 섹션에서 올바른 값을 확인해보세요. docker run 명령어를 다음과 같이 변경합니다:
 
 ```bash
 docker run -d \

@@ -14,7 +14,7 @@ sidebar_position: 5
 :::warning
 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고 수동으로 다시 시작해야 합니다.
 
-[the Quicksetup](https://palworld-server-docker.loef.dev/ko/)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+[빠른 설정](https://palworld-server-docker.loef.dev/ko/)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 :::
 
 `AUTO_UPDATE_ENABLED`를 설정하여 자동 업데이트를 활성화하거나 비활성화합니다 (기본값은 비활성화됨).

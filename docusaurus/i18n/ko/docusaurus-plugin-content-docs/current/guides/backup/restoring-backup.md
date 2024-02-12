@@ -17,7 +17,7 @@ docker exec -it palworld-server restore
 :::warning
 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면 복원 이후 컨테이너가 종료되므로 수동으로 재시작 해야 합니다.
 
-[the Quicksetup](https://palworld-server-docker.loef.dev/ko/)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
+[빠른 설정](https://palworld-server-docker.loef.dev/ko/)에서 제공된 Docker 실행 명령어와 Docker Compose 파일 예시는 이미 필요한 정책을 적용하고 있습니다.
 :::
 
 ## 수동으로 백업 복원하기
