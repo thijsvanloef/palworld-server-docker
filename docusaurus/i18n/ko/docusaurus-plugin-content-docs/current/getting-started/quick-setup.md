@@ -3,69 +3,67 @@ sidebar_position: 1
 slug: /
 ---
 
-# Quick Setup
+# 빠른 설정
 
-Let's get you on your way with the Palworld Dedicated server!
+Palworld 전용 서버를 이용해 보세요!
 
 :::warning
-At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+현재 Xbox Gamepass/Xbox 콘솔 플레이어는 전용 서버에 참여할 수 없습니다.
 
-They will need to join players using the invite code and are limited to sessions of 4 players max.
+초대 코드를 통해 다른 플레이어들과 함께 게임을 즐길 수 있으며, 게임은 최대 4명의 플레이어로 제한됩니다.
 :::
 
-## Server Requirements
+## 서버 요구 사양
 
-| Resource | Minimum | Recommended                              |
-|----------|---------|------------------------------------------|
-| CPU      | 4 cores | 4+ cores                                 |
-| RAM      | 16GB    | Recommend over 32GB for stable operation |
-| Storage  | 8GB     | 20GB                                     |
+| 리소스 | 최소    | 추천                                |
+| ------ | ------- | ----------------------------------- |
+| CPU    | 4 cores | 4+ cores                            |
+| RAM    | 16GB    | 안정적인 운영을 위해 32GB 이상 권장 |
+| 저장소 | 8GB     | 20GB                                |
 
 ## Docker Compose
 
-This repository includes an example
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
-file you can use to set up your server.
+이 저장소에는 서버를 설정하는 데 사용할 수 있는 [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 예제 파일이 포함되어 있습니다.
 
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+      stop_grace_period: 30s # 컨테이너가 정상적으로 중지될 때까지 기다리는 시간을 설정합니다.
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
          PUID: 1000
          PGID: 1000
-         PORT: 8211 # Optional but recommended
-         PLAYERS: 16 # Optional but recommended
-         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         PORT: 8211 # 선택사항이지만 설정하는 것을 권장합니다.
+         PLAYERS: 16 # 선택사항이지만 설정하는 것을 권장합니다.
+         SERVER_PASSWORD: "worldofpals" # 선택사항이지만 설정하는 것을 권장합니다.
          MULTITHREADING: true
          RCON_ENABLED: true
          RCON_PORT: 25575
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
-         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         COMMUNITY: false  # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
          SERVER_NAME: "World of Pals"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct <!-- markdownlint-disable-next-line -->
-values. Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
+환경 변수를 설정하는 또 다른 방법으로 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 파일을 **.env** 라는 새로운 파일에 복사할 수 있습니다.
+<!-- markdownlint-disable-next-line -->
+필요에 맞게 수정하고 [환경 변수](#environment-variables) 섹션에서 올바른 값을 확인해보세요. [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)을 다음과 같이 수정합니다:
 
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest 
       restart: unless-stopped
       container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+      stop_grace_period: 30s # 컨테이너가 정상적으로 중지될 때까지 기다리는 시간을 설정합니다.
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
@@ -101,9 +99,9 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](#environment-variables) section to check the
-correct values. Change your docker run command to this:
+환경 변수를 설정하는 또 다른 방법으로 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 파일을 **.env** 라는 새로운 파일에 복사할 수 있습니다.
+<!-- markdownlint-disable-next-line -->
+필요에 맞게 수정하고 [환경 변수](#environment-variables) 섹션에서 올바른 값을 확인해보세요. docker run 명령어를 다음과 같이 변경합니다:
 
 ```bash
 docker run -d \
@@ -114,15 +112,15 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest 
 ```
 
-## Starting the server
+## 서버 시작하기
 
-Use `docker compose up -d` to start the server in the background
+`docker compose up -d` 를 사용해 백그라운드에서 서버를 시작합니다.
 
-## Stopping the server
+## 서버 중지하기
 
-Use `docker compose stop` to stop the server
+`docker compose stop` 를 사용해 서버를 중지시킵니다.
 
-Use `docker compose down --rmi all` to stop and remove the server and remove the docker image from your computer
+`docker compose down --rmi all` 를 사용해 서버를 중지시키고 삭제한 다음 컴퓨터의 docker image까지 삭제합니다.

@@ -2,96 +2,97 @@
 sidebar_position: 2
 ---
 
-# Game Settings
+# 게임 설정
 
-## With Environment Variables
+## 환경 변수로 설정
 
 :::warning
-These Environment Variables and Settings are subject to change since the game is still in beta.
+게임이 아직 베타버전이므로 이러한 환경 변수 또는 설정은 변경될 수 있습니다.
 
-Check out the [official webpage for the supported parameters.](https://tech.palworldgame.com/optimize-game-balance)
+지원되는 파라미터들을 [공식 웹페이지](https://tech.palworldgame.com/optimize-game-balance)에서 확인하세요.
 :::
 
-Converting server settings to environment variables follow the same principles (with some exceptions):
+서버 설정을 환경 변수로 바꾸는 과정은 다음과 같은 규칙을 따릅니다 (몇가지 예외 있음):
 
-* all capital letters
-* split words by inserting an underscore
-* remove the single letter if the setting starts with one (like 'b')
+- 모두 대문자로 작성
+- 밑줄을 삽입하여 단어를 분할
+- 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
 
-For example:
+아래는 예시입니다:
 
-* Difficulty -> DIFFICULTY
-* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-* bIsPvP -> IS_PVP
+- Difficulty -> DIFFICULTY
+- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+- bIsPvP -> IS_PVP
 
-| Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
+| 변수                                  | 설명                                                    | 기본값                                                                                | 허용값                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
-| DIFFICULTY                                | Game Difficulty                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
-| DAYTIME_SPEEDRATE                         | Day time speed - Smaller number means shorter days             | 1.000000                                                                                     | Float                                  |
-| NIGHTTIME_SPEEDRATE                       | Night time speed - Smaller number means shorter nights         | 1.000000                                                                                     | Float                                  |
-| EXP_RATE                                  | EXP earn rate                                                  | 1.000000                                                                                     | Float                                  |
-| PAL_CAPTURE_RATE                          | Pal capture rate                                               | 1.000000                                                                                     | Float                                  |
-| PAL_SPAWN_NUM_RATE                        | Pal appearance rate                                            | 1.000000                                                                                     | Float                                  |
-| PAL_DAMAGE_RATE_ATTACK                    | Damage from pals multipiler                                    | 1.000000                                                                                     | Float                                  |
-| PAL_DAMAGE_RATE_DEFENSE                   | Damage to pals multipiler                                      | 1.000000                                                                                     | Float                                  |
-| PLAYER_DAMAGE_RATE_ATTACK                 | Damage from player multipiler                                  | 1.000000                                                                                     | Float                                  |
-| PLAYER_DAMAGE_RATE_DEFENSE                | Damage to  player multipiler                                   | 1.000000                                                                                     | Float                                  |
-| PLAYER_STOMACH_DECREASE_RATE              | Player hunger depletion rate                                   | 1.000000                                                                                     | Float                                  |
-| PLAYER_STAMINA_DECREASE_RATE              | Player stamina reduction rate                                  | 1.000000                                                                                     | Float                                  |
-| PLAYER_AUTO_HP_REGEN_RATE                 | Player auto HP regeneration rate                               | 1.000000                                                                                     | Float                                  |
-| PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP        | Player sleep HP regeneration rate                              | 1.000000                                                                                     | Float                                  |
-| PAL_STOMACH_DECREASE_RATE                 | Pal hunger depletion rate                                      | 1.000000                                                                                     | Float                                  |
-| PAL_STAMINA_DECREASE_RATE                 | Pal stamina reduction rate                                     | 1.000000                                                                                     | Float                                  |
-| PAL_AUTO_HP_REGEN_RATE                    | Pal auto HP regeneration rate                                  | 1.000000                                                                                     | Float                                  |
-| PAL_AUTO_HP_REGEN_RATE_IN_SLEEP           | Pal sleep health regeneration rate (in Palbox)                 | 1.000000                                                                                     | Float                                  |
-| BUILD_OBJECT_DAMAGE_RATE                  | Damage to structure multipiler                                 | 1.000000                                                                                     | Float                                  |
-| BUILD_OBJECT_DETERIORATION_DAMAGE_RATE    | Structure determination rate                                   | 1.000000                                                                                     | Float                                  |
-| COLLECTION_DROP_RATE                      | Getherable items multipiler                                    | 1.000000                                                                                     | Float                                  |
-| COLLECTION_OBJECT_HP_RATE                 | Getherable objects HP multipiler                               | 1.000000                                                                                     | Float                                  |
-| COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | Getherable objects respawn interval - The smaller the number, the faster the regeneration                            | 1.000000                                                                                     | Float                                  |
-| ENEMY_DROP_ITEM_RATE                      | Dropped Items Multipiler                                       | 1.000000                                                                                     | Float                                  |
-| DEATH_PENALTY                             | Death Penalty None: No death penalty Item: Drops items other than equipment ItemAndEquipment: Drops all items All: Drops all PALs and all items.                                    | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
-| ENABLE_PLAYER_TO_PLAYER_DAMAGE            | Allows players to cause damage to players                      | False                                                                                        | Boolean                                |
-| ENABLE_FRIENDLY_FIRE                      | Allow friendly fire                                            | False                                                                                        | Boolean                                |
-| ENABLE_INVADER_ENEMY                      | Enable invaders                                                | True                                                                                         | Boolean                                |
-| ACTIVE_UNKO                               | Enable UNKO (?)                                                | False                                                                                        | Boolean                                |
-| ENABLE_AIM_ASSIST_PAD                     | Enable controller aim assist                                   | True                                                                                         | Boolean                                |
-| ENABLE_AIM_ASSIST_KEYBOARD                | Enable Keyboard aim assist                                     | False                                                                                        | Boolean                                |
-| DROP_ITEM_MAX_NUM                         | Maximum number of drops in the world                           | 3000                                                                                         | Integer                                |
-| DROP_ITEM_MAX_NUM_UNKO                    | Maximum number of UNKO drops in the world                      | 100                                                                                          | Integer                                |
-| BASE_CAMP_MAX_NUM                         | Maximum number of base camps                                   | 128                                                                                          | Integer                                |
-| BASE_CAMP_WORKER_MAX_NUM                  | Maximum number of workers                                      | 15                                                                                           | Integer                                |
-| DROP_ITEM_ALIVE_MAX_HOURS                 | Time it takes for items to despawn in hours                    | 1.000000                                                                                     | Float                                  |
-| AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | Automatically reset guild when no players are online           | False                                                                                        | Bool                                   |
-| AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | Time to automatically reset guild when no players are online   | 72.000000                                                                                    | Float                                  |
-| GUILD_PLAYER_MAX_NUM                      | Max player of Guild                                            | 20                                                                                           | Integer                                |
-| PAL_EGG_DEFAULT_HATCHING_TIME             | Time(h) to incubate massive egg                                | 72.000000                                                                                    | Float                                  |
-| WORK_SPEED_RATE                           | Work speed muliplier                                           | 1.000000                                                                                     | Float                                  |
-| IS_MULTIPLAY                              | Enable multiplayer                                             | False                                                                                        | Boolean                                |
-| IS_PVP                                    | Enable PVP                                                     | False                                                                                        | Boolean                                |
-| CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP | Allow players from other guilds to pick up death penalty items | False                                                                                        | Boolean                                |
-| ENABLE_NON_LOGIN_PENALTY                  | Enable non-login penalty                                       | True                                                                                         | Boolean                                |
-| ENABLE_FAST_TRAVEL                        | Enable fast travel                                             | True                                                                                         | Boolean                                |
-| IS_START_LOCATION_SELECT_BY_MAP           | Enable selecting of start location                             | True                                                                                         | Boolean                                |
-| EXIST_PLAYER_AFTER_LOGOUT                 | Toggle for deleting players when they log off                  | False                                                                                        | Boolean                                |
-| ENABLE_DEFENSE_OTHER_GUILD_PLAYER         | Allows defense against other guild players                     | False                                                                                        | Boolean                                |
-| COOP_PLAYER_MAX_NUM                       | Maximum number of players in a guild                           | 4                                                                                            | Integer                                |
+| DIFFICULTY                                | 게임 난이도                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
+| DAYTIME_SPEEDRATE                         | 낮 시간 속도 - 숫자가 작을수록 낮이 짧아짐             | 1.000000                                                                                     | Float                                  |
+| NIGHTTIME_SPEEDRATE                       | 밤 시간 속도 - 숫자가 작을수록 밤이 짧아짐         | 1.000000                                                                                     | Float                                  |
+| EXP_RATE                                  | 경험치 획득 비율                                                 | 1.000000                                                                                     | Float                                  |
+| PAL_CAPTURE_RATE                          | PAL 포획률                                               | 1.000000                                                                                     | Float                                  |
+| PAL_SPAWN_NUM_RATE                        | PAL 출현 비율                                            | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_ATTACK                    | PAL이 주는 데미지 배수                                    | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_DEFENSE                   | PAL이 받는 데미지 배수                                      | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_ATTACK                 | 플레이어가 주는 데미지 배수                                  | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_DEFENSE                | 플레이어가 받는 데미지 배수                                   | 1.000000                                                                                     | Float                                  |
+| PLAYER_STOMACH_DECREASE_RATE              | 플레이어 포만도 감소율                                   | 1.000000                                                                                     | Float                                  |
+| PLAYER_STAMINA_DECREASE_RATE              | 플레이어 기력 감소율                                 | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE                 | 플레이어 HP 자연 회복률                               | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP        | 플레이어 수면 시 HP 회복률                              | 1.000000                                                                                     | Float                                  |
+| PAL_STOMACH_DECREASE_RATE                 | PAL 포만도 감소율                                      | 1.000000                                                                                     | Float                                  |
+| PAL_STAMINA_DECREASE_RATE                 | PAL 기력 감소율                                     | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE                    | PAL HP 자연 회복률                                  | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE_IN_SLEEP           | PAL 수면 시 HP 회복률 (PLA상자 내 HP 회복률)                 | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DAMAGE_RATE                  | 구조물 피해 배수                                 | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DETERIORATION_DAMAGE_RATE    | 구조물 노화 속도 배수                                   | 1.000000                                                                                     | Float                                  |
+| COLLECTION_DROP_RATE                      | 채집 아이템 획득량 배수                                    | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_HP_RATE                 | 채집 오브젝트 HP 배수                               | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | 채집 오브젝트 생성 간격 - 숫자가 작을수록 재 생성이 빨라짐                           | 1.000000                                                                                     | Float                                  |
+| ENEMY_DROP_ITEM_RATE                      | 드롭 아이템 양 배수                                       | 1.000000                                                                                     | Float                                  |
+| DEATH_PENALTY                             | 사망 패널티</br>None: 사망 패널티 없음</br>Item: 장비 이외의 아이템 드롭</br>ItemAndEquipment: 모든 아이템 드롭</br>All: 모든 PAL과 모든 아이템 드롭                                   | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
+| ENABLE_PLAYER_TO_PLAYER_DAMAGE            | 플레이어간 데미지 여부                      | False                                                                                        | Boolean                                |
+| ENABLE_FRIENDLY_FIRE                      | 아군간 데미지 여부                                            | False                                                                                        | Boolean                                |
+| ENABLE_INVADER_ENEMY                      | 습격 이벤트 발생 여부                                                | True                                                                                         | Boolean                                |
+| ACTIVE_UNKO                               | UNKO 활성화 여부(?)                                                | False                                                                                        | Boolean                                |
+| ENABLE_AIM_ASSIST_PAD                     | 컨트롤러 조준 보조 활성화                                   | True                                                                                         | Boolean                                |
+| ENABLE_AIM_ASSIST_KEYBOARD                | 키보드 조준 보조 활성화                                     | False                                                                                        | Boolean                                |
+| DROP_ITEM_MAX_NUM                         | 월드 내의 드롭 아이템 최대 수                           | 3000                                                                                         | Integer                                |
+| DROP_ITEM_MAX_NUM_UNKO                    | 월드 내의 UNKO 드롭 최대 수                      | 100                                                                                          | Integer                                |
+| BASE_CAMP_MAX_NUM                         | 거점 최대 수량                                   | 128                                                                                          | Integer                                |
+| BASE_CAMP_WORKER_MAX_NUM                  | 거점 작업 PAL 최대 수                                      | 15                                                                                           | Integer                                |
+| DROP_ITEM_ALIVE_MAX_HOURS                 | 드롭 아이템이 사라지기까지 걸리는 시간                    | 1.000000                                                                                     | Float                                  |
+| AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | 온라인 플레이어가 없을 때 길드 자동 리셋 여부          | False                                                                                        | Bool                                   |
+| AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | 온라인 플레이어가 없을 때 길드를 자동 리셋 시간(h)   | 72.000000                                                                                    | Float                                  |
+| GUILD_PLAYER_MAX_NUM                      | 길드 내 최대 인원 수                                            | 20                                                                                           | Integer                                |
+| PAL_EGG_DEFAULT_HATCHING_TIME             | 거대알 부화에 걸리는 시간(h)                                | 72.000000                                                                                    | Float                                  |
+| WORK_SPEED_RATE                           | 작업 속도 배수                                          | 1.000000                                                                                     | Float                                  |
+| IS_MULTIPLAY                              | 멀티플레이 활성화 여부                                             | False                                                                                        | Boolean                                |
+| IS_PVP                                    | PVP 활성화 여부                                                     | False                                                                                        | Boolean                                |
+| CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP | 다른 길드 플레이어의 데스 페널티 드롭 아이템 획득 가능 여부 | False                                                                                        | Boolean                                |
+| ENABLE_NON_LOGIN_PENALTY                  | 비 로그인 패널티 활성화 여부                                       | True                                                                                         | Boolean                                |
+| ENABLE_FAST_TRAVEL                        | 빠른 이동 활성화 여부                                             | True                                                                                         | Boolean                                |
+| IS_START_LOCATION_SELECT_BY_MAP           | 시작 위치를 지도로 선택할 수 있는지 여부                             | True                                                                                         | Boolean                                |
+| EXIST_PLAYER_AFTER_LOGOUT                 | 로그오프 후 플레이어 삭제 여부                  | False                                                                                        | Boolean                                |
+| ENABLE_DEFENSE_OTHER_GUILD_PLAYER         | 다른 길드 플레이어에 대한 방어 허용 여부                     | False                                                                                        | Boolean                                |
+| COOP_PLAYER_MAX_NUM                       | 협동던전 최대인원                           | 4                                                                                            | Integer                                |
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
-| USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
-| BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| USEAUTH                                   | 인증 사용 여부                                             | True                                                                                         | Boolean                                |
+| BAN_LIST_URL                              | 사용할 BAN 목록                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
 
-### Manually
+### 수동으로 설정
 
-When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
+서버가 시작되면 `PalWorldSettings.ini` 파일은 다음 위치에 생성됩니다.
+`<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
-Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
+환경 변수 설정은 항상 `PalWorldSettings.ini`의 변경 사항을 덮어쓴다는 점에 유의하세요.
 
 :::warning
-Changes can only be made to `PalWorldSettings.ini` while the server is off.
+서버가 꺼져 있을 때만 `PalWorldSettings.ini`를 변경할 수 있습니다.
 
-Any changes made while the server is live will be overwritten when the server stops.
+서버가 작동하는 동안 변경한 내용은 서버가 중지되면 덮어쓰기됩니다.
 :::
 
-For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
+서버 설정에 대한 자세한 목록을 보려면 다음을 참조하세요: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
 
-For more detailed server settings explanations go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+서버 설정에 대한 자세한 설명을 보려면 다음을 참조하세요: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)

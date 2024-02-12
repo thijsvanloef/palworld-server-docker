@@ -4,18 +4,18 @@ sidebar_position: 1
 
 # Kubernetes
 
-All files you will need to deploy this container to kubernetes are located in the [k8s folder](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s).
+쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s)에 있습니다.
 
-## Setup Palworld in kubernetes
+## Kubernetes에서 Palworld 설정하기
 
-Use the following commands to setup this Palworld container in Kubernetes:
+다음 명령어를 사용하여 Kubernetes에서 Palworld 컨테이너를 설정합니다:
 
-* `kubectl apply -f pvc.yaml`
-* `kubectl apply -f configmap.yaml`
-* `kubectl apply -f secret.yaml`
-* `kubectl apply -f service.yaml`
-* `kubectl apply -f deployment.yaml`
+- `kubectl apply -f pvc.yaml`
+- `kubectl apply -f configmap.yaml`
+- `kubectl apply -f secret.yaml`
+- `kubectl apply -f service.yaml`
+- `kubectl apply -f deployment.yaml`
 
-## Using helm chart
+## Helm 차트 사용하기
 
-The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
+공식 Helm 차트는 별도의 저장소에서 찾을 수 있습니다: [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
