@@ -109,6 +109,7 @@ if [ -f "$BACKUP_FILE" ]; then
             # Decompress the backup file in tmp directory
             tar -zxvf "$BACKUP_FILE" -C "$TMP_PATH"
 
+            # Make sure Saves with a different ID are removed before restoring the save
             rm -rf "$RESTORE_PATH/Saved/"
 
             # Move the backup file to the restore directory
