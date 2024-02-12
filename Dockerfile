@@ -1,10 +1,42 @@
-FROM cm2network/steamcmd:root
+FROM golang:1.22.0-alpine as rcon-cli_builder
+
+ARG RCON_VERSION="0.10.3"
+
+WORKDIR /build
+
+ENV CGO_ENABLED=0
+RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && tar -xzvf rcon.tar.gz \
+    && rm rcon.tar.gz \
+    && mv rcon-cli-${RCON_VERSION}/* ./ \
+    && rm -rf rcon-cli-${RCON_VERSION} \
+    && go build -v ./cmd/gorcon
+
+FROM cm2network/steamcmd:root as base-amd64
+# Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
+# hadolint ignore=DL3029
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root as base-arm64
+
+ARG TARGETARCH
+# Ignoring the lack of a tag here because the tag is defined in the above FROM lines
+# and hadolint isn't aware of those.
+# hadolint ignore=DL3006
+FROM base-${TARGETARCH}
+
 LABEL maintainer="thijs@loef.dev" \
       name="thijsvanloef/palworld-server-docker" \
       github="https://github.com/thijsvanloef/palworld-server-docker" \
       dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
       org.opencontainers.image.authors="Thijs van Loef" \
       org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
+
+# set envs
+# SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
+# RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
+# NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
+ARG SUPERCRONIC_SHA1SUM_ARM64="512f6736450c56555e01b363144c3c9d23abed4c"
+ARG SUPERCRONIC_SHA1SUM_AMD64="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
+ARG SUPERCRONIC_VERSION="0.2.29"
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -16,26 +48,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# set envs
-# SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
-# RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
-# NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ENV RCON_MD5SUM="8601c70dcab2f90cd842c127f700e398" \
-    SUPERCRONIC_SHA1SUM="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b" \
-    RCON_VERSION="0.10.3" \
-    SUPERCRONIC_VERSION="0.2.29"
-
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-RUN wget --progress=dot:giga https://github.com/gorcon/rcon-cli/releases/download/v${RCON_VERSION}/rcon-${RCON_VERSION}-amd64_linux.tar.gz -O rcon.tar.gz \
-    && echo "${RCON_MD5SUM}" rcon.tar.gz | md5sum -c - \
-    && tar -xzvf rcon.tar.gz \
-    && rm rcon.tar.gz \
-    && mv rcon-${RCON_VERSION}-amd64_linux/rcon /usr/bin/rcon-cli \
-    && rmdir /tmp/dumps
+COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
 
-RUN wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-amd64 -O supercronic \
+ARG TARGETARCH
+RUN case ${TARGETARCH} in \
+        "amd64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_AMD64} ;; \
+        "arm64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_ARM64} ;; \
+    esac \
+    && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
     && chmod +x supercronic \
     && mv supercronic /usr/local/bin/supercronic

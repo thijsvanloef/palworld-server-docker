@@ -115,7 +115,7 @@ jobs:
       - name: Build and export to Docker
         uses: docker/build-push-action@v5
         with:
-          file: ./Dockerfile.arm64
+          file: ./Dockerfile
           load: true
           tags: ${{ github.run_id }}
           platforms: linux/arm64
