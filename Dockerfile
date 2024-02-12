@@ -31,7 +31,7 @@ RUN wget -q https://github.com/aptible/supercronic/archive/refs/tags/${SUPERCRON
     && rm -rf supercronic-${SUPERCRONIC_VERSION##v} \
     && go build -v .
 
-FROM cm2network/steamcmd:root@sha256:929876d2ea6309de2076fa2b5df68acc1fce459f746b2d9fd7da8cd0a76885c1 as base-amd64
+FROM cm2network/steamcmd:root@sha256:ec251a0e50f703219981fdd95cc64818e94c5fa7ed8873a33d2ad36356f0be68 as base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root@sha256:c10b72df4bb461d124c2d5dab26f08d6742cb0103296f3db55360a233b0a8767 as base-arm64
