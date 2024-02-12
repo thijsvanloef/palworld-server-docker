@@ -1,8 +1,12 @@
 ---
 name: Unit-test
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   pull_request:
   workflow_call:
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   unit-test-amd64:
@@ -30,19 +34,7 @@ jobs:
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
             -v ./palworld:/palworld/ \
-            -e PUID=1000 \
-            -e PGID=1000 \
-            -e PORT=8211 \
-            -e PLAYERS=16 \
-            -e MULTITHREADING=true \
-            -e RCON_ENABLED=true \
-            -e RCON_PORT=25575 \
-            -e TZ=UTC \
-            -e ADMIN_PASSWORD="adminPasswordHere" \
-            -e SERVER_PASSWORD="worldofpals" \
-            -e COMMUNITY=false \
-            -e SERVER_NAME="World of Pals" \
-            -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
+            --env-file .env.example \
             --restart unless-stopped \
             --stop-timeout 30 \
             ${{ github.run_id }}
@@ -79,7 +71,7 @@ jobs:
             nc -z -u -v 127.0.0.1 27015 || exit 1
             nc -z -v 127.0.0.1 25575 || exit 1
 
-      - name: Test the backup command functions
+      - name: Test the backup script
         run: |
           docker exec palworld-server backup
           if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
@@ -117,7 +109,7 @@ jobs:
         with:
           file: ./Dockerfile
           load: true
-          tags: ${{ github.run_id }}
+          tags: ${{ github.run_id }}:arm64
           platforms: linux/arm64
 
       - name: Run server
@@ -129,26 +121,14 @@ jobs:
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
             -v ./palworld:/palworld/ \
-            -e PUID=1000 \
-            -e PGID=1000 \
-            -e PORT=8211 \
-            -e PLAYERS=16 \
-            -e MULTITHREADING=true \
-            -e RCON_ENABLED=true \
-            -e RCON_PORT=25575 \
-            -e TZ=UTC \
-            -e ADMIN_PASSWORD="adminPasswordHere" \
-            -e SERVER_PASSWORD="worldofpals" \
-            -e COMMUNITY=false \
-            -e SERVER_NAME="World of Pals" \
-            -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
+            --env-file .env.example \
             --restart unless-stopped \
             --stop-timeout 30 \
-            ${{ github.run_id }}
+            ${{ github.run_id }}:arm64
 
       - name: Wait for server to start
         run: |
-            TIMEOUT_SECONDS=400
+            TIMEOUT_SECONDS=600
             START_TIME=$(date +%s)
 
             while ! docker logs palworld-server 2>&1 | grep -q "Setting breakpad minidump AppID"; do
@@ -178,7 +158,7 @@ jobs:
             nc -z -u -v 127.0.0.1 27015 || exit 1
             nc -z -v 127.0.0.1 25575 || exit 1
 
-      - name: Test the backup command functions
+      - name: Test the backup script
         run: |
           docker exec palworld-server backup
           if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
