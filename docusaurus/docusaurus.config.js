@@ -170,6 +170,28 @@ const config = {
       metadata: [
         {name: 'keywords', content: 'palworld, palworld server docker, palworld docker'},
       ],
+      algolia: {
+        // The application ID provided by Algolia
+        appId: 'MVCUXHA7XU',
+  
+        // Public API key: it is safe to commit it
+        apiKey: 'b7e35eb305f1beef4ba2217366cf471a',
+  
+        indexName: 'palworld-server-ker',
+  
+        // Optional: see doc section below
+        contextualSearch: true,
+  
+        // Optional: Algolia search parameters
+        searchParameters: {},
+  
+        // Optional: path for search page that enabled by default (`false` to disable it)
+        searchPagePath: 'search',
+
+        insights: true,
+  
+        //... other Algolia params
+      },
     }),
 };
 
