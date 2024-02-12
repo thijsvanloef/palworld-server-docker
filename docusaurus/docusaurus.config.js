@@ -149,6 +149,10 @@ const config = {
                 label: 'GitHub',
                 href: 'https://github.com/thijsvanloef/palworld-server-docker',
               },
+              {
+                label: 'Docker Hub',
+                href: 'https://hub.docker.com/r/thijsvanloef/palworld-server-docker',
+              },
             ],
           },
         ],
