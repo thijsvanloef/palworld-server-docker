@@ -2,13 +2,13 @@
 sidebar_position: 1
 ---
 
-# Kubernetes
+# 쿠버네티스
 
-쿠버네티스에 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s)에 있습니다.
+쿠버네티스에서 이 컨테이너를 배포하는 데 필요한 모든 파일은 [k8s 폴더](https://github.com/thijsvanloef/palworld-server-docker/tree/main/k8s)에 있습니다.
 
-## Kubernetes에서 Palworld 설정하기
+## 쿠버네티스에서 Palworld 설정하기
 
-다음 명령어를 사용하여 Kubernetes에서 Palworld 컨테이너를 설정합니다:
+다음 명령어를 사용하여 쿠버네티스에서 Palworld 컨테이너를 설정합니다:
 
 - `kubectl apply -f pvc.yaml`
 - `kubectl apply -f configmap.yaml`

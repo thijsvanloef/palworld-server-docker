@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # 백업 복원하기
 
-## Interactively restore from a backup
+## 명령어로 백업 복원하기
 
 백업을 복원하려면 다음 명령을 사용합니다:
 
