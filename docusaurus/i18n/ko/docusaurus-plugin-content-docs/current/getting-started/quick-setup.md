@@ -23,7 +23,8 @@ Palworld 전용 서버를 이용해 보세요!
 
 ## Docker Compose
 
-이 저장소에는 서버를 설정하는 데 사용할 수 있는 [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 예제 파일이 포함되어 있습니다.
+이 저장소에는 서버를 설정하는 데 사용할 수 있는
+[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 예제 파일이 포함되어 있습니다.
 
 ```yml
 services:

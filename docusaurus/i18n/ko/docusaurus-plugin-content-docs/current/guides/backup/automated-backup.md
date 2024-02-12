@@ -11,7 +11,8 @@ BACKUP_ENABLED를 설정하여 자동 백업을 활성화하거나 비활성화�
 BACKUP_CRON_EXPRESSION은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
 :::tip
-이 이미지는 cron 작업을 위해 Supercronic을 사용합니다. [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는 [Crontab Generator](https://crontab-generator.org)를 참조하세요.
+이 이미지는 cron 작업을 위해 Supercronic을 사용합니다. [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+[Crontab Generator](https://crontab-generator.org)를 참조하세요.
 :::
 
 BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.

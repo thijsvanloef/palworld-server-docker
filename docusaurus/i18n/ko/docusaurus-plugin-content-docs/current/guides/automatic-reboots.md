@@ -20,7 +20,8 @@ sidebar_position: 4
 `AUTO_REBOOT_CRON_EXPRESSION`은 cron 표현식으로, Cron 표현식에서는 작업을 실행할 간격을 정의합니다.
 
 :::tip
-이 이미지는 cron 작업을 위해 Supercronic을 사용합니다. [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는 [Crontab Generator](https://crontab-generator.org)를 참조하세요.
+이 이미지는 cron 작업을 위해 Supercronic을 사용합니다. [supercronic](https://github.com/aptible/supercronic#crontab-format) 또는
+[Crontab Generator](https://crontab-generator.org)를 참조하세요.
 :::
 
 `AUTO_REBOOT_CRON_EXPRESSION`을 설정하여 기본 스케줄을 변경하세요. 기본 설정은 TZ로 설정된 시간대에 따라 매일 자정에 재부팅됩니다.
