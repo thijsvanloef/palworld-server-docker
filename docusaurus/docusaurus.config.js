@@ -178,19 +178,9 @@ const config = {
         apiKey: '0ca6a3850b4a44a153523f0028fc73e3',
   
         indexName: 'palworld-server-ker',
-  
-        // Optional: see doc section below
-        contextualSearch: true,
-  
-        // Optional: Algolia search parameters
-        searchParameters: {},
-  
-        // Optional: path for search page that enabled by default (`false` to disable it)
-        searchPagePath: 'search',
 
         insights: true,
   
-        //... other Algolia params
       },
     }),
 };
