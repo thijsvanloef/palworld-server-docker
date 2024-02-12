@@ -26,13 +26,13 @@ docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 
 | 명령어                           | 정보                                               |
 | -------------------------------- | -------------------------------------------------- |
-| Shutdown {Seconds} {MessageText} | {Seconds}가 지나면 서버가 종료됩니다.              |
+| Shutdown (Seconds) (MessageText) | (Seconds)가 지나면 서버가 종료됩니다.              |
 | DoExit                           | 서버를 강제 종료합니다.                            |
 | Broadcast                        | 서버에 있는 모든 플레이어에게 메시지를 전송합니다. |
-| KickPlayer {SteamID}             | 서버에서 플레이어를 추방합니다.                    |
-| BanPlayer {SteamID}              | 서버에서 사용자를 차단합니다.                      |
-| TeleportToPlayer {SteamID}       | 대상 플레이어의 위치로 순간이동합니다.             |
-| TeleportToMe {SteamID}           | 대상 플레이어가 현재 위치로 순간이동합니다.        |
+| KickPlayer (SteamID)             | 서버에서 플레이어를 추방합니다.                    |
+| BanPlayer (SteamID)              | 서버에서 사용자를 차단합니다.                      |
+| TeleportToPlayer (SteamID)       | 대상 플레이어의 위치로 순간이동합니다.             |
+| TeleportToMe (SteamID)           | 대상 플레이어가 현재 위치로 순간이동합니다.        |
 | ShowPlayers                      | 서버에 있는 모든 플레이어의 정보를 표시합니다.     |
 | Info                             | 서버 정보를 표시합니다.                            |
 | Save                             | 월드 정보를 저장합니다.                            |
