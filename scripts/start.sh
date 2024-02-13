@@ -84,7 +84,7 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
 else
   printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
   printf "\e[0;32m%s\e[0m\n" "***Using Env vars to create PalWorldSettings.ini***"
-  /home/steam/server/compile-settings.sh
+  /home/steam/server/compile-settings.sh || exit
 fi
 
 printf "\e[0;32m%s\e[0m\n" "*****GENERATING CRONTAB*****"
