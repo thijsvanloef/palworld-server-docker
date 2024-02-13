@@ -8,15 +8,15 @@
     "description": "The alt text of navbar logo"
   },
   "item.label.Getting started": {
-    "message": "Getting started",
+    "message": "Aan de slag",
     "description": "Navbar item with label Getting started"
   },
   "item.label.Guides": {
-    "message": "Guides",
+    "message": "Gidsen",
     "description": "Navbar item with label Guides"
   },
   "item.label.Advanced": {
-    "message": "Advanced",
+    "message": "Geavanceerd",
     "description": "Navbar item with label Advanced"
   }
 }
