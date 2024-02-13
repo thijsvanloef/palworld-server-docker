@@ -2,14 +2,14 @@
 sidebar_position: 1
 ---
 
-# Server Settings
+# Serverinstellingen
 
-Changing Server Settings using environment variables.
+Serverinstellingen wijzigen met behulp van omgevingsvariabelen.
 
-## Environment variables
+## Omgevingsvariabelen
 
-You can use the following values to change the settings of the server on boot.
-It is highly recommended you set the following environment values before starting the server:
+Je kunt de volgende waarden gebruiken om de instellingen van de server bij het opstarten te wijzigen.
+Het wordt sterk aanbevolen om de volgende omgevingswaarden in te stellen voordat je de server start:
 
 * PLAYERS
 * PORT
@@ -55,15 +55,15 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
 
-*highly recommended to set
+*Het is ten zeerste aanbevolen om in te stellen.
 
-** Make sure you know what you are doing when running this option enabled
+**Zorg ervoor dat je weet wat je doet wanneer je deze optie inschakelt.
 
-*** Required for docker stop to save and gracefully close the server
+***Vereist voor docker stop om de server op te slaan en op een correcte manier af te sluiten.
 
 ### Game Ports
 
-The server needs the following ports by default.
+De server heeft standaard de volgende poorten nodig.
 
 | Port  | Info             |
 |-------|------------------|

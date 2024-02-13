@@ -2,25 +2,25 @@
 sidebar_position: 2
 ---
 
-# Game Settings
+# Spelinstellingen
 
-Changing Game Settings with Environment variables.
+Het wijzigen van spelinstellingen met omgevingsvariabelen.
 
-## With Environment Variables
+Met Omgevingsvariabelen
 
 :::warning
-These Environment Variables and Settings are subject to change since the game is still in beta.
+Deze Omgevingsvariabelen en Instellingen zijn onderhevig aan verandering aangezien het spel zich nog in de bètafase bevindt.
 
-Check out the [official webpage for the supported parameters.](https://tech.palworldgame.com/optimize-game-balance)
+Bekijk de [officiële webpagina voor ondersteunde parameters](https://tech.palworldgame.com/optimize-game-balance).
 :::
 
-Converting server settings to environment variables follow the same principles (with some exceptions):
+Het omzetten van serverinstellingen naar omgevingsvariabelen volgt dezelfde principes (met enkele uitzonderingen):
 
-* all capital letters
-* split words by inserting an underscore
-* remove the single letter if the setting starts with one (like 'b')
+* Alle hoofdletters
+* Woorden splitsen door een underscore in te voegen
+* Verwijder de enkele letter als de instelling daarmee begint (zoals 'b')
 
-For example:
+Bijvoorbeeld:
 
 * Difficulty -> DIFFICULTY
 * PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
@@ -82,18 +82,18 @@ For example:
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
 
-### Manually
+## Handmatig
 
-When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
+Wanneer de server start, wordt er een PalWorldSettings.ini bestand aangemaakt op de volgende locatie: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
-Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
+Houd er rekening mee dat de omgevingsvariabelen altijd de wijzigingen in PalWorldSettings.ini zullen overschrijven.
 
 :::warning
-Changes can only be made to `PalWorldSettings.ini` while the server is off.
+Wijzigingen kunnen alleen worden aangebracht in PalWorldSettings.ini terwijl de server is uitgeschakeld.
 
-Any changes made while the server is live will be overwritten when the server stops.
+Eventuele wijzigingen die worden aangebracht terwijl de server actief is, worden overschreven wanneer de server stopt.
 :::
 
-For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
+Voor een meer gedetailleerde lijst van serverinstellingen ga naar: Palworld Wiki
 
-For more detailed server settings explanations go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+Voor meer gedetailleerde uitleg van serverinstellingen ga naar: shockbyte

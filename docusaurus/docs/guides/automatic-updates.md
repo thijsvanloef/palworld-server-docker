@@ -19,10 +19,11 @@ The example docker run command and docker compose file in [the Quicksetup](https
 already use the needed policy
 :::
 
-Set `AUTO_UPDATE_ENABLED` enable or disable automatic updates (Default is disabled)
-
-`AUTO_UPDATE_CRON_EXPRESSION` is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
-
+| Variable                    | Info                                                                                                                       | Default Values | Allowed Values                                                                                                                                  |
+|-----------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| AUTO_UPDATE_CRON_EXPRESSION | Setting affects frequency of automatic updates.                                                                            | 0 \* \* \* \*  | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](https://palworld-server-docker.loef.dev/guides/backup/automated-backup) |
+| AUTO_UPDATE_ENABLED         | Enables automatic updates                                                                                                  | false          | true/false                                                                                                                                      |
+| AUTO_UPDATE_WARN_MINUTES    | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected) | 30             | !0                                                                                                                                              |
 :::tip
 This image uses Supercronic for crons
 see [supercronic](https://github.com/aptible/supercronic#crontab-format)

@@ -31,7 +31,7 @@ const config = {
   // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'ko', 'zh'],
+    locales: ['en', 'ko', 'zh', 'nl'],
     localeConfigs:{
       en: {
         label: 'English',
@@ -41,6 +41,9 @@ const config = {
       },
       zh: {
         label: 'Simplified Chinese',
+      },
+      nl: {
+        label: 'Dutch',
       },
     }
   },
@@ -179,7 +182,8 @@ const config = {
   
         indexName: 'palworld-server-ker',
 
-        contextualSearch: false,
+        contextualSearch: true,
+
         insights: true,
   
       },
