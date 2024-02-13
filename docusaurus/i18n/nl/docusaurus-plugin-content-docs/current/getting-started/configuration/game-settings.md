@@ -11,7 +11,7 @@ Met Omgevingsvariabelen
 :::warning
 Deze Omgevingsvariabelen en Instellingen zijn onderhevig aan verandering aangezien het spel zich nog in de bètafase bevindt.
 
-Bekijk de [officiële webpagina voor ondersteunde parameters]((https://tech.palworldgame.com/optimize-game-balance)).
+Bekijk de [officiële webpagina voor ondersteunde parameters](https://tech.palworldgame.com/optimize-game-balance).
 :::
 
 Het omzetten van serverinstellingen naar omgevingsvariabelen volgt dezelfde principes (met enkele uitzonderingen):
