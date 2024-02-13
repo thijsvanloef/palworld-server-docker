@@ -39,10 +39,10 @@ ARG SUPERCRONIC_SHA1SUM_AMD64="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
 ARG SUPERCRONIC_VERSION="0.2.29"
 
 # update and install dependencies
+# hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
-    # hadolint ignore=DL3008
-    wget \
+    wget \ 
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
