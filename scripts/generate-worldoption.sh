@@ -149,6 +149,7 @@ convert_json_to_sav() {
     echo "WorldOption Generator: Compressing WorldOption to .sav"
     if echo "$json_data" | python3 -c "$convert_json_to_sav_python" > "$output_path/WorldOption.sav"; then
         echo "WorldOption Generator: Generated WorldOption.sav file to $output_path"
+        echo "Generating WorldOption.sav done!"
     else
         echo "WorldOption Generator: WorldOption.sav generation failed."
     fi
@@ -198,7 +199,7 @@ fi
 settings_json=$(generate_json_config "$parsed_config")
 
 # Update JSON data with generated settings
-json_data=$(echo "$worldoption" | jq ".properties.OptionWorldData.value.Settings.value = $settings_json")
+json_data=$(jq --argjson new "$settings_json" '.properties.OptionWorldData.value.Settings.value = $new' <<< "$worldoption")
 
 if [ "${DEBUG,,}" = true ]; then
     echo "====Debug===="
@@ -208,5 +209,3 @@ fi
 
 # Convert JSON data to .sav
 convert_json_to_sav "$json_data" "$target_directory"
-
-echo "Generating WorldOption.sav done!"
