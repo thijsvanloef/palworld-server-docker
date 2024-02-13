@@ -46,7 +46,17 @@ isReadable() {
 isWritable() {
     local path="$1"
     local return_val=0
-    if ! [ -w "${path}" ]; then
+    # Directories may be writable but not deletable causing -w to return false
+    if [ -d "${path}" ]; then
+        temp_file=$(mktemp -q -p "${path}")
+        if [ -n "${temp_file}" ]; then
+            rm -f "${temp_file}"
+        else
+            echo "${path} is not writable."
+            return_val=1
+        fi
+    # If it is a file it must be writable
+    elif ! [ -w "${path}" ]; then
         echo "${path} is not writable."
         return_val=1
     fi
