@@ -34,7 +34,7 @@ RUN wget -q https://github.com/aptible/supercronic/archive/refs/tags/${SUPERCRON
 FROM cm2network/steamcmd:root@sha256:ec251a0e50f703219981fdd95cc64818e94c5fa7ed8873a33d2ad36356f0be68 as base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root@sha256:c10b72df4bb461d124c2d5dab26f08d6742cb0103296f3db55360a233b0a8767 as base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root@sha256:558734d28d27256a3d2ecc386d7394fafd5c797490c37689e2a86f3015b0a6d5 as base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
