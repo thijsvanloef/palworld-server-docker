@@ -55,8 +55,6 @@ type_cast() {
         else
             echo "true"
         fi
-    elif [[ $struct == "Str" ]]; then
-        echo "\"$value\""
     else
         echo "$value"
     fi
@@ -91,9 +89,6 @@ generate_json_config() {
 
     # Loop through each key-value pair
     while IFS='=' read -r key value; do
-        if [[ "$value" == \"*\" ]]; then
-            value="${value//\"/}"  # Remove quotes from value
-        fi
         config_properties="$(json_struct "$(config_to_struct_type "$key")" "$value")"
 
         if [[ -n "$config_properties" ]]; then
