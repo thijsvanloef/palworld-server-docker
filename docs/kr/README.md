@@ -46,6 +46,10 @@
 
 서버를 가동하기 위해서는 반드시 [환경 변수](#환경-변수)를 수정해야 합니다. 잊지 마세요!
 
+> [!IMPORTANT]
+> 만약 ARM64 기반의 CPU (라즈베리 파이, M1, M2, M3 Mac, 오라클 클라우드 프리 티어 등) 를 사용하고 있다면,
+> 반드시 `:latest-arm64` 이미지 태그를 사용해주세요.
+
 ### Docker Compose
 
 이 저장소에는 서버를 설정하는 데 사용할 수 있는 [docker-compose.yml](/docker-compose.yml)예제 파일이 포함되어 있습니다.
@@ -146,14 +150,14 @@ docker run -d \
 
 [README.md](/k8s/readme.md) 에 있는 지침을 따라 배포를 진행해주세요.
 
-#### Using helm chart
+#### Helm 차트 사용하기
 
-[README.md](/charts/palworld/README.md) 에 있는 지침을 따라 배포를 진행해주세요.
+공식 Helm 차트는 별도의 저장소에서 찾을 수 있습니다, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### 환경 변수
 
 다음 값을 사용하여 부팅 시 서버의 설정을 변경할 수 있습니다.
-서버를 시작하기 전에 다음 환경 변수를 설정하는 것이 좋습니다
+서버를 시작하기 전에 다음 환경 변수를 설정하는 것이 좋습니다:
 
 - PLAYERS
 - PORT
@@ -197,6 +201,7 @@ docker run -d \
 | DISCORD_PRE_START_MESSAGE | 서버가 시작될 때 전송되는 디스코드 메시지 | Server is started! | "string" |
 | DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
+| DISABLE_GENERATE_SETTINGS | 자동으로 PalWorldSettings.ini를 생성할지 여부 | false | true/false |
 
 *설정하는 것을 적극 권장합니다.
 
@@ -364,7 +369,19 @@ AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요.
 
 > [!IMPORTANT]
 >
-> 게임이 아직 베타버전이므로 이러한 환경 변수/설정은 변경될 수 있습니다
+> 게임이 아직 베타버전이므로 이러한 환경 변수/설정은 변경될 수 있습니다. 지원되는 파라미터들을 [공식 웹페이지](https://tech.palworldgame.com/optimize-game-balance)에서 확인하세요.
+
+서버 설정을 환경 변수로 바꾸는 과정은 다음과 같은 규칙을 따릅니다 (몇가지 예외 있음):
+
+- 모두 대문자로 작성
+- 밑줄을 삽입하여 단어를 분할
+- 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
+
+아래는 예시입니다:
+
+- Difficulty -> DIFFICULTY
+- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+- bIsPvP -> IS_PVP
 
 | 변수                                  | 설명                                                    | 기본값                                                                                | 허용값                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
@@ -434,11 +451,33 @@ AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요.
 >
 > 서버가 작동하는 동안 변경한 내용은 서버가 중지되면 덮어쓰기됩니다.
 
-서버 설정에 대한 자세한 설명 목록을 보려면 다음을 참조하세요: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+서버 설정에 대한 자세한 목록을 보려면 다음을 참조하세요: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
+
+서버 설정에 대한 자세한 설명을 보려면 다음을 참조하세요: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
 
 > [!TIP]
 > 만약 `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini` 파일 내부가 비어 있으면,
 > 파일을 삭제하고 서버를 다시 시작하면 콘텐츠가 포함된 새 파일이 생성됩니다.
+
+## 디스코드 웹훅 사용하기
+
+1. 디스코드의 서버 설정 창에서 웹훅 url을 생성하세요.
+2. 끝 부분에 고유 토큰이 있는 디스코드 웹훅 url을 환경 변수로 설정하세요.  
+(예시: <https://discord.com/api/webhooks/1234567890/abcde>)
+
+docker run으로 디스코드 메시지 보내기:
+
+```sh
+-e DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1234567890/abcde" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+```
+
+docker compose로 디스코드 메시지 보내기:
+
+```yaml
+- DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
+```
 
 ## 이슈/기능 요청
 

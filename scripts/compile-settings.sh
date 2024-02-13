@@ -155,7 +155,7 @@ fi
 
 cat > "$config_file" <<EOF
 [/Script/Pal.PalGameWorldSettings]
-$(envsubst < ./files/PalWorldSettings.ini.template | tr -d "\n\r")
+$(envsubst < /home/steam/server/files/PalWorldSettings.ini.template | tr -d "\n\r")
 EOF
 
 echo "Compiling PalWorldSettings.ini done!"

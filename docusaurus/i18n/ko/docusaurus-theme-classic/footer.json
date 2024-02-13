@@ -1,0 +1,38 @@
+{
+  "link.title.Docs": {
+    "message": "문서",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Community": {
+    "message": "커뮤니티",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.title.More": {
+    "message": "더보기",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Getting started": {
+    "message": "시작하기",
+    "description": "The label of footer link with label=Getting started linking to /category/getting-started"
+  },
+  "link.item.label.Guides": {
+    "message": "가이드",
+    "description": "The label of footer link with label=Guides linking to /category/guides"
+  },
+  "link.item.label.Advanced": {
+    "message": "고급",
+    "description": "The label of footer link with label=Advanced linking to /category/advanced"
+  },
+  "link.item.label.Discord": {
+    "message": "Discord",
+    "description": "The label of footer link with label=Discord linking to https://discord.gg/UxBxStPAAE"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/thijsvanloef/palworld-server-docker"
+  },
+  "copyright": {
+    "message": "Copyright © 2024 palworld-server-docker, Built with Docusaurus.",
+    "description": "The footer copyright"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "시작하기",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "설정",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Guides": {
+    "message": "가이드",
+    "description": "The label for category Guides in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backup": {
+    "message": "백업",
+    "description": "The label for category Backup in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Discord integration": {
+    "message": "Discord 연동",
+    "description": "The label for category Discord integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "고급",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
+  }
+}

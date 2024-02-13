@@ -8,7 +8,8 @@
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
+[![GHCR](https://img.shields.io/badge/GHCR-palworld-blue?logo=docker)](https://github.com/thijsvanloef/palworld-server-docker/pkgs/container/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld-server-chart)](https://artifacthub.io/packages/search?repo=palworld-server-chart)
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
@@ -38,7 +39,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 Massive shoutout to the following sponsors!
 
 <p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/USA-RedDragon"><img src="https://github.com/USA-RedDragon.png" width="50px" alt="USA-RedDragon" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Server Requirements
@@ -53,10 +54,6 @@ Massive shoutout to the following sponsors!
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
-> [!IMPORTANT]
-> If you use an ARM64 based CPU (Raspberry pi, M1,M2,M3 Mac, Oracle Cloud Free tier, etc.)
-> Please make sure you use the `:latest-arm64` image tag.
-
 ### Docker Compose
 
 This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
@@ -64,7 +61,7 @@ This repository includes an example [docker-compose.yml](/docker-compose.yml) fi
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -72,19 +69,19 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PUID=1000
-         - PGID=1000
-         - PORT=8211 # Optional but recommended
-         - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD=worldofpals # Optional but recommended
-         - MULTITHREADING=true
-         - RCON_ENABLED=true
-         - RCON_PORT=25575
-         - TZ=UTC
-         - ADMIN_PASSWORD=adminPasswordHere
-         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME=World of Pals
-         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
+         PUID: 1000
+         PGID: 1000
+         PORT: 8211 # Optional but recommended
+         PLAYERS: 16 # Optional but recommended
+         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         MULTITHREADING: true
+         RCON_ENABLED: true
+         RCON_PORT: 25575
+         TZ: "UTC"
+         ADMIN_PASSWORD: "adminPasswordHere"
+         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         SERVER_NAME: "World of Pals"
+         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -96,7 +93,7 @@ values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -118,7 +115,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     -e PUID=1000 \
     -e PGID=1000 \
     -e PORT=8211 \
@@ -127,14 +124,14 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
-    -e ADMIN_PASSWORD=adminPasswordHere \
-    -e SERVER_PASSWORD=worldofpals \
+    -e ADMIN_PASSWORD="adminPasswordHere" \
+    -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME=World of Pals \
-    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
+    -e SERVER_NAME="World of Pals" \
+    -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -146,11 +143,11 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 
 ### Kubernetes
@@ -191,7 +188,7 @@ or by changing the permissions for all other: `chmod o=rwx palworld/`
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
+The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
@@ -228,10 +225,11 @@ It is highly recommended you set the following environment values before startin
 | OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
 | AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
-| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
+| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected) | 30 | !0 |
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online. | false | true/false |
 | DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
@@ -240,6 +238,7 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
 | DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
+| DISABLE_GENERATE_SETTINGS | Whether to automatically generate the PalWorldSettings.ini | false | true/false |
 
 *highly recommended to set
 

@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "下一步",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "入门",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "配置",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Guides": {
+    "message": "指南",
+    "description": "The label for category Guides in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backup": {
+    "message": "备份",
+    "description": "The label for category Backup in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Discord integration": {
+    "message": "Discord集成",
+    "description": "The label for category Discord integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "高级配置",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
+  }
+}
