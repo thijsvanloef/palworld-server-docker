@@ -204,11 +204,5 @@ fi
 # Update JSON data with generated settings
 json_data=$(jq --argjson new "$settings_json" '.properties.OptionWorldData.value.Settings.value = $new' <<< "$worldoption")
 
-if [ "${DEBUG,,}" = true ]; then
-    echo "====Debug===="
-    echo "$json_data"
-    echo "====Debug===="
-fi
-
 # Convert JSON data to .sav
 convert_json_to_sav "$json_data" "$target_directory"
