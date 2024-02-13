@@ -100,8 +100,7 @@ rm -f /palworld/Pal/Saved/SaveGames/0/*/WorldOption.sav
 if [ "${GENERATE_WORLD_OPTION,,}" = true ]; then
     printf "\e[0;32m%s\e[0m\n" "*****GENERATING WORLDOPTION*****"
     printf "\e[0;32m%s\e[0m\n" "***Using PalWorldSettings.ini to create WorldOption.sav***"
-    /home/steam/server/generate-worldoption.sh
-    if [ $? != 0 ]; then
+    if ! /home/steam/server/generate-worldoption.sh; then
         echo "WorldOption will not be generated. PalWorldSettings.ini will apply."
     fi
 fi

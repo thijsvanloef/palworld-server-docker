@@ -87,17 +87,19 @@ json_struct() {
 # Function to generate JSON config
 generate_json_config() {
     local json_config="{}"
-    # Replace commas with newlines
-    config=$(echo "$1" | sed 's/,/\n/g')
+    local input="$1"
+
+    # Replace commas with newline using parameter expansion
+    local config="${input//,/\\n}"
 
     # Loop through each key-value pair
     while IFS='=' read -r key value; do
         if [[ "$value" == \"*\" ]]; then
             value="${value//\"/}"  # Remove quotes from value
         fi
-        config_properties=$(json_struct $(config_to_struct_type "$key") "$value")
+        config_properties="$(json_struct "$(config_to_struct_type "$key")" "$value")"
 
-        if [[ ! -z "$config_properties" ]]; then
+        if [[ -n "$config_properties" ]]; then
             json_config=$(echo "$json_config" | jq --arg key "$key" --argjson config_properties "$config_properties" '.[$key] = $config_properties')
         fi
     done <<< "$config"
@@ -145,8 +147,7 @@ convert_json_to_sav() {
     local output_path="$2"
 
     echo "WorldOption Generator: Compressing WorldOption to .sav"
-    echo "$json_data" | python3 -c "$convert_json_to_sav_python" > "$output_path/WorldOption.sav"
-    if [ $? -eq 0 ]; then
+    if echo "$json_data" | python3 -c "$convert_json_to_sav_python" > "$output_path/WorldOption.sav"; then
         echo "WorldOption Generator: Generated WorldOption.sav file to $output_path"
     else
         echo "WorldOption Generator: WorldOption.sav generation failed."
