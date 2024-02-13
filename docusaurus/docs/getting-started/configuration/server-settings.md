@@ -4,7 +4,7 @@ sidebar_position: 1
 
 # Server Settings
 
-This part will explain how to configure the server.
+Changing Server Settings using environment variables.
 
 ## Environment variables
 

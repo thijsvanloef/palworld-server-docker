@@ -4,6 +4,8 @@ sidebar_position: 2
 
 # Game Settings
 
+Changing Game Settings with Environment variables.
+
 ## With Environment Variables
 
 :::warning
