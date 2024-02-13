@@ -26,9 +26,9 @@ mkdir -p /palworld/backups
 term_handler() {
     if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_SHUTDOWN_MESSAGE}" ]; then
         if [ "$(id -u)" -eq 0 ]; then
-            su steam -c "/home/steam/server/discord.sh '${DISCORD_PRE_SHUTDOWN_MESSAGE}' in-progress" &
+            su steam -c "/home/steam/server/discord.sh \"${DISCORD_PRE_SHUTDOWN_MESSAGE}\" in-progress" &
         else
-            /home/steam/server/discord.sh '${DISCORD_PRE_SHUTDOWN_MESSAGE}' in-progress &
+            /home/steam/server/discord.sh "${DISCORD_PRE_SHUTDOWN_MESSAGE}" in-progress &
         fi
     fi
 
