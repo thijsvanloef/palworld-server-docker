@@ -17,7 +17,7 @@ The example docker run command and docker compose file in [the Quicksetup](https
 already use the needed policy
 :::
 
-Set `AUTO_REBOOT_ENABLED` to true or false to enable or disable automatic reboots (Default is disabled)
+Set `AUTO_REBOOT_ENABLED` to `true` or `false` to enable or disable automatic reboots (Default is disabled)
 
 `AUTO_REBOOT_CRON_EXPRESSION` is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
 
