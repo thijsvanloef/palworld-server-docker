@@ -13,6 +13,10 @@ At the moment, Xbox Gamepass/Xbox Console players will not be able to join a ded
 They will need to join players using the invite code and are limited to sessions of 4 players max.
 :::
 
+## Prerequisites
+
+* Must have [Docker](https://docs.docker.com/engine/install/) installed
+
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
