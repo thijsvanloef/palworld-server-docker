@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Volgende",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "Aan de slag",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "Configuratie",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Guides": {
+    "message": "Gidsen",
+    "description": "The label for category Guides in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backup": {
+    "message": "Backup",
+    "description": "The label for category Backup in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Discord integration": {
+    "message": "Discord integratie",
+    "description": "The label for category Discord integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "Geavanceerd",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
+  }
+}
