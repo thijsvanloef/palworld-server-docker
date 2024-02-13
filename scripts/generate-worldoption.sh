@@ -198,6 +198,12 @@ fi
 # Generate JSON settings from parsed configuration
 settings_json=$(generate_json_config "$parsed_config")
 
+if [ "${DEBUG,,}" = true ]; then
+    echo "====Debug===="
+    echo "$settings_json"
+    echo "====Debug===="
+fi
+
 # Update JSON data with generated settings
 json_data=$(jq --argjson new "$settings_json" '.properties.OptionWorldData.value.Settings.value = $new' <<< "$worldoption")
 

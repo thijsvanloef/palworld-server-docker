@@ -305,8 +305,7 @@
 					"struct_type": "PalOptionWorldSettings",
 					"struct_id": "00000000-0000-0000-0000-000000000000",
 					"id": null,
-					"value": {
-					},
+					"value": {},
 					"type": "StructProperty"
 				}
 			},
