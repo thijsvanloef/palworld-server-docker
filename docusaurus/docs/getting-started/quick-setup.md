@@ -13,6 +13,11 @@ At the moment, Xbox Gamepass/Xbox Console players will not be able to join a ded
 They will need to join players using the invite code and are limited to sessions of 4 players max.
 :::
 
+## Prerequisites
+
+* Virtualization enabled in the BIOS/UEFI
+* Must have [Docker](https://docs.docker.com/engine/install/) installed
+
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
@@ -55,9 +60,12 @@ services:
          - ./palworld:/palworld/
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the correct <!-- markdownlint-disable-next-line -->
-values. Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
+<!-- markdownlint-disable-next-line -->
+Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the correct 
+values.
+<!-- markdownlint-disable-next-line -->
+Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
 
 ```yml
 services:
@@ -75,7 +83,18 @@ services:
          - ./palworld:/palworld/
 ```
 
-### Docker Run
+### Starting the server
+
+Use `docker compose up -d` in the same folder as the `docker-compose.yml` to start the server in the background
+
+### Stopping the server
+
+Use `docker compose stop` in the same folder as the `docker-compose.yml` to stop the server
+
+Use `docker compose down --rmi all` in the same folder as the `docker-compose.yml`
+to stop and remove the server and remove the docker image from your computer
+
+## Docker Run
 
 ```bash
 docker run -d \
@@ -101,9 +120,12 @@ docker run -d \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.<!-- markdownlint-disable-next-line -->
+As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
+<!-- markdownlint-disable-next-line -->
 Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the
-correct values. Change your docker run command to this:
+correct values.
+
+Change your docker run command to this:
 
 ```bash
 docker run -d \
@@ -116,13 +138,3 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
-
-## Starting the server
-
-Use `docker compose up -d` to start the server in the background
-
-## Stopping the server
-
-Use `docker compose stop` to stop the server
-
-Use `docker compose down --rmi all` to stop and remove the server and remove the docker image from your computer
