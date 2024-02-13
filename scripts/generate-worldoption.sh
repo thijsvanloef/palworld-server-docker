@@ -108,7 +108,12 @@ load_palworldsettings() {
         echo "WorldOption Generator: Failed to get OptionSettings from PalWorldSettings.ini"
         exit 1
     fi
-    config=$(echo "$config" | sed 's/OptionSettings=//; s/,$//' | tr -d '() ')
+
+    # Remove "OptionSettings=" and parentheses
+    config="${config#OptionSettings=}"
+    config="${config#\(}"
+    config="${config%\)}"
+
     echo "$config"
 }
 
