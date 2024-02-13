@@ -87,10 +87,7 @@ json_struct() {
 # Function to generate JSON config
 generate_json_config() {
     local json_config="{}"
-    local input="$1"
-
-    # Replace commas with newline using parameter expansion
-    local config="${input//,/\\n}"
+    local config=${1//,/$'\n'}
 
     # Loop through each key-value pair
     while IFS='=' read -r key value; do
