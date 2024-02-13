@@ -179,7 +179,8 @@ const config = {
   
         indexName: 'palworld-server-ker',
 
-        contextualSearch: false,
+        contextualSearch: true,
+
         insights: true,
   
       },
