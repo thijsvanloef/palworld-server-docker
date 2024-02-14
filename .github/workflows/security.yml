@@ -7,24 +7,31 @@ on:  # yamllint disable-line rule:truthy
       - main
 
 jobs:
- security-scan:
+  security-scan:
     runs-on: ubuntu-latest
     name: Container - Scan
     steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
   
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
   
-        - name: Build and export to Docker
-          uses: docker/build-push-action@v5
-          with:
-            load: true
-            tags: thijsvanloef/palworld-server-docker:security
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          load: true
+          tags: thijsvanloef/palworld-server-docker:security
 
-        - name: Scan for vulnerabilities
-          id: scan
-          uses: anchore/scan-action@v3
-          with:
-            image: "thijsvanloef/palworld-server-docker:security"
+      - name: Scan for vulnerabilities
+        id: scan
+        uses: anchore/scan-action@v3
+        with:
+          image: "thijsvanloef/palworld-server-docker:security"
+          only-fixed: true
+          severity-cutoff: high
+
+      - name: upload Anchore scan SARIF report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}
