@@ -95,25 +95,36 @@ else
   /home/steam/server/compile-settings.sh
 fi
 
+printf "\e[0;32m%s\e[0m\n" "*****GENERATING CRONTAB*****"
+
 rm -f  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
     echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
+    echo "Adding cronjob for auto backups"
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
+    supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
     echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
+    echo "Adding cronjob for auto updating"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
+    supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
     echo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
+    echo "Adding cronjob for auto rebooting"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
+    supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if { [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; } || [ "${BACKUP_ENABLED,,}" = true ] || \
     [ "${AUTO_REBOOT_ENABLED,,}" = true ]; then
     supercronic "/home/steam/server/crontab" &
+    echo "Cronjobs started"
+else
+    echo "No Cronjobs found"
 fi
 
 # Configure RCON settings
