@@ -7,7 +7,7 @@ on:  # yamllint disable-line rule:truthy
       - main
 
 jobs:
- scan:
+ security-scan:
     runs-on: ubuntu-latest
     name: Container - Scan
     steps:
@@ -24,7 +24,7 @@ jobs:
             tags: thijsvanloef/palworld-server-docker:security
 
         - name: Scan for vulnerabilities
-          uses: crazy-max/ghaction-container-scan@v3
+          id: scan
+          uses: anchore/scan-action@v3
           with:
-            image: thijsvanloef/palworld-server-docker:security
-            annotations: true
+            image: "thijsvanloef/palworld-server-docker:security"
