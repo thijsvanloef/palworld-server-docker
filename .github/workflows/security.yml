@@ -30,6 +30,7 @@ jobs:
         with:
           image: "local/palworld-server-docker:security"
           fail-build: false
+          only-fixed: true
 
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
