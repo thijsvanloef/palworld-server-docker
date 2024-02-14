@@ -1,6 +1,6 @@
 ---
 name: Unit-test
-on: # yamllint disable-line rule:truthy
+on:  # yamllint disable-line rule:truthy
   pull_request:
   workflow_call:
 
