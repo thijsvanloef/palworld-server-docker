@@ -4,6 +4,8 @@ sidebar_position: 5
 
 # Known Issues
 
+Known issues of using this Docker image.
+
 ## Broadcast command can only send 1 word
 
 When using Broadcast among RCON's functions, only one word is transmitted.
