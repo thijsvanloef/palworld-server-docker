@@ -3,39 +3,39 @@ sidebar_position: 1
 slug: /
 ---
 
-# Quick Setup
+# Snelle Installatie
 
-Let's get you on your way with the Palworld Dedicated server!
+Laten we je op weg helpen met de Palworld Dedicated server!
 
 :::warning
-At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+Op dit moment zullen Xbox Gamepass/Xbox Console spelers niet in staat zijn om zich bij een dedicated server aan te sluiten.
 
-They will need to join players using the invite code and are limited to sessions of 4 players max.
+Ze moeten spelers die de uitnodigingscode gebruiken om deel te nemen en zijn beperkt tot sessies van maximaal 4 spelers.
 :::
 
 ## Prerequisites
 
-* Virtualization enabled in the BIOS/UEFI
-* Must have [Docker](https://docs.docker.com/engine/install/) installed
+* Virtualisatie ingeschakeld in de BIOS/UEFI
+* Moet [Docker](https://docs.docker.com/engine/install/) geïnstalleerd hebben.
 
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
 |----------|---------|------------------------------------------|
 | CPU      | 4 cores | 4+ cores                                 |
-| RAM      | 16GB    | Recommend over 32GB for stable operation |
+| RAM      | 16GB    | Aanbevolen is meer dan 32GB voor stabiele werking |
 | Storage  | 8GB     | 20GB                                     |
 
 ## Docker Compose
 
-This repository includes an example
+Deze repository bevat een voorbeeld
 [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
-file you can use to set up your server.
+bestand dat je kunt gebruiken om je server in te stellen.
 
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -60,17 +60,16 @@ services:
          - ./palworld:/palworld/
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
+Als alternatief kun je het [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) bestand kopiëren naar een nieuw bestand genaamd .env.
 <!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the correct 
-values.
+Pas het aan naar jouw behoeften, bekijk de [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) sectie om de juiste waarden te controleren.
 <!-- markdownlint-disable-next-line -->
-Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
+Pas je [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) aan naar dit:
 
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -83,16 +82,16 @@ services:
          - ./palworld:/palworld/
 ```
 
-### Starting the server
+### De server starten
 
-Use `docker compose up -d` in the same folder as the `docker-compose.yml` to start the server in the background
+Gebruik `docker compose up -d` in dezelfde map als de `docker-compose.yml` om de server op de achtergrond te starten.
 
-### Stopping the server
+### De server stoppen
 
-Use `docker compose stop` in the same folder as the `docker-compose.yml` to stop the server
+Gebruik `docker compose stop` in dezelfde map als de `docker-compose.yml` om de server te stoppen.
 
-Use `docker compose down --rmi all` in the same folder as the `docker-compose.yml`
-to stop and remove the server and remove the docker image from your computer
+Gebruik `docker compose down --rmi all` in dezelfde map als de `docker-compose.yml`
+om de server te stoppen en te verwijderen, en om het docker-image van je computer te verwijderen.
 
 ## Docker Run
 
@@ -117,15 +116,14 @@ docker run -d \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 <!-- markdownlint-disable-next-line -->
-As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
+Als alternatief kun je het [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) bestand kopiëren naar een nieuw bestand genaamd .env.
 <!-- markdownlint-disable-next-line -->
-Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the
-correct values.
+Pas het aan naar jouw behoeften, bekijk de [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) sectie om de juiste waarden te controleren.
 
-Change your docker run command to this:
+Pas je docker run commando aan naar dit:
 
 ```bash
 docker run -d \
@@ -136,5 +134,5 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
