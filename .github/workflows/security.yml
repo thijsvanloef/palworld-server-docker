@@ -20,14 +20,15 @@ jobs:
       - name: Build and export to Docker
         uses: docker/build-push-action@v5
         with:
+          tags: local/palworld-server-docker:security
+          push: false
           load: true
-          tags: thijsvanloef/palworld-server-docker:security
 
       - name: Scan for vulnerabilities
         id: scan
         uses: anchore/scan-action@v3
         with:
-          image: "thijsvanloef/palworld-server-docker:latest"
+          image: "local/palworld-server-docker:security"
           fail-build: false
 
       - name: Inspect action SARIF report
