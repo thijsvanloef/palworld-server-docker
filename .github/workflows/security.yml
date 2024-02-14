@@ -1,5 +1,5 @@
 ---
-name: Security Scanning
+name: Security
 
 on:  # yamllint disable-line rule:truthy
   pull_request:
@@ -9,7 +9,7 @@ on:  # yamllint disable-line rule:truthy
 jobs:
  scan:
     runs-on: ubuntu-latest
-    name: Security - Scan
+    name: Container - Scan
     steps:
         - name: Checkout
           uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
         - name: Build and export to Docker
           uses: docker/build-push-action@v5
           with:
-            push: false
+            load: true
             tags: thijsvanloef/palworld-server-docker:security
 
         - name: Scan for vulnerabilities
