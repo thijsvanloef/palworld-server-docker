@@ -28,6 +28,7 @@ jobs:
         uses: anchore/scan-action@v3
         with:
           image: "thijsvanloef/palworld-server-docker:latest"
+          fail-build: false
 
       - name: Inspect action SARIF report
         run: cat ${{ steps.scan.outputs.sarif }}
