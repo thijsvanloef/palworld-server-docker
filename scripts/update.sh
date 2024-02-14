@@ -48,8 +48,10 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
-        rcon-cli -c /home/steam/server/rcon.yaml "broadcast Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
-        sleep "${AUTO_UPDATE_WARN_MINUTES}m"
+        for ((i = "${AUTO_UPDATE_WARN_MINUTES}" ; i > 0 ; i--)); do
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast Server_will_update_in_${i}_Minutes"
+            sleep "1m"
+        done
     fi
     backup
     rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
