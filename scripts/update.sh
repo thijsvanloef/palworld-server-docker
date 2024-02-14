@@ -46,7 +46,7 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
 
     if [ "$(get_player_count)" -gt 0 ]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-        /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
+            /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
         rcon-cli -c /home/steam/server/rcon.yaml "broadcast Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
