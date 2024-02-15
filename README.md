@@ -178,13 +178,6 @@ Below we assume your UID is 1000 and your GID is 1001
 
 * In docker run add `--user 1000:1001 \` above the last line.
 * In docker compose add `user: 1000:1001` above ports.
-* In k8s add the following above the ports in deployment.yaml
-
-   ```yml
-   securityContext:
-      runAsUser: 1000
-      runAsGroup: 1001
-   ```
 
 If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that
 is being bind: `chown UID:GID palworld/`
