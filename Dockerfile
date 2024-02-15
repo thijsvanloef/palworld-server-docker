@@ -31,16 +31,9 @@ RUN wget -q https://github.com/aptible/supercronic/archive/refs/tags/${SUPERCRON
     && rm -rf supercronic-${SUPERCRONIC_VERSION##v} \
     && go build -v .
 
-FROM cm2network/steamcmd:root@sha256:34431e0ae5b85e018478047f203e394a9c69a75142d50b2fecb2aa63ab8c3f77 as base-amd64
-# Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
-# hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root@sha256:558734d28d27256a3d2ecc386d7394fafd5c797490c37689e2a86f3015b0a6d5 as base-arm64
+FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:949142959bdeb41c2b5565552896902f6ba524a5602f61a23ecda76d51f798e6
 
-ARG TARGETARCH
-# Ignoring the lack of a tag here because the tag is defined in the above FROM lines
-# and hadolint isn't aware of those.
-# hadolint ignore=DL3006
-FROM base-${TARGETARCH}
+USER root
 
 # renovate: datasource=repology versioning=deb depName=debian_11/procps
 ENV PROCPS_VERSION=2:3.3.17-5
