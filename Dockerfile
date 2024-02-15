@@ -39,8 +39,6 @@ USER root
 
 # renovate: datasource=repology versioning=deb depName=debian_12/procps
 ENV PROCPS_VERSION=2:3.3.17-5
-# renovate: datasource=repology versioning=deb depName=debian_12/wget
-ENV WGET_VERSION=1.21-1+deb11u1
 # renovate: datasource=repology versioning=deb depName=debian_12/gettext-base
 ENV GETTEXT_BASE_VERSION=0.21-4
 # renovate: datasource=repology versioning=deb depName=debian_12/xdg-user-dirs
@@ -49,7 +47,6 @@ ENV XDG_USER_DIRS_VERSION=0.17-2
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=${PROCPS_VERSION} \
-    wget=${WGET_VERSION} \
     gettext-base=${GETTEXT_BASE_VERSION} \
     xdg-user-dirs=${XDG_USER_DIRS_VERSION} \
     && apt-get clean \
