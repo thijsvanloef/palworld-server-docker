@@ -33,8 +33,6 @@ RUN wget -q https://github.com/aptible/supercronic/archive/refs/tags/${SUPERCRON
 
 FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:949142959bdeb41c2b5565552896902f6ba524a5602f61a23ecda76d51f798e6
 
-# Ignoring, future refactor
-# hadolint ignore=DL3002
 USER root
 
 # renovate: datasource=repology versioning=deb depName=debian_12/procps
@@ -53,14 +51,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # install rcon and supercronic
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
 COPY --from=supercronic_builder /build/supercronic /usr/local/bin/supercronic
 
+COPY ./scripts /home/steam/server/
+
+RUN chmod +x /home/steam/server/*.sh
+
+RUN mv /home/steam/server/backup.sh /usr/local/bin/backup && \
+    mv /home/steam/server/update.sh /usr/local/bin/update && \
+    mv /home/steam/server/restore.sh /usr/local/bin/restore
+
+RUN mkdir -p /palworld/backups \
+    && chown -R steam:steam /home/steam /palworld
+
+USER steam
+WORKDIR /home/steam/server
+
 ENV PORT= \
-    PUID=1000 \
-    PGID=1000 \
     PLAYERS= \
     MULTITHREADING=false \
     COMMUNITY=false \
@@ -86,15 +94,6 @@ ENV PORT= \
     AUTO_REBOOT_WARN_MINUTES=5 \
     AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE=false \
     AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *"
-
-COPY ./scripts /home/steam/server/
-
-RUN chmod +x /home/steam/server/*.sh && \
-    mv /home/steam/server/backup.sh /usr/local/bin/backup && \
-    mv /home/steam/server/update.sh /usr/local/bin/update && \
-    mv /home/steam/server/restore.sh /usr/local/bin/restore
-
-WORKDIR /home/steam/server
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
