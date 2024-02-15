@@ -37,13 +37,13 @@ FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:949142959bdeb41c2b5565552896902f
 # hadolint ignore=DL3002
 USER root
 
-# renovate: datasource=repology versioning=deb depName=debian_11/procps
+# renovate: datasource=repology versioning=deb depName=debian_12/procps
 ENV PROCPS_VERSION=2:3.3.17-5
-# renovate: datasource=repology versioning=deb depName=debian_11/wget
+# renovate: datasource=repology versioning=deb depName=debian_12/wget
 ENV WGET_VERSION=1.21-1+deb11u1
-# renovate: datasource=repology versioning=deb depName=debian_11/gettext-base
+# renovate: datasource=repology versioning=deb depName=debian_12/gettext-base
 ENV GETTEXT_BASE_VERSION=0.21-4
-# renovate: datasource=repology versioning=deb depName=debian_11/xdg-user-dirs
+# renovate: datasource=repology versioning=deb depName=debian_12/xdg-user-dirs
 ENV XDG_USER_DIRS_VERSION=0.17-2
 
 # update and install dependencies
