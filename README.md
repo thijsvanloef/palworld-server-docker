@@ -68,6 +68,7 @@ services:
       image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
+      user: 0:0
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
       ports:
         - 8211:8211/udp
@@ -100,6 +101,7 @@ services:
       image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
+      user: 0:0
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
       ports:
         - 8211:8211/udp
@@ -117,6 +119,7 @@ Change every <> to your own configuration
 ```bash
 docker run -d \
     --name palworld-server \
+    --user 0:0 \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./palworld:/palworld/ \
@@ -145,6 +148,7 @@ correct values. Change your docker run command to this:
 ```bash
 docker run -d \
     --name palworld-server \
+    --user 0:0 \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./palworld:/palworld/ \
