@@ -38,11 +38,11 @@ FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:949142959bdeb41c2b5565552896902f
 USER root
 
 # renovate: datasource=repology versioning=deb depName=debian_12/procps
-ENV PROCPS_VERSION=2:3.3.17-5
+ENV PROCPS_VERSION=2:4.0.2-3
 # renovate: datasource=repology versioning=deb depName=debian_12/gettext-base
-ENV GETTEXT_BASE_VERSION=0.21-4
+ENV GETTEXT_BASE_VERSION=0.21-12
 # renovate: datasource=repology versioning=deb depName=debian_12/xdg-user-dirs
-ENV XDG_USER_DIRS_VERSION=0.17-2
+ENV XDG_USER_DIRS_VERSION=0.18-1
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
