@@ -134,11 +134,9 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****"
-if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_START_MESSAGE}" ]; then
-    /home/steam/server/discord.sh "${DISCORD_PRE_START_MESSAGE}" "success" &
-fi
+
 
 echo "${STARTCOMMAND[*]}"
-"${STARTCOMMAND[@]}"
+#"${STARTCOMMAND[@]}"
+sed -i "/\[program:palworld\]/,/\[/{s|command=.*|command=${STARTCOMMAND[*]}|}" /home/steam/server/services/supervisord.conf
 exit 0
