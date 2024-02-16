@@ -78,3 +78,38 @@ get_player_count() {
     player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
     echo -n "${player_list}" | wc -l
 }
+
+# Given an amount of time in minutes and a message prefix
+countdown_message() {
+    mtime="$1"
+    message_prefix="$2"
+
+    for ((i = "${mtime}" ; i > 0 ; i--)); do
+        if [ "$i" -eq 1 ]; then
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutue"
+            sleep 30s
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_30_seconds"
+            sleep 20s
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_10_seconds"
+            sleep 10s
+        else
+            case "$i" in
+                "$mtime" )
+                    ;&
+                15 )
+                    ;&
+                10 )
+                    ;&
+                5 )
+                    ;&
+                2 )
+                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutues"
+                    ;&
+                * ) 
+                    sleep 1m
+                    ;;
+            esac
+        fi
+    done
+    
+}
