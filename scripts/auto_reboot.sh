@@ -4,12 +4,12 @@ source "/home/steam/server/helper_functions.sh"
 
 if [ "${RCON_ENABLED,,}" = true ]; then
     if [ "${AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE,,}" != true ]; then
-      players_count=$(get_player_count)
+        players_count=$(get_player_count)
 
-      if [ "$players_count" -gt 0 ]; then
-          echo "There are ${players_count} players online. Skipping auto reboot."
-          exit 1
-      fi
+        if [ "$players_count" -gt 0 ]; then
+            echo "There are ${players_count} players online. Skipping auto reboot."
+            exit 1
+        fi
     fi
 
     if [ -z "${AUTO_REBOOT_WARN_MINUTES}" ]; then
