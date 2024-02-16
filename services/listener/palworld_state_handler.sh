@@ -1,7 +1,7 @@
 #!/bin/bash
 
 send_discord_message() {
-    "$(/home/steam/server/discord.sh "${1}" "${2}" &)"
+    "$(/home/steam/server/discord.sh "${@}" &)"
 }
 
 # generates variables from header String
