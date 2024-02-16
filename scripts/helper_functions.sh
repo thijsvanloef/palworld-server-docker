@@ -103,7 +103,7 @@ countdown_message() {
                 5 )
                     ;&
                 2 )
-                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutues"
+                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutes"
                     ;&
                 * ) 
                     sleep 1m
