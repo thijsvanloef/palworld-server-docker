@@ -42,14 +42,14 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         exit 0
     fi
 
-    echo "New Build was found."
+    echo "An update is available"
     if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
     fi
     if countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; then
-        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
+        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST"
         rm /palworld/steamapps/appmanifest_2394010.acf
 
         backup
