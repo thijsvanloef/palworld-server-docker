@@ -5,7 +5,7 @@ send_discord_message() {
 }
 
 # generates variables from header String
-# supervisor provides the following variables: ver, server, serial, pool, myeventpool, poolserial, eventname, len
+# supervisor provides the following variables: ver, server, serial, pool, myeventpool, poolserial, processname, eventname, len
 parse_headers() {
     
     IFS=' '
