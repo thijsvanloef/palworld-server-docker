@@ -110,6 +110,5 @@ countdown_message() {
                     ;;
             esac
         fi
-    done
-    
+    done   
 }
