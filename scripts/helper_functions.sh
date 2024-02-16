@@ -80,38 +80,50 @@ get_player_count() {
 }
 
 # Given an amount of time in minutes and a message prefix
+# Returns 0 on success
+# If mtime is not an integer and there are players in game then return 1
 countdown_message() {
     mtime="$1"
     message_prefix="$2"
+    return_val=0
 
-    for ((i = "${mtime}" ; i > 0 ; i--)); do
-        if [ "$(get_player_count)" -eq 0 ]; then
-            break
+    if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
+        for ((i = "${mtime}" ; i > 0 ; i--)); do
+            if [ "$(get_player_count)" -eq 0 ]; then
+                break
+            fi
+            if [ "$i" -eq 1 ]; then
+                rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minute"
+                sleep 30s
+                rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_30_seconds"
+                sleep 20s
+                rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_10_seconds"
+                sleep 10s
+            else
+                case "$i" in
+                    "$mtime" )
+                        ;&
+                    15 )
+                        ;&
+                    10 )
+                        ;&
+                    5 )
+                        ;&
+                    2 )
+                        rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minutes"
+                        ;&
+                    * ) 
+                        sleep 1m
+                        ;;
+                esac
+            fi
+        done
+        return 0
+    else
+        # mtime is not an integer so check if there are no players
+        if [ "$(get_player_count)" -gt 0 ]; then
+            return_val=1
         fi
-        if [ "$i" -eq 1 ]; then
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minute"
-            sleep 30s
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_30_seconds"
-            sleep 20s
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_10_seconds"
-            sleep 10s
-        else
-            case "$i" in
-                "$mtime" )
-                    ;&
-                15 )
-                    ;&
-                10 )
-                    ;&
-                5 )
-                    ;&
-                2 )
-                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minutes"
-                    ;&
-                * ) 
-                    sleep 1m
-                    ;;
-            esac
-        fi
-    done   
+    fi
+    return "$return_val"
 }

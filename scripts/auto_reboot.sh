@@ -14,8 +14,7 @@ if [ "${RCON_ENABLED,,}" = true ]; then
 
     if [ -z "${AUTO_REBOOT_WARN_MINUTES}" ]; then
         echo "Unable to auto reboot, AUTO_REBOOT_WARN_MINUTES is empty."
-    elif [[ "${AUTO_REBOOT_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
-        countdown_message "${AUTO_REBOOT_WARN_MINUTES}" "The_Server_will_reboot"
+    elif countdown_message "${AUTO_REBOOT_WARN_MINUTES}" "The_Server_will_reboot"; then
         rcon-cli -c /home/steam/server/rcon.yaml save
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else
