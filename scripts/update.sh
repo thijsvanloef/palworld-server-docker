@@ -48,12 +48,11 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         echo "New Build was found. Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
         rm /palworld/steamapps/appmanifest_2394010.acf
 
-        if [ "$(get_player_count)" -gt 0 ]; then
-            if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-                /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
-            fi
-            countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update_in"
+        if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
+            /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
+        countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update_in"
+
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     else

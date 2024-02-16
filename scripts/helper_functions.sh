@@ -85,6 +85,9 @@ countdown_message() {
     message_prefix="$2"
 
     for ((i = "${mtime}" ; i > 0 ; i--)); do
+        if [ "$(get_player_count)" -eq 0 ]; then
+            break
+        fi
         if [ "$i" -eq 1 ]; then
             rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minute"
             sleep 30s
