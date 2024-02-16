@@ -32,7 +32,7 @@ if [ -z "$TARGET_MANIFEST" ]; then
     fi
     exit 1
 fi
-echo "player count: $(get_player_count)"
+
 if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
     if [ "${RCON_ENABLED,,}" != true ]; then
         echo "An update is available however auto updating without rcon is not supported"
@@ -43,19 +43,19 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
     fi
 
     echo "New Build was found."
-    if [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
-        echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is empty."
-    elif [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
-        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
-        rm /palworld/steamapps/appmanifest_2394010.acf
-
+    if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
-        countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"
+    fi
+    if countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; then
+        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
+        rm /palworld/steamapps/appmanifest_2394010.acf
 
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+    elif [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
+        echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is empty."
     else
         echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is not an integer: ${AUTO_UPDATE_WARN_MINUTES}"
     fi
