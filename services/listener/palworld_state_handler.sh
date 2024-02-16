@@ -27,23 +27,17 @@ while true; do
     if [ "${processname}" = "palworld" ]; then
 
         case $eventname in
-            PROCESS_STATE_STARTING)
-                send_discord_message "${processname} is starting" "in-progress"
-                ;;
             PROCESS_STATE_RUNNING)
-                send_discord_message "${processname} is running" "success"
+                send_discord_message "${DISCORD_PRE_START_MESSAGE}" "success"
                 ;;
             PROCESS_STATE_STOPPING)
-                send_discord_message "${processname} is stopping." "in-progress"
+                send_discord_message "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
                 ;;
-            PROCESS_STATE_STOPPED)
-                send_discord_message "${processname} has stopped." "failure"
-                ;;
-            PROCESS_STATE_EXITED)
-                send_discord_message "${processname} has exited." "failure"
+            PROCESS_STATE_STOPPED|PROCESS_STATE_EXITED)
+                send_discord_message "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
                 ;;
             *)
-                send_discord_message "Unkown event: $header" "failure"
+                send_discord_message "Unkown event occured: $header" "failure"
                 ;;
         esac
     fi
