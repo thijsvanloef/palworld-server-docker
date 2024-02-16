@@ -51,7 +51,7 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
             /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
         fi
-        countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update_in"
+        countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"
 
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"

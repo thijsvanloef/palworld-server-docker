@@ -89,11 +89,11 @@ countdown_message() {
             break
         fi
         if [ "$i" -eq 1 ]; then
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minute"
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minute"
             sleep 30s
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_30_seconds"
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_30_seconds"
             sleep 20s
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_10_seconds"
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_10_seconds"
             sleep 10s
         else
             case "$i" in
@@ -106,7 +106,7 @@ countdown_message() {
                 5 )
                     ;&
                 2 )
-                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutes"
+                    rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_in_${i}_minutes"
                     ;&
                 * ) 
                     sleep 1m
