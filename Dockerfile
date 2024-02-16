@@ -32,10 +32,12 @@ LABEL maintainer="thijs@loef.dev" \
 
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    procps=2:3.3.17-5 \
-    wget=1.21-1+deb11u1 \
-    supervisor=4.2.2-2 \
-    xdg-user-dirs=0.17-2 \
+    procps=2:4.0.2-3 \
+    wget \ 
+    gettext-base=0.21-12 \
+    xdg-user-dirs=0.18-1 \
+    jo=1.9-1 \
+    supervisor=4.2.5-1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -111,10 +113,9 @@ ENV PORT= \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
 
 COPY ./scripts /home/steam/server/
-# supervisord config
-COPY ./services/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./services /home/steam/server/services/
 
-RUN chmod +x /home/steam/server/*.sh && \
+RUN chmod +x /home/steam/server/*.sh /home/steam/server/services/listener/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
     mv /home/steam/server/restore.sh /usr/local/bin/restore
