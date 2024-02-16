@@ -9,6 +9,9 @@
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
+> [!CAUTION]
+> The docs have been moved to: [https://palworld-server-docker.loef.dev/zh/](https://palworld-server-docker.loef.dev/zh/)
+
 加入我们的 [Discord](https://discord.gg/UxBxStPAAE)
 
 [English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
