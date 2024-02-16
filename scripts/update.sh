@@ -42,10 +42,11 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         exit 0
     fi
 
+    echo "New Build was found."
     if [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
         echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is empty."
     elif [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
-        echo "New Build was found. Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
+        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
         rm /palworld/steamapps/appmanifest_2394010.acf
 
         if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
