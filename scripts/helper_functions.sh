@@ -86,7 +86,7 @@ countdown_message() {
 
     for ((i = "${mtime}" ; i > 0 ; i--)); do
         if [ "$i" -eq 1 ]; then
-            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minutue"
+            rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_${i}_minute"
             sleep 30s
             rcon-cli -c /home/steam/server/rcon.yaml "broadcast ${message_prefix}_30_seconds"
             sleep 20s
