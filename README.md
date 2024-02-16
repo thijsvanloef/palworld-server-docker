@@ -8,7 +8,8 @@
 [![Discord](https://img.shields.io/discord/1200397673329594459?logo=discord&label=Discord&link=https%3A%2F%2Fdiscord.gg%2FUxBxStPAAE)](https://discord.com/invite/UxBxStPAAE)
 
 [![Docker Hub](https://img.shields.io/badge/Docker_Hub-palworld-blue?logo=docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
+[![GHCR](https://img.shields.io/badge/GHCR-palworld-blue?logo=docker)](https://github.com/thijsvanloef/palworld-server-docker/pkgs/container/palworld-server-docker)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld-server-chart)](https://artifacthub.io/packages/search?repo=palworld-server-chart)
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
@@ -20,12 +21,30 @@
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
-This Docker container has been tested and will work on Linux (Ubuntu/Debian), Windows 10 and macOS (including Apple Silicon).
+This Docker container has been tested and will work on the following OS:
+
+* Linux (Ubuntu/Debian)
+* Windows 10,11
+* MacOS (including Apple Silicon M1/M2/M3).
+
+This container has also been tested and will work on both `x64` and `ARM64` based CPU architecture.
 
 > [!IMPORTANT]
 > At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
 >
 > They will need to join players using the invite code and are limited to sessions of 4 players max.
+
+## Sponsors
+
+Massive shoutout to the following sponsors!
+
+<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/USA-RedDragon"><img src="https://github.com/USA-RedDragon.png" width="50px" alt="USA-RedDragon" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
+</p>
+
+## Official Documentation
+
+[![Documentation](https://github.com/thijsvanloef/palworld-server-docker/assets/58031337/b92d76d1-5efb-438d-9ffd-5385544a831b)](https://palworld-server-docker.loef.dev/)
 
 ## Server Requirements
 
@@ -54,19 +73,19 @@ services:
         - 8211:8211/udp
         - 27015:27015/udp
       environment:
-         - PUID=1000
-         - PGID=1000
-         - PORT=8211 # Optional but recommended
-         - PLAYERS=16 # Optional but recommended
-         - SERVER_PASSWORD=worldofpals # Optional but recommended
-         - MULTITHREADING=true
-         - RCON_ENABLED=true
-         - RCON_PORT=25575
-         - TZ=UTC
-         - ADMIN_PASSWORD=adminPasswordHere
-         - COMMUNITY=false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         - SERVER_NAME=World of Pals
-         - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
+         PUID: 1000
+         PGID: 1000
+         PORT: 8211 # Optional but recommended
+         PLAYERS: 16 # Optional but recommended
+         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         MULTITHREADING: true
+         RCON_ENABLED: true
+         RCON_PORT: 25575
+         TZ: "UTC"
+         ADMIN_PASSWORD: "adminPasswordHere"
+         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         SERVER_NAME: "World of Pals"
+         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -100,7 +119,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     -e PUID=1000 \
     -e PGID=1000 \
     -e PORT=8211 \
@@ -109,11 +128,11 @@ docker run -d \
     -e RCON_ENABLED=true \
     -e RCON_PORT=25575 \
     -e TZ=UTC \
-    -e ADMIN_PASSWORD=adminPasswordHere \
-    -e SERVER_PASSWORD=worldofpals \
+    -e ADMIN_PASSWORD="adminPasswordHere" \
+    -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME=World of Pals \
-    -e SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef \
+    -e SERVER_NAME="World of Pals" \
+    -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
@@ -128,7 +147,7 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -v ./<palworld-folder>:/palworld/ \
+    -v ./palworld:/palworld/ \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
@@ -143,7 +162,7 @@ Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
 #### Using helm chart
 
-Follow up the docs on the [README.md for the helm chart](./charts/palworld/README.md) to deploy.
+The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
 ### Environment variables
 
@@ -155,8 +174,8 @@ It is highly recommended you set the following environment values before startin
 * PUID
 * PGID
 
-| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values                                                                                             |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|------------------------------------------------------------------------------------------------------------|
+| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values |
+|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------|
 | TZ                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
 | PLAYERS*           | Max amount of players that are able to join the server                                                                                                                                              | 16             | 1-32                                                                                                       |
 | PORT*              | UDP port that the server will expose                                                                                                                                                                | 8211           | 1024-65535                                                                                                 |
@@ -180,10 +199,20 @@ It is highly recommended you set the following environment values before startin
 | OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
 | AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
-| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. | 30 | !0 |
+| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected) | 30 | !0 |
 | AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online. | false | true/false |
+| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
+| DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
+| DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | "string" |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | "string" |
+| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
+| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
+| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
+| DISABLE_GENERATE_SETTINGS | Whether to automatically generate the PalWorldSettings.ini | false | true/false |
 
 *highly recommended to set
 
@@ -263,6 +292,11 @@ The `RCON_ENABLED` environment variable must be set to `true` to use this comman
 ## Manually restore from a backup
 
 Locate the backup you want to restore in `/palworld/backups/` and decompress it.
+Need to stop the server before task.
+
+```bash
+docker compose down
+```
 
 Delete the old saved data folder located at `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
 
@@ -277,7 +311,7 @@ DedicatedServerName=<new_hash_value>  # Replace it with your folder name.
 Restart the game. (If you are using Docker Compose)
 
 ```bash
-docker compose down && docker compose up -d
+docker compose up -d
 ```
 
 ## Configuring Automatic Backups with Cron
@@ -311,7 +345,7 @@ To be able to use automatic Updates with this Server the following environment v
 >
 > The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
 
-Set AUTO_UPDATE_ENABLED enable or disable automatic backups (Default is disabled)
+Set AUTO_UPDATE_ENABLED enable or disable automatic updates (Default is disabled)
 
 AUTO_UPDATE_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
 
@@ -334,7 +368,7 @@ To be able to use automatic reboots with this server RCON_ENABLED enabled.
 >
 > The example docker run command and docker compose file in [How to Use](#how-to-use) already use the needed policy
 
-Set AUTO_REBOOT_ENABLED enable or disable automatic backups (Default is disabled)
+Set AUTO_REBOOT_ENABLED enable or disable automatic reboots (Default is disabled)
 
 AUTO_REBOOT_CRON_EXPRESSION is a cron expression, in a Cron-Expression you define an interval for when to run jobs.
 
@@ -355,6 +389,18 @@ timezone set with TZ
 >
 > These Environment Variables/Settings are subject to change since the game is still in beta.
 > Check out the [official webpage for the supported parameters.](https://tech.palworldgame.com/optimize-game-balance)
+
+Converting server settings to environment variables follow the same principles (with some exceptions):
+
+* all capital letters
+* split words by inserting an underscore
+* remove the single letter if the setting starts with one (like 'b')
+
+For example:
+
+* Difficulty -> DIFFICULTY
+* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+* bIsPvP -> IS_PVP
 
 | Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
@@ -392,7 +438,7 @@ timezone set with TZ
 | DROP_ITEM_MAX_NUM                         | Maximum number of drops in the world                           | 3000                                                                                         | Integer                                |
 | DROP_ITEM_MAX_NUM_UNKO                    | Maximum number of UNKO drops in the world                      | 100                                                                                          | Integer                                |
 | BASE_CAMP_MAX_NUM                         | Maximum number of base camps                                   | 128                                                                                          | Integer                                |
-| BASE_CAMP_WORKER_MAXNUM                   | Maximum number of workers                                      | 15                                                                                           | Integer                                |
+| BASE_CAMP_WORKER_MAX_NUM                  | Maximum number of workers                                      | 15                                                                                           | Integer                                |
 | DROP_ITEM_ALIVE_MAX_HOURS                 | Time it takes for items to despawn in hours                    | 1.000000                                                                                     | Float                                  |
 | AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | Automatically reset guild when no players are online           | False                                                                                        | Bool                                   |
 | AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | Time to automatically reset guild when no players are online   | 72.000000                                                                                    | Float                                  |
@@ -423,7 +469,29 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 >
 > Any changes made while the server is live will be overwritten when the server stops.
 
-For a more detailed list of explanations of server settings go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
+
+For more detailed server settings explanations go to: [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html)
+
+## Using discord webhooks
+
+1. Generate a webhook url for your discord server in your discord's server settings.
+
+2. Set the environment variable with the unique token at the end of the discord webhook url example: `https://discord.com/api/webhooks/1234567890/abcde`
+
+send discord messages with docker run:
+
+```sh
+-e DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/1234567890/abcde" \
+-e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
+```
+
+send discord messages with docker compose:
+
+```yaml
+- DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
+- DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
+```
 
 ## Reporting Issues/Feature Requests
 

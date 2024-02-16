@@ -1,34 +1,35 @@
+---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: restart-deployment
 spec:
-  concurrencyPolicy:  Forbid
+  concurrencyPolicy: Forbid
   schedule: '30 9 * * *'
   jobTemplate:
     spec:
       backoffLimit: 1
-      activeDeadlineSeconds:  600
+      activeDeadlineSeconds: 600
       template:
         spec:
           serviceAccountName: restart-deploy
-          restartPolicy:  Never
+          restartPolicy: Never
           containers:
             - name: kubectl
-              image:  bitnami/kubectl
+              image: bitnami/kubectl
               command:
-              - /bin/sh
-              - -c
-              - /restart-script/restart-deployment.sh
+                - /bin/sh
+                - -c
+                - /restart-script/restart-deployment.sh
               volumeMounts:
-              - name: restart-script
-                mountPath:  "/restart-script"
-                readOnly: true
+                - name: restart-script
+                  mountPath: "/restart-script"
+                  readOnly: true
           volumes:
-          - name: restart-script
-            configMap:
-              name: restart-deployment-configmap
-              defaultMode:  0777
-              items:
-              - key:  "restart-deployment.sh"
-                path: "restart-deployment.sh"
+            - name: restart-script
+              configMap:
+                name: restart-deployment-configmap
+                defaultMode: 0777
+                items:
+                  - key: "restart-deployment.sh"
+                    path: "restart-deployment.sh"

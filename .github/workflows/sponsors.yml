@@ -1,0 +1,25 @@
+---
+name: Generate Sponsors
+on:  # yamllint disable-line rule:truthy
+  workflow_dispatch:
+  schedule:
+    - cron: 0 0 * * *
+jobs:
+  sponsors:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sponsors - Generate
+        uses: JamesIves/github-sponsors-readme-action@v1
+        with:
+          token: ${{ secrets.SPONSOR_PAT }}
+          file: 'README.md'
+          template: <a href="https://github.com/{{{ login }}}"><img src="https://github.com/{{{ login }}}.png" width="50px" alt="{{{ login }}}" /></a>&nbsp;&nbsp;
+
+      - name: Sponsors - Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: main
+          folder: '.'

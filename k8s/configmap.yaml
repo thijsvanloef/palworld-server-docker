@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,9 +6,9 @@ metadata:
 data:
   PUID: "1000"
   PGID: "1000"
-  PORT: "8211" # Optional but recommended
-  PLAYERS: "16" # Optional but recommended
-  SERVER_PASSWORD: "worldofpals" # Optional but recommended
+  PORT: "8211"  # Optional but recommended
+  PLAYERS: "16"  # Optional but recommended
+  SERVER_PASSWORD: "worldofpals"  # Optional but recommended
   MULTITHREADING: "true"
   RCON_ENABLED: "true"
   RCON_PORT: "25575"
