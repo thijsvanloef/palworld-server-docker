@@ -55,9 +55,9 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         backup
         rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
     elif [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
-        echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is empty."
+        echo "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is empty."
     else
-        echo "Unable to auto update, AUTO_UPDATE_WARN_MINUTES is not an integer: ${AUTO_UPDATE_WARN_MINUTES}"
+        echo "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is not an integer: ${AUTO_UPDATE_WARN_MINUTES}"
     fi
 else
     echo "The Server is up to date!"
