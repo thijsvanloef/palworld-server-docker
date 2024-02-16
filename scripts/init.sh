@@ -12,6 +12,6 @@ fi
 mkdir -p /palworld/backups
 chown -R steam:steam /palworld /home/steam/
 
-/home/steam/server/start.sh
+su steam -c /home/steam/server/start.sh
 
-exec /usr/bin/supervisord
+exec /usr/bin/supervisord --configuration=/home/steam/server/services/supervisord.conf
