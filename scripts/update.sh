@@ -2,34 +2,22 @@
 # shellcheck source=/dev/null
 source "/home/steam/server/helper_functions.sh"
 
-if [ "${UPDATE_ON_BOOT}" = false ]; then
-    echo "Update on Boot needs to be enabled for auto updating"
-    if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-        /home/steam/server/discord.sh "Update on Boot needs to be enabled for auto updating" "warn"
-    fi
-    exit 0
+UpdateRequired
+updateRequired=$?
+# Check if Update was actually required
+if [ "$updateRequired" != 0 ]; then
+  exit 0
 fi
 
-temp_file=$(mktemp)
-http_code=$(curl https://api.steamcmd.net/v1/info/2394010 --output "$temp_file" --silent --location --write-out "%{http_code}")
-
-CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf)
-TARGET_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
-rm "$temp_file"
-
-if [ "$http_code" -ne 200 ]; then
-    echo "There was a problem reaching the Steam api. Unable to check for updates!"
-    if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-        /home/steam/server/discord.sh "There was a problem reaching the Steam api. Unable to check for updates!" "failure" &
-    fi
+if [ "${UPDATE_ON_BOOT}" = false ]; then
+    LogWarn "An update is available however, UPDATE_ON_BOOT needs to be enabled for auto updating"
+    DiscordMessage "An update is available however, UPDATE_ON_BOOT needs to be enabled for auto updating" "warn"
     exit 1
 fi
 
-if [ -z "$TARGET_MANIFEST" ]; then
-    echo "The server response does not contain the expected BuildID. Unable to check for updates!"
-    if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-        /home/steam/server/discord.sh "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure" &
-    fi
+if [ "${RCON_ENABLED,,}" = false ]; then
+    LogWarn "An update is available however auto updating without rcon is not supported"
+    DiscordMessage "An update is available however auto updating without rcon is not supported" "warn"
     exit 1
 fi
 
@@ -44,12 +32,10 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
 
     echo "An update is available"
     if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
-        if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-            /home/steam/server/discord.sh "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes" "info" &
-        fi
+        DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
     fi
     if countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; then
-        echo "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST"
+        LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
         rm /palworld/steamapps/appmanifest_2394010.acf
 
         backup
