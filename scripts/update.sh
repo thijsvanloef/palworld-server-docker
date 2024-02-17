@@ -53,7 +53,7 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         rm /palworld/steamapps/appmanifest_2394010.acf
 
         backup
-        rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+        shutdown_server
     elif [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
         echo "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is empty."
     else

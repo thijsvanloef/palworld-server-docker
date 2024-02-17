@@ -79,6 +79,38 @@ get_player_count() {
     echo -n "${player_list}" | wc -l
 }
 
+# Saves the server
+# Returns 0 if it saves
+# Returns 1 if it is not able to save
+save_server() {
+    local return_val=0
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        rcon-cli -c /home/steam/server/rcon.yaml save
+    else
+        return_val=1
+    fi
+    return "$return_val"
+}
+
+# Saves then shutdowns the server
+# Returns 0 if it is shutdown
+# Returns 1 if it is not able to be shutdown
+shutdown_server() {
+    local return_val=0
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        # Do not shutdown if not able to save
+        if save_server; then
+            rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+        else
+            return_val=1
+        fi
+    else
+        return_val=1
+    fi
+    return "$return_val"
+}
+
+
 # Given an amount of time in minutes and a message prefix
 # Returns 0 on success
 # If mtime is not an integer and there are players in game then return 1
