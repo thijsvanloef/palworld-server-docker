@@ -135,5 +135,5 @@ EOL
 
 echo "${STARTCOMMAND[*]}"
 #"${STARTCOMMAND[@]}"
-sed -i "/\[program:palworld\]/,/\[/{s|command=.*|command=${STARTCOMMAND[*]}|}" /home/steam/server/services/supervisord.conf
+sed -i "/\[program:palworld\]/,/\[/{s|command=.*|command=/home/steam/server/server.sh ${STARTCOMMAND[*]}|}" /home/steam/server/services/supervisord.conf
 exit 0
