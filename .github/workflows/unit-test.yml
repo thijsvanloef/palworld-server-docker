@@ -64,7 +64,7 @@ jobs:
             RCON_PORT=$(grep "^RCON_PORT=" .env.example | cut -d '=' -f2)
             ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" .env.example | cut -d '=' -f2)
 
-            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | tr -d '"')
+            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
             PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
             if [ "$RCON_PORT" != "$ADDRESS" ]; then
@@ -187,7 +187,7 @@ jobs:
             RCON_PORT=$(grep "^RCON_PORT=" .env.example | cut -d '=' -f2)
             ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" .env.example | cut -d '=' -f2)
 
-            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | tr -d '"')
+            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
             PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
             if [ "$RCON_PORT" != "$ADDRESS" ]; then
