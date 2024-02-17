@@ -64,11 +64,12 @@ jobs:
 
       - name: Test if rcon.yaml is valid
         run: |
+            docker exec palworld-server cat /home/steam/server/rcon.yaml
             RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
             ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d'"')
 
             if [ "$RCON_PORT" -eq "$YAML_PORT" ]; then
               echo "Error: $RCON_PORT in .env.example does not match $RCON_YAML_PORT in rcon.yaml."
