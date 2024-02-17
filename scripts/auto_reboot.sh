@@ -16,7 +16,7 @@ if [ "${RCON_ENABLED,,}" = true ]; then
         shutdown_server
     elif [ -z "${AUTO_REBOOT_WARN_MINUTES}" ]; then
         LogError "Unable to auto reboot, the server is not empty and AUTO_REBOOT_WARN_MINUTES is empty"
-        exit 0
+        exit 1
     else
         LogError "Unable to auto reboot, the server is not empty and AUTO_REBOOT_WARN_MINUTES is not an integer: ${AUTO_REBOOT_WARN_MINUTES}"
     fi
