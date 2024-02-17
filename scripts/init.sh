@@ -16,7 +16,7 @@ chown -R steam:steam /palworld /home/steam/
 
 # shellcheck disable=SC2317
 term_handler() {
-  DiscordMessage "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
+    DiscordMessage "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
 
     if ! shutdown_server; then
         # If it fails then kill the server
