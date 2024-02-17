@@ -24,6 +24,9 @@ while true; do
 
     if [ "${processname}" = "palworld" ]; then
         case $eventname in
+            PROCESS_STATE_STARTING)
+                #Ignore Starting Event
+                ;;
             PROCESS_STATE_RUNNING)
                 LogAction "*****STARTING SERVER*****" >&2
                 DiscordMessage "${DISCORD_PRE_START_MESSAGE}" "success" >&2
@@ -37,7 +40,7 @@ while true; do
                 DiscordMessage "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" >&2
                 ;;
             *)
-                LogError "Unkown event occured: $header" "failure"
+                LogError "Unkown event occured: $header" "failure" >&2
                 ;;
         esac
     fi
