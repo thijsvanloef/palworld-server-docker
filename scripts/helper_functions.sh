@@ -223,6 +223,19 @@ shutdown_server() {
     return "$return_val"
 }
 
+# Given a message this will broadcast in game
+# Since RCON does not support spaces this will replace all spaces with underscores
+# Returns 0 on success
+# Returns 1 if not able to broadcast
+broadcast_command() {
+    local return_val=0
+    # Replaces spaces with underscore
+    local message="${1// /_}"
+    if ! RCON "broadcast ${message}"; then
+        return_val=1
+    fi
+    return "$return_val"
+}
 
 # Given an amount of time in minutes and a message prefix
 # Returns 0 on success
@@ -238,11 +251,11 @@ countdown_message() {
                 break
             fi
             if [ "$i" -eq 1 ]; then
-                RCON "broadcast ${message_prefix}_in_${i}_minute"
+                broadcast_command "${message_prefix}_in_${i}_minute"
                 sleep 30s
-                RCON "broadcast ${message_prefix}_in_30_seconds"
+                broadcast_command "${message_prefix}_in_30_seconds"
                 sleep 20s
-                RCON "broadcast ${message_prefix}_in_10_seconds"
+                broadcast_command "${message_prefix}_in_10_seconds"
                 sleep 10s
             else
                 case "$i" in
@@ -255,7 +268,7 @@ countdown_message() {
                     5 )
                         ;&
                     2 )
-                        RCON "broadcast ${message_prefix}_in_${i}_minutes"
+                        broadcast_command "${message_prefix}_in_${i}_minutes"
                         ;&
                     * ) 
                         sleep 1m
