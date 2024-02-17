@@ -100,7 +100,7 @@ shutdown_server() {
     if [ "${RCON_ENABLED,,}" = true ]; then
         # Do not shutdown if not able to save
         if save_server; then
-            shutdown_server
+            rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
         else
             return_val=1
         fi
