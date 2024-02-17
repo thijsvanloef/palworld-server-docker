@@ -20,9 +20,7 @@ if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     exit 1
 fi
 
-IsInstalled
-ServerInstalled=$?
-if [ "$ServerInstalled" == 1 ]; then
+if ! IsInstalled; then
     LogInfo "Server installation not detected."
     LogAction "Starting Installation"
     InstallServer
@@ -30,9 +28,7 @@ fi
 
 # Update Only If Already Installed
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    UpdateRequired
-    IsUpdateRequired=$?
-    if [ "$IsUpdateRequired" == 0 ]; then
+    if UpdateRequired; then
         LogAction "Starting Update"
         InstallServer
     fi
@@ -78,27 +74,27 @@ if [ "${MULTITHREADING,,}" = true ]; then
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
-  LogAction "GENERATING CONFIG"
-  LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
+    LogAction "GENERATING CONFIG"
+    LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
 
-  # shellcheck disable=SC2143
-  if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-      LogAction "GENERATING CONFIG"
-      # Server will generate all ini files after first run.
-      if [ "$architecture" == "arm64" ]; then
-          timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
-      else
-          timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
-      fi
+    # shellcheck disable=SC2143
+    if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+        LogAction "GENERATING CONFIG"
+        # Server will generate all ini files after first run.
+        if [ "$architecture" == "arm64" ]; then
+            timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
+        else
+            timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
+        fi
 
-      # Wait for shutdown
-      sleep 5
-      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-  fi
+        # Wait for shutdown
+        sleep 5
+        cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+    fi
 else
-  LogAction "GENERATING CONFIG"
-  LogInfo "Using Env vars to create PalWorldSettings.ini"
-  /home/steam/server/compile-settings.sh || exit
+    LogAction "GENERATING CONFIG"
+    LogInfo "Using Env vars to create PalWorldSettings.ini"
+    /home/steam/server/compile-settings.sh || exit
 fi
 
 LogAction "GENERATING CRONTAB"
