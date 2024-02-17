@@ -52,7 +52,7 @@ if [ "$CURRENT_MANIFEST" != "$TARGET_MANIFEST" ]; then
         sleep "${AUTO_UPDATE_WARN_MINUTES}m"
     fi
     backup
-    rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+    shutdown_server
 else
     echo "The Server is up to date!"
 fi

@@ -21,7 +21,7 @@ if [ "${RCON_ENABLED,,}" = true ]; then
         done
 
         save_server
-        rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
+        shutdown_server
     else
         echo "Unable to auto reboot, AUTO_REBOOT_WARN_MINUTES is not an integer: ${AUTO_REBOOT_WARN_MINUTES}"
     fi

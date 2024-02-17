@@ -91,3 +91,16 @@ save_server() {
     fi
     return "$return_val"
 }
+
+# Shutdowns the server
+# Returns 0 if it is shutdown
+# Returns 1 if it is not able to be shutdown
+shutdown_server() {
+    local return_val=0
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        shutdown_server
+    else
+        return_val=1
+    fi
+    return "$return_val"
+}
