@@ -20,7 +20,6 @@ if [ "${RCON_ENABLED,,}" = true ]; then
             sleep "1m"
         done
 
-        save_server
         shutdown_server
     else
         echo "Unable to auto reboot, AUTO_REBOOT_WARN_MINUTES is not an integer: ${AUTO_REBOOT_WARN_MINUTES}"

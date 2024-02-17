@@ -61,7 +61,6 @@ if [ -f "$BACKUP_FILE" ]; then
 
         if [ "${RCON_ENABLED}" = true ]; then
             printf "\e[0;32m*****SHUTDOWN SERVER*****\e[0m\n"
-            save_server
             shutdown_server
         else
             echo "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."
