@@ -131,7 +131,7 @@ DiscordMessage() {
 # RCON Call
 RCON() {
   local args="$1"
-  echo rcon-cli -c /home/steam/server/rcon.yaml "$args"
+  rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
 
 
