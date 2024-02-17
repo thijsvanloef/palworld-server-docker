@@ -83,9 +83,9 @@ get_player_count() {
 # Returns 0 on success
 # If mtime is not an integer and there are players in game then return 1
 countdown_message() {
-    mtime="$1"
-    message_prefix="$2"
-    return_val=0
+    local mtime="$1"
+    local message_prefix="$2"
+    local return_val=0
 
     if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
         for ((i = "${mtime}" ; i > 0 ; i--)); do
