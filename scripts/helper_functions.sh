@@ -214,7 +214,7 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if ! RCON "shutdown 1"; then
+        if ! RCON "DoExit"; then
             return_val=1
         fi
     else
