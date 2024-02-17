@@ -9,17 +9,17 @@ mkdir -p "$config_dir" || exit
 # If file exists then check if it is writable
 if [ -f "$config_file" ]; then
     if ! isWritable "$config_file"; then
-        echo "Unable to create $config_file"
+        LogError "Unable to create $config_file"
         exit 1
     fi
 # If file does not exist then check if the directory is writable
 elif ! isWritable "$config_dir"; then
     # Exiting since the file does not exist and the directory is not writable.
-    echo "Unable to create $config_file"
+    LogError "Unable to create $config_file"
     exit 1
 fi
 
-echo "Compiling PalWorldSettings.ini..."
+LogAction "Compiling PalWorldSettings.ini"
 
 export DIFFICULTY=${DIFFICULTY:-None}
 export DAYTIME_SPEEDRATE=${DAYTIME_SPEEDRATE:-1.000000}
@@ -158,4 +158,4 @@ cat > "$config_file" <<EOF
 $(envsubst < /home/steam/server/files/PalWorldSettings.ini.template | tr -d "\n\r")
 EOF
 
-echo "Compiling PalWorldSettings.ini done!"
+LogSuccess "Compiling PalWorldSettings.ini done!"
