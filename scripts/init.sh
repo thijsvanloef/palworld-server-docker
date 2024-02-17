@@ -18,10 +18,8 @@ term_handler() {
         su steam -c "/home/steam/server/discord.sh '${DISCORD_PRE_SHUTDOWN_MESSAGE}' in-progress" &
     fi
 
-    if [ "${RCON_ENABLED,,}" = true ]; then
-        rcon-cli save
-        rcon-cli "shutdown 1"
-    else # Does not save
+    if ! shutdown_server; then
+        # If it fails then kill the server
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
 
