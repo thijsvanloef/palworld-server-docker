@@ -14,23 +14,27 @@ architecture=$(dpkg --print-architecture)
 # Get host kernel page size
 kernel_page_size=$(getconf PAGESIZE)
 
-# Check kernel page size for arm64 hosts before running steamcmd
+# Check kernel page size for arm64 hosts before running steamcmdac
 if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
-    echo "Only ARM64 hosts with 4k page size is supported."
+    LogError "Only ARM64 hosts with 4k page size is supported."
     exit 1
 fi
 
-if [ "${UPDATE_ON_BOOT,,}" = true ]; then
-    printf "\e[0;32m%s\e[0m\n" "*****STARTING INSTALL/UPDATE*****"
+IsInstalled
+ServerInstalled=$?
+if [ "$ServerInstalled" == 1 ]; then
+    LogInfo "Server installation not detected."
+    LogAction "Starting Installation"
+    InstallServer
+fi
 
-    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" &
-    fi
-
-    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
-
-    if [ -n "${DISCORD_WEBHOOK_URL}" ] && [ -n "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" ]; then
-        /home/steam/server/discord.sh "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
+# Update Only If Already Installed
+if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
+    UpdateRequired
+    IsUpdateRequired=$?
+    if [ "$IsUpdateRequired" == 0 ]; then
+        LogAction "Starting Update"
+        InstallServer
     fi
 fi
 
@@ -46,13 +50,17 @@ else
     STARTCOMMAND=("/palworld/PalServer.sh")
 fi
 
+
+#Validate Installation
 if ! fileExists "${STARTCOMMAND[0]}"; then
-    echo "Try restarting with UPDATE_ON_BOOT=true"
+    LogError "Server Not Installed Properly"
     exit 1
 fi
+
 isReadable "${STARTCOMMAND[0]}" || exit
 isExecutable "${STARTCOMMAND[0]}" || exit
 
+# Prepare Arguments
 if [ -n "${PORT}" ]; then
     STARTCOMMAND+=("-port=${PORT}")
 fi
@@ -70,14 +78,12 @@ if [ "${MULTITHREADING,,}" = true ]; then
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
-  printf "\e[0;32m%s\e[0m\n" "*****CHECKING FOR EXISTING CONFIG*****"
-  printf "\e[0;32m%s\e[0m\n" "***Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!***"
+  LogAction "GENERATING CONFIG"
+  LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
 
   # shellcheck disable=SC2143
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-
-      printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
-
+      LogAction "GENERATING CONFIG"
       # Server will generate all ini files after first run.
       if [ "$architecture" == "arm64" ]; then
           timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
@@ -90,31 +96,30 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
       cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
   fi
 else
-  printf "\e[0;32m%s\e[0m\n" "*****GENERATING CONFIG*****"
-  printf "\e[0;32m%s\e[0m\n" "***Using Env vars to create PalWorldSettings.ini***"
+  LogAction "GENERATING CONFIG"
+  LogInfo "Using Env vars to create PalWorldSettings.ini"
   /home/steam/server/compile-settings.sh || exit
 fi
 
-printf "\e[0;32m%s\e[0m\n" "*****GENERATING CRONTAB*****"
-
+LogAction "GENERATING CRONTAB"
 touch "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
-    echo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
-    echo "Adding cronjob for auto backups"
+    LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
+    LogInfo "Adding cronjob for auto backups"
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
-    echo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
-    echo "Adding cronjob for auto updating"
+    LogInfo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
+    LogInfo "Adding cronjob for auto updating"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
-    echo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
-    echo "Adding cronjob for auto rebooting"
+    LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
+    LogInfo "Adding cronjob for auto rebooting"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi

@@ -1,11 +1,13 @@
 #!/bin/bash
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
-    printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
+    LogAction "EXECUTING USERMOD"
     usermod -o -u "${PUID}" steam
     groupmod -o -g "${PGID}" steam
 else
-    printf "\033[31m%s\n" "Running as root is not supported, please fix your PUID and PGID!"
+    LogError "Running as root is not supported, please fix your PUID and PGID!"
     exit 1
 fi
 
