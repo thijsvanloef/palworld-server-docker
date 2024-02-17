@@ -4,9 +4,7 @@ if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
     /home/steam/server/discord.sh "Creating backup..." "in-progress" &
 fi
 
-if [ "${RCON_ENABLED,,}" = true ]; then
-    rcon-cli -c /home/steam/server/rcon.yaml save
-fi
+save_server
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
 FILE_PATH="/palworld/backups/palworld-save-${DATE}.tar.gz"

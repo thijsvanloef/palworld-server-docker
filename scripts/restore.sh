@@ -61,7 +61,7 @@ if [ -f "$BACKUP_FILE" ]; then
 
         if [ "${RCON_ENABLED}" = true ]; then
             printf "\e[0;32m*****SHUTDOWN SERVER*****\e[0m\n"
-            rcon-cli -c /home/steam/server/rcon.yaml save
+            save_server
             rcon-cli -c /home/steam/server/rcon.yaml "shutdown 1"
         else
             echo "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."

@@ -78,3 +78,16 @@ get_player_count() {
     player_list=$(rcon-cli -c /home/steam/server/rcon.yaml "ShowPlayers")
     echo -n "${player_list}" | wc -l
 }
+
+# Saves the server
+# Returns 0 if it saves
+# Returns 1 if it is not able to save
+save_server() {
+    local return_val=0
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        rcon-cli -c /home/steam/server/rcon.yaml save
+    else
+        return_val=1
+    fi
+    return "$return_val"
+}
