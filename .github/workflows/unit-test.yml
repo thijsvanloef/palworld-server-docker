@@ -64,19 +64,19 @@ jobs:
 
       - name: Test if rcon.yaml is valid
         run: |
+            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
             docker exec palworld-server cat /home/steam/server/rcon.yaml
             RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
             ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d'"')
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
-            if [ "$RCON_PORT" -eq "$YAML_PORT" ]; then
-              echo "Error: $RCON_PORT in .env.example does not match $RCON_YAML_PORT in rcon.yaml."
+            if [[ $RCON_PORT == $YAML_PORT ]]; then
+              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
               exit 1
             fi
-
-            if [ "$ADMIN_PASSWORD" -eq "$YAML_PASSWORD" ]; then
+            if [[ "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]]; then
               echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
               exit 1
             fi
@@ -188,18 +188,19 @@ jobs:
 
       - name: Test if rcon.yaml is valid
         run: |
+            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
+            docker exec palworld-server cat /home/steam/server/rcon.yaml
             RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
             ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep address | cut -d'"' -f2 | cut -d':' -f2)
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep password | awk '{print $2}')
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
-            if [ "$RCON_PORT" -eq "$YAML_PORT" ]; then
-              echo "Error: $RCON_PORT in .env.example does not match $RCON_YAML_PORT in rcon.yaml."
+            if [[ $RCON_PORT == $YAML_PORT ]]; then
+              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
               exit 1
             fi
-
-            if [ "$ADMIN_PASSWORD" -eq "$YAML_PASSWORD" ]; then
+            if [[ "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]]; then
               echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
               exit 1
             fi
