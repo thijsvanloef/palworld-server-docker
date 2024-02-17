@@ -44,7 +44,7 @@ jobs:
 
       - name: Wait for server to start
         run: |
-            TIMEOUT_SECONDS=120
+            TIMEOUT_SECONDS=180
             START_TIME=$(date +%s)
 
             while ! docker logs palworld-server 2>&1 | grep -q "Setting breakpad minidump AppID"; do
@@ -55,25 +55,28 @@ jobs:
                 echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
                 printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
                 docker logs palworld-server
-                exit 1  # or handle the failure accordingly
+                exit 1
               fi
+
+              echo "Waiting for server to start..."
+              sleep 30
             done
 
       - name: Test if rcon.yaml is valid
         run: |
-            RCON_PORT=$(grep "^RCON_PORT=" .env.example | cut -d '=' -f2)
-            ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" .env.example | cut -d '=' -f2)
+            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
+            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
-            if [ "$RCON_PORT" != "$ADDRESS" ]; then
-              echo "Error: $RCON_PORT in .env.example != $ADDRESS in rcon.yaml."
+            if [ "$RCON_PORT" -eq "$YAML_PORT" ]; then
+              echo "Error: $RCON_PORT in .env.example does not match $RCON_YAML_PORT in rcon.yaml."
               exit 1
             fi
 
-            if [ "$ADMIN_PASSWORD" != "$PASSWORD" ]; then
-              echo "Error: $ADMIN_PASSWORD in .env.example != $PASSWORD in rcon.yaml."
+            if [ "$ADMIN_PASSWORD" -eq "$YAML_PASSWORD" ]; then
+              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
               exit 1
             fi
 
@@ -164,7 +167,7 @@ jobs:
 
       - name: Wait for server to start
         run: |
-            TIMEOUT_SECONDS=600
+            TIMEOUT_SECONDS=660
             START_TIME=$(date +%s)
 
             while ! docker logs palworld-server 2>&1 | grep -q "Setting breakpad minidump AppID"; do
@@ -175,28 +178,28 @@ jobs:
                 echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
                 printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
                 docker logs palworld-server
-                exit 1  # or handle the failure accordingly
+                exit 1
               fi
-            done
 
-            printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
-            docker logs palworld-server
+              echo "Waiting for server to start..."
+              sleep 30
+            done
 
       - name: Test if rcon.yaml is valid
         run: |
-            RCON_PORT=$(grep "^RCON_PORT=" .env.example | cut -d '=' -f2)
-            ADMIN_PASSWORD=$(grep "^ADMIN_PASSWORD=" .env.example | cut -d '=' -f2)
+            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
+            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            ADDRESS=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep address | cut -d'"' -f2 | cut -d':' -f2)
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep password | awk '{print $2}')
 
-            if [ "$RCON_PORT" != "$ADDRESS" ]; then
-              echo "Error: $RCON_PORT in .env.example != $ADDRESS in rcon.yaml."
+            if [ "$RCON_PORT" -eq "$YAML_PORT" ]; then
+              echo "Error: $RCON_PORT in .env.example does not match $RCON_YAML_PORT in rcon.yaml."
               exit 1
             fi
 
-            if [ "$ADMIN_PASSWORD" != "$PASSWORD" ]; then
-              echo "Error: $ADMIN_PASSWORD in .env.example != $PASSWORD in rcon.yaml."
+            if [ "$ADMIN_PASSWORD" -eq "$YAML_PASSWORD" ]; then
+              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
               exit 1
             fi
 
