@@ -20,19 +20,18 @@ if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     exit 1
 fi
 
-if ! IsInstalled; then
+if IsInstalled; then
+    # Update Only If Already Installed
+    if [ "${UPDATE_ON_BOOT,,}" == true ] && UpdateRequired; then
+        LogAction "Starting Update"
+        InstallServer
+    fi
+else
     LogInfo "Server installation not detected."
     LogAction "Starting Installation"
     InstallServer
 fi
 
-# Update Only If Already Installed
-if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    if UpdateRequired; then
-        LogAction "Starting Update"
-        InstallServer
-    fi
-fi
 
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
