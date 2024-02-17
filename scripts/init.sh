@@ -14,5 +14,5 @@ mkdir -p /home/steam/server/logs/
 chown -R steam:steam /palworld /home/steam/
 
 su steam -c /home/steam/server/start.sh
-mv /home/steam/server/services/supervisord.conf /etc/supervisor/supervisord.conf
+cp /home/steam/server/services/supervisord.conf /etc/supervisor/supervisord.conf
 exec /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
