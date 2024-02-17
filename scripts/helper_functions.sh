@@ -71,12 +71,15 @@ isExecutable() {
 # Outputs the player count if rcon is enabled
 get_player_count() {
     local player_list
-    if [ "${RCON_ENABLED,,}" != true ]; then
+    local return_val=0
+    if player_list=$(RCON "ShowPlayers"); then
+        echo -n "${player_list}" | wc -l
+    else
         echo 0
-        return 0
+        return_val=1
     fi
-    player_list=$(RCON "ShowPlayers")
-    echo -n "${player_list}" | wc -l
+
+    return "$return_val"
 }
 
 #
@@ -130,8 +133,14 @@ DiscordMessage() {
 
 # RCON Call
 RCON() {
+    local return_val=0
     local args="$1"
-    rcon-cli -c /home/steam/server/rcon.yaml "$args"
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        rcon-cli -c /home/steam/server/rcon.yaml "$args"
+    else
+        return_val=1
+    fi
+    return "$return_val"
 }
 
 
@@ -192,9 +201,7 @@ IsInstalled() {
 # Returns 1 if it is not able to save
 save_server() {
     local return_val=0
-    if [ "${RCON_ENABLED,,}" = true ]; then
-        RCON save
-    else
+    if ! RCON save; then
         return_val=1
     fi
     return "$return_val"
@@ -205,11 +212,9 @@ save_server() {
 # Returns 1 if it is not able to be shutdown
 shutdown_server() {
     local return_val=0
-    if [ "${RCON_ENABLED,,}" = true ]; then
-        # Do not shutdown if not able to save
-        if save_server; then
-            RCON "shutdown 1"
-        else
+    # Do not shutdown if not able to save
+    if save_server; then
+        if ! RCON "shutdown 1"; then
             return_val=1
         fi
     else
