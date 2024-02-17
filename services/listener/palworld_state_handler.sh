@@ -1,8 +1,6 @@
 #!/bin/bash
-
-send_discord_message() {
-    exec /home/steam/server/discord.sh "${@}" >&2 &
-}
+# shellcheck source=/dev/null
+source "/home/steam/server/helper_functions.sh"
 
 # generates variables from header String
 # supervisor provides the following variables: ver, server, serial, pool, myeventpool, poolserial, processname, eventname, len
@@ -27,20 +25,19 @@ while true; do
     if [ "${processname}" = "palworld" ]; then
         case $eventname in
             PROCESS_STATE_RUNNING)
-                printf "\e[0;32m%s\e[0m\n" "*****STARTING SERVER*****" >&2
-                send_discord_message "${DISCORD_PRE_START_MESSAGE}" "success"
+                LogAction "*****STARTING SERVER*****" >&2
+                DiscordMessage "${DISCORD_PRE_START_MESSAGE}" "success" >&2
                 ;;
             PROCESS_STATE_STOPPING)
-                printf "\e[0;32m%s\e[0m\n" "*****STOPPING SERVER*****" >&2
-                send_discord_message "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
+                LogAction "*****STOPPING SERVER*****" >&2
+                DiscordMessage "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress" >&2
                 ;;
             PROCESS_STATE_STOPPED|PROCESS_STATE_EXITED)
-                printf "\e[0;32m%s\e[0m\n" "*****EXITED SERVER*****" >&2
-                send_discord_message "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
+                LogAction "*****STOPPED SERVER*****" >&2
+                DiscordMessage "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" >&2
                 ;;
             *)
-                
-                #send_discord_message "Unkown event occured: $header" "failure"
+                LogError "Unkown event occured: $header" "failure"
                 ;;
         esac
     fi
