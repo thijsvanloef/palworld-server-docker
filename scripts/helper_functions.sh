@@ -238,49 +238,55 @@ broadcast_command() {
 }
 
 # Given an amount of time in minutes and a message prefix
+# Will skip countdown if no players are in the server, Will only check the mtime if there are players in the server
 # Returns 0 on success
-# If mtime is not an integer and there are players in game then return 1
+# Returns 1 if mtime is empty
+# Returns 2 if mtime is not an integer
 countdown_message() {
     local mtime="$1"
     local message_prefix="$2"
     local return_val=0
 
-    if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
-        for ((i = "${mtime}" ; i > 0 ; i--)); do
-            if [ "$(get_player_count)" -eq 0 ]; then
-                break
-            fi
-            if [ "$i" -eq 1 ]; then
-                broadcast_command "${message_prefix}_in_${i}_minute"
-                sleep 30s
-                broadcast_command "${message_prefix}_in_30_seconds"
-                sleep 20s
-                broadcast_command "${message_prefix}_in_10_seconds"
-                sleep 10s
-            else
-                case "$i" in
-                    "$mtime" )
-                        ;&
-                    15 )
-                        ;&
-                    10 )
-                        ;&
-                    5 )
-                        ;&
-                    2 )
-                        broadcast_command "${message_prefix}_in_${i}_minutes"
-                        ;&
-                    * ) 
-                        sleep 1m
-                        ;;
-                esac
-            fi
-        done
-        return 0
-    else
-        # mtime is not an integer so check if there are no players
-        if [ "$(get_player_count)" -gt 0 ]; then
+    # Only do countdown if there are players
+    if [ "$(get_player_count)" -gt 0 ]; then
+        if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
+            for ((i = "${mtime}" ; i > 0 ; i--)); do
+                if [ "$i" -eq 1 ]; then
+                    broadcast_command "${message_prefix}_in_${i}_minute"
+                    sleep 30s
+                    broadcast_command "${message_prefix}_in_30_seconds"
+                    sleep 20s
+                    broadcast_command "${message_prefix}_in_10_seconds"
+                    sleep 10s
+                else
+                    case "$i" in
+                        "$mtime" )
+                            ;&
+                        15 )
+                            ;&
+                        10 )
+                            ;&
+                        5 )
+                            ;&
+                        2 )
+                            broadcast_command "${message_prefix}_in_${i}_minutes"
+                            ;&
+                        * ) 
+                            sleep 1m
+                            ;;
+                    esac
+                fi
+                # Checking for players every minute
+                if [ "$(get_player_count)" -eq 0 ]; then
+                    break
+                fi
+            done
+        # If there are players but mtime is empty
+        elif [ -z "${mtime}" ]; then
             return_val=1
+        # If there are players but mtime is not an integer
+        else
+            return_val=2
         fi
     fi
     return "$return_val"

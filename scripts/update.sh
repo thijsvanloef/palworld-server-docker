@@ -20,15 +20,21 @@ if UpdateRequired; then
         DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
     fi
 
-    if countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; then
-        LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
-        rm /palworld/steamapps/appmanifest_2394010.acf
+    case "$(countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; echo $?)" in
+        0 )
+            LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
+            rm /palworld/steamapps/appmanifest_2394010.acf
 
-        backup
-        shutdown_server
-    elif [ -z "${AUTO_UPDATE_WARN_MINUTES}" ]; then
-        LogWarn "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is empty."
-    else
-        LogWarn "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is not an integer: ${AUTO_UPDATE_WARN_MINUTES}"
-    fi
+            backup
+            shutdown_server
+            ;;
+        1 )
+            LogWarn "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is empty."
+            exit 1
+            ;;
+        2 )
+            LogWarn "Unable to auto update, the server is not empty and AUTO_UPDATE_WARN_MINUTES is not an integer: ${AUTO_UPDATE_WARN_MINUTES}"
+            exit 1
+            ;;
+    esac
 fi
