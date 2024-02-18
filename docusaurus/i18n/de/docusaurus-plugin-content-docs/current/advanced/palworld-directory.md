@@ -13,7 +13,7 @@ Alles was mit den Palworld-Dateien zusammenhängt, befindet sich im Ordner `/pal
 | Ordner                       | Verwendung                                                             |
 |------------------------------|------------------------------------------------------------------------|
 | palworld                     | Stammordner mit allen Dateien des Palworld-Servers                     |
-| backups                      | Ordner, in dem alle Backups des Befehls `backup` gespeichert werden    |
+| backups                      | Der Ordner, in dem alle Backups gespeichert werden                     |
 | Pal/Saved/Config/LinuxServer | Ordner mit allen .ini-Konfigurationsdateien für manuelle Konfiguration |
 
 ## Datenverzeichnis an das Host-Dateisystem anbinden

@@ -72,7 +72,7 @@ services:
       image: thijsvanloef/palworld-server-docker:latest # Verwenden Sie das Tag latest-arm64 für ARM64-Hosts
       restart: unless-stopped
       container_name: palworld-server
-      stop_grace_period: 30s # Auf die Zeit festlegen, die Sie bereit sind zu warten, bis der Container ordnungsgemäß beendet ist
+      stop_grace_period: 30s # die Zeit, die Sie bereit sind zu warten, bis der Container ordnungsgemäß beendet ist
       ports:
         - 8211:8211/udp
         - 27015:27015/udp

@@ -18,4 +18,4 @@ Verwenden Sie die folgenden Befehle, um diesen Palworld-Container in Kubernetes 
 
 ## Verwendung des Helm-Charts
 
-Der offizielle Helm-Chart befindet sich in einem separaten Repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
+Das offizielle Helm-Chart befindet sich in einem separaten Repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)

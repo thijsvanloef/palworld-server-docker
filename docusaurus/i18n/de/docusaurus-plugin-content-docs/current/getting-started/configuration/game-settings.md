@@ -14,11 +14,11 @@ Diese Umgebungsvariablen und Einstellungen können sich ändern, da das Spiel no
 Überprüfen Sie die [offizielle Webseite für unterstützte Parameter.](https://tech.palworldgame.com/optimize-game-balance)
 :::
 
-Das Konvertieren von Servereinstellungen in Umgebungsvariablen folgt denselben Prinzipien (mit einigen Ausnahmen):
+Um Servereinstellung in Umgebungsvariablen zu konvertieren müssen folgende Regeln eingehalten werden:
 
 * alle Buchstaben groß schreiben
 * Wörter durch Einfügen eines Unterstrichs trennen
-* den einzelnen Buchstaben entfernen, wenn die Einstellung damit beginnt (wie 'b')
+* falls die Einstellung mit einem einzelnen Buchstaben beginnt, muss dieser entfernt werden (z.B. 'b')
 
 Beispiele:
 
@@ -32,12 +32,12 @@ Beispiele:
 | DAYTIME_SPEEDRATE                         | Tageszeit-Geschwindigkeit - Kleinerer Wert bedeutet kürzere Tage | 1.000000                                                                                     | Float                                  |
 | NIGHTTIME_SPEEDRATE                       | Nachtszeit-Geschwindigkeit - Kleinerer Wert bedeutet kürzere Nächte | 1.000000                                                                                     | Float                                  |
 | EXP_RATE                                  | EXP-Sammelrate                                                 | 1.000000                                                                                     | Float                                  |
-| PAL_CAPTURE_RATE                          | Pal-Fangerate                                                  | 1.000000                                                                                     | Float                                  |
+| PAL_CAPTURE_RATE                          | Pal-Fangrate                                                  | 1.000000                                                                                     | Float                                  |
 | PAL_SPAWN_NUM_RATE                        | Pal-Erscheinungsrate                                           | 1.000000                                                                                     | Float                                  |
 | PAL_DAMAGE_RATE_ATTACK                    | Schadensmultiplikator von Pals                                | 1.000000                                                                                     | Float                                  |
-| PAL_DAMAGE_RATE_DEFENSE                   | Schadensmultiplikator zu Pals                                 | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_DEFENSE                   | Verteidigungsmultiplikator von Pals                                 | 1.000000                                                                                     | Float                                  |
 | PLAYER_DAMAGE_RATE_ATTACK                 | Schadensmultiplikator von Spielern                            | 1.000000                                                                                     | Float                                  |
-| PLAYER_DAMAGE_RATE_DEFENSE                | Schadensmultiplikator zu Spielern                              | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_DEFENSE                | Verteidigungsmultiplikator von Spielern                              | 1.000000                                                                                     | Float                                  |
 | PLAYER_STOMACH_DECREASE_RATE              | Rate der Hungerabnahme von Spielern                           | 1.000000                                                                                     | Float                                  |
 | PLAYER_STAMINA_DECREASE_RATE              | Rate der Ausdauerreduktion von Spielern                       | 1.000000                                                                                     | Float                                  |
 | PLAYER_AUTO_HP_REGEN_RATE                 | Rate der automatischen HP-Regeneration von Spielern           | 1.000000                                                                                     | Float                                  |
