@@ -493,6 +493,19 @@ send discord messages with docker compose:
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
 
+## Locking Specific Game Version
+
+If **TARGET_MANIFEST_ID** environment variable is set, will lock server version to specific manifest.
+The manifest corresponds to the release date/update versions. Manifests can be found using SteamCMD or websites like [SteamDB](https://steamdb.info/depot/2394012/manifests/).
+
+### Version To Manifest ID Table
+
+| Version | Manifest ID          |
+|---------|----------------------|
+| 1.3.0   | 1354752814336157338  |
+| 1.4.0   | 4190579964382773830  |
+| 1.4.1   | 6370735655629434989  |
+
 ## Reporting Issues/Feature Requests
 
 Issues/Feature requests can be submitted by using [this link](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
