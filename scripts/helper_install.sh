@@ -66,7 +66,7 @@ UpdateRequired() {
   fi
 
   # Parse temp file for manifest id
-  LATEST_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/')
+  LATEST_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/' | tr -d '"')
   rm "$temp_file"
 
   if [ -z "$LATEST_MANIFEST" ]; then
@@ -76,7 +76,7 @@ UpdateRequired() {
   fi
 
   # Parse current manifest from steam files
-  CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf)
+  CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
   LogInfo "Current Version: $CURRENT_MANIFEST"
 
   # Log any updates available
@@ -103,8 +103,7 @@ UpdateRequired() {
   fi
 
   if [ -n "${TARGET_MANIFEST_ID}" ]; then
-    LogWarn "Unable to update."
-    LogInfo "Version Locked by environment variable TARGET_MANIFEST_ID."
+    LogWarn "Unable to update. Locked by TARGET_MANIFEST_ID."
     return 1
   fi
 }
@@ -121,7 +120,7 @@ InstallServer() {
   local targetManifest
   targetManifest="${TARGET_MANIFEST_ID}"
 
-  LogAction "Installing Target Version: $targetManifest"
+  LogWarn "Installing Target Version: $targetManifest"
   DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
   /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
   cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
