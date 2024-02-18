@@ -1,0 +1,42 @@
+{
+  "link.title.Docs": {
+    "message": "Inhalte",
+    "description": "The title of the footer links column with title=Docs in the footer"
+  },
+  "link.title.Community": {
+    "message": "Community",
+    "description": "The title of the footer links column with title=Community in the footer"
+  },
+  "link.title.More": {
+    "message": "Weitere",
+    "description": "The title of the footer links column with title=More in the footer"
+  },
+  "link.item.label.Getting started": {
+    "message": "Erste Schritte",
+    "description": "The label of footer link with label=Getting started linking to /category/getting-started"
+  },
+  "link.item.label.Guides": {
+    "message": "Leitfäden",
+    "description": "The label of footer link with label=Guides linking to /category/guides"
+  },
+  "link.item.label.Advanced": {
+    "message": "Fortgeschritten",
+    "description": "The label of footer link with label=Advanced linking to /category/advanced"
+  },
+  "link.item.label.Discord": {
+    "message": "Discord",
+    "description": "The label of footer link with label=Discord linking to https://discord.gg/UxBxStPAAE"
+  },
+  "link.item.label.GitHub": {
+    "message": "GitHub",
+    "description": "The label of footer link with label=GitHub linking to https://github.com/thijsvanloef/palworld-server-docker"
+  },
+  "link.item.label.Docker Hub": {
+    "message": "Docker Hub",
+    "description": "The label of footer link with label=Docker Hub linking to https://hub.docker.com/r/thijsvanloef/palworld-server-docker"
+  },
+  "copyright": {
+    "message": "Copyright © 2024 palworld-server-docker, Erstellt mit Docusaurus.",
+    "description": "The footer copyright"
+  }
+}
