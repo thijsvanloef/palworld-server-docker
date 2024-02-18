@@ -274,6 +274,7 @@ countdown_message() {
                     * ) 
                         sleep 1m
                         # Checking for players every minute
+                        # Checking after sleep since it is ran in the beginning of the function
                         if [ "$(get_player_count)" -eq 0 ]; then
                             break
                         fi
