@@ -273,12 +273,12 @@ countdown_message() {
                             ;&
                         * ) 
                             sleep 1m
+                            # Checking for players every minute
+                            if [ "$(get_player_count)" -eq 0 ]; then
+                                break
+                            fi
                             ;;
                     esac
-                fi
-                # Checking for players every minute
-                if [ "$(get_player_count)" -eq 0 ]; then
-                    break
                 fi
             done
         # If there are players but mtime is empty
