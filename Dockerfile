@@ -30,17 +30,6 @@ LABEL maintainer="thijs@loef.dev" \
       org.opencontainers.image.authors="Thijs van Loef" \
       org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
-# update and install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    procps=2:4.0.2-3 \
-    wget=1.21.3-1+b2 \ 
-    gettext-base=0.21-12 \
-    xdg-user-dirs=0.18-1 \
-    jo=1.9-1 \
-    supervisor=4.2.5-1 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
-
 # set envs
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
@@ -53,10 +42,11 @@ ARG SUPERCRONIC_VERSION="0.2.29"
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
-    wget \ 
+    wget=1.21.3-1+b2 \ 
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
+    supervisor=4.2.5-1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
