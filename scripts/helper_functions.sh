@@ -260,15 +260,15 @@ countdown_message() {
                         broadcast_command "${message_prefix}_in_10_seconds"
                         sleep 10s
                         ;;
-                    "$mtime" )
+                    2 )
                         ;&
-                    15 )
+                    3 )
                         ;&
                     10 )
                         ;&
-                    5 )
+                    15 )
                         ;&
-                    2 )
+                    "$mtime" )
                         broadcast_command "${message_prefix}_in_${i}_minutes"
                         ;&
                     * ) 
