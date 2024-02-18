@@ -6,14 +6,15 @@ sidebar_position: 4
 
 ## Konfiguration von automatischen Neustarts mit Cron
 
-Um automatische Neustarts mit diesem Server verwenden zu können, **müssen** die folgenden Umgebungsvariablen auf `true` gesetzt werden:
+Um automatische Neustarts mit diesem Server verwenden zu können, **müssen** die folgenden Umgebungsvariablen auf `true`
+gesetzt werden:
 
 * `RCON_ENABLED`
 
 :::warning
 
 Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server heruntergefahren und muss manuell neu gestartet werden.
-
+<!-- markdownlint-disable-next-line -->
 Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in [der Schnellstartanleitung](https://palworld-server-docker.loef.dev/de/) verwenden bereits die benötigte Richtlinie.
 :::
 
@@ -29,4 +30,5 @@ Dieses Image verwendet Supercronic für Cron-Jobs.
 Siehe [Supercronic](https://github.com/aptible/supercronic#crontab-format)
 oder [Crontab Generator](https://crontab-generator.org).
 :::
-Setzen Sie `AUTO_REBOOT_CRON_EXPRESSION`, um den Zeitplan zu ändern. Standardmäßig ist er auf jede Nacht um Mitternacht gesetzt. (gemäß der mit TZ festgelegten Zeitzone)
+Setzen Sie `AUTO_REBOOT_CRON_EXPRESSION`, um den Zeitplan zu ändern. Standardmäßig ist er auf jede Nacht um Mitternacht
+gesetzt. (gemäß der mit TZ festgelegten Zeitzone)

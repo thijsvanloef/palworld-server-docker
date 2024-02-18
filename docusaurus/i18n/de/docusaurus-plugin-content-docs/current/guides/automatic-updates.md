@@ -6,15 +6,18 @@ sidebar_position: 5
 
 ## Konfiguration von automatischen Updates mit Cron
 
-Um automatische Updates mit diesem Server verwenden zu können, **müssen** die folgenden Umgebungsvariablen auf `true` gesetzt werden:
+Um automatische Updates mit diesem Server verwenden zu können, **müssen** die folgenden Umgebungsvariablen auf
+`true` gesetzt werden:
 
 * `RCON_ENABLED`
 * `UPDATE_ON_BOOT`
 
 :::warning
-Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server heruntergefahren und muss manuell neu gestartet werden.
+Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server
+heruntergefahren und muss manuell neu gestartet werden.
 
-Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in [der Schnellstartanleitung](https://palworld-server-docker.loef.dev/de/) verwenden bereits die benötigte Richtlinie.
+Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in
+[der Schnellstartanleitung](https://palworld-server-docker.loef.dev/de/) verwenden bereits die benötigte Richtlinie.
 :::
 
 | Variable                    | Info                                                                                                                       | Standardwerte | Erlaubte Werte                                                                                                                                  |

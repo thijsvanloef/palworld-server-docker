@@ -29,10 +29,11 @@ docker compose down
 ```
 
 Löschen Sie den alten Ordner unter `palworld/Pal/Saved/SaveGames/0/<old_hash_value>`.
-
+<!-- markdownlint-disable-next-line -->
 Kopieren Sie den Inhalt des neu dekomprimierten Ordner `Saved/SaveGames/0/<new_hash_value>` nach `palworld/Pal/Saved/SaveGames/0/<new_hash_value>`.
 
-Ersetzen Sie den Wert von DedicatedServerName in `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` durch den neuen Ordnernamen.
+Ersetzen Sie den Wert von DedicatedServerName in `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` durch den
+neuen Ordnernamen.
 
 ```ini
 DedicatedServerName=<new_hash_value>  # Ersetzen Sie ihn durch Ihren Ordnernamen.

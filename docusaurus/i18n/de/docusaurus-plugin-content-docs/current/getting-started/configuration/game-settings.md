@@ -84,7 +84,8 @@ Beispiele:
 
 ### Manuell
 
-Beim Start des Servers wird eine `PalWorldSettings.ini`-Datei im folgenden Pfad erstellt: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
+Beim Start des Servers wird eine `PalWorldSettings.ini`-Datei im folgenden Pfad erstellt:
+`<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
 Bitte beachten Sie, dass die ENV-Variablen immer die Änderungen an `PalWorldSettings.ini` überschreiben.
 

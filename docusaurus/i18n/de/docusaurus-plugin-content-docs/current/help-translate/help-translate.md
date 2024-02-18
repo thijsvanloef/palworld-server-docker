@@ -4,7 +4,8 @@ sidebar_position: 99
 
 # Hilfe bei der Übersetzung der Dokumentation
 
-Ich bin immer auf der Suche nach Personen, die die Dokumentation in verschiedene Sprachen übersetzen möchten. Wenn Sie helfen möchten, verwenden Sie diese Anleitung, um loszulegen!
+Ich bin immer auf der Suche nach Personen, die die Dokumentation in verschiedene Sprachen übersetzen möchten. Wenn Sie
+helfen möchten, verwenden Sie diese Anleitung, um loszulegen!
 
 ## So können Sie helfen
 

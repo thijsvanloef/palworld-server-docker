@@ -6,7 +6,8 @@ sidebar_position: 1
 
 1. Generieren Sie eine Webhook-URL für Ihren Discord-Server in den Servereinstellungen Ihres Discords.
 
-2. Setze die Umgebungsvariable wie bei dem Discord-Webhook-Beispiel auf diesen eindeutigen Token: `https://discord.com/api/webhooks/1234567890/abcde`
+2. Setze die Umgebungsvariable wie bei dem Discord-Webhook-Beispiel auf diesen eindeutigen Token:
+   `https://discord.com/api/webhooks/1234567890/abcde`
 
 Senden Sie Discord-Nachrichten mit `docker run`:
 

@@ -84,13 +84,15 @@ services:
 
 ### Starten des Servers
 
-Verwenden Sie `docker compose up -d` im gleichen Ordner wie die `docker-compose.yml`, um den Server im Hintergrund zu starten.
+Verwenden Sie `docker compose up -d` im gleichen Ordner wie die `docker-compose.yml`, um den Server im Hintergrund zu
+starten.
 
 ### Stoppen des Servers
 
 Verwenden Sie `docker compose stop` im gleichen Ordner wie die `docker-compose.yml`, um den Server zu stoppen.
 
-Nutzen Sie `docker compose down --rmi all` im gleichen Ordner wie die `docker-compose.yml`, um den Server zu stoppen und zu entfernen und das Docker-Image von Ihrem System zu entfernen.
+Nutzen Sie `docker compose down --rmi all` im gleichen Ordner wie die `docker-compose.yml`, um den Server zu stoppen und
+zu entfernen und das Docker-Image von Ihrem System zu entfernen.
 
 ## Docker Run
 
