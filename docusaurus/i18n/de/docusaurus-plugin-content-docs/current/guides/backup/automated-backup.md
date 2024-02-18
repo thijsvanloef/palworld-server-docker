@@ -11,7 +11,7 @@ Setzen Sie `BACKUP_ENABLED`, um automatische Backups zu aktivieren oder zu deakt
 `BACKUP_CRON_EXPRESSION` ist ein Cron-Ausdruck. In einem Cron-Ausdruck definieren Sie ein Intervall, wann Aufgaben
 ausgeführt werden sollen.
 
-:::Tipp
+:::tip
 Dieses Image verwendet Supercronic für Cron-Jobs.
 Siehe [supercronic](https://github.com/aptible/supercronic#crontab-format)
 oder [Crontab Generator](https://crontab-generator.org).
