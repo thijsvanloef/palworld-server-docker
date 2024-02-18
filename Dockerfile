@@ -33,7 +33,7 @@ LABEL maintainer="thijs@loef.dev" \
 # update and install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
-    wget \ 
+    wget=1.21.3-1+b2 \ 
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
