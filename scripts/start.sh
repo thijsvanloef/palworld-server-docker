@@ -97,7 +97,7 @@ else
 fi
 
 LogAction "GENERATING CRONTAB"
-rm -f  "/home/steam/server/crontab"
+truncate -s 0  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
     LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
     LogInfo "Adding cronjob for auto backups"

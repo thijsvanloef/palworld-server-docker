@@ -1,0 +1,30 @@
+{
+  "version.label": {
+    "message": "Nächste",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "Erste Schritte",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "Konfiguration",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Guides": {
+    "message": "Leitfäden",
+    "description": "The label for category Guides in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Backup": {
+    "message": "Backup",
+    "description": "The label for category Backup in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Discord integration": {
+    "message": "Discord Integration",
+    "description": "The label for category Discord integration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "Fortgeschritten",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
+  }
+}
