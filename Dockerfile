@@ -109,6 +109,10 @@ RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/restore.sh /usr/local/bin/restore
 
 WORKDIR /home/steam/server
+RUN touch rcon.yaml crontab && \
+    chmod o+w rcon.yaml crontab && \
+    chown steam:steam -R /home/steam && \
+    chmod -R o+w /home/steam/steamcmd
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
