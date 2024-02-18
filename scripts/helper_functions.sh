@@ -120,7 +120,7 @@ Log() {
 DiscordMessage() {
   local message="$1"
   local level="$2"
-  if [ -n "$level" ]; then
+  if [ -z "$level" ]; then
     level="info"
   fi
   if [ -n "${DISCORD_WEBHOOK_URL}" ]; then

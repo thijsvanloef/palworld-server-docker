@@ -2,17 +2,27 @@
 # shellcheck source=/dev/null
 source "/home/steam/server/helper_functions.sh"
 
-if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
-    LogAction "EXECUTING USERMOD"
-    usermod -o -u "${PUID}" steam
-    groupmod -o -g "${PGID}" steam
-else
-    LogError "Running as root is not supported, please fix your PUID and PGID!"
+if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
+    if [[ "${PUID}" -ne 0 ]] && [[ "${PGID}" -ne 0 ]]; then
+        LogAction "EXECUTING USERMOD"
+        usermod -o -u "${PUID}" steam
+        groupmod -o -g "${PGID}" steam
+        chown -R steam:steam /palworld /home/steam/
+    else
+        LogError "Running as root is not supported, please fix your PUID and PGID!"
+        exit 1
+    fi
+elif [[ "$(id -u)" -eq 0 ]] || [[ "$(id -g)" -eq 0 ]]; then
+   LogError "Running as root is not supported, please fix your user!"
+   exit 1
+fi
+
+if ! [ -w "/palworld" ]; then
+    LogError "/palworld is not writable."
     exit 1
 fi
 
 mkdir -p /palworld/backups
-chown -R steam:steam /palworld /home/steam/
 
 # shellcheck disable=SC2317
 term_handler() {
@@ -30,7 +40,11 @@ term_handler() {
 
 trap 'term_handler' SIGTERM
 
-su steam -c ./start.sh &
+if [[ "$(id -u)" -eq 0 ]]; then
+    su steam -c ./start.sh &
+else
+    ./start.sh &
+fi
 # Process ID of su
 killpid="$!"
 wait "$killpid"
