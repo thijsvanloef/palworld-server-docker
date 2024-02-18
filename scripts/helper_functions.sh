@@ -251,35 +251,34 @@ countdown_message() {
     if [ "$(get_player_count)" -gt 0 ]; then
         if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
             for ((i = "${mtime}" ; i > 0 ; i--)); do
-                if [ "$i" -eq 1 ]; then
-                    broadcast_command "${message_prefix}_in_${i}_minute"
-                    sleep 30s
-                    broadcast_command "${message_prefix}_in_30_seconds"
-                    sleep 20s
-                    broadcast_command "${message_prefix}_in_10_seconds"
-                    sleep 10s
-                else
-                    case "$i" in
-                        "$mtime" )
-                            ;&
-                        15 )
-                            ;&
-                        10 )
-                            ;&
-                        5 )
-                            ;&
-                        2 )
-                            broadcast_command "${message_prefix}_in_${i}_minutes"
-                            ;&
-                        * ) 
-                            sleep 1m
-                            # Checking for players every minute
-                            if [ "$(get_player_count)" -eq 0 ]; then
-                                break
-                            fi
-                            ;;
-                    esac
-                fi
+                case "$i" in
+                    1 ) 
+                        broadcast_command "${message_prefix}_in_${i}_minute"
+                        sleep 30s
+                        broadcast_command "${message_prefix}_in_30_seconds"
+                        sleep 20s
+                        broadcast_command "${message_prefix}_in_10_seconds"
+                        sleep 10s
+                        ;;
+                    "$mtime" )
+                        ;&
+                    15 )
+                        ;&
+                    10 )
+                        ;&
+                    5 )
+                        ;&
+                    2 )
+                        broadcast_command "${message_prefix}_in_${i}_minutes"
+                        ;&
+                    * ) 
+                        sleep 1m
+                        # Checking for players every minute
+                        if [ "$(get_player_count)" -eq 0 ]; then
+                            break
+                        fi
+                        ;;
+                esac
             done
         # If there are players but mtime is empty
         elif [ -z "${mtime}" ]; then
