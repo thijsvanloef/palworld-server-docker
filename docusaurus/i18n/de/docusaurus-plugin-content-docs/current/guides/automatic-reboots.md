@@ -13,7 +13,8 @@ gesetzt werden:
 
 :::warning
 
-Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server heruntergefahren und muss manuell neu gestartet werden.
+Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server
+heruntergefahren und muss manuell neu gestartet werden.
 <!-- markdownlint-disable-next-line -->
 Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in [der Schnellstartanleitung](https://palworld-server-docker.loef.dev/de/) verwenden bereits die benötigte Richtlinie.
 :::

@@ -26,4 +26,5 @@ bereitgestellte Beispiel zu verwenden:
          - ./palworld:/palworld/
 ```
 
-Dies erstellt ein lokales `palworld`-Verzeichnis im aktuellen Arbeitsverzeichnis und bindet das `/palworld`-Verzeichnis des Containers an.
+Dies erstellt ein lokales `palworld`-Verzeichnis im aktuellen Arbeitsverzeichnis und bindet das `/palworld`-Verzeichnis
+des Containers an.
