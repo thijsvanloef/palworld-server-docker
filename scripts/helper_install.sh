@@ -130,9 +130,8 @@ InstallServer() {
 
 # Returns the architecture of the host
 GetArchitecture() {
-    # ARCH=$(grep -o 'lm' /proc/cpuinfo &>/dev/null && echo "amd" || echo "arm")
-    # echo "$ARCH$(getconf LONG_BIT)"
-    dpkg --print-architecture
+    ARCH=$(grep -o 'lm' /proc/cpuinfo &>/dev/null && echo "amd" || echo "arm")
+    echo "$ARCH$(getconf LONG_BIT)"
 }
 
 # Builds the start command of the palworld server
