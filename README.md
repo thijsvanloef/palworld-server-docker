@@ -160,6 +160,29 @@ All files you will need to deploy this container to kubernetes are located in th
 
 Follow the steps in the [README.md here](k8s/readme.md) to deploy it.
 
+### Running without root
+
+This is only for advanced users
+
+It is possible to run this container and
+[override the default user](https://docs.docker.com/engine/reference/run/#user) which is root in this image.
+
+Because you are specifiying the user and group `PUID` and `PGID` are ignored.
+
+If you want to find your UID: `id -u`
+If you want to find your GID: `id -g`
+
+You must set user to `NUMBERICAL_UID:NUMBERICAL_GID`
+
+Below we assume your UID is 1000 and your GID is 1001
+
+* In docker run add `--user 1000:1001 \` above the last line.
+* In docker compose add `user: 1000:1001` above ports.
+
+If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that
+is being bind: `chown UID:GID palworld/`
+or by changing the permissions for all other: `chmod o=rwx palworld/`
+
 #### Using helm chart
 
 The official helm chart can be found in a seperate repository, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
@@ -174,45 +197,46 @@ It is highly recommended you set the following environment values before startin
 * PUID
 * PGID
 
-| Variable           | Info                                                                                                                                                                                                | Default Values | Allowed Values |
-|--------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|---------------------------------------------------------------------------------------|
-| TZ                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC            | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations) |
-| PLAYERS*           | Max amount of players that are able to join the server                                                                                                                                              | 16             | 1-32                                                                                                       |
-| PORT*              | UDP port that the server will expose                                                                                                                                                                | 8211           | 1024-65535                                                                                                 |
-| PUID*              | The uid of the user the server should run as                                                                                                                                                        | 1000           | !0                                                                                                         |
-| PGID*              | The gid of the group the server should run as                                                                                                                                                       | 1000           | !0                                                                                                         |
-| MULTITHREADING**   | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false          | true/false                                                                                                 |
-| COMMUNITY          | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false          | true/false                                                                                                 |
-| PUBLIC_IP          | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                | x.x.x.x                                                                                                    |
-| PUBLIC_PORT        | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                | 1024-65535                                                                                                 |
-| SERVER_NAME        | A name for your server                                                                                                                                                                              |                | "string"                                                                                                   |
-| SERVER_DESCRIPTION | Your server Description                                                                                                                                                                             |                | "string"                                                                                                   |
-| SERVER_PASSWORD    | Secure your community server with a password                                                                                                                                                        |                | "string"                                                                                                   |
-| ADMIN_PASSWORD     | Secure administration access in the server with a password                                                                                                                                          |                | "string"                                                                                                   |
-| UPDATE_ON_BOOT**   | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true           | true/false                                                                                                 |
-| RCON_ENABLED***    | Enable RCON for the Palworld server                                                                                                                                                                 | true           | true/false                                                                                                 |
-| RCON_PORT          | RCON port to connect to                                                                                                                                                                             | 25575          | 1024-65535                                                                                                 |
-| QUERY_PORT         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015          | 1024-65535                                                                                                 |
-| BACKUP_CRON_EXPRESSION  | Setting affects frequency of automatic backups. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
-| BACKUP_ENABLED | Enables automatic backups | true | true/false |
-| DELETE_OLD_BACKUPS | Delete backups after a certain number of days                                                                                                                                                       | false          | true/false                                                                                                 |
-| OLD_BACKUP_DAYS    | How many days to keep backups                                                                                                                                                                       | 30             | any positive integer                                                                                       |
-| AUTO_UPDATE_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 \* \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
-| AUTO_UPDATE_ENABLED | Enables automatic updates | false | true/false |
-| AUTO_UPDATE_WARN_MINUTES | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected) | 30 | !0 |
-| AUTO_REBOOT_CRON_EXPRESSION  | Setting affects frequency of automatic updates. | 0 0 \* \* \* | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
-| AUTO_REBOOT_ENABLED | Enables automatic reboots | false | true/false |
-| AUTO_REBOOT_WARN_MINUTES | How long to wait to reboot the server, after the player were informed. | 5 | !0 |
-| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online. | false | true/false |
-| DISCORD_WEBHOOK_URL | Discord webhook url found after creating a webhook on a discord server | | `https://discord.com/api/webhooks/<webhook_id>` |
-| DISCORD_CONNECT_TIMEOUT | Discord command initial connection timeout | 30 | !0 |
-| DISCORD_MAX_TIMEOUT | Discord total hook timeout | 30 | !0 |
-| DISCORD_PRE_UPDATE_BOOT_MESSAGE | Discord message sent when server begins updating | Server is updating... | "string" |
-| DISCORD_POST_UPDATE_BOOT_MESSAGE | Discord message sent when server completes updating | Server update complete! | "string" |
-| DISCORD_PRE_START_MESSAGE | Discord message sent when server begins to start | Server is started! | "string" |
-| DISCORD_PRE_SHUTDOWN_MESSAGE | Discord message sent when server begins to shutdown | Server is shutting down... | "string" |
-| DISCORD_POST_SHUTDOWN_MESSAGE | Discord message sent when server has stopped | Server is stopped! | "string" |
-| DISABLE_GENERATE_SETTINGS | Whether to automatically generate the PalWorldSettings.ini | false | true/false |
+| Variable                           | Info                                                                                                                                                                                                | Default Values             | Allowed Values                                                                                                    |
+|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------|
+| TZ                                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC                        | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations)        |
+| PLAYERS*                           | Max amount of players that are able to join the server                                                                                                                                              | 16                         | 1-32                                                                                                              |
+| PORT*                              | UDP port that the server will expose                                                                                                                                                                | 8211                       | 1024-65535                                                                                                        |
+| PUID*                              | The uid of the user the server should run as                                                                                                                                                        | 1000                       | !0                                                                                                                |
+| PGID*                              | The gid of the group the server should run as                                                                                                                                                       | 1000                       | !0                                                                                                                |
+| MULTITHREADING**                   | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false                      | true/false                                                                                                        |
+| COMMUNITY                          | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false                      | true/false                                                                                                        |
+| PUBLIC_IP                          | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                            | x.x.x.x                                                                                                           |
+| PUBLIC_PORT                        | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                            | 1024-65535                                                                                                        |
+| SERVER_NAME                        | A name for your server                                                                                                                                                                              |                            | "string"                                                                                                          |
+| SERVER_DESCRIPTION                 | Your server Description                                                                                                                                                                             |                            | "string"                                                                                                          |
+| SERVER_PASSWORD                    | Secure your community server with a password                                                                                                                                                        |                            | "string"                                                                                                          |
+| ADMIN_PASSWORD                     | Secure administration access in the server with a password                                                                                                                                          |                            | "string"                                                                                                          |
+| UPDATE_ON_BOOT**                   | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true                       | true/false                                                                                                        |
+| RCON_ENABLED***                    | Enable RCON for the Palworld server                                                                                                                                                                 | true                       | true/false                                                                                                        |
+| RCON_PORT                          | RCON port to connect to                                                                                                                                                                             | 25575                      | 1024-65535                                                                                                        |
+| QUERY_PORT                         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015                      | 1024-65535                                                                                                        |
+| BACKUP_CRON_EXPRESSION             | Setting affects frequency of automatic backups.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
+| BACKUP_ENABLED                     | Enables automatic backups                                                                                                                                                                           | true                       | true/false                                                                                                        |
+| DELETE_OLD_BACKUPS                 | Delete backups after a certain number of days                                                                                                                                                       | false                      | true/false                                                                                                        |
+| OLD_BACKUP_DAYS                    | How many days to keep backups                                                                                                                                                                       | 30                         | any positive integer                                                                                              |
+| AUTO_UPDATE_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 \* \* \* \*              | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
+| AUTO_UPDATE_ENABLED                | Enables automatic updates                                                                                                                                                                           | false                      | true/false                                                                                                        |
+| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | !0                                                                                                                |
+| AUTO_REBOOT_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
+| AUTO_REBOOT_ENABLED                | Enables automatic reboots                                                                                                                                                                           | false                      | true/false                                                                                                        |
+| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | !0                                                                                                                |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online.                                                                                                                                                | false                      | true/false                                                                                                        |
+| TARGET_MANIFEST_ID                 | Locks game version to corespond with Manfiest ID from Steam Download Depot.                                                                                                                         |                           | See [Manifest ID Table](#locking-specific-game-version)                                                           |
+| DISCORD_WEBHOOK_URL                | Discord webhook url found after creating a webhook on a discord server                                                                                                                              |                            | `https://discord.com/api/webhooks/<webhook_id>`                                                                   |
+| DISCORD_CONNECT_TIMEOUT            | Discord command initial connection timeout                                                                                                                                                          | 30                         | !0                                                                                                                |
+| DISCORD_MAX_TIMEOUT                | Discord total hook timeout                                                                                                                                                                          | 30                         | !0                                                                                                                |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE    | Discord message sent when server begins updating                                                                                                                                                    | Server is updating...      | "string"                                                                                                          |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE   | Discord message sent when server completes updating                                                                                                                                                 | Server update complete!    | "string"                                                                                                          |
+| DISCORD_PRE_START_MESSAGE          | Discord message sent when server begins to start                                                                                                                                                    | Server is started!         | "string"                                                                                                          |
+| DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
+| DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
+| DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
 
 *highly recommended to set
 
@@ -492,6 +516,24 @@ send discord messages with docker compose:
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
+
+## Locking Specific Game Version
+
+>[!WARNING]
+>Downgrading to a lower game version is possible, but it is unknown what impact it will have on existing saves.
+>
+>**Please do so at your own risk!**
+
+If **TARGET_MANIFEST_ID** environment variable is set, will lock server version to specific manifest.
+The manifest corresponds to the release date/update versions. Manifests can be found using SteamCMD or websites like [SteamDB](https://steamdb.info/depot/2394012/manifests/).
+
+### Version To Manifest ID Table
+
+| Version | Manifest ID          |
+|---------|----------------------|
+| 1.3.0   | 1354752814336157338  |
+| 1.4.0   | 4190579964382773830  |
+| 1.4.1   | 6370735655629434989  |
 
 ## Reporting Issues/Feature Requests
 
