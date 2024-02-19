@@ -4,6 +4,12 @@ sidebar_position: 7
 
 # Pinning a Game Version
 
+:::warning
+Downgrading to a lower game version is possible, but it is unknown what impact it will have on existing saves.
+
+**Please do so at your own risk!**
+:::
+
 If **TARGET_MANIFEST_ID** environment variable is set, will lock server version to specific manifest.
 The manifest corresponds to the release date/update versions. Manifests can be found using SteamCMD or websites like [SteamDB](https://steamdb.info/depot/2394012/manifests/).
 
