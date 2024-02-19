@@ -94,7 +94,7 @@ UpdateRequired() {
     return 0
   fi
 
-  if [ "$CURRENT_MANIFEST" != "${TARGET_MANIFEST_ID}" ]; then
+  if [ -n "${TARGET_MANIFEST_ID}" ] && [ "$CURRENT_MANIFEST" != "${TARGET_MANIFEST_ID}" ]; then
     LogInfo "Game not at target version. Target Version: ${TARGET_MANIFEST_ID}"
     return 0
   fi
