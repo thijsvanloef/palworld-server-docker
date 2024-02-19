@@ -27,7 +27,7 @@ mkdir -p /home/steam/server/logs/
 if [[ "$(id -u)" -eq 0 ]]; then
     su steam -c ./start.sh
 else
-    ./start.sh &
+    ./start.sh
 fi
 
 cp /home/steam/server/services/supervisord.conf /etc/supervisor/supervisord.conf
