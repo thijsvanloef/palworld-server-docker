@@ -73,27 +73,32 @@ if [ "${MULTITHREADING,,}" = true ]; then
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
-    LogAction "GENERATING CONFIG"
-    LogWarn "Environment variables will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
+LogAction "GENERATING CONFIG"
+LogWarn "Environment variables will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
 
-    # shellcheck disable=SC2143
-    if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-        LogAction "GENERATING CONFIG"
-        # Server will generate all ini files after first run.
-        if [ "$architecture" == "arm64" ]; then
-            timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
-        else
-            timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
-        fi
+# shellcheck disable=SC2143
+if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+  LogAction "GENERATING CONFIG"
+  LogWarn "Environment variables will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
 
-        # Wait for shutdown
-        sleep 5
-        cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
-    fi
+  # shellcheck disable=SC2143
+  if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+      LogAction "GENERATING CONFIG"
+      # Server will generate all ini files after first run.
+      if [ "$architecture" == "arm64" ]; then
+          timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
+      else
+          timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
+      fi
+
+      # Wait for shutdown
+      sleep 5
+      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+  fi
 else
-    LogAction "GENERATING CONFIG"
-    LogInfo "Using Env vars to create PalWorldSettings.ini"
-    /home/steam/server/compile-settings.sh || exit
+  LogAction "GENERATING CONFIG"
+  LogInfo "Using Env vars to create PalWorldSettings.ini"
+  /home/steam/server/compile-settings.sh || exit
 fi
 
 LogAction "GENERATING CRONTAB"
