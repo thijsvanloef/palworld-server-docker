@@ -127,3 +127,57 @@ InstallServer() {
   CreateACFFile "$targetManifest"
   DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
 }
+
+# Returns the architecture of the host
+GetArchitecture() {
+    # ARCH=$(grep -o 'lm' /proc/cpuinfo &>/dev/null && echo "amd" || echo "arm")
+    # echo "$ARCH$(getconf LONG_BIT)"
+    dpkg --print-architecture
+}
+
+# Builds the start command of the palworld server
+# Returns 0 and outputs the start command if everything is ok
+# Returns 1 if the Server is not found or has the wrong permissions
+BuildStartCommand() {
+    local STARTCOMMAND
+    # Check if the architecture is arm64
+    if [ "$(GetArchitecture)" == "arm64" ]; then
+        # create an arm64 version of ./PalServer.sh
+        cp ./PalServer.sh ./PalServer-arm64.sh
+        # shellcheck disable=SC2016
+        sed -i 's|\("$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Test" Pal "$@"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:$LD_LIBRARY_PATH box64 \1|' ./PalServer-arm64.sh
+        chmod +x ./PalServer-arm64.sh
+        STARTCOMMAND=("/palworld/PalServer-arm64.sh")
+    else
+        STARTCOMMAND=("/palworld/PalServer.sh")
+    fi
+
+    #Validate Installation
+    if ! fileExists "${STARTCOMMAND[0]}"; then
+        LogError "Server Not Installed Properly"
+        return 1
+    fi
+
+    isReadable "${STARTCOMMAND[0]}" || return 1
+    isExecutable "${STARTCOMMAND[0]}" || return 1
+
+    # Prepare Arguments
+    if [ -n "${PORT}" ]; then
+        STARTCOMMAND+=("-port=${PORT}")
+    fi
+
+    if [ -n "${QUERY_PORT}" ]; then
+        STARTCOMMAND+=("-queryport=${QUERY_PORT}")
+    fi
+
+    if [ "${COMMUNITY,,}" = true ]; then
+        STARTCOMMAND+=("EpicApp=PalServer")
+    fi
+
+    if [ "${MULTITHREADING,,}" = true ]; then
+        STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    fi
+
+    echo "${STARTCOMMAND[*]}"
+    return 0
+}

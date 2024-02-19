@@ -13,6 +13,13 @@ graceful_shutdown() {
 }
 
 trap 'graceful_shutdown' TERM INT
-"$@" &
+
+STARTCOMMAND=$(BuildStartCommand)
+if [ "$!" == 1 ]; then
+    LogWarn "Server Not Installed Properly"
+    exit 1
+fi
+
+${STARTCOMMAND}
 PID=$!
 wait "$PID"
