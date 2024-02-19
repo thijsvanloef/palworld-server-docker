@@ -35,7 +35,7 @@ file you can use to set up your server.
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -70,7 +70,7 @@ Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
@@ -117,7 +117,7 @@ docker run -d \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 <!-- markdownlint-disable-next-line -->
 As an alternative, you can copy the [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) file to a new file called **.env** file.
@@ -136,5 +136,5 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
