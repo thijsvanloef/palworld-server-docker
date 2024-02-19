@@ -231,6 +231,9 @@ broadcast_command() {
     local return_val=0
     # Replaces spaces with underscore
     local message="${1// /_}"
+    if [[ $TEXT = *[![:ascii:]]* ]]; then
+        LogWarn "Broadcast message contains non-ascii characters: \"${message}\""
+    fi
     if ! RCON "broadcast ${message}"; then
         return_val=1
     fi
