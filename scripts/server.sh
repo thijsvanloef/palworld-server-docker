@@ -20,6 +20,6 @@ if [ "$!" == 1 ]; then
     exit 1
 fi
 
-${STARTCOMMAND}
+${STARTCOMMAND} &
 PID=$!
 wait "$PID"
