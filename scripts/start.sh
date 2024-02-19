@@ -75,6 +75,7 @@ fi
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
 LogAction "GENERATING CONFIG"
 LogWarn "Environment variables will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
+fi
 
 # shellcheck disable=SC2143
 if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
