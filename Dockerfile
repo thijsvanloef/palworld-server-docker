@@ -114,7 +114,7 @@ RUN touch rcon.yaml crontab && \
     mkdir -p /home/steam/Steam/package && \
     rm -rf /tmp/dumps && \
     chmod o+w rcon.yaml crontab /home/steam/Steam/package && \
-    chown steam:steam -R /home/steam
+    chown steam:steam -R /home/steam/server
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
