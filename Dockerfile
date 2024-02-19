@@ -112,6 +112,7 @@ RUN chmod +x /home/steam/server/*.sh && \
 WORKDIR /home/steam/server
 RUN touch rcon.yaml crontab && \
     mkdir -p /home/steam/Steam/package && \
+    rm -rf /tmp/dumps && \
     chmod o+w rcon.yaml crontab /home/steam/Steam/package && \
     chown steam:steam -R /home/steam
 
