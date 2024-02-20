@@ -133,7 +133,3 @@ RCON() {
   local args="$1"
   rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
-
-# Helper Functions for installation & updates
-# shellcheck source=/dev/null
-source "/home/steam/server/helper_install.sh"
