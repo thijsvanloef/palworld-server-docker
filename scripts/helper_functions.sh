@@ -134,6 +134,23 @@ RCON() {
   rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
 
+# Given a message this will broadcast in game
+# Since RCON does not support spaces this will replace all spaces with underscores
+# Returns 0 on success
+# Returns 1 if not able to broadcast
+broadcast_command() {
+    local return_val=0
+    # Replaces spaces with underscore
+    local message="${1// /_}"
+    if [[ $TEXT = *[![:ascii:]]* ]]; then
+        LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
+        return_val=1
+    elif ! RCON "broadcast ${message}"; then
+        return_val=1
+    fi
+    return "$return_val"
+}
+
 # Helper Functions for installation & updates
 # shellcheck source=/dev/null
 source "/home/steam/server/helper_install.sh"
