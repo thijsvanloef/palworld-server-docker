@@ -2,6 +2,8 @@
 name: Security
 on:  # yamllint disable-line rule:truthy
   pull_request:
+  schedule:
+    - cron: 0 0 * * *
 
 jobs:
   container-scanning:
@@ -25,7 +27,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'thijsvanloef/palworld-server-docker:v0.1'
+          image-ref: 'security'
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
