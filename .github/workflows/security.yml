@@ -4,7 +4,7 @@ on:
 
 jobs:
   container-scanning:
-    name: Security - Container Scan
+    name: Container - Scan
     runs-on: ubuntu-latest
     steps:
 
