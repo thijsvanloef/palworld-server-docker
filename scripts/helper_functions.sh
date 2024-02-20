@@ -135,5 +135,5 @@ RCON() {
 }
 
 # Helper Functions for installation & updates
-# shellcheck source=/dev/null
+# shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
