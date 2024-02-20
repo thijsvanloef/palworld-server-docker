@@ -25,7 +25,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'security'
+          image-ref: 'thijsvanloef/palworld-server-docker:v0.1'
           ignore-unfixed: true
           format: 'sarif'
           output: 'trivy-results.sarif'
