@@ -81,6 +81,7 @@ Beispiele:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Authentifizierung verwenden                                    | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Welche Sperrliste verwenden                                    | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| TARGET_MANIFEST_ID | Legt die Spielversion entsprechend der Manifest-ID aus dem Steam-Download-Depot fest. | | Siehe [Manifest IDs](https://palworld-server-docker.loef.dev/de/guides/pinning-game-version) |
 
 ### Manuell
 
