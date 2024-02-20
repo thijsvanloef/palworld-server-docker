@@ -14,8 +14,6 @@ jobs:
 
       - name: Shellcheck
         uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          config_file: .shellcheckrc
 
   dockerlint:
     name: Lint - Docker
