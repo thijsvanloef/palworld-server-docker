@@ -35,7 +35,7 @@ Datei, die Sie verwenden können, um Ihren Server aufzusetzen.
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Verwenden Sie das Tag latest-arm64 für ARM64-Hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # Auf die Zeit festlegen, die Sie bereit sind zu warten, bis der Container ordnungsgemäß beendet ist
@@ -69,7 +69,7 @@ Passen Sie es an Ihre Bedürfnisse an, sehen Sie sich die [Umgebungsvariablen-Ü
 ```yml
 services:
    palworld:
-      image: thijsvanloef/palworld-server-docker:latest # Verwenden Sie das Tag latest-arm64 für ARM64-Hosts
+      image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
       stop_grace_period: 30s # die Zeit, die Sie bereit sind zu warten, bis der Container ordnungsgemäß beendet ist
@@ -117,7 +117,7 @@ docker run -d \
     -e SERVER_DESCRIPTION="palworld-server-docker von Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Verwenden Sie das Tag latest-arm64 für ARM64-Hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
 <!-- markdownlint-disable-next-line -->
 Als Alternative können Sie die [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) Datei in eine neue Datei mit dem Namen **.env** kopieren.
@@ -135,5 +135,5 @@ docker run -d \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
-    thijsvanloef/palworld-server-docker:latest # Verwenden Sie das Tag latest-arm64 für ARM64-Hosts
+    thijsvanloef/palworld-server-docker:latest
 ```
