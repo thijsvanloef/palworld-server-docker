@@ -1,6 +1,9 @@
 #!/bin/bash
 # This file contains functions which can be used in multiple scripts
 
+# shellcheck source=scripts/helper_functions.sh
+source "/home/steam/server/helper_functions.sh"
+
 # Returns 0 if game is installed
 # Returns 1 if game is not installed
 IsInstalled() {
