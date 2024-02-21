@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck source=/dev/null
+# shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
 if [ "${RCON_ENABLED,,}" != true ]; then
@@ -22,7 +22,7 @@ fi
 
 if [[ "${AUTO_REBOOT_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
     for ((i = "${AUTO_REBOOT_WARN_MINUTES}" ; i > 0 ; i--)); do
-        RCON "broadcast The_Server_will_reboot_in_${i}_Minutes"
+        broadcast_command "The Server will reboot in ${i} minutes"
         sleep "1m"
     done
     RCON save

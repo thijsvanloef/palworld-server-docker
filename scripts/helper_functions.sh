@@ -46,7 +46,17 @@ isReadable() {
 isWritable() {
     local path="$1"
     local return_val=0
-    if ! [ -w "${path}" ]; then
+    # Directories may be writable but not deletable causing -w to return false
+    if [ -d "${path}" ]; then
+        temp_file=$(mktemp -q -p "${path}")
+        if [ -n "${temp_file}" ]; then
+            rm -f "${temp_file}"
+        else
+            echo "${path} is not writable."
+            return_val=1
+        fi
+    # If it is a file it must be writable
+    elif ! [ -w "${path}" ]; then
         echo "${path} is not writable."
         return_val=1
     fi
@@ -66,17 +76,32 @@ isExecutable() {
     return "$return_val"
 }
 
+# Lists players
+# Outputs nothing if RCON is not enabled and returns 1
+# Outputs player list if RCON is enabled and returns 0
+get_players_list() {
+    local return_val=0
+    if [ "${RCON_ENABLED,,}" != true ]; then
+        return_val=1
+    fi
+
+    # tail -n +2 removes the header "name,playeruid,steamid"
+    RCON "ShowPlayers" | tail -n +2
+    return "$return_val"
+}
+
 # Checks how many players are currently connected
-# Outputs 0 if RCON is not enabled
-# Outputs the player count if rcon is enabled
+# Outputs 0 if RCON is not enabled and returns 1
+# Outputs the player count if rcon is enabled and returns 0
 get_player_count() {
     local player_list
-    if [ "${RCON_ENABLED,,}" != true ]; then
-        echo 0
-        return 0
+    local return_val=0
+    if ! player_list=$(get_players_list); then
+        return_val=1
     fi
-    player_list=$(RCON "ShowPlayers")
+    
     echo -n "${player_list}" | wc -l
+    return "$return_val"
 }
 
 #
@@ -132,4 +157,21 @@ DiscordMessage() {
 RCON() {
   local args="$1"
   rcon-cli -c /home/steam/server/rcon.yaml "$args"
+}
+
+# Given a message this will broadcast in game
+# Since RCON does not support spaces this will replace all spaces with underscores
+# Returns 0 on success
+# Returns 1 if not able to broadcast
+broadcast_command() {
+    local return_val=0
+    # Replaces spaces with underscore
+    local message="${1// /_}"
+    if [[ $TEXT = *[![:ascii:]]* ]]; then
+        LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
+        return_val=1
+    elif ! RCON "broadcast ${message}"; then
+        return_val=1
+    fi
+    return "$return_val"
 }
