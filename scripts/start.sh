@@ -102,5 +102,4 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-#sed -i "/\[program:palworld\]/,/\[/{s|command=.*|command=/home/steam/server/server.sh ${STARTCOMMAND}}|}" /home/steam/server/services/supervisord.conf
 exit 0
