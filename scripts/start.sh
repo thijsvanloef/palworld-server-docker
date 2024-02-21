@@ -143,6 +143,14 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
+if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]]; then
+    if [[ "$(id -u)" -eq 0 ]]; then
+        su steam -c /home/steam/server/scripts/player_logging.sh &
+    else
+        /home/steam/server/scripts/player_logging.sh &
+    fi
+fi
+
 LogAction "Starting Server"
 DiscordMessage "${DISCORD_PRE_START_MESSAGE}" "success"
 

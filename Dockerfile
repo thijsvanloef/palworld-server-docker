@@ -100,7 +100,9 @@ ENV HOME=/home/steam \
     DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
     DISCORD_PRE_START_MESSAGE="Server has been started!" \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
-    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
+    ENABLE_PLAYER_LOGGING=true \
+    PLAYER_LOGGING_POLL_PERIOD=5
 
 COPY ./scripts /home/steam/server/
 
