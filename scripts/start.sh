@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck source=/dev/null
+# shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
 dirExists "/palworld" || exit
