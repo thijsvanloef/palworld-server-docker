@@ -21,6 +21,15 @@ if [ "$(GetArchitecture)" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; the
     exit 1
 fi
 
+if [ "$(GetArchitecture)" == "arm64" ]; then
+    # create an arm64 version of ./PalServer.sh
+    cp ./PalServer.sh ./PalServer-arm64.sh
+    # shellcheck disable=SC2016
+    sed -i 's|\("$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Test" Pal "$@"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:$LD_LIBRARY_PATH box64 \1|' ./PalServer-arm64.sh
+    chmod +x ./PalServer-arm64.sh
+fi
+
+
 IsInstalled
 ServerInstalled=$?
 if [ "$ServerInstalled" == 1 ]; then

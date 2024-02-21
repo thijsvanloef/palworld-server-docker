@@ -1,7 +1,9 @@
 #!/bin/bash
-
-# shellcheck source=/dev/null
+# shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
+
+# shellcheck source=scripts/helper_install.sh
+source "/home/steam/server/helper_install.sh"
 
 graceful_shutdown() {
     if [ "${RCON_ENABLED,,}" = true ]; then
