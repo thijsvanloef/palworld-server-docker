@@ -17,12 +17,12 @@ while true; do
     mapfile -t server_pids < <(pgrep PalServer-Linux)
     if [ "${#server_pids[@]}" -ne 0 ]; then
         # Player IDs are usally 7 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros)
-        new_player_list=( $(get_players_list | sed -E 's/,([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]|00000000),([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/,\2/g' ) )
+        mapfile -t new_player_list < <(get_players_list | sed -E 's/,([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]|00000000),([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])/,\2/g' )
         # No players
         if [ "${#new_player_list[@]}" -gt 0 ] && [ "${#old_player_list[@]}" -gt 0 ]; then
-            players_change_list=( $( comm -23  \
+            mapfile -t players_change_list < <( comm -23  \
                 <(printf '%s\n' "${old_player_list[@]}" | sort) \
-                <(printf '%s\n' "${new_player_list[@]}" | sort) ))
+                <(printf '%s\n' "${new_player_list[@]}" | sort) )
 
         # All have joined
         elif [ "${#new_player_list[@]}" -gt 0 ]; then
