@@ -28,10 +28,8 @@ mkdir -p /palworld/backups
 term_handler() {
   DiscordMessage "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
 
-    if [ "${RCON_ENABLED,,}" = true ]; then
-        RCON save
-        RCON "shutdown 1"
-    else # Does not save
+    if ! shutdown_server; then
+        # Does not save
         kill -SIGTERM "$(pidof PalServer-Linux-Test)"
     fi
 

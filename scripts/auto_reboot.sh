@@ -25,8 +25,7 @@ if [[ "${AUTO_REBOOT_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
         broadcast_command "The Server will reboot in ${i} minutes"
         sleep "1m"
     done
-    RCON save
-    RCON "shutdown 1"
+    shutdown_server
     exit 0
 fi
 
