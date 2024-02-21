@@ -175,3 +175,30 @@ broadcast_command() {
     fi
     return "$return_val"
 }
+
+# Saves the server
+# Returns 0 if it saves
+# Returns 1 if it is not able to save
+save_server() {
+    local return_val=0
+    if ! RCON save; then
+        return_val=1
+    fi
+    return "$return_val"
+}
+
+# Saves then shutdowns the server
+# Returns 0 if it is shutdown
+# Returns 1 if it is not able to be shutdown
+shutdown_server() {
+    local return_val=0
+    # Do not shutdown if not able to save
+    if save_server; then
+        if ! RCON "DoExit"; then
+            return_val=1
+        fi
+    else
+        return_val=1
+    fi
+    return "$return_val"
+}
