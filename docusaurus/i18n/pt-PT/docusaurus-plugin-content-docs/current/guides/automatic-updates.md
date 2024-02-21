@@ -6,14 +6,16 @@ sidebar_position: 5
 
 ## Configurar atualização servidor automática com o CRON
 
-Para poder utilizar os reinícios automáticos com este servidor, as seguintes variáveis de ambiente **têm** de ser definidas como `true`:
+Para poder utilizar os reinícios automáticos com este servidor,
+as seguintes variáveis de ambiente **têm** de ser definidas como `true`:
 
 - `RCON_ENABLED`
 - `UPDATE_ON_BOOT`
 
 :::warning
 
-Se a reinicialização do docker não estiver definida como `always` ou `unless-stopped`, o servidor será desligado e precisará ser reiniciado manualmente.
+Se a reinicialização do docker não estiver definida como `always` ou `unless-stopped`,
+o servidor será desligado e precisará ser reiniciado manualmente.
 
 Os ficheiros de exemplo docker run command e docker compose em [Configuração rápida](/pt-PT/) utilizam esta definição.
 
@@ -31,4 +33,5 @@ Consultar [supercronic](https://github.com/aptible/supercronic#crontab-format)
 ou [Crontab Generator](https://crontab-generator.org).
 :::
 
-Definir `AUTO_UPDATE_CRON_EXPRESSION` para alterar o horário definido, por defeito é todas as noites à meia-noite de acordo com o fuso horário definido com `TZ`
+Definir `AUTO_UPDATE_CRON_EXPRESSION` para alterar o horário definido,
+por defeito é todas as noites à meia-noite de acordo com o fuso horário definido com `TZ`

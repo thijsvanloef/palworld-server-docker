@@ -18,4 +18,5 @@ ou [Crontab Generator](https://crontab-generator.org).
 
 Definir `BACKUP_CRON_EXPRESSION` para alterar o horário definido
 
-**Exemplo**: Se `BACKUP_CRON_EXPRESSION` for `0 2 * * *`, o script da cópia de segurança será executado todos os dias ás 2:00 AM
+**Exemplo**: Se `BACKUP_CRON_EXPRESSION` for `0 2 * * *`,
+o script da cópia de segurança será executado todos os dias ás 2:00 AM

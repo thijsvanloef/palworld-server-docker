@@ -29,7 +29,8 @@ Eles podem se juntar a outros jogadores com códigos de convite e estão limitad
 ## Docker Compose
 
 Este repositório inclui o ficheiro exemplo
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) que podes utilizar para configurar o teu servidor.
+[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+que podes utilizar para configurar o teu servidor.
 
 ```yml
 services:
@@ -61,15 +62,20 @@ services:
 
 <!-- markdownlint-disable-next-line -->
 
-Como alternativa, podes copiar o ficheiro [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) para um novo ficheiro com o nome **.env**.
+Como alternativa, podes copiar o ficheiro
+[.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example)
+para um novo ficheiro com o nome **.env**.
 
 <!-- markdownlint-disable-next-line -->
 
-Modifica o ficheiro conforme as tuas necessidades, vai á secção [environment variables](/pt-PT/getting-started/configuration/server-settings#variáveis-do-ambiente) para verificar os valores corretos.
+Modifica o ficheiro conforme as tuas necessidades, vai á secção
+[environment variables](/pt-PT/getting-started/configuration/server-settings#variáveis-do-ambiente)
+para verificar os valores corretos.
 
 <!-- markdownlint-disable-next-line -->
 
-Modifica o teu [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) para:
+Modifica o teu [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+para:
 
 ```yml
 services:
@@ -95,7 +101,8 @@ Usa `docker compose up -d` na mesma diretoria que `docker-compose.yml` para inic
 
 Usa `docker compose stop` na mesma diretoria que `docker-compose.yml` para parar o servidor.
 
-Usa `docker compose down --rmi all` na mesma diretoria que `docker-compose.yml` para parar, remover o servidor e remover a imagem docker do teu computador.
+Usa `docker compose down --rmi all` na mesma diretoria que `docker-compose.yml` para parar,
+remover o servidor e remover a imagem docker do teu computador.
 
 ## Docker Run
 
@@ -125,11 +132,15 @@ docker run -d \
 
 <!-- markdownlint-disable-next-line -->
 
-Como alternativa, podes copiar o ficheiro [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) para um novo ficheiro com o nome **.env**.
+Como alternativa, podes copiar o ficheiro
+[.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example)
+para um novo ficheiro com o nome **.env**.
 
 <!-- markdownlint-disable-next-line -->
 
-Modifica o ficheiro conforme as tuas necessidades, vai á secção [environment variables](/pt-PT/getting-started/configuration/server-settings#variáveis-do-ambiente) para verificar os valores corretos.
+Modifica o ficheiro conforme as tuas necessidades, vai á secção
+[environment variables](/pt-PT/getting-started/configuration/server-settings#variáveis-do-ambiente)
+para verificar os valores corretos.
 
 Modifica o commando docker run para:
 

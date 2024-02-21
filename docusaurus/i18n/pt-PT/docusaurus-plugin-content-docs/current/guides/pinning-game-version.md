@@ -13,7 +13,8 @@ sidebar_position: 7
 
 Se a variável `TARGET_MANIFEST_ID` estiver definida, a versão de jogo será a associada.
 
-O manifesto corresponde à data de lançamento/versões de atualização. Podes encontrar o manifesto usando a SteamCMD ou um website como [SteamDB](https://steamdb.info/depot/2394012/manifests/).
+O manifesto corresponde à data de lançamento/versões de atualização.
+Podes encontrar o manifesto usando a SteamCMD ou um website como [SteamDB](https://steamdb.info/depot/2394012/manifests/).
 
 ## Tabela Versão para Manifest ID
 

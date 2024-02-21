@@ -6,7 +6,8 @@ sidebar_position: 8
 
 Isto é apenas para utilizadores avançados
 
-É possível executar este contentor e [substituir o utilizador predefinido](https://docs.docker.com/engine/reference/run/#user) que é o root nesta imagem.
+É possível executar este contentor e
+[substituir o utilizador predefinido](https://docs.docker.com/engine/reference/run/#user) que é o root nesta imagem.
 
 Se especificares o user e o grupo, `PUID` e `PGID` são ignorados.
 

@@ -37,7 +37,8 @@ Este facto pode ser ignorado com segurança e não terá impacto no servidor.
 
 ## Setting breakpad minidump AppID = 2394010
 
-Isto significa que o servidor está a funcionar. Se continuar a não conseguir ligar-se a ele, isso significa que terá de verificar o seguinte:
+Isto significa que o servidor está a funcionar. Se continuar a não conseguir ligar-se a ele,
+isso significa que terá de verificar o seguinte:
 
 - Opções de firewall, verificar que as portas 8211/udp e 27015/udp estão desbloqueadas
 - Garantir que o port forward está correctamente configurado para 8211/udp e 27015/udp

@@ -6,7 +6,8 @@ sidebar_position: 1
 
 1. Gerar um webhook para o servidor discord nas definicões do servidor do discord
 
-2. Definir a variável de ambiente `DISCORD_WEBHOOK_URL` com o token único no final do URL do webhook do Discord, por exemplo: `https://discord.com/api/webhooks/1234567890/abcde`
+2. Definir a variável de ambiente `DISCORD_WEBHOOK_URL` com o token único no final do URL do webhook do Discord,
+   por exemplo: `https://discord.com/api/webhooks/1234567890/abcde`
 
 Definir mensagens Discord com docker run:
 
