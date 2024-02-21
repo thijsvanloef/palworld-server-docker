@@ -5,6 +5,9 @@ on:  # yamllint disable-line rule:truthy
   workflow_dispatch:
   schedule:
     - cron: 0 0 * * *
+  push:
+    branches:
+      - main
 
 jobs:
   container-scanning:
