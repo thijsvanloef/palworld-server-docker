@@ -65,7 +65,8 @@ RUN case ${TARGETARCH} in \
     && chmod +x supercronic \
     && mv supercronic /usr/local/bin/supercronic
 
-ENV PORT= \
+ENV HOME=/home/steam \
+    PORT= \
     PUID=1000 \
     PGID=1000 \
     PLAYERS= \
@@ -112,9 +113,11 @@ RUN chmod +x /home/steam/server/*.sh /home/steam/server/services/listener/*.sh &
 
 WORKDIR /home/steam/server
 RUN touch rcon.yaml crontab && \
-    chmod o+w rcon.yaml crontab && \
-    chown steam:steam -R /home/steam && \
-    chmod -R o+w /home/steam/steamcmd
+    mkdir -p /home/steam/Steam/package && \
+    chown steam:steam /home/steam/Steam/package && \
+    rm -rf /tmp/dumps && \
+    chmod o+w rcon.yaml crontab /home/steam/Steam/package && \
+    chown steam:steam -R /home/steam/server
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1

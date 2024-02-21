@@ -1,6 +1,10 @@
 #!/bin/bash
-# shellcheck source=/dev/null
+# shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
+
+# Helper Functions for installation & updates
+# shellcheck source=scripts/helper_install.sh
+source "/home/steam/server/helper_install.sh"
 
 UpdateRequired
 updateRequired=$?
@@ -24,7 +28,7 @@ fi
 if [ "$(get_player_count)" -gt 0 ]; then
   LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
   DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
-  RCON "broadcast The_Server_will_update_in_${AUTO_UPDATE_WARN_MINUTES}_Minutes"
+  broadcast_command "The Serverwill update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
   sleep "${AUTO_UPDATE_WARN_MINUTES}m"
 fi
 
