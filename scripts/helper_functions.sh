@@ -175,7 +175,3 @@ broadcast_command() {
     fi
     return "$return_val"
 }
-
-# Helper Functions for installation & updates
-# shellcheck source=scripts/helper_install.sh
-source "/home/steam/server/helper_install.sh"

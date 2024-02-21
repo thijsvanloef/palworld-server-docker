@@ -2,6 +2,10 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+# Helper Functions for installation & updates
+# shellcheck source=scripts/helper_install.sh
+source "/home/steam/server/helper_install.sh"
+
 UpdateRequired
 updateRequired=$?
 # Check if Update was actually required
