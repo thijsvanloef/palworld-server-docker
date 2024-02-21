@@ -38,7 +38,7 @@ while true; do
                 new_player_steamid=$(get_steamid "${new_player}")
                 # If a new player then a change
                 if [ "$new_player_steamid" = "$player_steamid" ]; then
-                    player_name=$( get_playername ${player} )
+                    player_name=$( get_playername "${player}" )
                     LogInfo "${player_name} has joined"
                     broadcast_command "${player_name} has joined"
                     continue 2
@@ -48,7 +48,7 @@ while true; do
                 old_player_steamid=$(get_steamid "${old_player}")
                 # If an old player then no change
                 if [ "$old_player_steamid" = "$player_steamid" ]; then
-                    player_name=$( get_playername ${player} )
+                    player_name=$( get_playername "${player}" )
                     LogInfo "${player_name} has left"
                     broadcast_command "${player_name} has left"
                     continue 2
