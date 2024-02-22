@@ -10,7 +10,8 @@
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/palworld)](https://artifacthub.io/packages/search?repo=palworld)
 
 > [!CAUTION]
-> The docs have been moved to: [https://palworld-server-docker.loef.dev/zh/](https://palworld-server-docker.loef.dev/zh/)
+> The docs have been moved
+> to: [https://palworld-server-docker.loef.dev/zh/](https://palworld-server-docker.loef.dev/zh/)
 
 加入我们的 [Discord](https://discord.gg/UxBxStPAAE)
 
@@ -154,42 +155,42 @@ docker run -d \
 * PUID
 * PGID
 
-| 变量               | 信息                                               | 默认值   | 允许值                                                                           |
-|------------------|--------------------------------------------------|-------|-------------------------------------------------------------------------------|
-| TZ               | 备份服务器时所使用的时间戳。                                   | UTC   | 参见 [时区列表](https://zh.wikipedia.org/wiki/%E6%97%B6%E5%8C%BA%E5%88%97%E8%A1%A8) |
-| PLAYERS*         | 可同加入服务器的最大玩家数。                                   | 16    | 1-32                                                                          |
-| PORT*            | 服务器将开放的 UDP 端口。                                  | 8211  | 1024-65535                                                                    |
-| PUID*            | 服务器运行时的用户的 UID。                                  | 1000  | !0                                                                            |
-| PGID*            | 服务器运行时的组的 GID。                                   | 1000  | !0                                                                            |
-| MULTITHREADING** | 提高多线程 CPU 环境下的性能。它最多对 4 个线程有效，分配超过这个数量的线程没有太大意义。 | false | true/false                                                                    |
-| COMMUNITY        | 服务器是否显示在社区服务器页中（建议设置SERVER_PASSWORD）。            | false | true/false                                                                    |
-| PUBLIC_IP        | 您可以手动指定服务器 IP 地址。若未指定，将自动检测。                     |       | x.x.x.x                                                                       |
-| PUBLIC_PORT      | 您可以手动指定服务器端口。若未指定，将自动检测。                         |       | 1024-65535                                                                    |
-| SERVER_NAME      | 服务器名称。                                           |       | "string"                                                                      |
-| SERVER_PASSWORD  | 为服务器设置密码。                                        |       | "string"                                                                      |
-| ADMIN_PASSWORD   | 为服务器设置管理员密码。                                     |       | "string"                                                                      |
-| UPDATE_ON_BOOT** | 在启动 Docker 容器时更新/安装服务器（需要在第一次运行时启用）。             | true  | true/false                                                                    |
-| RCON_ENABLED***  | 为服务器启用 RCON。                                     | true  | true/false                                                                    |
-| RCON_PORT        | RCON 连接端口。                                       | 25575 | 1024-65535                                                                    |
-| QUERY_PORT       | 用于与 Steam 服务器通信的查询端口。                            | 27015 | 1024-65535                                                                    |
-| BACKUP_CRON_EXPRESSION  | 自动备份的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](#使用-cron-执行自动备份)。 |
-| BACKUP_ENABLED | 启用自动备份。 | true | true/false |
-| DELETE_OLD_BACKUPS | 在一定天数后删除备份。     | false          | true/false                                                                                                 |
-| OLD_BACKUP_DAYS    | 保留备份的天数。                      | 30             | 任何正整数                                                                                       |
-| AUTO_UPDATE_CRON_EXPRESSION  | 自动更新的频率。 | 0 \* \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](#使用-cron-执行自动更新)。 |
-| AUTO_UPDATE_ENABLED | 启用自动更新。 | false | true/false |
-| AUTO_UPDATE_WARN_MINUTES | 在通知玩家后等待多长时间更新服务器。 | 30 | !0 |
-| AUTO_REBOOT_CRON_EXPRESSION  | 设置自动重启的频率。 | 0 0 \* \* \* | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](#使用-cron-执行自动重启)。 |
-| AUTO_REBOOT_ENABLED | 启用自动重启 | false | true/false |
-| AUTO_REBOOT_WARN_MINUTES | 在通知玩家后等待多长时间重启服务器。 | 5 | !0 |
-| DISCORD_WEBHOOK_URL | Discord 服务器上创建 Webhook 后的 Discord Webhook URL | | `https://discord.com/api/webhooks/<webhook_id>` |
-| DISCORD_CONNECT_TIMEOUT | Discord 命令初始连接超时 | 30 | !0 |
-| DISCORD_MAX_TIMEOUT | Discord 超时时间 | 30 | !0 |
-| DISCORD_PRE_UPDATE_BOOT_MESSAGE | 服务器开始更新时发送到 Discord 的消息 | Server is updating... | "string" |
-| DISCORD_POST_UPDATE_BOOT_MESSAGE | 服务器完成更新时发送到 Discord 的消息 | Server update complete! | "string" |
-| DISCORD_PRE_START_MESSAGE | 服务器启动时发送到 Discord 的消息 | Server is started! | "string" |
-| DISCORD_PRE_SHUTDOWN_MESSAGE | 服务器关闭时发送到 Discord 的消息 | Server is shutting down... | "string" |
-| DISCORD_POST_SHUTDOWN_MESSAGE | 服务器停止时发送到 Discord 的消息 | Server is stopped! | "string" |
+| 变量                               | 信息                                               | 默认值                        | 允许值                                                                           |
+|----------------------------------|--------------------------------------------------|----------------------------|-------------------------------------------------------------------------------|
+| TZ                               | 备份服务器时所使用的时间戳。                                   | UTC                        | 参见 [时区列表](https://zh.wikipedia.org/wiki/%E6%97%B6%E5%8C%BA%E5%88%97%E8%A1%A8) |
+| PLAYERS*                         | 可同加入服务器的最大玩家数。                                   | 16                         | 1-32                                                                          |
+| PORT*                            | 服务器将开放的 UDP 端口。                                  | 8211                       | 1024-65535                                                                    |
+| PUID*                            | 服务器运行时的用户的 UID。                                  | 1000                       | !0                                                                            |
+| PGID*                            | 服务器运行时的组的 GID。                                   | 1000                       | !0                                                                            |
+| MULTITHREADING**                 | 提高多线程 CPU 环境下的性能。它最多对 4 个线程有效，分配超过这个数量的线程没有太大意义。 | false                      | true/false                                                                    |
+| COMMUNITY                        | 服务器是否显示在社区服务器页中（建议设置SERVER_PASSWORD）。            | false                      | true/false                                                                    |
+| PUBLIC_IP                        | 您可以手动指定服务器 IP 地址。若未指定，将自动检测。                     |                            | x.x.x.x                                                                       |
+| PUBLIC_PORT                      | 您可以手动指定服务器端口。若未指定，将自动检测。                         |                            | 1024-65535                                                                    |
+| SERVER_NAME                      | 服务器名称。                                           |                            | "string"                                                                      |
+| SERVER_PASSWORD                  | 为服务器设置密码。                                        |                            | "string"                                                                      |
+| ADMIN_PASSWORD                   | 为服务器设置管理员密码。                                     |                            | "string"                                                                      |
+| UPDATE_ON_BOOT**                 | 在启动 Docker 容器时更新/安装服务器（需要在第一次运行时启用）。             | true                       | true/false                                                                    |
+| RCON_ENABLED***                  | 为服务器启用 RCON。                                     | true                       | true/false                                                                    |
+| RCON_PORT                        | RCON 连接端口。                                       | 25575                      | 1024-65535                                                                    |
+| QUERY_PORT                       | 用于与 Steam 服务器通信的查询端口。                            | 27015                      | 1024-65535                                                                    |
+| BACKUP_CRON_EXPRESSION           | 自动备份的频率。                                         | 0 0 \* \* \*               | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动备份](#使用-cron-执行自动备份)。                           |
+| BACKUP_ENABLED                   | 启用自动备份。                                          | true                       | true/false                                                                    |
+| DELETE_OLD_BACKUPS               | 在一定天数后删除备份。                                      | false                      | true/false                                                                    |
+| OLD_BACKUP_DAYS                  | 保留备份的天数。                                         | 30                         | 任何正整数                                                                         |
+| AUTO_UPDATE_CRON_EXPRESSION      | 自动更新的频率。                                         | 0 \* \* \* \*              | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动更新](#使用-cron-执行自动更新)。                           |
+| AUTO_UPDATE_ENABLED              | 启用自动更新。                                          | false                      | true/false                                                                    |
+| AUTO_UPDATE_WARN_MINUTES         | 在通知玩家后等待多长时间更新服务器。                               | 30                         | !0                                                                            |
+| AUTO_REBOOT_CRON_EXPRESSION      | 设置自动重启的频率。                                       | 0 0 \* \* \*               | 需要一个Cron表达式 - 参见 [使用 Cron 执行自动重启](#使用-cron-执行自动重启)。                           |
+| AUTO_REBOOT_ENABLED              | 启用自动重启                                           | false                      | true/false                                                                    |
+| AUTO_REBOOT_WARN_MINUTES         | 在通知玩家后等待多长时间重启服务器。                               | 5                          | !0                                                                            |
+| DISCORD_WEBHOOK_URL              | Discord 服务器上创建 Webhook 后的 Discord Webhook URL    |                            | `https://discord.com/api/webhooks/<webhook_id>`                               |
+| DISCORD_CONNECT_TIMEOUT          | Discord 命令初始连接超时                                 | 30                         | !0                                                                            |
+| DISCORD_MAX_TIMEOUT              | Discord 超时时间                                     | 30                         | !0                                                                            |
+| DISCORD_PRE_UPDATE_BOOT_MESSAGE  | 服务器开始更新时发送到 Discord 的消息                          | Server is updating...      | "string"                                                                      |
+| DISCORD_POST_UPDATE_BOOT_MESSAGE | 服务器完成更新时发送到 Discord 的消息                          | Server update complete!    | "string"                                                                      |
+| DISCORD_PRE_START_MESSAGE        | 服务器启动时发送到 Discord 的消息                            | Server is started!         | "string"                                                                      |
+| DISCORD_PRE_SHUTDOWN_MESSAGE     | 服务器关闭时发送到 Discord 的消息                            | Server is shutting down... | "string"                                                                      |
+| DISCORD_POST_SHUTDOWN_MESSAGE    | 服务器停止时发送到 Discord 的消息                            | Server is stopped!         | "string"                                                                      |
 
 * 强烈建议设置。
 
@@ -271,7 +272,8 @@ docker exec -it palworld-server restore
 
 删除位于 `/palworld/Pal/Saved/SaveGames/0/<old_hash_value>` 的旧保存数据文件夹。
 
-将新解压缩的保存数据文件夹 `Saved/SaveGames/0/<new_hash_value>` 的内容复制到 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>` 。
+将新解压缩的保存数据文件夹 `Saved/SaveGames/0/<new_hash_value>`
+的内容复制到 `palworld/Pal/Saved/SaveGames/0/<new_hash_value>` 。
 
 将 `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` 中的 `DedicatedServerName` 替换为新文件夹名称。
 
@@ -428,7 +430,8 @@ docker compose down && docker compose up -d
 
 1. 在 Discord 的服务器设置中为你的 Discord 服务器生成一个 Webhook URL。
 
-2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL 的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
+2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL
+   的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
 
 使用 Docker run 命令发送 Discord 消息：
 
@@ -443,6 +446,25 @@ docker compose down && docker compose up -d
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
+
+## 锁定特定的游戏版本
+
+> [!WARNING]
+> 降级到更低的游戏版本是可能的，但目前不清楚它对现有存档会有什么影响。
+>
+>**请自行承担风险！**
+
+如果 **TARGET_MANIFEST_ID** 环境变量被设置，服务器将锁定到特定的 manifest 版本。
+manifest 对应于发布日期/更新版本。manifest 可以在 SteamCMD 或 [SteamDB](https://steamdb.info/depot/2394012/manifests/)
+等网站上找到。
+
+### 版本和 manifest 对照表
+
+| 版本    | Manifest ID         |
+|-------|---------------------|
+| 1.3.0 | 1354752814336157338 |
+| 1.4.0 | 4190579964382773830 |
+| 1.4.1 | 6370735655629434989 |
 
 ## 报告问题/功能请求
 
