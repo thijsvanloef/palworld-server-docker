@@ -21,10 +21,7 @@ while true; do
         mapfile -t new_player_list < <( get_players_list | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' )
         # No players
         if [ "${#new_player_list[@]}" -gt 0 ] && [ "${#old_player_list[@]}" -gt 0 ]; then
-            mapfile -t players_change_list < <( comm -23  \
-                <(printf '%s\n' "${old_player_list[@]}" | sort) \
-                <(printf '%s\n' "${new_player_list[@]}" | sort) )
-
+            mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
         # All have joined
         elif [ "${#new_player_list[@]}" -gt 0 ]; then
             players_change_list=("${new_player_list[@]}")
