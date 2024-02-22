@@ -8,11 +8,11 @@ if [ "${RCON_ENABLED,,}" != true ]; then
 fi
 
 if [ "${AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE,,}" != true ]; then
-    players_count=$(get_player_count)
-    if [ "$players_count" -gt 0 ]; then
-        LogWarn "There are ${players_count} players online. Skipping auto reboot."
-        exit 0
-    fi
+  players_count=$(get_player_count)
+  if [ "$players_count" -gt 0 ]; then
+    LogWarn "There are ${players_count} players online. Skipping auto reboot."
+    exit 0
+  fi
 fi
 
 case "$(countdown_message "${AUTO_REBOOT_WARN_MINUTES}" "The_Server_will_reboot"; echo $?)" in
