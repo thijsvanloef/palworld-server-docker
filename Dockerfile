@@ -5,7 +5,7 @@ ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
 
 WORKDIR /build
 
-# install rcon and supercronic
+# install rcon
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV CGO_ENABLED=0
