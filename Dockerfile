@@ -6,7 +6,7 @@ ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
 WORKDIR /build
 
 # install rcon
-SHELL ["/bin/sh", "-o", "pipefail", "-c"]
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 
 ENV CGO_ENABLED=0
 RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
