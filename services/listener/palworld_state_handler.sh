@@ -39,6 +39,13 @@ while true; do
                 LogAction "*****STOPPED SERVER*****" >&2
                 DiscordMessage "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" >&2
                 ;;
+            PROCESS_STATE_BACKOFF)
+                LogAction "*****FAILED TO START (RETRY)*****" >&2
+                ;;
+            PROCESS_STATE_FATAL)
+                LogAction "*****COULD NOT START SERVER*****" >&2
+                DiscordMessage "Server was not able to Start. Please check your configuration." "failure" >&2
+                ;;
             *)
                 LogError "Unkown event occured: $header" "failure" >&2
                 ;;
