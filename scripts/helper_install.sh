@@ -131,19 +131,13 @@ InstallServer() {
   DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
 }
 
-# Returns the architecture of the host
-GetArchitecture() {
-    ARCH=$(grep -o 'lm' /proc/cpuinfo &>/dev/null && echo "amd" || echo "arm")
-    echo "$ARCH$(getconf LONG_BIT)"
-}
-
 # Builds the start command of the palworld server
 # Returns 0 and outputs the start command if everything is ok
 # Returns 1 if the Server is not found or has the wrong permissions
 BuildStartCommand() {
     local command
     # Check if the architecture is arm64
-    if [ "$(GetArchitecture)" == "arm64" ]; then
+    if [ "${ARCH}" == "arm64" ]; then
         command=("/palworld/PalServer-arm64.sh")
     else
         command=("/palworld/PalServer.sh")

@@ -16,7 +16,7 @@ cd /palworld || exit
 kernel_page_size=$(getconf PAGESIZE)
 
 # Check kernel page size for arm64 hosts before running steamcmdac
-if [ "$(GetArchitecture)" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
+if [ "${ARCH}" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     LogError "Only ARM64 hosts with 4k page size is supported."
     exit 1
 fi
@@ -29,7 +29,7 @@ if [ "$ServerInstalled" == 1 ]; then
     InstallServer
 fi
 
-if [ "$(GetArchitecture)" == "arm64" ]; then
+if [ "${ARCH}" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     cp ./PalServer.sh ./PalServer-arm64.sh
     # shellcheck disable=SC2016
@@ -56,7 +56,7 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
       LogAction "GENERATING CONFIG"
       # Server will generate all ini files after first run.
-      if [ "$(GetArchitecture)" == "arm64" ]; then
+      if [ "${ARCH}" == "arm64" ]; then
           timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
       else
           timeout --preserve-status 15s ./PalServer.sh 1> /dev/null

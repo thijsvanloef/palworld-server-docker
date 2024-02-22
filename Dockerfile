@@ -71,6 +71,7 @@ RUN case ${TARGETARCH} in \
     && mv supercronic /usr/local/bin/supercronic
 
 ENV HOME=/home/steam \
+    ARCH=${TARGETARCH} \
     PORT= \
     PUID=1000 \
     PGID=1000 \
