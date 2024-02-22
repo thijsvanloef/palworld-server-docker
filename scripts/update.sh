@@ -29,7 +29,9 @@ if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
     DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
 fi
 
-case "$(countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"; echo $?)" in
+countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"
+countdown_exit_code=$?
+case "${countdown_exit_code}" in
     0 )
         LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
         rm /palworld/steamapps/appmanifest_2394010.acf
