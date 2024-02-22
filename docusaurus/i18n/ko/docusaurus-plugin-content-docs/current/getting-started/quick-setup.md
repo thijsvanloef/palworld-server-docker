@@ -48,7 +48,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
-         SERVER_NAME: "World of Pals"
+         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
@@ -93,7 +93,7 @@ docker run -d \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
+    -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \

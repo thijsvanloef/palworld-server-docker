@@ -54,7 +54,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Aktivieren Sie dies, wenn Ihr Server im Tab für Community-Server angezeigt werden soll, VERWENDEN SIE ES AUSSCHLIEẞLICH MIT SERVER_PASSWORD!
-         SERVER_NAME: "World of Pals"
+         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker von Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
@@ -113,7 +113,7 @@ docker run -d \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
+    -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker von Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
