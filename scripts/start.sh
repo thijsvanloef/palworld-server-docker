@@ -21,6 +21,14 @@ if [ "$(GetArchitecture)" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; the
     exit 1
 fi
 
+IsInstalled
+ServerInstalled=$?
+if [ "$ServerInstalled" == 1 ]; then
+    LogInfo "Server installation not detected."
+    LogAction "Starting Installation"
+    InstallServer
+fi
+
 if [ "$(GetArchitecture)" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     cp ./PalServer.sh ./PalServer-arm64.sh
@@ -29,14 +37,6 @@ if [ "$(GetArchitecture)" == "arm64" ]; then
     chmod +x ./PalServer-arm64.sh
 fi
 
-
-IsInstalled
-ServerInstalled=$?
-if [ "$ServerInstalled" == 1 ]; then
-    LogInfo "Server installation not detected."
-    LogAction "Starting Installation"
-    InstallServer
-fi
 
 # Update Only If Already Installed
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
