@@ -23,7 +23,6 @@ if ! [ -w "/palworld" ]; then
 fi
 
 mkdir -p /palworld/backups
-mkdir -p /home/steam/server/logs/
 if [[ "$(id -u)" -eq 0 ]]; then
     su steam -c ./start.sh
 else
