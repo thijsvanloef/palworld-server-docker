@@ -7,7 +7,7 @@ WORKDIR /build
 
 ENV CGO_ENABLED=0
 RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
-    && echo "${RCON_TGZ_SHA1SUM}" rcon.tar.gz | sha1sum -c - \
+    && sha1sum -c - <<< "${RCON_TGZ_SHA1SUM} rcon.tar.gz" \
     && tar -xzvf rcon.tar.gz \
     && rm rcon.tar.gz \
     && mv rcon-cli-${RCON_VERSION}/* ./ \
