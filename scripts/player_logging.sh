@@ -19,13 +19,13 @@ while true; do
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros) while loading
         # Player ID is also 00000000 (8x zeros) when in character creation
         mapfile -t new_player_list < <( get_players_list | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' )
-        # No players
+        # New players have joined the existing players
         if [ "${#new_player_list[@]}" -gt 0 ] && [ "${#old_player_list[@]}" -gt 0 ]; then
             mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
-        # All have joined
+        # No old players
         elif [ "${#new_player_list[@]}" -gt 0 ]; then
             players_change_list=("${new_player_list[@]}")
-        # All have left
+        # All players have left
         elif [ "${#old_player_list[@]}" -gt 0 ]; then 
             players_change_list=("${old_player_list[@]}")
         fi
