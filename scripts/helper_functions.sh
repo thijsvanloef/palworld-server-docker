@@ -219,11 +219,11 @@ countdown_message() {
             for ((i = "${mtime}" ; i > 0 ; i--)); do
                 case "$i" in
                     1 ) 
-                        broadcast_command "${message_prefix}_in_${i}_minute"
+                        broadcast_command "${message_prefix} in ${i} minute"
                         sleep 30s
-                        broadcast_command "${message_prefix}_in_30_seconds"
+                        broadcast_command "${message_prefix} in 30 seconds"
                         sleep 20s
-                        broadcast_command "${message_prefix}_in_10_seconds"
+                        broadcast_command "${message_prefix} in 10 seconds"
                         sleep 10s
                         ;;
                     2 )
@@ -235,7 +235,7 @@ countdown_message() {
                     15 )
                         ;&
                     "$mtime" )
-                        broadcast_command "${message_prefix}_in_${i}_minutes"
+                        broadcast_command "${message_prefix} in ${i} minutes"
                         ;&
                     * ) 
                         sleep 1m

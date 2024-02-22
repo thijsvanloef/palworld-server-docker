@@ -15,7 +15,7 @@ if [ "${AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE,,}" != true ]; then
   fi
 fi
 
-countdown_message "${AUTO_REBOOT_WARN_MINUTES}" "The_Server_will_reboot"
+countdown_message "${AUTO_REBOOT_WARN_MINUTES}" "Server will reboot"
 countdown_exit_code=$?
 case "${countdown_exit_code}" in
     0 )

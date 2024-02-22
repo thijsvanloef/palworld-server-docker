@@ -29,7 +29,7 @@ if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
     DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
 fi
 
-countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server_will_update"
+countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server will update"
 countdown_exit_code=$?
 case "${countdown_exit_code}" in
     0 )
