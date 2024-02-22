@@ -170,7 +170,7 @@ broadcast_command() {
     if [[ $TEXT = *[![:ascii:]]* ]]; then
         LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
         return_val=1
-    elif ! RCON "broadcast ${message}"; then
+    elif ! RCON "broadcast ${message}" > /dev/null; then
         return_val=1
     fi
     return "$return_val"

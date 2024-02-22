@@ -82,6 +82,8 @@ For example:
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
 | TARGET_MANIFEST_ID | Locks game version to corespond with Manfiest ID from Steam Download Depot. | | See [Manifest ID Table](https://palworld-server-docker.loef.dev/guides/pinning-game-version) |
+| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
+| PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
 
 ### Manually
 

@@ -1,11 +1,16 @@
 FROM golang:1.22.0-alpine as rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
+ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
 
 WORKDIR /build
 
+# install rcon
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
 ENV CGO_ENABLED=0
 RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && echo "${RCON_TGZ_SHA1SUM}" rcon.tar.gz | sha1sum -c - \
     && tar -xzvf rcon.tar.gz \
     && rm rcon.tar.gz \
     && mv rcon-cli-${RCON_VERSION}/* ./ \
@@ -100,7 +105,9 @@ ENV HOME=/home/steam \
     DISCORD_POST_UPDATE_BOOT_MESSAGE="Server update complete!" \
     DISCORD_PRE_START_MESSAGE="Server has been started!" \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
-    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!"
+    DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
+    ENABLE_PLAYER_LOGGING=true \
+    PLAYER_LOGGING_POLL_PERIOD=5
 
 COPY ./scripts /home/steam/server/
 
