@@ -1,0 +1,22 @@
+{
+  "title": {
+    "message": "palworld-server-docker",
+    "description": "The title in the navbar"
+  },
+  "logo.alt": {
+    "message": "Palworld Logo",
+    "description": "The alt text of navbar logo"
+  },
+  "item.label.Getting started": {
+    "message": "Primeiros passos",
+    "description": "Navbar item with label Getting started"
+  },
+  "item.label.Guides": {
+    "message": "Guias",
+    "description": "Navbar item with label Guides"
+  },
+  "item.label.Advanced": {
+    "message": "Guias Avançados",
+    "description": "Navbar item with label Advanced"
+  }
+}

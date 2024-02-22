@@ -88,7 +88,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         SERVER_NAME: "World of Pals"
+         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
          - ./palworld:/palworld/
@@ -135,7 +135,7 @@ docker run -d \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e SERVER_PASSWORD="worldofpals" \
     -e COMMUNITY=false \
-    -e SERVER_NAME="World of Pals" \
+    -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
     --restart unless-stopped \
     --stop-timeout 30 \
@@ -226,10 +226,10 @@ It is highly recommended you set the following environment values before startin
 | OLD_BACKUP_DAYS                    | How many days to keep backups                                                                                                                                                                       | 30                         | any positive integer                                                                                              |
 | AUTO_UPDATE_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 \* \* \* \*              | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED                | Enables automatic updates                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | !0                                                                                                                |
+| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | Integer                                                                                                                |
 | AUTO_REBOOT_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED                | Enables automatic reboots                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | !0                                                                                                                |
+| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | Integer                                                                                                                |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online.                                                                                                                                                | false                      | true/false                                                                                                        |
 | TARGET_MANIFEST_ID                 | Locks game version to corespond with Manfiest ID from Steam Download Depot.                                                                                                                         |                           | See [Manifest ID Table](#locking-specific-game-version)                                                           |
 | DISCORD_WEBHOOK_URL                | Discord webhook url found after creating a webhook on a discord server                                                                                                                              |                            | `https://discord.com/api/webhooks/<webhook_id>`                                                                   |
@@ -241,6 +241,8 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
 | DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
 | DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
+| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
+| PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
 
 *highly recommended to set
 

@@ -63,8 +63,7 @@ if [ -f "$BACKUP_FILE" ]; then
 
         if [ "${RCON_ENABLED}" = true ]; then
             LogAction "Shutting Down Server"
-            RCON save
-            RCON "shutdown 1"
+            shutdown_server
         else
             LogWarn "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."
             exit 1

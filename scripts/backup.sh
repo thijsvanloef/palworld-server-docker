@@ -4,7 +4,7 @@ source "/home/steam/server/helper_functions.sh"
 
 DiscordMessage "Creating backup..." "in-progress"
 if [ "${RCON_ENABLED,,}" = true ]; then
-    RCON save
+    save_server
 fi
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
