@@ -23,11 +23,15 @@ while true; do
         # See players whose states have changed
         mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
 
+        # Go through the list of changes
         for player in "${players_change_list[@]}"; do
+            # Steam ID to check since names are not unique in game
             player_steamid=$(get_steamid "${player}")
+
+            # Searching players who have joined
             for new_player in "${new_player_list[@]}"; do
                 new_player_steamid=$(get_steamid "${new_player}")
-                # If a new player then a change
+                # If in new player list then they joined
                 if [ "$new_player_steamid" = "$player_steamid" ]; then
                     player_name=$( get_playername "${player}" )
                     LogInfo "${player_name} has joined"
@@ -35,9 +39,11 @@ while true; do
                     continue 2
                 fi
             done
+
+            # Searching players who have left
             for old_player in "${old_player_list[@]}"; do
                 old_player_steamid=$(get_steamid "${old_player}")
-                # If an old player then no change
+                # If in old player list then they left
                 if [ "$old_player_steamid" = "$player_steamid" ]; then
                     player_name=$( get_playername "${player}" )
                     LogInfo "${player_name} has left"
