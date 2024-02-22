@@ -141,40 +141,40 @@ GetArchitecture() {
 # Returns 0 and outputs the start command if everything is ok
 # Returns 1 if the Server is not found or has the wrong permissions
 BuildStartCommand() {
-    local STARTCOMMAND
+    local command
     # Check if the architecture is arm64
     if [ "$(GetArchitecture)" == "arm64" ]; then
-        STARTCOMMAND=("/palworld/PalServer-arm64.sh")
+        command=("/palworld/PalServer-arm64.sh")
     else
-        STARTCOMMAND=("/palworld/PalServer.sh")
+        command=("/palworld/PalServer.sh")
     fi
 
     #Validate Installation
-    if ! fileExists "${STARTCOMMAND[0]}"; then
+    if ! fileExists "${command[0]}"; then
         LogError "Server Not Installed Properly"
         return 1
     fi
 
-    isReadable "${STARTCOMMAND[0]}" || return 1
-    isExecutable "${STARTCOMMAND[0]}" || return 1
+    isReadable "${command[0]}" || return 1
+    isExecutable "${command[0]}" || return 1
 
     # Prepare Arguments
     if [ -n "${PORT}" ]; then
-        STARTCOMMAND+=("-port=${PORT}")
+        command+=("-port=${PORT}")
     fi
 
     if [ -n "${QUERY_PORT}" ]; then
-        STARTCOMMAND+=("-queryport=${QUERY_PORT}")
+        command+=("-queryport=${QUERY_PORT}")
     fi
 
     if [ "${COMMUNITY,,}" = true ]; then
-        STARTCOMMAND+=("EpicApp=PalServer")
+        command+=("EpicApp=PalServer")
     fi
 
     if [ "${MULTITHREADING,,}" = true ]; then
-        STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+        command+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
     fi
 
-    echo "${STARTCOMMAND[*]}"
+    echo "${command[*]}"
     return 0
 }
