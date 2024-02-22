@@ -202,3 +202,58 @@ shutdown_server() {
     fi
     return "$return_val"
 }
+
+# Given an amount of time in minutes and a message prefix
+# Will skip countdown if no players are in the server, Will only check the mtime if there are players in the server
+# Returns 0 on success
+# Returns 1 if mtime is empty
+# Returns 2 if mtime is not an integer
+countdown_message() {
+    local mtime="$1"
+    local message_prefix="$2"
+    local return_val=0
+
+    # Only do countdown if there are players
+    if [ "$(get_player_count)" -gt 0 ]; then
+        if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
+            for ((i = "${mtime}" ; i > 0 ; i--)); do
+                case "$i" in
+                    1 ) 
+                        broadcast_command "${message_prefix}_in_${i}_minute"
+                        sleep 30s
+                        broadcast_command "${message_prefix}_in_30_seconds"
+                        sleep 20s
+                        broadcast_command "${message_prefix}_in_10_seconds"
+                        sleep 10s
+                        ;;
+                    2 )
+                        ;&
+                    3 )
+                        ;&
+                    10 )
+                        ;&
+                    15 )
+                        ;&
+                    "$mtime" )
+                        broadcast_command "${message_prefix}_in_${i}_minutes"
+                        ;&
+                    * ) 
+                        sleep 1m
+                        # Checking for players every minute
+                        # Checking after sleep since it is ran in the beginning of the function
+                        if [ "$(get_player_count)" -eq 0 ]; then
+                            break
+                        fi
+                        ;;
+                esac
+            done
+        # If there are players but mtime is empty
+        elif [ -z "${mtime}" ]; then
+            return_val=1
+        # If there are players but mtime is not an integer
+        else
+            return_val=2
+        fi
+    fi
+    return "$return_val"
+}
