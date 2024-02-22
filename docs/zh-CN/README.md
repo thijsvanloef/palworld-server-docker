@@ -252,7 +252,7 @@ docker exec palworld-server backup
 
 若启用了 RCON，服务器将在备份前进行保存。
 
-## 透过备份恢復数据
+## 通过备份恢复数据
 
 要从备份中恢复，请使用以下命令：
 
@@ -263,8 +263,8 @@ docker exec -it palworld-server restore
 必须将 `RCON_ENABLED` 环境变量设置为 `true` 以使用此命令。
 
 > [!IMPORTANT]
-> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
-> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那么服务器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已经使用了所需的策略。
 
 ## 手动从备份中恢复数据
 
@@ -314,8 +314,8 @@ docker compose down && docker compose up -d
 * UPDATE_ON_BOOT
 
 > [!IMPORTANT]
-> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
-> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那么服务器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已经使用了所需的策略。
 
 设置 `AUTO_UPDATE_ENABLED` 以启用或禁用自动更新（默认为禁用）。
 
@@ -327,15 +327,15 @@ docker compose down && docker compose up -d
 > 或者
 > [Crontab Generat](https://crontab-generator.org).
 
-設置 `AUTO_UPDATE_CRON_EXPRESSION` 以更改默認时程。
+設置 `AUTO_UPDATE_CRON_EXPRESSION` 以更改默认时程。
 
 ## 使用 Cron 执行自动重启
 
 为了能够使用该服务器的自动重启功能，需要启用 `RCON_ENABLED` 。
 
 > [!IMPORTANT]
-> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
-> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+> 如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那么服务器将会关闭，需要手动重新启动。
+> 在 [开始使用](#开始使用) 中的示例 Docker run 命令和 Docker Compose 文件已经使用了所需的策略。
 
 设置 `AUTO_REBOOT_ENABLED` 以启用或禁用自动备份（默认为禁用）。
 
@@ -426,11 +426,11 @@ docker compose down && docker compose up -d
 服务器配置文件参数相关说明，请在
 [shockbyte](https://shockbyte.com/billing/knowledgebase/1189/How-to-Configure-your-Palworld-server.html) 中查看。
 
-## 使用 discord webhooks
+## 使用 Discord Webhooks
 
 1. 在 Discord 的服务器设置中为你的 Discord 服务器生成一个 Webhook URL。
 
-2. 使用 Discord Webhook URL 的範例，將唯一的令牌設置為環境變數，附在 URL
+2. 使用 Discord Webhook URL 的范例，将唯一的令牌设置为环境变量，附在 URL
    的末尾，如下所示：`https://discord.com/api/webhooks/1234567890/abcde`
 
 使用 Docker run 命令发送 Discord 消息：
@@ -440,7 +440,7 @@ docker compose down && docker compose up -d
 -e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Server is updating..." \
 ```
 
-使用 Docker Compose 命令發送 Discord 消息：
+使用 Docker Compose 命令发送 Discord 消息：
 
 ```yaml
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
