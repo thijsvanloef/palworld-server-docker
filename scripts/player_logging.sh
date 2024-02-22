@@ -20,15 +20,7 @@ while true; do
         # Player ID is also 00000000 (8x zeros) when in character creation
         mapfile -t new_player_list < <( get_players_list | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' )
         # New players have joined the existing players
-        if [ "${#new_player_list[@]}" -gt 0 ] && [ "${#old_player_list[@]}" -gt 0 ]; then
-            mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
-        # No old players
-        elif [ "${#new_player_list[@]}" -gt 0 ]; then
-            players_change_list=("${new_player_list[@]}")
-        # All players have left
-        elif [ "${#old_player_list[@]}" -gt 0 ]; then 
-            players_change_list=("${old_player_list[@]}")
-        fi
+        mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
 
         for player in "${players_change_list[@]}"; do
             player_steamid=$(get_steamid "${player}")
