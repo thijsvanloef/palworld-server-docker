@@ -1,11 +1,13 @@
 FROM golang:1.22.0-alpine as rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
+ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
 
 WORKDIR /build
 
 ENV CGO_ENABLED=0
 RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION}.tar.gz -O rcon.tar.gz \
+    && echo "${RCON_TGZ_SHA1SUM}" rcon.tar.gz | sha1sum -c - \
     && tar -xzvf rcon.tar.gz \
     && rm rcon.tar.gz \
     && mv rcon-cli-${RCON_VERSION}/* ./ \
