@@ -26,10 +26,10 @@ if [ "${RCON_ENABLED,,}" = false ]; then
 fi
 
 if [ "$(get_player_count)" -gt 0 ]; then
-  LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
-  DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
-  broadcast_command "The Serverwill update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
-  sleep "${AUTO_UPDATE_WARN_MINUTES}m"
+    LogAction "Updating the server from $CURRENT_MANIFEST to $TARGET_MANIFEST."
+    DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
+    broadcast_command "The Serverwill update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
+    sleep "${AUTO_UPDATE_WARN_MINUTES}m"
 fi
 
 rm /palworld/steamapps/appmanifest_2394010.acf
