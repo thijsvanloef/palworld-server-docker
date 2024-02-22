@@ -85,8 +85,7 @@ get_players_list() {
         return_val=1
     fi
 
-    # tail -n +2 removes the header "name,playeruid,steamid"
-    RCON "ShowPlayers" | tail -n +2
+    RCON "ShowPlayers"
     return "$return_val"
 }
 
