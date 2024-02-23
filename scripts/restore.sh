@@ -69,14 +69,12 @@ if [ -f "$BACKUP_FILE" ]; then
             exit 1
         fi
 
-        mapfile -t server_pids < <(pgrep PalServer-Linux-Test)
-        if [ "${#server_pids[@]}" -ne 0 ]; then
+        server_pid=$(pidof PalServer-Linux-Test)
+        if [ -n "${server_pid}" ]; then
             LogInfo "Waiting for Palworld to exit.."
-            for pid in "${server_pids[@]}"; do
-                tail --pid="$pid" -f 2>/dev/null
-            done
+            tail --pid="${server_pid}" -f /dev/null
         fi
-          LogSuccess "Shutdown Complete"
+        LogSuccess "Shutdown Complete"
 
         trap - ERR
 
