@@ -4,20 +4,26 @@ sidebar_position: 4
 
 # 自动重启
 
-## 使用 Cron 执行自动重启
+## 使用 Cron 配置自动重启
 
-为了能够使用该服务器的自动重启功能，需要启用 `RCON_ENABLED` 。
+要使用此服务器的自动重启功能，必须将以下环境变量设置为 `true`：
+
+* `RCON_ENABLED`
 
 :::warning
 
-如果 Docker 重启策略不是设为 `always` 或 `unless-stopped`，那麽伺服器将会关闭，需要手动重新启动。
+如果 docker 重启未设置为策略 `always` 或 `unless-stopped`，
+则服务器将关闭并需要手动重新启动。
 
-在 [开始使用](https://palworld-server-docker.loef.dev/zh/) 中的示例 Docker run 命令和 Docker Compose 文件已經使用了所需的策略。
+[快速设置](https://palworld-server-docker.loef.dev/zh/)中的示例 docker run 命令和 docker-compose 文件已使用所需的策略。
 :::
 
-设置 `AUTO_REBOOT_ENABLED` 以启用或禁用自动备份（默认为禁用）。
-
-`AUTO_REBOOT_CRON_EXPRESSION` 是一个cron表达式，在Cron表达式中，需要定义了运行作业的间隔。
+| 变量                              | 信息                                                                       | 默认值          | 允许的值                                                                                                            |
+|-----------------------------------|----------------------------------------------------------------------------|----------------|-----------------------------------------------------------------------------------------------------------------------|
+| AUTO_REBOOT_CRON_EXPRESSION        | 设置影响自动更新的频率。                                                  | 0 0 \* \* \*   | 需要 Cron 表达式 - 请参见 [使用 Cron 配置自动备份](https://palworld-server-docker.loef.dev/zh/guides/backup/automated-backup/)                              |
+| AUTO_REBOOT_ENABLED                | 启用自动重启                                                               | false          | true/false                                                                                                            |
+| AUTO_REBOOT_WARN_MINUTES           | 在通知玩家后等待多长时间重启服务器                                       | 5              | !0                                                                                                                    |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | 即使有玩家在线，也重新启动服务器                                           | false          | true/false                                                                                                            |
 
 :::tip
 该镜像使用 Supercronic 进行 cron 作业。
