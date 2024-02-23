@@ -72,7 +72,7 @@ if [ -f "$BACKUP_FILE" ]; then
         server_pid=$(pidof PalServer-Linux-Test)
         if [ -n "${server_pid}" ]; then
             LogInfo "Waiting for Palworld to exit.."
-            tail --pid="${server_pid}" -f 2>/dev/null
+            tail --pid="${server_pid}" -f /dev/null
         fi
           LogSuccess "Shutdown Complete"
 
