@@ -65,6 +65,7 @@ UpdateRequired() {
   if [ "$http_code" -ne 200 ]; then
       LogError "There was a problem reaching the Steam api. Unable to check for updates!"
       DiscordMessage "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
+      rm "$temp_file"
       return 2
   fi
 
