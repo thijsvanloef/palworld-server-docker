@@ -1,23 +1,5 @@
 #!/bin/bash
 
-if [[ ! "${PUID}" -eq 0 ]] && [[ ! "${PGID}" -eq 0 ]]; then
-    printf "\e[0;32m*****EXECUTING USERMOD*****\e[0m\n"
-    usermod -o -u "${PUID}" steam
-    groupmod -o -g "${PGID}" steam
-else
-    printf "\033[31m%s\n" "Running as root is not supported, please fix your PUID and PGID!"
-    exit 1
-fi
-
-mkdir -p /palworld/backups
-
-if [ -n "${SKIP_CHOWN}" ]; then
-    printf "\e[0;32m*****SKIPPING CHOWN*****\e[0m\n"
-else
-    printf "\e[0;32m*****CHOWNING*****\e[0m\n"
-    chown -R steam:steam /palworld /home/steam/
-fi
-
 # shellcheck disable=SC2317
 term_handler() {
     if [ "${RCON_ENABLED,,}" = true ]; then
@@ -32,7 +14,7 @@ term_handler() {
 
 trap 'term_handler' SIGTERM
 
-su steam -c ./start.sh &
+./start.sh &
 # Process ID of su
 killpid="$!"
 wait "$killpid"

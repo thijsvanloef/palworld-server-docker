@@ -96,7 +96,10 @@ RUN chmod +x /home/steam/server/*.sh && \
 
 WORKDIR /home/steam/server
 
-RUN chown -R steam:steam /home/steam
+RUN mkdir -p /palworld/backups
+RUN chown -R steam:steam /home/steam /palworld
+
+USER steam:steam
 
 HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
