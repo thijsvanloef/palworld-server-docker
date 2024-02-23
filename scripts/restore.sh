@@ -74,7 +74,7 @@ if [ -f "$BACKUP_FILE" ]; then
             LogInfo "Waiting for Palworld to exit.."
             tail --pid="${server_pid}" -f /dev/null
         fi
-          LogSuccess "Shutdown Complete"
+        LogSuccess "Shutdown Complete"
 
         trap - ERR
 
