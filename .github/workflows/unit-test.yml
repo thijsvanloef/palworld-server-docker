@@ -35,8 +35,6 @@ jobs:
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
             -v ./palworld:/palworld/ \
-            -e PUID=1000 \
-            -e PGID=1000 \
             -e PORT=8211 \
             -e PLAYERS=16 \
             -e MULTITHREADING=true \
@@ -140,8 +138,6 @@ jobs:
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
             -v ./palworld:/palworld/ \
-            -e PUID=1000 \
-            -e PGID=1000 \
             -e PORT=8211 \
             -e PLAYERS=16 \
             -e MULTITHREADING=true \

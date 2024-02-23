@@ -59,8 +59,6 @@ COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
 COPY --from=supercronic_builder /build/supercronic /usr/local/bin/supercronic
 
 ENV PORT= \
-    PUID=1000 \
-    PGID=1000 \
     PLAYERS= \
     MULTITHREADING=false \
     COMMUNITY=false \
