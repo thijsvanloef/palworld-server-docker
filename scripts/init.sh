@@ -11,7 +11,7 @@ fi
 
 mkdir -p /palworld/backups
 
-if [[ ! -z "${SKIP_CHOWN}" ]]; then
+if [ -n "${SKIP_CHOWN}" ]; then
     printf "\e[0;32m*****SKIPPING CHOWN*****\e[0m\n"
 else
     printf "\e[0;32m*****CHOWNING*****\e[0m\n"
