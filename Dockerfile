@@ -96,8 +96,8 @@ RUN chmod +x /home/steam/server/*.sh && \
 
 WORKDIR /home/steam/server
 
-RUN mkdir -p /palworld/backups
-RUN chown -R steam:steam /home/steam /palworld
+RUN mkdir -p /palworld/backups \
+    && chown -R steam:steam /home/steam /palworld
 
 USER steam:steam
 
