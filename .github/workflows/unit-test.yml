@@ -28,7 +28,7 @@ jobs:
 
       - name: Run server
         run: |
-            mkdir -p ./palworld && sudo chown -R 1000:1000 ./palworld
+            mkdir -p ./palworld/backups && sudo chown -R 1000:1000 ./palworld
             docker run -d \
             --name palworld-server \
             -p 8211:8211/udp \
@@ -132,7 +132,7 @@ jobs:
 
       - name: Run server
         run: |
-            mkdir -p ./palworld && sudo chown -R 1000:1000 ./palworld
+            mkdir -p ./palworld/backups && sudo chown -R 1000:1000 ./palworld
             docker run -d \
             --name palworld-server \
             --platform linux/arm64 \
