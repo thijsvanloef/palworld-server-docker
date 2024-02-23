@@ -77,6 +77,16 @@ services:
          - ./palworld:/palworld/
 ```
 
+## 启动服务器
+
+使用 `docker compose up -d` 在后台启动服务器
+
+## 停止服务器
+
+使用 `docker compose stop` 停止服务器
+
+使用 `docker compose down --rmi all` 停止并删除服务器，并从计算机中删除 Docker 镜像。
+
 ### Docker Run
 
 ```bash
@@ -118,13 +128,3 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest # Use the latest-arm64 tag for arm64 hosts
 ```
-
-## 启动服务器
-
-使用 `docker compose up -d` 在后台启动服务器
-
-## 停止服务器
-
-使用 `docker compose stop` 停止服务器
-
-使用 `docker compose down --rmi all` 停止并删除服务器，并从计算机中删除 Docker 镜像。
