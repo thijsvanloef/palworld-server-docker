@@ -4,6 +4,10 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
   workflow_call:
 
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.ref }}'
+  cancel-in-progress: true
+
 jobs:
   unit-test-amd64:
     name: Docker - Test (amd64)
