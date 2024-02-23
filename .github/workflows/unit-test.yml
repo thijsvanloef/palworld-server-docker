@@ -62,6 +62,7 @@ jobs:
 
               if [ $ELAPSED_TIME -gt $TIMEOUT_SECONDS ]; then
                 echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
+                docker logs palworld-server
                 exit 1  # or handle the failure accordingly
               fi
 
@@ -74,6 +75,7 @@ jobs:
             sleep 5
             if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
               echo "Server may not have started successfully."
+              docker logs palworld-server
               exit 1
             fi
 
@@ -88,6 +90,7 @@ jobs:
           docker exec palworld-server backup
           if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
             echo "Backup file not found. Backup command may have failed."
+            docker logs palworld-server
             exit 1
           fi
 
@@ -95,11 +98,13 @@ jobs:
         run: |
           if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
             echo "Error: PalWorldSettings.ini is missing the required section [/Script/Pal.PalGameWorldSettings]."
+            docker logs palworld-server
             exit 1
           fi
 
           if ! grep -q "^OptionSettings=\(.*\)" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
             echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
+            docker logs palworld-server
             exit 1
           fi
 
@@ -161,6 +166,7 @@ jobs:
 
               if [ $ELAPSED_TIME -gt $TIMEOUT_SECONDS ]; then
                 echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
+                docker logs palworld-server
                 exit 1  # or handle the failure accordingly
               fi
 
@@ -173,6 +179,7 @@ jobs:
             sleep 100
             if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
               echo "Server may not have started successfully."
+              docker logs palworld-server
               exit 1
             fi
 
@@ -187,6 +194,7 @@ jobs:
           docker exec palworld-server backup
           if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
             echo "Backup file not found. Backup command may have failed."
+            docker logs palworld-server
             exit 1
           fi
 
@@ -194,10 +202,12 @@ jobs:
         run: |
           if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
             echo "Error: PalWorldSettings.ini is missing the required section [/Script/Pal.PalGameWorldSettings]."
+            docker logs palworld-server
             exit 1
           fi
 
           if ! grep -q "^OptionSettings=\(.*\)" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
             echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
+            docker logs palworld-server
             exit 1
           fi
