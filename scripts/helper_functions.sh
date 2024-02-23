@@ -103,6 +103,19 @@ get_player_count() {
     return "$return_val"
 }
 
+# Gets the status of a process via supervisorctl
+# Returns 0 if successfull
+# Returns 1 if the process was not found
+getProcessStatus() {
+    processName="$1"
+    status=$(supervisorctl status "$processName" | awk '{print $2}')
+    if [ -z "$status" ] || [ "$status" = "ERROR" ]; then
+        return 1
+    fi
+    echo "$status"
+    return 0
+}
+
 #
 # Log Definitions
 #
