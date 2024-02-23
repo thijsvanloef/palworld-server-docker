@@ -10,7 +10,13 @@ else
 fi
 
 mkdir -p /palworld/backups
-chown -R steam:steam /palworld /home/steam/
+
+if [[ ! -z "${SKIP_CHOWN}" ]]; then
+    printf "\e[0;32m*****SKIPPING CHOWN*****\e[0m\n"
+else
+    printf "\e[0;32m*****CHOWNING*****\e[0m\n"
+    chown -R steam:steam /palworld /home/steam/
+fi
 
 # shellcheck disable=SC2317
 term_handler() {
