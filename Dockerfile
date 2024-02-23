@@ -31,7 +31,7 @@ RUN wget -q https://github.com/aptible/supercronic/archive/refs/tags/${SUPERCRON
     && rm -rf supercronic-${SUPERCRONIC_VERSION##v} \
     && go build -v .
 
-FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:3554d1b0ab15904cba8b2e28aaaa989855c15ba5e0392763825cd6ab8526fc99
+FROM ghcr.io/usa-reddragon/steamcmd:main@sha256:6efae378ecf6e2c269874ce948ebc7a7406c60b4ee1f2bdba14107c450e79f0a
 
 # Ignoring, future refactor
 # hadolint ignore=DL3002
