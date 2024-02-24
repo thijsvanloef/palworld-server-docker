@@ -103,11 +103,12 @@ default:
 EOL
 
 if [ "${ENABLE_PLAYER_LOGGING,,}" = true ]; then
-    if [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]]; then
+    if [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && [ "${RCON_ENABLED}" = true ]; then
         LogInfo "Player Logging enabled"
-        mv -f /home/steam/server/services/conf.d/palworld_player_logging.disabled /home/steam/server/services/conf.d/palworld_player_logging.conf >/dev/null
+        mv -f /home/steam/server/services/conf.d/palworld_player_logging.disabled /home/steam/server/services/conf.d/palworld_player_logging.conf
     else
         LogWarn "Unable to enable player logging" 
+        mv -f /home/steam/server/services/conf.d/palworld_player_logging.conf /home/steam/server/services/conf.d/palworld_player_logging.disabled
     fi
 fi
 

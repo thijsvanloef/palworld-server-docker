@@ -30,5 +30,4 @@ else
 fi
 
 cp /home/steam/server/services/supervisord.conf /etc/supervisor/supervisord.conf
-cp /home/steam/server/services/conf.d/*.conf /etc/supervisor/conf.d/ >/dev/null
 exec /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf
