@@ -103,16 +103,34 @@ get_player_count() {
     return "$return_val"
 }
 
-# Gets the status of a process via supervisorctl
+# Gets the status of a service via supervisorctl
 # Returns 0 if successfull
-# Returns 1 if the process was not found
-getProcessStatus() {
-    processName="$1"
+# Returns 1 if the service was not found
+getServiceStatus() {
+    local processName="$1"
+    local status
     status=$(supervisorctl status "$processName" | awk '{print $2}')
     if [ -z "$status" ] || [ "$status" = "ERROR" ]; then
         return 1
     fi
     echo "$status"
+    return 0
+}
+
+# Gets the PID of a service via supervisorctl
+# Returns 0 if successfull
+# Returns 1 if the service was not found or is not running
+getServicePID() {
+    local processName="$1"
+    local pid
+    if [ "$(getServiceStatus "$processName")" != "RUNNING" ]; then
+        return 1
+    fi
+    pid=$(supervisorctl status "$processName" | awk '{print $4}' | sed 's/,\+$//')
+    if [ -z "$pid" ] || [ "$pid" = "ERROR" ]; then
+        return 1
+    fi
+    echo "$pid"
     return 0
 }
 
