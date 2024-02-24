@@ -105,7 +105,7 @@ EOL
 if [ "${ENABLE_PLAYER_LOGGING,,}" = true ]; then
     if [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]]; then
         LogInfo "Player Logging enabled"
-        mv -f /home/steam/server/services/conf.d/palworld_player_logging.disabled /home/steam/server/services/conf.d/palworld_player_logging.conf
+        mv -f /home/steam/server/services/conf.d/palworld_player_logging.disabled /home/steam/server/services/conf.d/palworld_player_logging.conf >/dev/null
     else
         LogWarn "Unable to enable player logging" 
     fi

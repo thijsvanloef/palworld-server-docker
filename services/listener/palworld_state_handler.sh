@@ -26,9 +26,11 @@ while true; do
         case $eventname in
             PROCESS_STATE_STARTING)
                 #Ignore Starting Event
+                LogAction "*****STARTING SERVER*****" >&2
+                DiscordMessage "Server is starting" "in-progress" >&2
                 ;;
             PROCESS_STATE_RUNNING)
-                LogAction "*****STARTING SERVER*****" >&2
+                LogAction "*****STARTED SERVER*****" >&2
                 DiscordMessage "${DISCORD_PRE_START_MESSAGE}" "success" >&2
                 ;;
             PROCESS_STATE_STOPPING)
@@ -53,3 +55,4 @@ while true; do
     fi
     printf "RESULT 2\nOK"
 done
+exit 0
