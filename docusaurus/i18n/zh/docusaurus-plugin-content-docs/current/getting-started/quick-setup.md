@@ -57,7 +57,7 @@ services:
 ```
 <!-- markdownlint-disable-next-line -->
 或者，可以将 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 文件复制到一个名为 **.env** 的新文件中。<!-- markdownlint-disable-next-line -->
-根据需要进行修改，并查看 [环境变量](https://palworld-server-docker.loef.dev/zh/getting-started/configuration/server-settings#环境变量) 部分以检查正确的 <!-- markdownlint-disable-next-line -->
+根据需要进行修改，并查看 [环境变量](#/zh/入门/配置/服务器设置#环境变量) 部分以检查正确的 <!-- markdownlint-disable-next-line -->
 值。将 [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 修改为以下内容：
 
 ```yml
@@ -114,7 +114,7 @@ docker run -d \
 ```
 <!-- markdownlint-disable-next-line -->
 或者，可以将 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 文件复制到一个名为 **.env** 的新文件中。<!-- markdownlint-disable-next-line -->
-根据需要进行修改，并查看 [环境变量]([#/zh/入门/配置/服务器设置#环境变量](https://palworld-server-docker.loef.dev/zh/getting-started/configuration/server-settings#环境变量)) 部分以检查正确的值。
+根据需要进行修改，并查看 [环境变量](#/zh/入门/配置/服务器设置#环境变量) 部分以检查正确的值。
 将 docker run 命令修改为以下内容：
 
 ```bash
