@@ -9,8 +9,8 @@ graceful_shutdown() {
     if [ "${RCON_ENABLED,,}" = true ]; then
         rcon-cli -c /home/steam/server/rcon.yaml save
         rcon-cli -c /home/steam/server/rcon.yaml doexit
+        wait "$PID"
     fi
-    wait "$PID"
     exit 0
 }
 
