@@ -5,3 +5,4 @@ autostart=%(ENV_ENABLE_PLAYER_LOGGING)s
 stdout_logfile=/dev/fd/1
 stdout_logfile_maxbytes=0
 redirect_stderr=true
+startsecs=0
