@@ -7,8 +7,7 @@ source "/home/steam/server/helper_install.sh"
 
 graceful_shutdown() {
     if [ "${RCON_ENABLED,,}" = true ]; then
-        rcon-cli -c /home/steam/server/rcon.yaml save
-        rcon-cli -c /home/steam/server/rcon.yaml doexit
+        shutdown_server
         wait "$PID"
     fi
     exit 0
