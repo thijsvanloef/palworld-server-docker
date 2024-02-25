@@ -547,4 +547,4 @@ Issues/Feature requests can be submitted by using [this link](https://github.com
 
 ### Known Issues
 
-Known issues are listed in the [wiki](https://github.com/thijsvanloef/palworld-server-docker/wiki/Known-Issues)
+Known issues are listed in the [documentation](https://palworld-server-docker.loef.dev/known-issues/)
