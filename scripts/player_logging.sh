@@ -12,47 +12,52 @@ get_playername(){
     echo "${player_info}" | sed -E 's/,([0-9]+),[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]//g'
 }
 
-old_player_list=( )
+# Wait until rcon port is open
+while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
+    sleep 5
+    LogInfo "Waiting for RCON port to open to show player logging..."
+done
+
 while true; do
-    mapfile -t server_pids < <(pgrep PalServer-Linux)
-    if [ "${#server_pids[@]}" -ne 0 ]; then
+    server_pid=$(pidof PalServer-Linux-Test)
+    if [ -n "${server_pid}" ]; then
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros) while loading
         # Player ID is also 00000000 (8x zeros) when in character creation
-        mapfile -t new_player_list < <( get_players_list | tail -n +2 | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' )
-        
-        # See players whose states have changed
-        mapfile -t players_change_list < <( printf '%s\n' "${old_player_list[@]}" "${new_player_list[@]}" | sort | uniq -u )
+        mapfile -t current_player_list < <( get_players_list | tail -n +2 | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' | sort )
 
-        # Go through the list of changes
-        for player in "${players_change_list[@]}"; do
-            # Steam ID to check since names are not unique in game
-            player_steamid=$(get_steamid "${player}")
+        # If there are current players then some may have joined
+        if [ "${#current_player_list[@]}" -gt 0 ]; then
+            # Get list of players who have joined
+            mapfile -t players_who_joined_list < <( comm -13 \
+                <(printf '%s\n' "${old_player_list[@]}") \
+                <(printf '%s\n' "${current_player_list[@]}") )
+        fi
 
-            # Searching players who have joined
-            for new_player in "${new_player_list[@]}"; do
-                new_player_steamid=$(get_steamid "${new_player}")
-                # If in new player list then they joined
-                if [ "$new_player_steamid" = "$player_steamid" ]; then
-                    player_name=$( get_playername "${player}" )
-                    LogInfo "${player_name} has joined"
-                    broadcast_command "${player_name} has joined"
-                    continue 2
-                fi
-            done
+        # If there are old players then some may have left
+        if [ "${#old_player_list[@]}" -gt 0 ]; then
+            # Get list of players who have left
+            mapfile -t players_who_left_list < <( comm -23 \
+                <(printf '%s\n' "${old_player_list[@]}") \
+                <(printf '%s\n' "${current_player_list[@]}") )
+        fi
 
-            # Searching players who have left
-            for old_player in "${old_player_list[@]}"; do
-                old_player_steamid=$(get_steamid "${old_player}")
-                # If in old player list then they left
-                if [ "$old_player_steamid" = "$player_steamid" ]; then
-                    player_name=$( get_playername "${player}" )
-                    LogInfo "${player_name} has left"
-                    broadcast_command "${player_name} has left"
-                    continue 2
-                fi
-            done
+        # Log all players who have left
+        for player in "${players_who_left_list[@]}"; do
+            player_name=$( get_playername "${player}" )
+            LogInfo "${player_name} has left"
+            broadcast_command "${player_name} has left"
         done
-        old_player_list=("${new_player_list[@]}")
+
+        # Log all players who have joined
+        for player in "${players_who_joined_list[@]}"; do
+            player_name=$( get_playername "${player}" )
+            LogInfo "${player_name} has joined"
+            broadcast_command "${player_name} has joined"
+        done
+
+        old_player_list=("${current_player_list[@]}")
+        players_who_left_list=( )
+        players_who_joined_list=( )
     fi
     sleep "${PLAYER_LOGGING_POLL_PERIOD}"
 done

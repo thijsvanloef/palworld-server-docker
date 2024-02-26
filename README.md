@@ -435,8 +435,8 @@ For example:
 | Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
 | DIFFICULTY                                | Game Difficulty                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
-| DAYTIME_SPEEDRATE                         | Day time speed - Smaller number means shorter days             | 1.000000                                                                                     | Float                                  |
-| NIGHTTIME_SPEEDRATE                       | Night time speed - Smaller number means shorter nights         | 1.000000                                                                                     | Float                                  |
+| DAYTIME_SPEEDRATE                         | Day time speed - Larger number means shorter days             | 1.000000                                                                                     | Float                                  |
+| NIGHTTIME_SPEEDRATE                       | Night time speed - Larger number means shorter nights         | 1.000000                                                                                     | Float                                  |
 | EXP_RATE                                  | EXP earn rate                                                  | 1.000000                                                                                     | Float                                  |
 | PAL_CAPTURE_RATE                          | Pal capture rate                                               | 1.000000                                                                                     | Float                                  |
 | PAL_SPAWN_NUM_RATE                        | Pal appearance rate                                            | 1.000000                                                                                     | Float                                  |
@@ -547,4 +547,4 @@ Issues/Feature requests can be submitted by using [this link](https://github.com
 
 ### Known Issues
 
-Known issues are listed in the [wiki](https://github.com/thijsvanloef/palworld-server-docker/wiki/Known-Issues)
+Known issues are listed in the [documentation](https://palworld-server-docker.loef.dev/known-issues/)

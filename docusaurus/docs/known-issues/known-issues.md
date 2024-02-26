@@ -6,6 +6,19 @@ sidebar_position: 5
 
 Known issues of using this Docker image.
 
+## PalWorldSettings.ini keeps resetting
+
+If the `PalworldSettings.ini` keeps resettings after you have changed the file and rebooted the server.
+Please make sure you have `DISABLE_GENERATE_SETTINGS` set to `true`.
+
+If this is not the case, your setting will be overwritten by the settings set via [the environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/game-settings).
+
+:::tip
+It is recommended you use the environment variables to set your game settings, instead of manually changing the `PalWorldSettings.ini`
+
+If you do want to change the file manually, please make sure the server is off when you make the changes.
+:::
+
 ## Broadcast command can only send 1 word
 
 When using Broadcast among RCON's functions, only one word is transmitted.
