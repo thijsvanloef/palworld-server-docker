@@ -12,6 +12,12 @@ get_playername(){
     echo "${player_info}" | sed -E 's/,([0-9]+),[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]//g'
 }
 
+# Wait until rcon port is open
+while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
+    sleep 5
+    LogInfo "Waiting for RCON port to open to show player logging..."
+done
+
 while true; do
     server_pid=$(pidof PalServer-Linux-Test)
     if [ -n "${server_pid}" ]; then
