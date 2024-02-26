@@ -108,7 +108,8 @@ ENV HOME=/home/steam \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
     ENABLE_PLAYER_LOGGING=true \
-    PLAYER_LOGGING_POLL_PERIOD=5
+    PLAYER_LOGGING_POLL_PERIOD=5 \
+    DISABLE_GENERATE_ENGINE=true
 
 COPY ./scripts /home/steam/server/
 

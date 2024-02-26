@@ -105,6 +105,9 @@ else
   /home/steam/server/compile-settings.sh || exit
 fi
 
+if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
+    /home/steam/server/compile-engine.sh || exit
+fi
 LogAction "GENERATING CRONTAB"
 truncate -s 0  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
