@@ -13,10 +13,12 @@ get_playername(){
 }
 
 # Wait until rcon port is open
-while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
-    sleep 5
-    LogInfo "Waiting for RCON port to open to show player logging..."
-done
+if [ "${RCON_ENABLED}" = true ]; then
+    while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
+        sleep 5
+        LogInfo "Waiting for RCON port to open to show player logging..."
+    done
+fi
 
 while true; do
     server_pid=$(pidof PalServer-Linux-Test)
