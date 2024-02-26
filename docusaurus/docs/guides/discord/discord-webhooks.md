@@ -23,5 +23,5 @@ send discord messages with docker compose:
 ```
 
 :::tip
-You can mention people in the messages by adding <@user_id> in the message!
+You can mention people in the messages by adding `<@user_id>` in the message!
 :::
