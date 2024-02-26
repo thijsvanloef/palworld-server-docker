@@ -152,10 +152,10 @@ if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}"
 fi
 
 LogAction "Starting Server"
-DiscordMessage "${DISCORD_PRE_START_MESSAGE}" "success"
+DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success"
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
 
-DiscordMessage "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
+DiscordMessage "Start" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
 exit 0

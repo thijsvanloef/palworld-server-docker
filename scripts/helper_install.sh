@@ -64,7 +64,7 @@ UpdateRequired() {
 
   if [ "$http_code" -ne 200 ]; then
       LogError "There was a problem reaching the Steam api. Unable to check for updates!"
-      DiscordMessage "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
+      DiscordMessage "Install" "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
       rm "$temp_file"
       return 2
   fi
@@ -75,7 +75,7 @@ UpdateRequired() {
 
   if [ -z "$LATEST_MANIFEST" ]; then
       LogError "The server response does not contain the expected BuildID. Unable to check for updates!"
-      DiscordMessage "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
+      DiscordMessage "Install" "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
       return 2
   fi
 
@@ -115,9 +115,9 @@ UpdateRequired() {
 InstallServer() {
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
-    DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
+    DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate  +quit
-    DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
+    DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
     return
   fi
 
@@ -125,9 +125,9 @@ InstallServer() {
   targetManifest="${TARGET_MANIFEST_ID}"
 
   LogWarn "Installing Target Version: $targetManifest"
-  DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
+  DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
   /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
   cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   CreateACFFile "$targetManifest"
-  DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
+  DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
 }
