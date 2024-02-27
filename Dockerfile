@@ -109,7 +109,7 @@ ENV HOME=/home/steam \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
     ENABLE_PLAYER_LOGGING=true \
     PLAYER_LOGGING_POLL_PERIOD=5 \
-    ARM_COMPATIBILITY_MODE=false
+    ARM_COMPATIBILITY_MODE=false \
     DISABLE_GENERATE_ENGINE=true
 
 COPY ./scripts /home/steam/server/
