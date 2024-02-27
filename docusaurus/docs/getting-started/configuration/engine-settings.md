@@ -9,14 +9,14 @@ Changing Engine Settings with Environment variables.
 ## With Environment Variables
 
 :::warning
-These Environment Variables and Settings are subject to change since the game is still in beta.
+These environment variables and settings are subject to change since the game is still in beta.
 :::
 
 Converting engine settings to environment variables follow the same principles (with some exceptions):
 
-* all capital letters
-* split words by inserting an underscore
-* remove the single letter if the setting starts with one (like 'b')
+* All capital letters
+* Split words by inserting an underscore
+* Remove the single letter if the setting starts with one (like 'b')
 
 For example:
 
@@ -41,6 +41,6 @@ For example:
 | NET_CLIENT_TICKS_PER_SECOND   | Increases the update frequency for clients, enhancing responsiveness and reducing lag.                          | 120           | Integer            |
 
 :::tip
-While setting the server tickrate above to 120 fps will make some gameplay aspect smother,
+While setting the server tickrate above to 120 fps will make some gameplay aspect smoother,
 it won't fix rubber-banding and will tax your hardware significantly more.
 :::
