@@ -69,7 +69,7 @@ RUN case ${TARGETARCH} in \
     && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
     && chmod +x supercronic \
-    && mv supercronic /usr/local/bin/supercronic
+    && mkdir -p /usr/local/bin; mv supercronic /usr/local/bin/supercronic
 
 ENV HOME=/home/steam \
     PORT= \
