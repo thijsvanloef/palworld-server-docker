@@ -81,6 +81,10 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
+if [ "${RCON_ENABLED,,}" = true ]; then
+    STARTCOMMAND+=("-rconport=${RCON_PORT}")
+fi
+
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   LogAction "GENERATING CONFIG"
   LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
