@@ -81,8 +81,8 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-if [ "${RCON_ENABLED,,}" = true ] && [ -n "${RCON_PORT}" ]; then
-    STARTCOMMAND+=("-rconport=${RCON_PORT}")
+if [ "${RCON_ENABLED,,}" = true ]; then
+    STARTCOMMAND+=("-rcon)
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
