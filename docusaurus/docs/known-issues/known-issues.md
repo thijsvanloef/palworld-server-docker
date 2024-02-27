@@ -63,11 +63,12 @@ which is required for the emulation used for ARM64 architecture. The container r
 size for proper execution.
 
 If the host kernel does not have a 4k page size, you have a couple of alternatives:
+
 * **Change/Modify Kernel**: You can consider changing the kernel of your host machine to one that supports a 4k page size.
-    * The Raspberry Pi 5 with Raspberry Pi OS has an easy [switch](https://github.com/raspberrypi/bookworm-feedback/issues/107#issuecomment-1773810662).
+  * The Raspberry Pi 5 with Raspberry Pi OS has an easy [switch](https://github.com/raspberrypi/bookworm-feedback/issues/107#issuecomment-1773810662).
 
 * **Switch OS**: Another option is to switch OS to ones shipped with 4k page size kernels.
-    * Debian and Ubuntu are known working Linux distros.
+  * Debian and Ubuntu are known working Linux distros.
 
 * **Run within a VM**: Another option is to run the container within a virtual machine (VM) that is configured
   with a kernel supporting a 4k page size. By doing so, you can ensure compatibility and proper execution of the
