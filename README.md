@@ -488,6 +488,7 @@ For example:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
 
 ### Manually
 

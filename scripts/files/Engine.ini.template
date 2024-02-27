@@ -1,0 +1,95 @@
+[Core.System]
+Paths=../../../Engine/Content
+Paths=%GAMEDIR%Content
+Paths=../../../Engine/Plugins/2D/Paper2D/Content
+Paths=../../../Engine/Plugins/Animation/ControlRigSpline/Content
+Paths=../../../Engine/Plugins/Animation/ControlRig/Content
+Paths=../../../Engine/Plugins/Animation/IKRig/Content
+Paths=../../../Engine/Plugins/Animation/MotionWarping/Content
+Paths=../../../Engine/Plugins/Bridge/Content
+Paths=../../../Engine/Plugins/Compositing/Composure/Content
+Paths=../../../Engine/Plugins/Compositing/OpenColorIO/Content
+Paths=../../../Engine/Plugins/Developer/AnimationSharing/Content
+Paths=../../../Engine/Plugins/Developer/Concert/ConcertSync/ConcertSyncClient/Content
+Paths=../../../Engine/Plugins/Editor/BlueprintHeaderView/Content
+Paths=../../../Engine/Plugins/Editor/GeometryMode/Content
+Paths=../../../Engine/Plugins/Editor/ModelingToolsEditorMode/Content
+Paths=../../../Engine/Plugins/Editor/ObjectMixer/LightMixer/Content
+Paths=../../../Engine/Plugins/Editor/ObjectMixer/ObjectMixer/Content
+Paths=../../../Engine/Plugins/Editor/SpeedTreeImporter/Content
+Paths=../../../Engine/Plugins/Enterprise/DatasmithContent/Content
+Paths=../../../Engine/Plugins/Enterprise/GLTFExporter/Content
+Paths=../../../Engine/Plugins/Experimental/ChaosCaching/Content
+Paths=../../../Engine/Plugins/Experimental/ChaosClothEditor/Content
+Paths=../../../Engine/Plugins/Experimental/ChaosNiagara/Content
+Paths=../../../Engine/Plugins/Experimental/ChaosSolverPlugin/Content
+Paths=../../../Engine/Plugins/Experimental/CommonUI/Content
+Paths=../../../Engine/Plugins/Experimental/Dataflow/Content
+Paths=../../../Engine/Plugins/Experimental/FullBodyIK/Content
+Paths=../../../Engine/Plugins/Experimental/GeometryCollectionPlugin/Content
+Paths=../../../Engine/Plugins/Experimental/GeometryFlow/Content
+Paths=../../../Engine/Plugins/Experimental/ImpostorBaker/Content
+Paths=../../../Engine/Plugins/Experimental/Landmass/Content
+Paths=../../../Engine/Plugins/Experimental/MeshLODToolset/Content
+Paths=../../../Engine/Plugins/Experimental/PythonScriptPlugin/Content
+Paths=../../../Engine/Plugins/Experimental/StaticMeshEditorModeling/Content
+Paths=../../../Engine/Plugins/Experimental/UVEditor/Content
+Paths=../../../Engine/Plugins/Experimental/Volumetrics/Content
+Paths=../../../Engine/Plugins/Experimental/Water/Content
+Paths=../../../Engine/Plugins/FX/Niagara/Content
+Paths=../../../Engine/Plugins/JsonBlueprintUtilities/Content
+Paths=../../../Engine/Plugins/Media/MediaCompositing/Content
+Paths=../../../Engine/Plugins/Media/MediaPlate/Content
+Paths=../../../Engine/Plugins/MovieScene/SequencerScripting/Content
+Paths=../../../Engine/Plugins/PivotTool/Content
+Paths=../../../Engine/Plugins/PlacementTools/Content
+Paths=../../../Engine/Plugins/Runtime/AudioSynesthesia/Content
+Paths=../../../Engine/Plugins/Runtime/AudioWidgets/Content
+Paths=../../../Engine/Plugins/Runtime/GeometryProcessing/Content
+Paths=../../../Engine/Plugins/Runtime/Metasound/Content
+Paths=../../../Engine/Plugins/Runtime/ResonanceAudio/Content
+Paths=../../../Engine/Plugins/Runtime/SunPosition/Content
+Paths=../../../Engine/Plugins/Runtime/Synthesis/Content
+Paths=../../../Engine/Plugins/Runtime/WaveTable/Content
+Paths=../../../Engine/Plugins/Runtime/WebBrowserWidget/Content
+Paths=../../../Engine/Plugins/SkyCreatorPlugin/Content
+Paths=../../../Engine/Plugins/VirtualProduction/CameraCalibrationCore/Content
+Paths=../../../Engine/Plugins/VirtualProduction/LiveLinkCamera/Content
+Paths=../../../Engine/Plugins/VirtualProduction/Takes/Content
+Paths=../../../Engine/Plugins/Web/HttpBlueprint/Content
+Paths=../../../Pal/Plugins/DLSS/Content
+Paths=../../../Pal/Plugins/EffectsChecker/Content
+Paths=../../../Pal/Plugins/HoudiniEngine/Content
+Paths=../../../Pal/Plugins/PPSkyCreatorPlugin/Content
+Paths=../../../Pal/Plugins/PocketpairUser/Content
+Paths=../../../Pal/Plugins/SpreadSheetToCsv/Content
+Paths=../../../Pal/Plugins/Wwise/Content
+
+; Online Subsystem Utils Configuration
+; Adjusting tick rates for LAN and Internet servers to enhance the frequency of game state updates, 
+; leading to smoother gameplay and less desynchronization between server and clients.
+[/script/onlinesubsystemutils.ipnetdriver]
+LanServerMaxTickRate=$LAN_SERVER_MAX_TICK_RATE
+NetServerMaxTickRate=$NET_SERVER_MAX_TICK_RATE
+
+; Player Configuration
+; These settings are crucial for optimizing the network bandwidth allocation per player, 
+; allowing for more data to be sent and received without bottlenecking.
+[/script/engine.player]
+ConfiguredInternetSpeed=$CONFIGURED_INTERNET_SPEED
+ConfiguredLanSpeed=$CONFIGURED_LAN_SPEED
+
+[/script/socketsubsystemepic.epicnetdriver]
+MaxClientRate=$MAX_CLIENT_RATE
+MaxInternetClientRate=$MAX_INTERNET_CLIENT_RATE
+
+; Engine Configuration
+; These settings manage how the game's frame rate is handled, which can impact how smoothly the game runs.
+; Smoother frame rates can lead to a better synchronization between client and server.
+[/script/engine.engine]
+bSmoothFrameRate=$SMOOTH_FRAME_RATE
+SmoothedFrameRateRange=(LowerBound=(Type=Inclusive,Value=$SMOOTH_FRAME_RATE_LOWER_LIMIT),UpperBound=(Type=Exclusive,Value=$SMOOTH_FRAME_RATE_UPPER_LIMIT))
+bUseFixedFrameRate=$USE_FIXED_FRAME_RATE
+FixedFrameRate=$FIXED_FRAME_RATE
+MinDesiredFrameRate=$MIN_DESIRED_FRAME_RATE
+NetClientTicksPerSecond=$NET_CLIENT_TICKS_PER_SECOND

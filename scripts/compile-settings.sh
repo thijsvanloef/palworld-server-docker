@@ -83,6 +83,7 @@ export RCON_PORT=${RCON_PORT:-25575}
 export REGION=\"${REGION:-""}\"
 export USEAUTH=${USEAUTH:-True}
 export BAN_LIST_URL=\"${BAN_LIST_URL:-https://api.palworldgame.com/api/banlist.txt}\"
+export SHOW_PLAYER_LIST=${SHOW_PLAYER_LIST:-True}
 
 if [ "${DEBUG,,}" = true ]; then
 cat <<EOF
@@ -149,6 +150,7 @@ RCON_PORT = $RCON_PORT
 REGION = $REGION
 USEAUTH = $USEAUTH
 BAN_LIST_URL = $BAN_LIST_URL
+SHOW_PLAYER_LIST = $SHOW_PLAYER_LIST
 ====Debug====
 EOF
 fi
