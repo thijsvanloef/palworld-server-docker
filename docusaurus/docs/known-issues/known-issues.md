@@ -83,10 +83,6 @@ Docker Desktop solves this by running its containers inside a VM (QEMU) with a c
 However, if you're unable to use Docker Desktop, then try setting `ARM_COMPATIBILITY_MODE` to `true`.
 This will switch the container from using Box86 to QEMU when running steamcmd.
 
----
-
-Feel free to customize this FAQ section based on your specific container and use case.
-
 ## FAQ
 
 [A useful FAQ that gets updated regularly](https://gist.github.com/Toakan/3c78a577c21a21fcc5fa917f3021d70e#file-palworld-server-faq-community-md)
