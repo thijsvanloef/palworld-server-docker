@@ -25,7 +25,11 @@ if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
 fi
 
 if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
+    LogInfo "ARM compatibility mode enabled"
     export DEBUGGER="/usr/bin/qemu-i386-static"
+
+    # Arbitrary number to avoid CPU_MHZ warning due to qemu and steamcmd
+    export CPU_MHZ=2000
 fi
 
 IsInstalled
