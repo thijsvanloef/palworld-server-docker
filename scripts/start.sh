@@ -24,6 +24,10 @@ if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
     exit 1
 fi
 
+if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
+    export DEBUGGER="/usr/bin/qemu-i386-static"
+fi
+
 IsInstalled
 ServerInstalled=$?
 if [ "$ServerInstalled" == 1 ]; then

@@ -20,7 +20,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
 FROM cm2network/steamcmd:root as base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 thijsvanloef/steamcmd-arm64:root as base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root as base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
@@ -108,7 +108,8 @@ ENV HOME=/home/steam \
     DISCORD_PRE_SHUTDOWN_MESSAGE="Server is shutting down..." \
     DISCORD_POST_SHUTDOWN_MESSAGE="Server has been stopped!" \
     ENABLE_PLAYER_LOGGING=true \
-    PLAYER_LOGGING_POLL_PERIOD=5
+    PLAYER_LOGGING_POLL_PERIOD=5 \
+    ARM_COMPATIBILITY_MODE=false
 
 COPY ./scripts /home/steam/server/
 
