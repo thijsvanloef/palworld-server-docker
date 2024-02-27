@@ -15,6 +15,15 @@ cd /palworld || exit
 # Get the architecture using dpkg
 architecture=$(dpkg --print-architecture)
 
+# Get host kernel page size
+kernel_page_size=$(getconf PAGESIZE)
+
+# Check kernel page size for arm64 hosts before running steamcmdac
+if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = false ]; then
+    LogError "4k page size detected, please run with ARM_COMPATIBILITY_MODE=true"
+    exit 1
+fi
+
 if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
     LogInfo "ARM compatibility mode enabled"
     export DEBUGGER="/usr/bin/qemu-i386-static"
