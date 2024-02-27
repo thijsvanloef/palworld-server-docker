@@ -45,7 +45,7 @@ ARG SUPERCRONIC_VERSION="0.2.29"
 
 # update and install dependencies
 # hadolint ignore=DL3008
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt --fix-broken install && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
     wget \ 
     libproc2-0 \
