@@ -74,7 +74,7 @@ if [ -n "${QUERY_PORT}" ]; then
 fi
 
 if [ "${COMMUNITY,,}" = true ]; then
-    STARTCOMMAND+=("EpicApp=PalServer")
+    STARTCOMMAND+=("-publiclobby")
 fi
 
 if [ "${MULTITHREADING,,}" = true ]; then
