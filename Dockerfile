@@ -48,6 +48,7 @@ ARG SUPERCRONIC_VERSION="0.2.29"
 RUN apt-get update && apt-get install -y --no-install-recommends \
     procps=2:4.0.2-3 \
     wget \ 
+    libproc2-0 \
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
