@@ -542,6 +542,7 @@ The manifest corresponds to the release date/update versions. Manifests can be f
 | 1.3.0   | 1354752814336157338  |
 | 1.4.0   | 4190579964382773830  |
 | 1.4.1   | 6370735655629434989  |
+| 1.5.0   | 3750364703337203431  |
 
 ## Reporting Issues/Feature Requests
 
