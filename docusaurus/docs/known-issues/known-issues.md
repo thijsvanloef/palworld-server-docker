@@ -64,6 +64,11 @@ size for proper execution.
 
 If the host kernel does not have a 4k page size, you have a couple of alternatives:
 
+* **Download server files in a different machine**: The 4k page size limitation is only applicable for steamcmd
+ARM emulation. You may try initializing the container in a fully supported machine (AMD64 or ARM64 with 4k page size)
+and let it download the server files with `UPDATE_ON_BOOT` enabled. Make sure to disable `UPDATE_ON_BOOT` in the
+problematic machine to prevent steamcmd from executing.
+
 * **Change/Modify Kernel**: You can consider changing the kernel of your host machine to one that supports a 4k page size.
   * The Raspberry Pi 5 with Raspberry Pi OS has an easy [switch](https://github.com/raspberrypi/bookworm-feedback/issues/107#issuecomment-1773810662).
 
