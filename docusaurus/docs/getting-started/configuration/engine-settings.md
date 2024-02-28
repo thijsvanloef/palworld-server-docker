@@ -12,6 +12,8 @@ Changing Engine Settings with Environment variables.
 These environment variables and settings are subject to change since the game is still in beta.
 :::
 
+To use these settings you must set `DISABLE_GENERATE_ENGINE: false`.
+
 Converting engine settings to environment variables follow the same principles (with some exceptions):
 
 * All capital letters
@@ -26,6 +28,7 @@ For example:
 
 | Variable                      | Description                                                                                                     | Default Value | Allowed Value      |
 |-------------------------------|-----------------------------------------------------------------------------------------------------------------|---------------|--------------------|
+| DISABLE_GENERATE_ENGINE       | Disable the generation of the Engine.ini                                                                        | true          | Boolean            |
 | LAN_SERVER_MAX_TICK_RATE      | Sets maximum ticks per second for LAN servers, higher rates result in smoother gameplay.                        | 120           | Integer            |
 | NET_SERVER_MAX_TICK_RATE      | Sets maximum ticks per second for Internet servers, similarly ensuring smoother online gameplay.                | 120           | Integer            |
 | CONFIGURED_INTERNET_SPEED     | Sets the assumed player internet speed in bytes per second. High value reduces chances of bandwidth throttling. | 104857600     | Integer (in bytes) |
