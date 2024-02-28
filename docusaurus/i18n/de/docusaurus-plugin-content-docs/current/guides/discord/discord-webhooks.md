@@ -22,3 +22,7 @@ Senden Sie Discord-Nachrichten mit `docker-compose`:
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Der Server wird aktualisiert...
 ```
+
+:::tip
+Du kannst Personen in den Nachrichten erwähnen, indem du `<@user_id>` in die Nachricht einfügst!
+:::
