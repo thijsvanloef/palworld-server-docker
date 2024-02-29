@@ -47,17 +47,20 @@ if [ "$architecture" == "arm64" ]; then
     cp ./PalServer.sh ./PalServer-arm64.sh
 
     pagesize=$(getconf PAGESIZE)
-    box64_binary="/usr/local/bin/box64"
+    box64_binary="box64"
 
     case $pagesize in
         8192)
-            box64_binary="/usr/local/bin/box64-8k"
+            LogInfo "Using Box64 for 8k pagesize"
+            box64_binary="box64-8k"
             ;;
         16384)
-            box64_binary="/usr/local/bin/box64-16k"
+            LogInfo "Using Box64 for 16k pagesize"
+            box64_binary="box64-16k"
             ;;
         65536)
-            box64_binary="/usr/local/bin/box64-64k"
+            LogInfo "Using Box64 for 64k pagesize"
+            box64_binary="box64-64k"
             ;;
     esac
     
