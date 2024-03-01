@@ -1,5 +1,9 @@
 # Palworld Serveur Dédié Docker
 
+## ⚠️These docs will be deprecated and removed on March 31 2024⚠️
+
+Please use the official docs: [https://palworld-server-docker.loef.dev/](https://palworld-server-docker.loef.dev/)
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
@@ -59,11 +63,12 @@ Un énorme merci aux sponsors suivants !
 
 ## Comment utiliser
 
-N'oubliez pas que vous devrez modifier les [variables d'environnement](#variables-denvironnement).
+N'oubliez pas que vous devrez modifier les [variables d'environnement](#variables-d-environnement).
 
 ### Docker Compose
 
-Ce référentiel comprend un exemple de fichier [docker-compose.yml](/docker-compose.yml) que vous pouvez utiliser pour configurer votre serveur.
+Ce référentiel comprend un exemple de fichier [docker-compose.yml](/docker-compose.yml)
+que vous pouvez utiliser pour configurer votre serveur.
 
 ```yml
 services:
@@ -94,7 +99,8 @@ services:
 ```
 
 En alternative, vous pouvez copier le fichier [.env.example](.env.example) dans un nouveau fichier appelé **.env**.
-Modifiez-le selon vos besoins, consultez la section [environment variables](#environment-variables) pour vérifier les valeurs correctes. Modifiez votre fichier [docker-compose.yml](docker-compose.yml) comme suit :
+Modifiez-le selon vos besoins, consultez la section [environment variables](#variables-d-environnement) pour vérifier les
+valeurs correctes. Modifiez votre fichier [docker-compose.yml](docker-compose.yml) comme suit :
 
 ```yml
 services:
@@ -141,7 +147,8 @@ docker run -d \
 ```
 
 En alternative, vous pouvez copier le fichier [.env.example](.env.example) dans un nouveau fichier appelé **.env**.
-Modifiez-le selon vos besoins, consultez la section [environment variables](#environment-variables) pour vérifier les valeurs correctes. Modifiez votre commande docker run comme suit :
+Modifiez-le selon vos besoins, consultez la section [environment variables](#variables-d-environnement) pour vérifier
+les valeurs correctes. Modifiez votre commande docker run comme suit:
 
 ```bash
 docker run -d \
@@ -165,7 +172,8 @@ Suivez les étapes dans le [README.md ici](k8s/readme.md) pour le déployer.
 
 Ceci est réservé aux utilisateurs avancés.
 
-Il est possible d'exécuter ce conteneur et de [remplacer l'utilisateur par défaut](https://docs.docker.com/engine/reference/run/#user) qui est root dans cette image.
+Il est possible d'exécuter ce conteneur et de [remplacer l'utilisateur par défaut](https://docs.docker.com/engine/reference/run/#user)
+qui est root dans cette image.
 
 Étant donné que vous spécifiez l'utilisateur et le groupe, `PUID` et `PGID` sont ignorés.
 
@@ -179,14 +187,15 @@ Ci-dessous, nous supposons que votre UID est 1000 et votre GID est 1001.
 - Dans la commande docker run, ajoutez `--user 1000:1001 \` au-dessus de la dernière ligne.
 - Dans le fichier docker-compose, ajoutez `user: 1000:1001` au-dessus des ports.
 
-Si vous souhaitez l'exécuter avec un UID/GID différent du vôtre, vous devrez changer la propriété du répertoire qui est monté : `chown UID:GID palworld/`
+Si vous souhaitez l'exécuter avec un UID/GID différent du vôtre, vous devrez changer la
+propriété du répertoire qui est monté : `chown UID:GID palworld/`
 ou en changeant les permissions pour tous les autres : `chmod o=rwx palworld/`
 
 #### Utilisation du chart Helm
 
 Le chart Helm officiel peut être trouvé dans un dépôt séparé, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
-### Variables d'environnement
+### Variables d environnement
 
 Vous pouvez utiliser les valeurs suivantes pour modifier les paramètres du serveur au démarrage.
 Il est fortement recommandé de définir les valeurs d'environnement suivantes avant de démarrer le serveur :
@@ -226,7 +235,7 @@ Il est fortement recommandé de définir les valeurs d'environnement suivantes a
 | AUTO_REBOOT_ENABLED                | Active les redémarrages automatiques                                                                                                                                                                                             | false                                     | true/false                                                                                                                            |
 | AUTO_REBOOT_WARN_MINUTES           | Temps d'attente avant de redémarrer le serveur, après que les joueurs ont été informés.                                                                                                                                          | 5                                         | Entier                                                                                                                                |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Redémarrez le serveur même s'il y a des joueurs en ligne.                                                                                                                                                                        | false                                     | true/false                                                                                                                            |
-| TARGET_MANIFEST_ID                 | Verrouille la version du jeu en correspondance avec l'ID de manifeste de Steam Download Depot.                                                                                                                                   |                                           | Voir [Tableau des ID de manifeste](#locking-specific-game-version)                                                                    |
+| TARGET_MANIFEST_ID                 | Verrouille la version du jeu en correspondance avec l'ID de manifeste de Steam Download Depot.                                                                                                                                   |                                           | Voir [Tableau des ID de manifeste](#tableau-des-versions-vers-les-id-de-manifeste)                                                                    |
 | DISCORD_WEBHOOK_URL                | URL du webhook Discord trouvée après la création d'un webhook sur un serveur Discord                                                                                                                                             |                                           | `https://discord.com/api/webhooks/<webhook_id>`                                                                                       |
 | DISCORD_CONNECT_TIMEOUT            | Délai de connexion initial de la commande Discord                                                                                                                                                                                | 30                                        | !0                                                                                                                                    |
 | DISCORD_MAX_TIMEOUT                | Délai total du webhook Discord                                                                                                                                                                                                   | 30                                        | !0                                                                                                                                    |
@@ -311,10 +320,11 @@ docker exec -it palworld-server restore
 La variable d'environnement `RCON_ENABLED` doit être définie sur `true` pour utiliser cette commande.
 
 > [!IMPORTANT]
-> Si la redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped` le serveur s'éteindra et devra être
-> redémarré manuellement.
+> Si la redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped`
+> le serveur s'éteindra et devra être redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use) utilisent déjà la politique nécessaire
+> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use)
+> utilisent déjà la politique nécessaire
 
 ## Restauration manuelle à partir d'une sauvegarde
 
@@ -329,7 +339,8 @@ Supprimez l'ancien dossier de données sauvegardées situé à `palworld/Pal/Sav
 
 Copiez le contenu du nouveau dossier de données sauvegardées décompressé `Saved/SaveGames/0/<nouvelle_valeur_hash>` to `palworld/Pal/Saved/SaveGames/0/<nouvelle_valeur_hash>`.
 
-Remplacez le nom DedicatedServerName à l'intérieur de `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini` par le nouveau nom de dossier.
+Remplacez le nom DedicatedServerName à l'intérieur de `palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini`
+par le nouveau nom de dossier.
 
 ```ini
 DedicatedServerName=<nouvelle_valeur_hash>  # Remplacez-le par votre nom de dossier.
@@ -356,21 +367,25 @@ BACKUP_CRON_EXPRESSION est une expression cron, où vous définissez un interval
 > [Crontab Generator](https://crontab-generator.org).
 
 Définissez BACKUP_CRON_EXPRESSION pour changer la planification par défaut.
-Exemple d'utilisation : Si BACKUP_CRON_EXPRESSION est défini sur `0 2 * * *`, le script de sauvegarde s'exécutera tous les jours à 2h00 du matin.
+Exemple d'utilisation : Si BACKUP_CRON_EXPRESSION est défini sur `0 2 * * *`, le script de sauvegarde
+s'exécutera tous les jours à 2h00 du matin.
 
 ## Configuration des Mises à Jour Automatiques avec Cron
 
-Pour pouvoir utiliser les mises à jour automatiques avec ce serveur, les variables d'environnement suivantes **doivent** être définies sur `true`:
+Pour pouvoir utiliser les mises à jour automatiques avec ce serveur, les variables d'environnement
+suivantes **doivent** être définies sur `true`:
 
 - RCON_ENABLED
 - UPDATE_ON_BOOT
 
 > [!IMPORTANT]
 >
-> Si le redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped` le serveur s'éteindra et devra être
+> Si le redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped`
+> le serveur s'éteindra et devra être
 > redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use) utilisent déjà la politique nécessaire
+> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use)
+> utilisent déjà la politique nécessaire
 
 Définissez AUTO_UPDATE_ENABLED pour activer ou désactiver les mises à jour automatiques (par défaut, c'est désactivé).
 
@@ -390,10 +405,12 @@ Pour pouvoir utiliser les redémarrages automatiques avec ce serveur, RCON_ENABL
 
 > [!IMPORTANT]
 >
-> Si le redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped` le serveur s'éteindra et devra être
+> Si le redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped`
+> le serveur s'éteindra et devra être
 > redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use) utilisent déjà la politique nécessaire
+> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#how-to-use)
+> utilisent déjà la politique nécessaire
 
 Définissez AUTO_REBOOT_ENABLED pour activer ou désactiver les redémarrages automatiques (par défaut, c'est désactivé).
 
@@ -417,7 +434,7 @@ fuseau horaire défini avec TZ.
 > Ces variables d'environnement/paramètres sont susceptibles de changer car le jeu est encore en version bêta.
 > Consultez la [page officielle pour les paramètres pris en charge.](https://tech.palworldgame.com/optimize-game-balance)
 
-La conversion des paramètres du serveur en variables d'environnement suit les mêmes principes (avec quelques exceptions) :
+La conversion des paramètres du serveur en variables d'environnement suit les mêmes principes (avec quelques exceptions):
 
 - toutes en majuscules
 - séparation des mots par l'insertion d'un trait de soulignement
@@ -525,12 +542,15 @@ Envoyez des messages Discord avec docker compose :
 ## Verrouiller une Version Spécifique du Jeu
 
 > [!WARNING]
-> Rétrograder vers une version inférieure du jeu est possible, mais on ne sait pas quel impact cela aura sur les sauvegardes existantes.
+> Rétrograder vers une version inférieure du jeu est possible, mais on ne sait pas quel impact
+> cela aura sur les sauvegardes existantes.
 >
 > **Faites-le à vos propres risques !**
 
-Si la variable d'environnement **TARGET_MANIFEST_ID** est définie, elle verrouillera la version du serveur sur un manifeste spécifique.
-Le manifeste correspond aux dates de sortie/mises à jour. Les manifestes peuvent être trouvés à l'aide de SteamCMD ou de sites web comme [SteamDB](https://steamdb.info/depot/2394012/manifests/).
+Si la variable d'environnement **TARGET_MANIFEST_ID** est définie, elle verrouillera la version
+du serveur sur un manifeste spécifique.
+Le manifeste correspond aux dates de sortie/mises à jour. Les manifestes peuvent être trouvés
+à l'aide de SteamCMD ou de sites web comme [SteamDB](https://steamdb.info/depot/2394012/manifests/).
 
 ### Tableau des Versions Vers les ID de Manifeste
 
