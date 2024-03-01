@@ -244,6 +244,7 @@ It is highly recommended you set the following environment values before startin
 | DISABLE_GENERATE_ENGINE          | Whether to automatically generate the Engine.ini                                                                                                                                          | true                      | true/false                                                                                                        |
 | ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
+| ARM_COMPATIBILITY_MODE          | Switches the compatibility layer from Box86 to QEMU when executing steamcmd for server updates. This setting is only applicable for ARM64 hosts. | false                      | true/false |
 
 *highly recommended to set
 
