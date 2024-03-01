@@ -1,10 +1,16 @@
 ---
 sidebar_position: 5
+title: Palworld Dedicated Server Known Issues
+description: The current know issues with the Palworld Dedicated server running on Docker, including S_API FAIL, Setting breakpad minidump AppID = 2394010 and more.
+keywords: [Palworld, palworld dedicated server, Palworld dedicated server known issues, Palworld dedicated server issues]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Known issues
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated Server Known Issues
 
-# Known Issues
-
-Known issues of using this Docker image.
+The current know issues with the Palworld Dedicated server running on Docker,
+including S_API FAIL, Setting breakpad minidump AppID = 2394010 and more.
 
 ## PalWorldSettings.ini keeps resetting
 
