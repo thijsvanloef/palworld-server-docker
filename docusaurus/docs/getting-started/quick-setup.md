@@ -1,19 +1,25 @@
 ---
 sidebar_position: 1
 slug: /
+title: Palworld Dedicated server Quick Setup
+description: This guide will help you get setup with hosting your Palworld Dedicated server on Docker! This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
+keywords: [Palworld, palworld dedicated server, how to setup palworld dedicated server, palworld server docker, palworld docker]
+image: ../assets/Palworld_Banner.jpg
+sidebar_label: Quick Setup
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated server Quick Setup
 
-# Quick Setup
+This guide will help you get setup with hosting your Palworld Dedicated server on Docker!
+This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
 
-Let's get you on your way with the Palworld Dedicated server!
+## Prerequisites
 
 :::warning
 At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
 
 They will need to join players using the invite code and are limited to sessions of 4 players max.
 :::
-
-## Prerequisites
 
 * Virtualization enabled in the BIOS/UEFI
 * Must have [Docker](https://docs.docker.com/engine/install/) installed

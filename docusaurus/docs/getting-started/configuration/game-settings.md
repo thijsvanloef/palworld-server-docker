@@ -1,10 +1,15 @@
 ---
 sidebar_position: 2
+title: Palworld Server Game Settings
+description: How to change the Palworld Game Settings (PalWorldSettings.ini file) using Docker Environment variables.
+keywords: [Palworld, palworld dedicated server, Palworld PalWorldSettings.ini, palworld game settings, PalWorldSettings.ini]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Game Settings
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Server Game Settings
 
-# Game Settings
-
-Changing Game Settings with Environment variables.
+How to change the Palworld Game Settings (PalWorldSettings.ini file) using Docker Environment variables.
 
 ## With Environment Variables
 
