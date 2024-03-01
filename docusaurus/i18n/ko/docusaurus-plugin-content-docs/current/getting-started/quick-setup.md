@@ -1,6 +1,11 @@
 ---
 sidebar_position: 1
 slug: /
+title: 팔월드 데디케이드 서버 빠른설정
+description: 이 가이드는 팔월드 데디케이드 서버를 도커에서 설정하는 방법입니다! 불과 몇분만에 데디케이드 서버를 설정해보세요.
+keywords: [Palworld, palworld dedicated server, how to setup palworld dedicated server, palworld server docker, palworld docker]
+image: ../assets/Palworld_Banner.jpg
+sidebar_label: 빠른설정
 ---
 
 # 빠른 설정
@@ -74,6 +79,16 @@ services:
          - ./palworld:/palworld/
 ```
 
+### 서버 시작하기
+
+`docker compose up -d` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 백그라운드에서 실행하세요.
+
+### 서버 정지하기
+
+`docker compose stop` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 서버를 정지하세요.
+
+`docker compose down --rmi all` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 서버와 이미지를 정지해 지우세요.
+
 ### Docker Run
 
 ```bash
@@ -115,13 +130,3 @@ docker run -d \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest 
 ```
-
-## 서버 시작하기
-
-`docker compose up -d` 를 사용해 백그라운드에서 서버를 시작합니다.
-
-## 서버 중지하기
-
-`docker compose stop` 를 사용해 서버를 중지시킵니다.
-
-`docker compose down --rmi all` 를 사용해 서버를 중지시키고 삭제한 다음 컴퓨터의 docker image까지 삭제합니다.
