@@ -28,11 +28,11 @@ ARG TARGETARCH
 # hadolint ignore=DL3006
 FROM base-${TARGETARCH}
 
-LABEL maintainer="43414d@gmail.com" \
-      name="43414d/palworld-server-docker" \
+LABEL maintainer="thijs@loef.dev" \
+      name="thijsvanloef/palworld-server-docker" \
       github="https://github.com/thijsvanloef/palworld-server-docker" \
       dockerhub="https://hub.docker.com/r/thijsvanloef/palworld-server-docker" \
-      org.opencontainers.image.authors="43414d" \
+      org.opencontainers.image.authors="Thijs van Loef" \
       org.opencontainers.image.source="https://github.com/thijsvanloef/palworld-server-docker"
 
 # set envs
