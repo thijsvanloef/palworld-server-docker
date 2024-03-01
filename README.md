@@ -241,9 +241,10 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
 | DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
 | DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
-| DISABLE_GENERATE_ENGINE            | Whether to automatically generate the Engine.ini                                                                                                                                                    | true                       | true/false                                                                                                        |
-| ENABLE_PLAYER_LOGGING              | Enables Logging and announcing when players join and leave                                                                                                                                          | true                       | true/false                                                                                                        |
-| PLAYER_LOGGING_POLL_PERIOD         | Polling period (in seconds) to check for players who have joined or left                                                                                                                            | 5                          | !0                                                                                                                |
+| DISABLE_GENERATE_ENGINE          | Whether to automatically generate the Engine.ini                                                                                                                                          | true                      | true/false                                                                                                        |
+| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
+| PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
+| ARM_COMPATIBILITY_MODE          | Switches the compatibility layer from Box86 to QEMU when executing steamcmd for server updates. This setting is only applicable for ARM64 hosts. | false                      | true/false |
 
 \*highly recommended to set
 
@@ -291,7 +292,7 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 | Info                             | Show server information.                            |
 | Save                             | Save the world data.                                |
 
-For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+For a full list of commands go to: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
 
 ## Creating a backup
 

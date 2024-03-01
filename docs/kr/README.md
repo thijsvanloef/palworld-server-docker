@@ -1,5 +1,9 @@
 # Palworld 전용 서버 도커
 
+## ⚠️These docs will be deprecated and removed on March 31 2024⚠️
+
+Please use the official docs: [https://palworld-server-docker.loef.dev/](https://palworld-server-docker.loef.dev/ko/)
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
@@ -284,7 +288,7 @@ docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 | Info                             | 서버 정보를 표시합니다.                            |
 | Save                             | 월드 정보를 저장합니다.                            |
 
-전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
 
 ## 백업 만들기
 

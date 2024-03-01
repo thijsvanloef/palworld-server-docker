@@ -113,6 +113,16 @@ UpdateRequired() {
 }
 
 InstallServer() {
+  # Get the architecture using dpkg
+  architecture=$(dpkg --print-architecture)
+
+  # Get host kernel page size
+  kernel_page_size=$(getconf PAGESIZE)
+
+  # Check kernel page size for arm64 hosts before running steamcmd
+  if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
+    LogWarn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Expect server installation to fail."
+  fi
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
     DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress"
