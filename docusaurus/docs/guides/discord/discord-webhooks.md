@@ -21,3 +21,7 @@ send discord messages with docker compose:
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
+
+:::tip
+You can mention people in the messages by adding `<@user_id>` in the message!
+:::

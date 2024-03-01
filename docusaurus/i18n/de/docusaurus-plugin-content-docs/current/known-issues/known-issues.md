@@ -6,6 +6,21 @@ sidebar_position: 5
 
 Bekannte Probleme bei der Verwendung dieses Docker-Images.
 
+## PalWorldSettings.ini wird immer zurückgesetzt
+
+Wenn die `PalworldSettings.ini` zurückgesetzt wird, nachdem du die Datei geändert und den Server neu gestartet hast,
+dann stelle sicher, dass `DISABLE_GENERATE_SETTINGS` auf `true` gesetzt ist.
+<!-- markdownlint-disable-next-line -->
+Falls das nicht der Fall ist, werden deine Einstellungen von den über die [Umgebungsvariablen gesetzten Einstellungen](https://palworld-server-docker.loef.dev/getting-started/configuration/game-settings) überschrieben.
+
+:::tip
+Es wird empfohlen, die Umgebungsvariablen zu verwenden, um deine Spiel-Einstellungen festzulegen, anstatt
+die `PalWorldSettings.ini` manuell zu ändern.
+
+Wenn du die Datei dennoch manuell ändern möchtest, stelle sicher, dass der Server ausgeschaltet ist, wenn du die
+Änderungen vornimmst.
+:::
+
 ## Broadcast-Befehl kann nur 1 Wort senden
 
 Beim Verwenden eines Broadcasts über RCON wird nur ein Wort gesendet.

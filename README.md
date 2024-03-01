@@ -43,7 +43,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 Massive shoutout to the following sponsors!
 
 <p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Official Documentation
@@ -241,6 +241,7 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
 | DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
 | DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
+| DISABLE_GENERATE_ENGINE          | Whether to automatically generate the Engine.ini                                                                                                                                          | true                      | true/false                                                                                                        |
 | ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
 
@@ -487,6 +488,7 @@ For example:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
 
 ### Manually
 
@@ -540,6 +542,7 @@ The manifest corresponds to the release date/update versions. Manifests can be f
 | 1.3.0   | 1354752814336157338  |
 | 1.4.0   | 4190579964382773830  |
 | 1.4.1   | 6370735655629434989  |
+| 1.5.0   | 3750364703337203431  |
 
 ## Reporting Issues/Feature Requests
 

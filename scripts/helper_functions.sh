@@ -142,13 +142,14 @@ Log() {
 # Send Discord Message
 # Level is optional variable defaulting to info
 DiscordMessage() {
-  local message="$1"
-  local level="$2"
+  local title="$1"
+  local message="$2"
+  local level="$3"
   if [ -z "$level" ]; then
     level="info"
   fi
   if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-    /home/steam/server/discord.sh "$message" "$level" &
+    /home/steam/server/discord.sh "$title" "$message" "$level" &
   fi
 }
 

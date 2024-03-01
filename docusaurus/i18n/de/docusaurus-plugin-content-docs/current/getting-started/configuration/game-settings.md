@@ -29,8 +29,8 @@ Beispiele:
 | Variable                                  | Beschreibung                                                   | Standardwert                                                                                 | Erlaubte Werte                         |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
 | DIFFICULTY                                | Spiel-Schwierigkeitsgrad                                       | None                                                                                         | `None`,`Normal`,`Difficult`            |
-| DAYTIME_SPEEDRATE                         | Tageszeit-Geschwindigkeit - Kleinerer Wert bedeutet kürzere Tage | 1.000000                                                                                     | Float                                  |
-| NIGHTTIME_SPEEDRATE                       | Nachtszeit-Geschwindigkeit - Kleinerer Wert bedeutet kürzere Nächte | 1.000000                                                                                     | Float                                  |
+| DAYTIME_SPEEDRATE                         | Tageszeit-Geschwindigkeit - Größerer Wert bedeutet kürzere Tage | 1.000000                                                                                     | Float                                  |
+| NIGHTTIME_SPEEDRATE                       | Nachtszeit-Geschwindigkeit - Größerer Wert bedeutet kürzere Nächte | 1.000000                                                                                     | Float                                  |
 | EXP_RATE                                  | EXP-Sammelrate                                                 | 1.000000                                                                                     | Float                                  |
 | PAL_CAPTURE_RATE                          | Pal-Fangrate                                                  | 1.000000                                                                                     | Float                                  |
 | PAL_SPAWN_NUM_RATE                        | Pal-Erscheinungsrate                                           | 1.000000                                                                                     | Float                                  |
@@ -81,7 +81,10 @@ Beispiele:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Authentifizierung verwenden                                    | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Welche Sperrliste verwenden                                    | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Aktiviert die Anzeige der Spieler                              | True                                                                                         | Boolean                                |
 | TARGET_MANIFEST_ID | Legt die Spielversion entsprechend der Manifest-ID aus dem Steam-Download-Depot fest. | | Siehe [Manifest IDs](https://palworld-server-docker.loef.dev/de/guides/pinning-game-version) |
+| ENABLE_PLAYER_LOGGING      | Aktiviert das Protokollieren und das Ankündigen, wenn Spieler dem Spiel beitreten und es verlassen. | true         | Boolean |
+| PLAYER_LOGGING_POLL_PERIOD          | Abfrageintervall (in Sekunden), um zu überprüfen, ob Spieler dem Spiel beigetreten sind oder es verlassen haben. | 5                      | !0 |
 
 ### Manuell
 
