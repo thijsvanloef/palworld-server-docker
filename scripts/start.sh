@@ -82,7 +82,7 @@ if [ "${MULTITHREADING,,}" = true ]; then
 fi
 
 # fix bug and enable rcon for v0.1.5.0 only
-if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431"] && [-a "${RCON_ENABLED,,}" = true ]; then
+if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431" ] && [ "${RCON_ENABLED,,}" = true ]; then
     STARTCOMMAND+=("-rcon")
 fi
 
