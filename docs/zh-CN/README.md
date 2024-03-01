@@ -238,7 +238,7 @@ docker exec -it palworld-server rcon-cli
 | Info                       | 显示服务器信息。       |
 | Save                       | 保存游戏。          |
 
-请查看 [官方文档](https://tech.palworldgame.com/server-commands) 以获取所有命令。
+请查看 [官方文档](https://tech.palworldgame.com/settings-and-operation/commands) 以获取所有命令。
 
 ## 创建备份
 
