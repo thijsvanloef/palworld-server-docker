@@ -38,4 +38,4 @@ Dit opent een CLI die RCON gebruikt om opdrachten naar de Palworld Server te sch
 | Info                             | Toon serverinformatie.                            |
 | Save                             | Sla de wereldgegevens op.                                |
 
-Voor een volledige lijst met opdrachten ga naar: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+Voor een volledige lijst met opdrachten ga naar: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
