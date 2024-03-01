@@ -1,10 +1,15 @@
 ---
 sidebar_position: 1
+title: Palworld Dedicated Server Settings
+description: How to change the Palworld Server Settings using Docker Environment variables.
+keywords: [Palworld, palworld dedicated server, Palworld Dedicated server settings, palworld server settings, Palworld Docker Dedicated server settings, palworld Docker server settings]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Server Settings
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated Server Settings
 
-# Server Settings
-
-Changing Server Settings using environment variables.
+How to change the Palworld Server Settings using Docker Environment variables.
 
 ## Environment variables
 

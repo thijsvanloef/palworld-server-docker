@@ -1,8 +1,18 @@
 ---
 sidebar_position: 1
+title: Palworld Server Discord webhooks
+description: How to use the Palworld Dedicated server Discord Webhook integration to get notified when your server is starting, stopping, and updating!
+keywords: [Palworld, palworld dedicated server, Palworld dedicated server Discord Webhooks, Palworld Discord Webhooks]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Using Discord Webhooks
 ---
+<!-- markdownlint-disable-next-line -->
+# Using discord webhooks with Palworld Server
 
-# Using discord webhooks
+How to use the Palworld Dedicated server Discord Webhook integration to
+get notified when your server is starting, stopping, and updating!
+
+## Getting started
 
 1. Generate a webhook url for your discord server in your discord's server settings.
 
