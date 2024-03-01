@@ -1,5 +1,9 @@
 # Palworld Dedicated Server Docker
 
+## ⚠️These docs will be deprecated and removed on March 31 2024⚠️
+
+Please use the official docs: [https://palworld-server-docker.loef.dev/](https://palworld-server-docker.loef.dev/zh/)
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
