@@ -1,7 +1,7 @@
 ---
 sidebar_position: 2
 title: Palworld Dedicated Server on Kubernetes
-description: How to run Palworld Dedicared server on Kubernetes.
+description: How to run Palworld Dedicated server on Kubernetes.
 keywords: [Palworld, palworld dedicated server, Palworld Dedicated server kubernetes]
 image: ../assets/Palworld_Banner.jpg
 sidebar_label: Kubernetes
