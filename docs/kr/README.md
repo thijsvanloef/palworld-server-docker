@@ -190,10 +190,10 @@ GID를 찾으려면: `id -g`를 사용합니다.
 다음 값을 사용하여 부팅 시 서버의 설정을 변경할 수 있습니다.
 서버를 시작하기 전에 다음 환경 변수를 설정하는 것이 좋습니다:
 
-- PLAYERS
-- PORT
-- PUID
-- PGID
+* PLAYERS
+* PORT
+* PUID
+* PGID
 
 | 변수명             | 정보                                                                                                                                                     | 기본값 | 허용되는 값                                                                                            |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
@@ -225,7 +225,7 @@ GID를 찾으려면: `id -g`를 사용합니다.
 | AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | 온라인 사용자가 있어도 재시작.                                                                                                                                | false                      | true/false                                                                                                        |
-| TARGET_MANIFEST_ID | 게임의 버젼을 스팀 다운로드 디포의 해당 Manifest ID로 고정.                                                                                                                       |                           | [Manifest ID Table](#locking-specific-game-version) 보
+| TARGET_MANIFEST_ID | 게임의 버젼을 스팀 다운로드 디포의 해당 Manifest ID로 고정.                                                                                                                       |                           | [Manifest ID Table](#버전별Manifest ID표) 보 |
 | DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
@@ -358,8 +358,8 @@ BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 
 이 서버에서 자동 업데이트를 사용하려면 다음 환경 변수들을 `true`로 **설정해야 합니다**:
 
-- RCON_ENABLED
-- UPDATE_ON_BOOT
+* RCON_ENABLED
+* UPDATE_ON_BOOT
 
 > [!IMPORTANT]
 > 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
@@ -409,15 +409,15 @@ AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요.
 
 서버 설정을 환경 변수로 바꾸는 과정은 다음과 같은 규칙을 따릅니다 (몇가지 예외 있음):
 
-- 모두 대문자로 작성
-- 밑줄을 삽입하여 단어를 분할
-- 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
+* 모두 대문자로 작성
+* 밑줄을 삽입하여 단어를 분할
+* 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
 
 아래는 예시입니다:
 
-- Difficulty -> DIFFICULTY
-- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-- bIsPvP -> IS_PVP
+* Difficulty -> DIFFICULTY
+* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+* bIsPvP -> IS_PVP
 
 | 변수                                  | 설명                                                    | 기본값                                                                                | 허용값                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
@@ -523,8 +523,9 @@ docker compose로 디스코드 메시지 보내기:
 >
 >**본인의 책임하에 하세요!**
 
-만약 **TARGET_MANIFEST_ID** 환경변수가 정해졌다면, 서버의 버전은 특정 manifest로 고정됩니다. 
-Manifest는 게임의 릴리즈 시간/업데이트 버젼에 따라 정해집니다. Manifest는 SteamCMD나 [SteamDB](https://steamdb.info/depot/2394012/manifests/)와 같은 웹사이트에서 검색가능합니다.
+만약 **TARGET_MANIFEST_ID** 환경변수가 정해졌다면, 서버의 버전은 특정 manifest로 고정됩니다.
+Manifest는 게임의 릴리즈 시간/업데이트 버젼에 따라 정해집니다. Manifest는 SteamCMD나 [SteamDB](https://steamdb.info/depot/2394012/manifests/)와
+같은 웹사이트에서 검색가능합니다.
 
 ### 버전별 Manifest ID 표
 
@@ -534,7 +535,6 @@ Manifest는 게임의 릴리즈 시간/업데이트 버젼에 따라 정해집�
 | 1.4.0   | 4190579964382773830  |
 | 1.4.1   | 6370735655629434989  |
 | 1.5.0   | 3750364703337203431  |
-
 
 ## 이슈/기능 요청
 
