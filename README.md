@@ -17,7 +17,7 @@
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
-[English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
+[English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md) | [French](/docs/fr/README.md)
 
 > [!TIP]
 > Unsure how to get started? Check out [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
@@ -27,9 +27,9 @@ This is a Docker container to help you get started with hosting your own
 
 This Docker container has been tested and will work on the following OS:
 
-* Linux (Ubuntu/Debian)
-* Windows 10,11
-* MacOS (including Apple Silicon M1/M2/M3).
+- Linux (Ubuntu/Debian)
+- Windows 10,11
+- MacOS (including Apple Silicon M1/M2/M3).
 
 This container has also been tested and will work on both `x64` and `ARM64` based CPU architecture.
 
@@ -53,7 +53,7 @@ Massive shoutout to the following sponsors!
 ## Server Requirements
 
 | Resource | Minimum | Recommended                              |
-|----------|---------|------------------------------------------|
+| -------- | ------- | ---------------------------------------- |
 | CPU      | 4 cores | 4+ cores                                 |
 | RAM      | 16GB    | Recommend over 32GB for stable operation |
 | Storage  | 8GB     | 20GB                                     |
@@ -68,30 +68,30 @@ This repository includes an example [docker-compose.yml](/docker-compose.yml) fi
 
 ```yml
 services:
-   palworld:
-      image: thijsvanloef/palworld-server-docker:latest
-      restart: unless-stopped
-      container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-      environment:
-         PUID: 1000
-         PGID: 1000
-         PORT: 8211 # Optional but recommended
-         PLAYERS: 16 # Optional but recommended
-         SERVER_PASSWORD: "worldofpals" # Optional but recommended
-         MULTITHREADING: true
-         RCON_ENABLED: true
-         RCON_PORT: 25575
-         TZ: "UTC"
-         ADMIN_PASSWORD: "adminPasswordHere"
-         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
-         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
-      volumes:
-         - ./palworld:/palworld/
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp
+    environment:
+      PUID: 1000
+      PGID: 1000
+      PORT: 8211 # Optional but recommended
+      PLAYERS: 16 # Optional but recommended
+      SERVER_PASSWORD: 'worldofpals' # Optional but recommended
+      MULTITHREADING: true
+      RCON_ENABLED: true
+      RCON_PORT: 25575
+      TZ: 'UTC'
+      ADMIN_PASSWORD: 'adminPasswordHere'
+      COMMUNITY: false # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+      SERVER_NAME: 'palworld-server-docker by Thijs van Loef'
+      SERVER_DESCRIPTION: 'palworld-server-docker by Thijs van Loef'
+    volumes:
+      - ./palworld:/palworld/
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -100,18 +100,18 @@ values. Modify your [docker-compose.yml](docker-compose.yml) to this:
 
 ```yml
 services:
-   palworld:
-      image: thijsvanloef/palworld-server-docker:latest
-      restart: unless-stopped
-      container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-      env_file:
-         -  .env
-      volumes:
-         - ./palworld:/palworld/
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp
+    env_file:
+      - .env
+    volumes:
+      - ./palworld:/palworld/
 ```
 
 ### Docker Run
@@ -180,8 +180,8 @@ You must set user to `NUMBERICAL_UID:NUMBERICAL_GID`
 
 Below we assume your UID is 1000 and your GID is 1001
 
-* In docker run add `--user 1000:1001 \` above the last line.
-* In docker compose add `user: 1000:1001` above ports.
+- In docker run add `--user 1000:1001 \` above the last line.
+- In docker compose add `user: 1000:1001` above ports.
 
 If you wish to run it with a different UID/GID than your own you will need to change the ownership of the directory that
 is being bind: `chown UID:GID palworld/`
@@ -196,19 +196,19 @@ The official helm chart can be found in a seperate repository, [palworld-server-
 You can use the following values to change the settings of the server on boot.
 It is highly recommended you set the following environment values before starting the server:
 
-* PLAYERS
-* PORT
-* PUID
-* PGID
+- PLAYERS
+- PORT
+- PUID
+- PGID
 
 | Variable                           | Info                                                                                                                                                                                                | Default Values             | Allowed Values                                                                                                    |
-|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------|-------------------------------------------------------------------------------------------------------------------|
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | TZ                                 | Timezone used for time stamping backup server                                                                                                                                                       | UTC                        | See [TZ Identifiers](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#Time_Zone_abbreviations)        |
-| PLAYERS*                           | Max amount of players that are able to join the server                                                                                                                                              | 16                         | 1-32                                                                                                              |
-| PORT*                              | UDP port that the server will expose                                                                                                                                                                | 8211                       | 1024-65535                                                                                                        |
-| PUID*                              | The uid of the user the server should run as                                                                                                                                                        | 1000                       | !0                                                                                                                |
-| PGID*                              | The gid of the group the server should run as                                                                                                                                                       | 1000                       | !0                                                                                                                |
-| MULTITHREADING**                   | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false                      | true/false                                                                                                        |
+| PLAYERS\*                          | Max amount of players that are able to join the server                                                                                                                                              | 16                         | 1-32                                                                                                              |
+| PORT\*                             | UDP port that the server will expose                                                                                                                                                                | 8211                       | 1024-65535                                                                                                        |
+| PUID\*                             | The uid of the user the server should run as                                                                                                                                                        | 1000                       | !0                                                                                                                |
+| PGID\*                             | The gid of the group the server should run as                                                                                                                                                       | 1000                       | !0                                                                                                                |
+| MULTITHREADING\*\*                 | Improves performance in multi-threaded CPU environments. It is effective up to a maximum of about 4 threads, and allocating more than this number of threads does not make much sense.              | false                      | true/false                                                                                                        |
 | COMMUNITY                          | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false                      | true/false                                                                                                        |
 | PUBLIC_IP                          | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                            | x.x.x.x                                                                                                           |
 | PUBLIC_PORT                        | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                            | 1024-65535                                                                                                        |
@@ -216,8 +216,8 @@ It is highly recommended you set the following environment values before startin
 | SERVER_DESCRIPTION                 | Your server Description                                                                                                                                                                             |                            | "string"                                                                                                          |
 | SERVER_PASSWORD                    | Secure your community server with a password                                                                                                                                                        |                            | "string"                                                                                                          |
 | ADMIN_PASSWORD                     | Secure administration access in the server with a password                                                                                                                                          |                            | "string"                                                                                                          |
-| UPDATE_ON_BOOT**                   | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true                       | true/false                                                                                                        |
-| RCON_ENABLED***                    | Enable RCON for the Palworld server                                                                                                                                                                 | true                       | true/false                                                                                                        |
+| UPDATE_ON_BOOT\*\*                 | Update/Install the server when the docker container starts (THIS HAS TO BE ENABLED THE FIRST TIME YOU RUN THE CONTAINER)                                                                            | true                       | true/false                                                                                                        |
+| RCON_ENABLED\*\*\*                 | Enable RCON for the Palworld server                                                                                                                                                                 | true                       | true/false                                                                                                        |
 | RCON_PORT                          | RCON port to connect to                                                                                                                                                                             | 25575                      | 1024-65535                                                                                                        |
 | QUERY_PORT                         | Query port used to communicate with Steam servers                                                                                                                                                   | 27015                      | 1024-65535                                                                                                        |
 | BACKUP_CRON_EXPRESSION             | Setting affects frequency of automatic backups.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
@@ -226,12 +226,12 @@ It is highly recommended you set the following environment values before startin
 | OLD_BACKUP_DAYS                    | How many days to keep backups                                                                                                                                                                       | 30                         | any positive integer                                                                                              |
 | AUTO_UPDATE_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 \* \* \* \*              | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED                | Enables automatic updates                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | Integer                                                                                                                |
+| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | Integer                                                                                                           |
 | AUTO_REBOOT_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED                | Enables automatic reboots                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | Integer                                                                                                                |
+| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | Integer                                                                                                           |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online.                                                                                                                                                | false                      | true/false                                                                                                        |
-| TARGET_MANIFEST_ID                 | Locks game version to corespond with Manifest ID from Steam Download Depot.                                                                                                                         |                           | See [Manifest ID Table](#locking-specific-game-version)                                                           |
+| TARGET_MANIFEST_ID                 | Locks game version to corespond with Manifest ID from Steam Download Depot.                                                                                                                         |                            | See [Manifest ID Table](#locking-specific-game-version)                                                           |
 | DISCORD_WEBHOOK_URL                | Discord webhook url found after creating a webhook on a discord server                                                                                                                              |                            | `https://discord.com/api/webhooks/<webhook_id>`                                                                   |
 | DISCORD_CONNECT_TIMEOUT            | Discord command initial connection timeout                                                                                                                                                          | 30                         | !0                                                                                                                |
 | DISCORD_MAX_TIMEOUT                | Discord total hook timeout                                                                                                                                                                          | 30                         | !0                                                                                                                |
@@ -241,20 +241,20 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
 | DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
 | DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
-| DISABLE_GENERATE_ENGINE          | Whether to automatically generate the Engine.ini                                                                                                                                          | true                      | true/false                                                                                                        |
-| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
-| PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
+| DISABLE_GENERATE_ENGINE            | Whether to automatically generate the Engine.ini                                                                                                                                                    | true                       | true/false                                                                                                        |
+| ENABLE_PLAYER_LOGGING              | Enables Logging and announcing when players join and leave                                                                                                                                          | true                       | true/false                                                                                                        |
+| PLAYER_LOGGING_POLL_PERIOD         | Polling period (in seconds) to check for players who have joined or left                                                                                                                            | 5                          | !0                                                                                                                |
 
-*highly recommended to set
+\*highly recommended to set
 
-** Make sure you know what you are doing when running this option enabled
+\*\* Make sure you know what you are doing when running this option enabled
 
-*** Required for docker stop to save and gracefully close the server
+\*\*\* Required for docker stop to save and gracefully close the server
 
 ### Game Ports
 
 | Port  | Info             |
-|-------|------------------|
+| ----- | ---------------- |
 | 8211  | Game Port (UDP)  |
 | 27015 | Query Port (UDP) |
 | 25575 | RCON Port (TCP)  |
@@ -279,7 +279,7 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 ### List of server commands
 
 | Command                          | Info                                                |
-|----------------------------------|-----------------------------------------------------|
+| -------------------------------- | --------------------------------------------------- |
 | Shutdown {Seconds} {MessageText} | The server is shut down after the number of Seconds |
 | DoExit                           | Force stop the server.                              |
 | Broadcast                        | Send message to all player in the server            |
@@ -314,6 +314,7 @@ docker exec -it palworld-server restore
 ```
 
 The `RCON_ENABLED` environment variable must be set to `true` to use this command.
+
 > [!IMPORTANT]
 > If docker restart is not set to policy `always` or `unless-stopped` then the server will shutdown and will need to be
 > manually restarted.
@@ -366,8 +367,8 @@ Example Usage: If BACKUP_CRON_EXPRESSION to `0 2 * * *`, the backup script will 
 
 To be able to use automatic Updates with this Server the following environment variables **have** to be set to `true`:
 
-* RCON_ENABLED
-* UPDATE_ON_BOOT
+- RCON_ENABLED
+- UPDATE_ON_BOOT
 
 > [!IMPORTANT]
 >
@@ -423,72 +424,72 @@ timezone set with TZ
 
 Converting server settings to environment variables follow the same principles (with some exceptions):
 
-* all capital letters
-* split words by inserting an underscore
-* remove the single letter if the setting starts with one (like 'b')
+- all capital letters
+- split words by inserting an underscore
+- remove the single letter if the setting starts with one (like 'b')
 
 For example:
 
-* Difficulty -> DIFFICULTY
-* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-* bIsPvP -> IS_PVP
+- Difficulty -> DIFFICULTY
+- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+- bIsPvP -> IS_PVP
 
-| Variable                                  | Description                                                    | Default Value                                                                                | Allowed Value                          |
-|-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
-| DIFFICULTY                                | Game Difficulty                                                | None                                                                                         | `None`,`Normal`,`Difficult`            |
-| DAYTIME_SPEEDRATE                         | Day time speed - Larger number means shorter days             | 1.000000                                                                                     | Float                                  |
-| NIGHTTIME_SPEEDRATE                       | Night time speed - Larger number means shorter nights         | 1.000000                                                                                     | Float                                  |
-| EXP_RATE                                  | EXP earn rate                                                  | 1.000000                                                                                     | Float                                  |
-| PAL_CAPTURE_RATE                          | Pal capture rate                                               | 1.000000                                                                                     | Float                                  |
-| PAL_SPAWN_NUM_RATE                        | Pal appearance rate                                            | 1.000000                                                                                     | Float                                  |
-| PAL_DAMAGE_RATE_ATTACK                    | Damage from pals multipiler                                    | 1.000000                                                                                     | Float                                  |
-| PAL_DAMAGE_RATE_DEFENSE                   | Damage to pals multipiler                                      | 1.000000                                                                                     | Float                                  |
-| PLAYER_DAMAGE_RATE_ATTACK                 | Damage from player multipiler                                  | 1.000000                                                                                     | Float                                  |
-| PLAYER_DAMAGE_RATE_DEFENSE                | Damage to  player multipiler                                   | 1.000000                                                                                     | Float                                  |
-| PLAYER_STOMACH_DECREASE_RATE              | Player hunger depletion rate                                   | 1.000000                                                                                     | Float                                  |
-| PLAYER_STAMINA_DECREASE_RATE              | Player stamina reduction rate                                  | 1.000000                                                                                     | Float                                  |
-| PLAYER_AUTO_HP_REGEN_RATE                 | Player auto HP regeneration rate                               | 1.000000                                                                                     | Float                                  |
-| PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP        | Player sleep HP regeneration rate                              | 1.000000                                                                                     | Float                                  |
-| PAL_STOMACH_DECREASE_RATE                 | Pal hunger depletion rate                                      | 1.000000                                                                                     | Float                                  |
-| PAL_STAMINA_DECREASE_RATE                 | Pal stamina reduction rate                                     | 1.000000                                                                                     | Float                                  |
-| PAL_AUTO_HP_REGEN_RATE                    | Pal auto HP regeneration rate                                  | 1.000000                                                                                     | Float                                  |
-| PAL_AUTO_HP_REGEN_RATE_IN_SLEEP           | Pal sleep health regeneration rate (in Palbox)                 | 1.000000                                                                                     | Float                                  |
-| BUILD_OBJECT_DAMAGE_RATE                  | Damage to structure multipiler                                 | 1.000000                                                                                     | Float                                  |
-| BUILD_OBJECT_DETERIORATION_DAMAGE_RATE    | Structure determination rate                                   | 1.000000                                                                                     | Float                                  |
-| COLLECTION_DROP_RATE                      | Getherable items multipiler                                    | 1.000000                                                                                     | Float                                  |
-| COLLECTION_OBJECT_HP_RATE                 | Getherable objects HP multipiler                               | 1.000000                                                                                     | Float                                  |
-| COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | Getherable objects respawn interval - The smaller the number, the faster the regeneration                            | 1.000000                                                                                     | Float                                  |
-| ENEMY_DROP_ITEM_RATE                      | Dropped Items Multipiler                                       | 1.000000                                                                                     | Float                                  |
-| DEATH_PENALTY                             | Death Penalty</br>None: No death penalty</br>Item: Drops items other than equipment</br>ItemAndEquipment: Drops all items</br>All: Drops all PALs and all items.                                    | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
-| ENABLE_PLAYER_TO_PLAYER_DAMAGE            | Allows players to cause damage to players                      | False                                                                                        | Boolean                                |
-| ENABLE_FRIENDLY_FIRE                      | Allow friendly fire                                            | False                                                                                        | Boolean                                |
-| ENABLE_INVADER_ENEMY                      | Enable invaders                                                | True                                                                                         | Boolean                                |
-| ACTIVE_UNKO                               | Enable UNKO (?)                                                | False                                                                                        | Boolean                                |
-| ENABLE_AIM_ASSIST_PAD                     | Enable controller aim assist                                   | True                                                                                         | Boolean                                |
-| ENABLE_AIM_ASSIST_KEYBOARD                | Enable Keyboard aim assist                                     | False                                                                                        | Boolean                                |
-| DROP_ITEM_MAX_NUM                         | Maximum number of drops in the world                           | 3000                                                                                         | Integer                                |
-| DROP_ITEM_MAX_NUM_UNKO                    | Maximum number of UNKO drops in the world                      | 100                                                                                          | Integer                                |
-| BASE_CAMP_MAX_NUM                         | Maximum number of base camps                                   | 128                                                                                          | Integer                                |
-| BASE_CAMP_WORKER_MAX_NUM                  | Maximum number of workers                                      | 15                                                                                           | Integer                                |
-| DROP_ITEM_ALIVE_MAX_HOURS                 | Time it takes for items to despawn in hours                    | 1.000000                                                                                     | Float                                  |
-| AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | Automatically reset guild when no players are online           | False                                                                                        | Bool                                   |
-| AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | Time to automatically reset guild when no players are online   | 72.000000                                                                                    | Float                                  |
-| GUILD_PLAYER_MAX_NUM                      | Max player of Guild                                            | 20                                                                                           | Integer                                |
-| PAL_EGG_DEFAULT_HATCHING_TIME             | Time(h) to incubate massive egg                                | 72.000000                                                                                    | Float                                  |
-| WORK_SPEED_RATE                           | Work speed muliplier                                           | 1.000000                                                                                     | Float                                  |
-| IS_MULTIPLAY                              | Enable multiplayer                                             | False                                                                                        | Boolean                                |
-| IS_PVP                                    | Enable PVP                                                     | False                                                                                        | Boolean                                |
-| CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP | Allow players from other guilds to pick up death penalty items | False                                                                                        | Boolean                                |
-| ENABLE_NON_LOGIN_PENALTY                  | Enable non-login penalty                                       | True                                                                                         | Boolean                                |
-| ENABLE_FAST_TRAVEL                        | Enable fast travel                                             | True                                                                                         | Boolean                                |
-| IS_START_LOCATION_SELECT_BY_MAP           | Enable selecting of start location                             | True                                                                                         | Boolean                                |
-| EXIST_PLAYER_AFTER_LOGOUT                 | Toggle for deleting players when they log off                  | False                                                                                        | Boolean                                |
-| ENABLE_DEFENSE_OTHER_GUILD_PLAYER         | Allows defense against other guild players                     | False                                                                                        | Boolean                                |
-| COOP_PLAYER_MAX_NUM                       | Maximum number of players in a guild                           | 4                                                                                            | Integer                                |
-| REGION                                    | Region                                                         |                                                                                              | String                                 |
-| USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
-| BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
-| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
+| Variable                                  | Description                                                                                                                                                      | Default Value                                                                                | Allowed Value                          |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------- |
+| DIFFICULTY                                | Game Difficulty                                                                                                                                                  | None                                                                                         | `None`,`Normal`,`Difficult`            |
+| DAYTIME_SPEEDRATE                         | Day time speed - Larger number means shorter days                                                                                                                | 1.000000                                                                                     | Float                                  |
+| NIGHTTIME_SPEEDRATE                       | Night time speed - Larger number means shorter nights                                                                                                            | 1.000000                                                                                     | Float                                  |
+| EXP_RATE                                  | EXP earn rate                                                                                                                                                    | 1.000000                                                                                     | Float                                  |
+| PAL_CAPTURE_RATE                          | Pal capture rate                                                                                                                                                 | 1.000000                                                                                     | Float                                  |
+| PAL_SPAWN_NUM_RATE                        | Pal appearance rate                                                                                                                                              | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_ATTACK                    | Damage from pals multipiler                                                                                                                                      | 1.000000                                                                                     | Float                                  |
+| PAL_DAMAGE_RATE_DEFENSE                   | Damage to pals multipiler                                                                                                                                        | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_ATTACK                 | Damage from player multipiler                                                                                                                                    | 1.000000                                                                                     | Float                                  |
+| PLAYER_DAMAGE_RATE_DEFENSE                | Damage to player multipiler                                                                                                                                      | 1.000000                                                                                     | Float                                  |
+| PLAYER_STOMACH_DECREASE_RATE              | Player hunger depletion rate                                                                                                                                     | 1.000000                                                                                     | Float                                  |
+| PLAYER_STAMINA_DECREASE_RATE              | Player stamina reduction rate                                                                                                                                    | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE                 | Player auto HP regeneration rate                                                                                                                                 | 1.000000                                                                                     | Float                                  |
+| PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP        | Player sleep HP regeneration rate                                                                                                                                | 1.000000                                                                                     | Float                                  |
+| PAL_STOMACH_DECREASE_RATE                 | Pal hunger depletion rate                                                                                                                                        | 1.000000                                                                                     | Float                                  |
+| PAL_STAMINA_DECREASE_RATE                 | Pal stamina reduction rate                                                                                                                                       | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE                    | Pal auto HP regeneration rate                                                                                                                                    | 1.000000                                                                                     | Float                                  |
+| PAL_AUTO_HP_REGEN_RATE_IN_SLEEP           | Pal sleep health regeneration rate (in Palbox)                                                                                                                   | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DAMAGE_RATE                  | Damage to structure multipiler                                                                                                                                   | 1.000000                                                                                     | Float                                  |
+| BUILD_OBJECT_DETERIORATION_DAMAGE_RATE    | Structure determination rate                                                                                                                                     | 1.000000                                                                                     | Float                                  |
+| COLLECTION_DROP_RATE                      | Getherable items multipiler                                                                                                                                      | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_HP_RATE                 | Getherable objects HP multipiler                                                                                                                                 | 1.000000                                                                                     | Float                                  |
+| COLLECTION_OBJECT_RESPAWN_SPEED_RATE      | Getherable objects respawn interval - The smaller the number, the faster the regeneration                                                                        | 1.000000                                                                                     | Float                                  |
+| ENEMY_DROP_ITEM_RATE                      | Dropped Items Multipiler                                                                                                                                         | 1.000000                                                                                     | Float                                  |
+| DEATH_PENALTY                             | Death Penalty</br>None: No death penalty</br>Item: Drops items other than equipment</br>ItemAndEquipment: Drops all items</br>All: Drops all PALs and all items. | All                                                                                          | `None`,`Item`,`ItemAndEquipment`,`All` |
+| ENABLE_PLAYER_TO_PLAYER_DAMAGE            | Allows players to cause damage to players                                                                                                                        | False                                                                                        | Boolean                                |
+| ENABLE_FRIENDLY_FIRE                      | Allow friendly fire                                                                                                                                              | False                                                                                        | Boolean                                |
+| ENABLE_INVADER_ENEMY                      | Enable invaders                                                                                                                                                  | True                                                                                         | Boolean                                |
+| ACTIVE_UNKO                               | Enable UNKO (?)                                                                                                                                                  | False                                                                                        | Boolean                                |
+| ENABLE_AIM_ASSIST_PAD                     | Enable controller aim assist                                                                                                                                     | True                                                                                         | Boolean                                |
+| ENABLE_AIM_ASSIST_KEYBOARD                | Enable Keyboard aim assist                                                                                                                                       | False                                                                                        | Boolean                                |
+| DROP_ITEM_MAX_NUM                         | Maximum number of drops in the world                                                                                                                             | 3000                                                                                         | Integer                                |
+| DROP_ITEM_MAX_NUM_UNKO                    | Maximum number of UNKO drops in the world                                                                                                                        | 100                                                                                          | Integer                                |
+| BASE_CAMP_MAX_NUM                         | Maximum number of base camps                                                                                                                                     | 128                                                                                          | Integer                                |
+| BASE_CAMP_WORKER_MAX_NUM                  | Maximum number of workers                                                                                                                                        | 15                                                                                           | Integer                                |
+| DROP_ITEM_ALIVE_MAX_HOURS                 | Time it takes for items to despawn in hours                                                                                                                      | 1.000000                                                                                     | Float                                  |
+| AUTO_RESET_GUILD_NO_ONLINE_PLAYERS        | Automatically reset guild when no players are online                                                                                                             | False                                                                                        | Bool                                   |
+| AUTO_RESET_GUILD_TIME_NO_ONLINE_PLAYERS   | Time to automatically reset guild when no players are online                                                                                                     | 72.000000                                                                                    | Float                                  |
+| GUILD_PLAYER_MAX_NUM                      | Max player of Guild                                                                                                                                              | 20                                                                                           | Integer                                |
+| PAL_EGG_DEFAULT_HATCHING_TIME             | Time(h) to incubate massive egg                                                                                                                                  | 72.000000                                                                                    | Float                                  |
+| WORK_SPEED_RATE                           | Work speed muliplier                                                                                                                                             | 1.000000                                                                                     | Float                                  |
+| IS_MULTIPLAY                              | Enable multiplayer                                                                                                                                               | False                                                                                        | Boolean                                |
+| IS_PVP                                    | Enable PVP                                                                                                                                                       | False                                                                                        | Boolean                                |
+| CAN_PICKUP_OTHER_GUILD_DEATH_PENALTY_DROP | Allow players from other guilds to pick up death penalty items                                                                                                   | False                                                                                        | Boolean                                |
+| ENABLE_NON_LOGIN_PENALTY                  | Enable non-login penalty                                                                                                                                         | True                                                                                         | Boolean                                |
+| ENABLE_FAST_TRAVEL                        | Enable fast travel                                                                                                                                               | True                                                                                         | Boolean                                |
+| IS_START_LOCATION_SELECT_BY_MAP           | Enable selecting of start location                                                                                                                               | True                                                                                         | Boolean                                |
+| EXIST_PLAYER_AFTER_LOGOUT                 | Toggle for deleting players when they log off                                                                                                                    | False                                                                                        | Boolean                                |
+| ENABLE_DEFENSE_OTHER_GUILD_PLAYER         | Allows defense against other guild players                                                                                                                       | False                                                                                        | Boolean                                |
+| COOP_PLAYER_MAX_NUM                       | Maximum number of players in a guild                                                                                                                             | 4                                                                                            | Integer                                |
+| REGION                                    | Region                                                                                                                                                           |                                                                                              | String                                 |
+| USEAUTH                                   | Use authentication                                                                                                                                               | True                                                                                         | Boolean                                |
+| BAN_LIST_URL                              | Which ban list to use                                                                                                                                            | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                                                                                                                          | True                                                                                         | Boolean                                |
 
 ### Manually
 
@@ -527,23 +528,23 @@ send discord messages with docker compose:
 
 ## Locking Specific Game Version
 
->[!WARNING]
->Downgrading to a lower game version is possible, but it is unknown what impact it will have on existing saves.
+> [!WARNING]
+> Downgrading to a lower game version is possible, but it is unknown what impact it will have on existing saves.
 >
->**Please do so at your own risk!**
+> **Please do so at your own risk!**
 
 If **TARGET_MANIFEST_ID** environment variable is set, will lock server version to specific manifest.
 The manifest corresponds to the release date/update versions. Manifests can be found using SteamCMD or websites like [SteamDB](https://steamdb.info/depot/2394012/manifests/).
 
 ### Version To Manifest ID Table
 
-| Version | Manifest ID          |
-|---------|----------------------|
-| 1.3.0   | 1354752814336157338  |
-| 1.4.0   | 4190579964382773830  |
-| 1.4.1   | 6370735655629434989  |
-| 1.5.0   | 3750364703337203431  |
-| 1.5.1   | 2815085007637542021  |
+| Version | Manifest ID         |
+| ------- | ------------------- |
+| 1.3.0   | 1354752814336157338 |
+| 1.4.0   | 4190579964382773830 |
+| 1.4.1   | 6370735655629434989 |
+| 1.5.0   | 3750364703337203431 |
+| 1.5.1   | 2815085007637542021 |
 
 ## Reporting Issues/Feature Requests
 
