@@ -6,7 +6,7 @@ keywords: [Palworld, palworld dedicated server, Palworld PalWorldSettings.ini, p
 image: ../../assets/Palworld_Banner.jpg
 sidebar_label: 게임설정
 ---
-
+<!-- markdownlint-disable-next-line -->
 # 게임 설정
 
 도커의 환경변수로 팔월드 게임 설정하기 (PalWorldSettings.ini file).
@@ -21,15 +21,15 @@ sidebar_label: 게임설정
 
 서버 설정을 환경 변수로 바꾸는 과정은 다음과 같은 규칙을 따릅니다 (몇가지 예외 있음):
 
-- 모두 대문자로 작성
-- 밑줄을 삽입하여 단어를 분할
-- 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
+* 모두 대문자로 작성
+* 밑줄을 삽입하여 단어를 분할
+* 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
 
 아래는 예시입니다:
 
-- Difficulty -> DIFFICULTY
-- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-- bIsPvP -> IS_PVP
+* Difficulty -> DIFFICULTY
+* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+* bIsPvP -> IS_PVP
 
 | 변수                                      | 설명                                                           | 기본값                                                                                       | 허용값                                  |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
