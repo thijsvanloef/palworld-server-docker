@@ -182,5 +182,5 @@ DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success"
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
 
-DiscordMessage "Start" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
+DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
 exit 0
