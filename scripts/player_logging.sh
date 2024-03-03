@@ -41,18 +41,20 @@ while true; do
                 <(printf '%s\n' "${current_player_list[@]}") )
         fi
 
-        # Log all players who have left
+        # Notify Discord and log all players who have left
         for player in "${players_who_left_list[@]}"; do
             player_name=$( get_playername "${player}" )
             LogInfo "${player_name} has left"
             broadcast_command "${player_name} has left"
+			DiscordMessage "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE}" "failure"
         done
 
-        # Log all players who have joined
+        # Notify Discord and log all players who have joined
         for player in "${players_who_joined_list[@]}"; do
             player_name=$( get_playername "${player}" )
             LogInfo "${player_name} has joined"
             broadcast_command "${player_name} has joined"
+			DiscordMessage "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE}" "success"
         done
 
         old_player_list=("${current_player_list[@]}")
