@@ -12,13 +12,12 @@ isExecutable "/palworld" || exit
 
 cd /palworld || exit
 
-# Get host kernel page size
-kernel_page_size=$(getconf PAGESIZE)
+if [ "${ARCH}" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
+    LogInfo "ARM compatibility mode enabled"
+    export DEBUGGER="/usr/bin/qemu-i386-static"
 
-# Check kernel page size for arm64 hosts before running steamcmdac
-if [ "${ARCH}" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
-    LogError "Only ARM64 hosts with 4k page size is supported."
-    exit 1
+    # Arbitrary number to avoid CPU_MHZ warning due to qemu and steamcmd
+    export CPU_MHZ=2000
 fi
 
 IsInstalled
@@ -32,9 +31,30 @@ fi
 if [ "${ARCH}" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     cp ./PalServer.sh ./PalServer-arm64.sh
-    # shellcheck disable=SC2016
-    sed -i 's|\("$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Test" Pal "$@"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:$LD_LIBRARY_PATH box64 \1|' ./PalServer-arm64.sh
+
+    pagesize=$(getconf PAGESIZE)
+    box64_binary="box64"
+
+    case $pagesize in
+        8192)
+            LogInfo "Using Box64 for 8k pagesize"
+            box64_binary="box64-8k"
+            ;;
+        16384)
+            LogInfo "Using Box64 for 16k pagesize"
+            box64_binary="box64-16k"
+            ;;
+        65536)
+            LogInfo "Using Box64 for 64k pagesize"
+            box64_binary="box64-64k"
+            ;;
+    esac
+    
+    sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Test\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH $box64_binary \1|" ./PalServer-arm64.sh
     chmod +x ./PalServer-arm64.sh
+    STARTCOMMAND=("./PalServer-arm64.sh")
+else
+    STARTCOMMAND=("./PalServer.sh")
 fi
 
 
@@ -46,6 +66,39 @@ if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
         LogAction "Starting Update"
         InstallServer
     fi
+fi
+
+
+
+#Validate Installation
+if ! fileExists "${STARTCOMMAND[0]}"; then
+    LogError "Server Not Installed Properly"
+    exit 1
+fi
+
+isReadable "${STARTCOMMAND[0]}" || exit
+isExecutable "${STARTCOMMAND[0]}" || exit
+
+# Prepare Arguments
+if [ -n "${PORT}" ]; then
+    STARTCOMMAND+=("-port=${PORT}")
+fi
+
+if [ -n "${QUERY_PORT}" ]; then
+    STARTCOMMAND+=("-queryport=${QUERY_PORT}")
+fi
+
+if [ "${COMMUNITY,,}" = true ]; then
+    STARTCOMMAND+=("-publiclobby")
+fi
+
+if [ "${MULTITHREADING,,}" = true ]; then
+    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+fi
+
+# fix bug and enable rcon for v0.1.5.0 only
+if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431" ] && [ "${RCON_ENABLED,,}" = true ]; then
+    STARTCOMMAND+=("-rcon")
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
@@ -72,6 +125,9 @@ else
   /home/steam/server/compile-settings.sh || exit
 fi
 
+if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
+    /home/steam/server/compile-engine.sh || exit
+fi
 LogAction "GENERATING CRONTAB"
 truncate -s 0  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then

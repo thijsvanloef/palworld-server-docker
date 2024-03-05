@@ -1,10 +1,15 @@
 ---
 sidebar_position: 1
+title: 팔월드 데디케이트 서버 설정
+description: 도커 환경변수를 사용해 팔월드 서버 세팅 변경방법.
+keywords: [Palworld, palworld dedicated server, Palworld Dedicated server settings, palworld server settings, Palworld Docker Dedicated server settings, palworld Docker server settings]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Server Settings
 ---
+<!-- markdownlint-disable-next-line -->
+# 팔월드 데디케이트 서버 설정
 
-# 서버 설정
-
-이 부분에서는 서버를 구성하는 방법을 설명합니다.
+도커 환경변수를 사용해 팔월드 서버 세팅 변경방법.
 
 ## 환경 변수
 
@@ -45,6 +50,8 @@ sidebar_position: 1
 | AUTO_REBOOT_CRON_EXPRESSION  | 자동 서버 재부팅 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 재부팅 설정](https://palworld-server-docker.loef.dev/ko/guides/automatic-reboots#cron%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%9E%90%EB%8F%99-%EC%9E%AC%EB%B6%80%ED%8C%85-%EC%84%A4%EC%A0%95) 참조 |
 | AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | 플레이어 온라인시에도 재부팅.                                                                                                                                                | false                      | true/false                                                                                                        |
+| TARGET_MANIFEST_ID                 | 게임의 버젼을 스팀 다운로드 디포의 해당 Manifest ID로 고정.                                                                                                                         |                           | See [Manifest ID Table](https://palworld-server-docker.loef.dev/guides/pinning-game-version#version-to-manifest-id-table)                                                           |
 | DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
@@ -54,6 +61,10 @@ sidebar_position: 1
 | DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
 | DISABLE_GENERATE_SETTINGS | 자동으로 PalWorldSettings.ini를 생성할지 여부 | false | true/false |
+| DISABLE_GENERATE_ENGINE          | 엔진설정의 생성을 비활성화 합니다.ini                                                                                                                                          | true                      | true/false                                                                                                        |
+| ENABLE_PLAYER_LOGGING      | 플레이어가 접속 또는 종료시 로깅과 공지를 활성화 | true         | true/false |
+| PLAYER_LOGGING_POLL_PERIOD          | 플레이어의 접속과 종료를 확인하기위한 폴링시간(초) 설정 | 5                      | !0 |
+| ARM_COMPATIBILITY_MODE          | 서버 업데이트를하기 위해 steamcmd를 실행시 호환성 레이어를 Box86에서 QEMU로 변경. 이 설정은 ARM64 호스트 전용입니다. | false                      | true/false |
 
 *설정하는 것을 적극 권장합니다.
 

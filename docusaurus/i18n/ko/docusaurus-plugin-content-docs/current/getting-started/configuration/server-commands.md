@@ -1,8 +1,14 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
+title: 팔월드 데디케이드 서버 명령어 (RCON)
+description: RCON을 사용하여 서버와 상호 작용하는 방법을 소개합니다.
+keywords: [Palworld, palworld dedicated server, Palworld Server Commands, Palworld server how to ban player, Palworld server how to kick player]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Server Commands (RCON)
 ---
 
-# 서버 명령어 (RCON)
+<!-- markdownlint-disable-next-line -->
+# 팔월드 데디케이드 서버 명령어 (RCON)
 
 RCON을 사용하여 서버와 상호 작용하는 방법을 소개합니다.
 
@@ -37,4 +43,4 @@ docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 | Info                             | 서버 정보를 표시합니다.                            |
 | Save                             | 월드 정보를 저장합니다.                            |
 
-전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)

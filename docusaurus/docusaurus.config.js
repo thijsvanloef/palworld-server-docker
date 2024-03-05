@@ -11,6 +11,7 @@ const config = {
   title: 'Palworld Server Docker Documentation',
   tagline: 'All the information you need to get a Palworld Dedicated server up and running using Docker',
   favicon: 'img/favicon.ico',
+  trailingSlash: false,
 
   // Set the production url of your site here
   url: 'https://palworld-server-docker.loef.dev',

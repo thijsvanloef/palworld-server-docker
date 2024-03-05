@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Serverbefehle (RCON)
@@ -38,4 +38,4 @@ Dies öffnet eine CLI, die RCON verwendet, um Befehle an den Palworld-Server zu 
 | Info                            | Zeigt Serverinformationen an.                                   |
 | Save                            | Speichern Sie die Weltendaten.                                  |
 
-Für eine vollständige Liste der Befehle gehen Sie zu: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+Für eine vollständige Liste der Befehle gehen Sie zu: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)

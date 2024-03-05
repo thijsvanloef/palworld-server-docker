@@ -17,7 +17,7 @@
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
-[English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md)
+[English](/README.md) | [한국어](/docs/kr/README.md) | [简体中文](/docs/zh-CN/README.md) | [French](/docs/fr/README.md)
 
 > [!TIP]
 > Unsure how to get started? Check out [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
@@ -43,7 +43,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 Massive shoutout to the following sponsors!
 
 <p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/USA-RedDragon"><img src="https://github.com/USA-RedDragon.png" width="50px" alt="USA-RedDragon" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Official Documentation
@@ -226,12 +226,12 @@ It is highly recommended you set the following environment values before startin
 | OLD_BACKUP_DAYS                    | How many days to keep backups                                                                                                                                                                       | 30                         | any positive integer                                                                                              |
 | AUTO_UPDATE_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 \* \* \* \*              | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) |
 | AUTO_UPDATE_ENABLED                | Enables automatic updates                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | Integer                                                                                                                |
+| AUTO_UPDATE_WARN_MINUTES           | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected)                                                                          | 30                         | Integer                                                                                                           |
 | AUTO_REBOOT_CRON_EXPRESSION        | Setting affects frequency of automatic updates.                                                                                                                                                     | 0 0 \* \* \*               | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-reboots-with-cron) |
 | AUTO_REBOOT_ENABLED                | Enables automatic reboots                                                                                                                                                                           | false                      | true/false                                                                                                        |
-| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | Integer                                                                                                                |
+| AUTO_REBOOT_WARN_MINUTES           | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                          | Integer                                                                                                           |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | Restart the Server even if there are players online.                                                                                                                                                | false                      | true/false                                                                                                        |
-| TARGET_MANIFEST_ID                 | Locks game version to corespond with Manfiest ID from Steam Download Depot.                                                                                                                         |                           | See [Manifest ID Table](#locking-specific-game-version)                                                           |
+| TARGET_MANIFEST_ID                 | Locks game version to corespond with Manifest ID from Steam Download Depot.                                                                                                                         |                            | See [Manifest ID Table](#locking-specific-game-version)                                                           |
 | DISCORD_WEBHOOK_URL                | Discord webhook url found after creating a webhook on a discord server                                                                                                                              |                            | `https://discord.com/api/webhooks/<webhook_id>`                                                                   |
 | DISCORD_CONNECT_TIMEOUT            | Discord command initial connection timeout                                                                                                                                                          | 30                         | !0                                                                                                                |
 | DISCORD_MAX_TIMEOUT                | Discord total hook timeout                                                                                                                                                                          | 30                         | !0                                                                                                                |
@@ -240,9 +240,13 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_PRE_START_MESSAGE          | Discord message sent when server begins to start                                                                                                                                                    | Server is started!         | "string"                                                                                                          |
 | DISCORD_PRE_SHUTDOWN_MESSAGE       | Discord message sent when server begins to shutdown                                                                                                                                                 | Server is shutting down... | "string"                                                                                                          |
 | DISCORD_POST_SHUTDOWN_MESSAGE      | Discord message sent when server has stopped                                                                                                                                                        | Server is stopped!         | "string"                                                                                                          |
+| DISCORD_PLAYER_JOIN_MESSAGE        | Discord message sent when player joins the server                                                                                                                                                   | \${player_name} has joined Palworld! | "string"                                                                                             |
+| DISCORD_PLAYER_LEAVE_MESSAGE       | Discord message sent when player leaves the server                                                                                                                                                  | \${player_name} has left Palworld.   | "string"                                                                                             |
 | DISABLE_GENERATE_SETTINGS          | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                      | true/false                                                                                                        |
+| DISABLE_GENERATE_ENGINE            | Whether to automatically generate the Engine.ini                                                                                                                                                    | true                       | true/false                                                                                                        |
 | ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
+| ARM_COMPATIBILITY_MODE          | Switches the compatibility layer from Box86 to QEMU when executing steamcmd for server updates. This setting is only applicable for ARM64 hosts. | false                      | true/false |
 
 *highly recommended to set
 
@@ -290,7 +294,7 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 | Info                             | Show server information.                            |
 | Save                             | Save the world data.                                |
 
-For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+For a full list of commands go to: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
 
 ## Creating a backup
 
@@ -487,6 +491,7 @@ For example:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
 
 ### Manually
 
@@ -540,6 +545,8 @@ The manifest corresponds to the release date/update versions. Manifests can be f
 | 1.3.0   | 1354752814336157338  |
 | 1.4.0   | 4190579964382773830  |
 | 1.4.1   | 6370735655629434989  |
+| 1.5.0   | 3750364703337203431  |
+| 1.5.1   | 2815085007637542021  |
 
 ## Reporting Issues/Feature Requests
 

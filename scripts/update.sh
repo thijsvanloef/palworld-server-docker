@@ -15,18 +15,18 @@ fi
 
 if [ "${UPDATE_ON_BOOT,,}" != true ]; then
     LogWarn "An update is available however, UPDATE_ON_BOOT needs to be enabled for auto updating"
-    DiscordMessage "An update is available however, UPDATE_ON_BOOT needs to be enabled for auto updating" "warn"
+    DiscordMessage "Update" "An update is available however, UPDATE_ON_BOOT needs to be enabled for auto updating" "warn"
     exit 1
 fi
 
 if [ "${RCON_ENABLED,,}" != true ]; then
     LogWarn "An update is available however auto updating without rcon is not supported"
-    DiscordMessage "An update is available however auto updating without rcon is not supported" "warn"
+    DiscordMessage "Update" "An update is available however auto updating without rcon is not supported" "warn"
     exit 1
 fi
 
 if [[ "${AUTO_UPDATE_WARN_MINUTES}" =~ ^[0-9]+$ ]]; then
-    DiscordMessage "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
+    DiscordMessage "Update" "Server will update in ${AUTO_UPDATE_WARN_MINUTES} minutes"
 fi
 
 countdown_message "${AUTO_UPDATE_WARN_MINUTES}" "Server will update"

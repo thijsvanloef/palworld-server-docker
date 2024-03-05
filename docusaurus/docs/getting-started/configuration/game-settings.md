@@ -1,10 +1,15 @@
 ---
 sidebar_position: 2
+title: Palworld Server Game Settings
+description: How to change the Palworld Game Settings (PalWorldSettings.ini file) using Docker Environment variables.
+keywords: [Palworld, palworld dedicated server, Palworld PalWorldSettings.ini, palworld game settings, PalWorldSettings.ini]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Game Settings
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Server Game Settings
 
-# Game Settings
-
-Changing Game Settings with Environment variables.
+How to change the Palworld Game Settings (PalWorldSettings.ini file) using Docker Environment variables.
 
 ## With Environment Variables
 
@@ -81,6 +86,7 @@ For example:
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | Use authentication                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | Which ban list to use                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
 | TARGET_MANIFEST_ID | Locks game version to corespond with Manfiest ID from Steam Download Depot. | | See [Manifest ID Table](https://palworld-server-docker.loef.dev/guides/pinning-game-version) |
 | ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |

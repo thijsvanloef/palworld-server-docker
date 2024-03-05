@@ -1,5 +1,9 @@
 # Palworld Dedicated Server Docker
 
+## ⚠️These docs will be deprecated and removed on March 31 2024⚠️
+
+Please use the official docs: [https://palworld-server-docker.loef.dev/](https://palworld-server-docker.loef.dev/zh/)
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
@@ -238,7 +242,7 @@ docker exec -it palworld-server rcon-cli
 | Info                       | 显示服务器信息。       |
 | Save                       | 保存游戏。          |
 
-请查看 [官方文档](https://tech.palworldgame.com/server-commands) 以获取所有命令。
+请查看 [官方文档](https://tech.palworldgame.com/settings-and-operation/commands) 以获取所有命令。
 
 ## 创建备份
 

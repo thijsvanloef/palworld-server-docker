@@ -1,10 +1,16 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
+title: Palworld Dedicated Server Commands (RCON)
+description: How to use Palworld Dedicated server commands to manage your server, including Kicking, Banning and teleporting players.
+keywords: [Palworld, palworld dedicated server, Palworld Server Commands, Palworld server how to ban player, Palworld server how to kick player]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Server Commands (RCON)
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated Server Commands (RCON)
 
-# Server Commands (RCON)
-
-How to use RCON to interact with the server.
+How to use Palworld Dedicated server commands to manage your server,
+including Kicking, Banning and teleporting players.
 
 ## RCON
 
@@ -38,4 +44,4 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 | Info                             | Show server information.                            |
 | Save                             | Save the world data.                                |
 
-For a full list of commands go to: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+For a full list of commands go to: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)

@@ -1,5 +1,9 @@
 # Palworld 전용 서버 도커
 
+## ⚠️These docs will be deprecated and removed on March 31 2024⚠️
+
+Please use the official docs: [https://palworld-server-docker.loef.dev/](https://palworld-server-docker.loef.dev/ko/)
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
@@ -34,7 +38,7 @@
 다음 스폰서들에게 큰 박수를 보냅니다!
 
 <p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/ShoeBoom"><img src="https://github.com/ShoeBoom.png" width="50px" alt="ShoeBoom" /></a>&nbsp;&nbsp;<a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/doomhound188"><img src="https://github.com/doomhound188.png" width="50px" alt="doomhound188" /></a>&nbsp;&nbsp;<a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/pabumake"><img src="https://github.com/pabumake.png" width="50px" alt="pabumake" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/KiKoS0"><img src="https://github.com/KiKoS0.png" width="50px" alt="KiKoS0" /></a>&nbsp;&nbsp;<a href="https://github.com/inspired-by-nudes"><img src="https://github.com/inspired-by-nudes.png" width="50px" alt="inspired-by-nudes" /></a>&nbsp;&nbsp;<a href="https://github.com/PulsarFTW"><img src="https://github.com/PulsarFTW.png" width="50px" alt="PulsarFTW" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Official Documentation
@@ -161,15 +165,39 @@ docker run -d \
 
 공식 Helm 차트는 별도의 저장소에서 찾을 수 있습니다, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
 
+### 루트권한 없이 실행하기
+
+해당 항목은 고급사용자를 위한 항목입니다.
+
+해당 컨테이너는 [기본사용자 덮어씌우기](https://docs.docker.com/engine/reference/run/#user)가 가능합니다. 해당 이미지의 기본사용자는 루트입니다.
+
+사용자가 유저와 그룹을 설정하기 떄문에 `PUID`와 `PGID`가 무시됩니다.
+
+UID를 찾으려면: `id -u`를 사용합니다.
+GID를 찾으려면: `id -g`를 사용합니다.
+
+반드시 유저를 `NUMBERICAL_UID:NUMBERICAL_GID`와 같이 설정하셔야합니다.
+
+아래는 UID를 1000으로 GID를 1001로 가정해 작성된 예제문입니다.
+
+* docker run에서 `--user 1000:1001 \`를 마지막 줄위에 추가하세요.
+* docker compose에서 `user: 1000:1001`를 포트설정위에 추가하세요.
+
+만약 다른 UID/GID를 사용해 실행하려면 디렉토리의 소유권을 변경해야합니다: `chown UID:GID palworld/` 또는 모든 계정의 권한를 수정하셔야합니다: `chmod o=rwx palworld/`
+
+#### helm chart 사용
+
+공식 helm chart 사용법은 다른 리포지토리에 있습니다, [palworld-server-chart](https://github.com/Twinki14/palworld-server-chart)
+
 ### 환경 변수
 
 다음 값을 사용하여 부팅 시 서버의 설정을 변경할 수 있습니다.
 서버를 시작하기 전에 다음 환경 변수를 설정하는 것이 좋습니다:
 
-- PLAYERS
-- PORT
-- PUID
-- PGID
+* PLAYERS
+* PORT
+* PUID
+* PGID
 
 | 변수명             | 정보                                                                                                                                                     | 기본값 | 허용되는 값                                                                                            |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------ |
@@ -200,6 +228,8 @@ docker run -d \
 | AUTO_REBOOT_CRON_EXPRESSION  | 자동 서버 재부팅 주기 | 0 0 \* \* \* | Cron 표현식 필요 - [cron을 이용한 자동 재부팅 설정](#cron을-이용한-자동-재부팅-설정) 참조 |
 | AUTO_REBOOT_ENABLED | 자동 서버 재부팅 활성화 여부 | false | true/false |
 | AUTO_REBOOT_WARN_MINUTES | 재부팅 대기 시간 설정(분), 이때 사용자는 분 단위로 서버 종료에 대한 알림을 받습니다. | 5 | !0 |
+| AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE | 온라인 사용자가 있어도 재시작.                                                                                                                                | false                      | true/false                                                                                                        |
+| TARGET_MANIFEST_ID | 게임의 버젼을 스팀 다운로드 디포의 해당 Manifest ID로 고정.                                                                                                                       |                           | [Manifest ID Table](#버전별Manifest ID표) 보 |
 | DISCORD_WEBHOOK_URL | 디스코드 웹훅 URL | | `https://discord.com/api/webhooks/<webhook_id>` |
 | DISCORD_CONNECT_TIMEOUT | 디스코드 명령 초기 연결 시간 초과 | 30 | !0 |
 | DISCORD_MAX_TIMEOUT | Discord 총 훅 시간 초과 | 30 | !0 |
@@ -209,6 +239,9 @@ docker run -d \
 | DISCORD_PRE_SHUTDOWN_MESSAGE | 서버가 종료되기 시작할 때 전송되는 디스코드 메시지 | Server is shutting down... | "string" |
 | DISCORD_POST_SHUTDOWN_MESSAGE | 서버가 멈췄을 때 전송되는 디스코드 메시지 | Server is stopped! | "string" |
 | DISABLE_GENERATE_SETTINGS | 자동으로 PalWorldSettings.ini를 생성할지 여부 | false | true/false |
+| DISABLE_GENERATE_ENGINE  | 자동으로 Engine.ini를 생성할지 여부  | true                      | true/false           |
+| ENABLE_PLAYER_LOGGING     | 플레이어가 접속 또는 종료시 로깅과 공지를 활성화 | true         | true/false |
+| PLAYER_LOGGING_POLL_PERIOD        | 플레이어의 접속과 종료를 확인하기위한 폴링시간(초) 설정| 5               | !0 |
 
 *설정하는 것을 적극 권장합니다.
 
@@ -255,7 +288,7 @@ docker exec -it palworld-server rcon-cli "Broadcast Hello everyone"
 | Info                             | 서버 정보를 표시합니다.                            |
 | Save                             | 월드 정보를 저장합니다.                            |
 
-전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/server-commands](https://tech.palworldgame.com/server-commands)
+전체 명령어 목록을 보려면 다음으로 이동하세요: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
 
 ## 백업 만들기
 
@@ -329,8 +362,8 @@ BACKUP_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경합니다.
 
 이 서버에서 자동 업데이트를 사용하려면 다음 환경 변수들을 `true`로 **설정해야 합니다**:
 
-- RCON_ENABLED
-- UPDATE_ON_BOOT
+* RCON_ENABLED
+* UPDATE_ON_BOOT
 
 > [!IMPORTANT]
 > 도커 `restart` 정책이 `always` 또는 `unless-stopped`로 설정 되어있지 않다면, 서버는 종료되고
@@ -380,15 +413,15 @@ AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요.
 
 서버 설정을 환경 변수로 바꾸는 과정은 다음과 같은 규칙을 따릅니다 (몇가지 예외 있음):
 
-- 모두 대문자로 작성
-- 밑줄을 삽입하여 단어를 분할
-- 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
+* 모두 대문자로 작성
+* 밑줄을 삽입하여 단어를 분할
+* 한 글자로 시작하는 설정(예: 'b')의 경우 그 한 글자를 제거
 
 아래는 예시입니다:
 
-- Difficulty -> DIFFICULTY
-- PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
-- bIsPvP -> IS_PVP
+* Difficulty -> DIFFICULTY
+* PalSpawnNumRate -> PAL_SPAWN_NUM_RATE
+* bIsPvP -> IS_PVP
 
 | 변수                                  | 설명                                                    | 기본값                                                                                | 허용값                          |
 |-------------------------------------------|----------------------------------------------------------------|----------------------------------------------------------------------------------------------|----------------------------------------|
@@ -445,6 +478,7 @@ AUTO_REBOOT_CRON_EXPRESSION을 설정하여 기본 스케줄을 변경하세요.
 | REGION                                    | Region                                                         |                                                                                              | String                                 |
 | USEAUTH                                   | 인증 사용 여부                                             | True                                                                                         | Boolean                                |
 | BAN_LIST_URL                              | 사용할 BAN 목록                                          | [https://api.palworldgame.com/api/banlist.txt](https://api.palworldgame.com/api/banlist.txt) | string                                 |
+| SHOW_PLAYER_LIST                          | Enable show player list                                        | True                                                                                         | Boolean                                |
 
 ### 수동 설정
 
@@ -485,6 +519,26 @@ docker compose로 디스코드 메시지 보내기:
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde
 - DISCORD_PRE_UPDATE_BOOT_MESSAGE=Server is updating...
 ```
+
+## 게임버전 고정하기
+
+>[!WARNING]
+>다운그레이딩이 가능하나 세이브 파일에 어떠한 영향이 있을지 알 수 없습니다.
+>
+>**본인의 책임하에 하세요!**
+
+만약 **TARGET_MANIFEST_ID** 환경변수가 정해졌다면, 서버의 버전은 특정 manifest로 고정됩니다.
+Manifest는 게임의 릴리즈 시간/업데이트 버젼에 따라 정해집니다. Manifest는 SteamCMD나 [SteamDB](https://steamdb.info/depot/2394012/manifests/)와
+같은 웹사이트에서 검색가능합니다.
+
+### 버전별 Manifest ID 표
+
+| Version | Manifest ID          |
+|---------|----------------------|
+| 1.3.0   | 1354752814336157338  |
+| 1.4.0   | 4190579964382773830  |
+| 1.4.1   | 6370735655629434989  |
+| 1.5.0   | 3750364703337203431  |
 
 ## 이슈/기능 요청
 
