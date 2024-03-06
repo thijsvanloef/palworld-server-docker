@@ -145,11 +145,13 @@ DiscordMessage() {
   local title="$1"
   local message="$2"
   local level="$3"
+  local enabled="$4"
+  local webhook_url="$5"
   if [ -z "$level" ]; then
     level="info"
   fi
   if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-    /home/steam/server/discord.sh "$title" "$message" "$level" &
+    /home/steam/server/discord.sh "$title" "$message" "$level" "$enabled" "$webhook_url" &
   fi
 }
 
