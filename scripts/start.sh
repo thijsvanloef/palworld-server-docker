@@ -6,9 +6,9 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
-dirExists "/palworld" || exit
-isWritable "/palworld" || exit
-isExecutable "/palworld" || exit
+dir_exists "/palworld" || exit
+is_writable "/palworld" || exit
+is_executable "/palworld" || exit
 
 cd /palworld || exit
 
@@ -16,7 +16,7 @@ cd /palworld || exit
 architecture=$(dpkg --print-architecture)
 
 if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
-    LogInfo "ARM compatibility mode enabled"
+    log_info "ARM compatibility mode enabled"
     export DEBUGGER="/usr/bin/qemu-i386-static"
 
     # Arbitrary number to avoid CPU_MHZ warning due to qemu and steamcmd
@@ -26,8 +26,8 @@ fi
 IsInstalled
 ServerInstalled=$?
 if [ "$ServerInstalled" == 1 ]; then
-    LogInfo "Server installation not detected."
-    LogAction "Starting Installation"
+    log_info "Server installation not detected."
+    log_action "Starting Installation"
     InstallServer
 fi
 
@@ -36,7 +36,7 @@ if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
     UpdateRequired
     IsUpdateRequired=$?
     if [ "$IsUpdateRequired" == 0 ]; then
-        LogAction "Starting Update"
+        log_action "Starting Update"
         InstallServer
     fi
 fi
@@ -51,15 +51,15 @@ if [ "$architecture" == "arm64" ]; then
 
     case $pagesize in
         8192)
-            LogInfo "Using Box64 for 8k pagesize"
+            log_info "Using Box64 for 8k pagesize"
             box64_binary="box64-8k"
             ;;
         16384)
-            LogInfo "Using Box64 for 16k pagesize"
+            log_info "Using Box64 for 16k pagesize"
             box64_binary="box64-16k"
             ;;
         65536)
-            LogInfo "Using Box64 for 64k pagesize"
+            log_info "Using Box64 for 64k pagesize"
             box64_binary="box64-64k"
             ;;
     esac
@@ -73,13 +73,13 @@ fi
 
 
 #Validate Installation
-if ! fileExists "${STARTCOMMAND[0]}"; then
-    LogError "Server Not Installed Properly"
+if ! file_exists "${STARTCOMMAND[0]}"; then
+    log_error "Server Not Installed Properly"
     exit 1
 fi
 
-isReadable "${STARTCOMMAND[0]}" || exit
-isExecutable "${STARTCOMMAND[0]}" || exit
+is_readable "${STARTCOMMAND[0]}" || exit
+is_executable "${STARTCOMMAND[0]}" || exit
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
@@ -104,12 +104,12 @@ if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431" ] && [ "${RCON_ENABLED,,}"
 fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
-  LogAction "GENERATING CONFIG"
-  LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
+  log_action "GENERATING CONFIG"
+  log_warn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
 
   # shellcheck disable=SC2143
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
-      LogAction "GENERATING CONFIG"
+      log_action "GENERATING CONFIG"
       # Server will generate all ini files after first run.
       if [ "$architecture" == "arm64" ]; then
           timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
@@ -122,33 +122,33 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
       cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
   fi
 else
-  LogAction "GENERATING CONFIG"
-  LogInfo "Using Env vars to create PalWorldSettings.ini"
+  log_action "GENERATING CONFIG"
+  log_info "Using Env vars to create PalWorldSettings.ini"
   /home/steam/server/compile-settings.sh || exit
 fi
 
 if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
-LogAction "GENERATING CRONTAB"
+log_action "GENERATING CRONTAB"
 truncate -s 0  "/home/steam/server/crontab"
 if [ "${BACKUP_ENABLED,,}" = true ]; then
-    LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
-    LogInfo "Adding cronjob for auto backups"
+    log_info "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
+    log_info "Adding cronjob for auto backups"
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
-    LogInfo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
-    LogInfo "Adding cronjob for auto updating"
+    log_info "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
+    log_info "Adding cronjob for auto updating"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
-    LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
-    LogInfo "Adding cronjob for auto rebooting"
+    log_info "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
+    log_info "Adding cronjob for auto rebooting"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
@@ -156,9 +156,9 @@ fi
 if { [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; } || [ "${BACKUP_ENABLED,,}" = true ] || \
     [ "${AUTO_REBOOT_ENABLED,,}" = true ]; then
     supercronic "/home/steam/server/crontab" &
-    LogInfo "Cronjobs started"
+    log_info "Cronjobs started"
 else
-    LogInfo "No Cronjobs found"
+    log_info "No Cronjobs found"
 fi
 
 # Configure RCON settings
@@ -176,11 +176,11 @@ if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}"
     fi
 fi
 
-LogAction "Starting Server"
-DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
+log_action "Starting Server"
+discord_message "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
 
-DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
+discord_message "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
 exit 0

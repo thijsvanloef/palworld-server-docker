@@ -53,7 +53,7 @@ EOL
 # Returns 1 if Update NOT Required
 # Returns 2 if Check Failed
 UpdateRequired() {
-  LogAction "Checking for new update"
+  log_action "Checking for new update"
 
   #define local variables
   local CURRENT_MANIFEST LATEST_MANIFEST temp_file http_code updateAvailable
@@ -63,8 +63,8 @@ UpdateRequired() {
   http_code=$(curl https://api.steamcmd.net/v1/info/2394010 --output "$temp_file" --silent --location --write-out "%{http_code}")
 
   if [ "$http_code" -ne 200 ]; then
-      LogError "There was a problem reaching the Steam api. Unable to check for updates!"
-      DiscordMessage "Install" "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
+      log_error "There was a problem reaching the Steam api. Unable to check for updates!"
+      discord_message "Install" "There was a problem reaching the Steam api. Unable to check for updates!" "failure"
       rm "$temp_file"
       return 2
   fi
@@ -74,19 +74,19 @@ UpdateRequired() {
   rm "$temp_file"
 
   if [ -z "$LATEST_MANIFEST" ]; then
-      LogError "The server response does not contain the expected BuildID. Unable to check for updates!"
-      DiscordMessage "Install" "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
+      log_error "The server response does not contain the expected BuildID. Unable to check for updates!"
+      discord_message "Install" "Steam servers response does not contain the expected BuildID. Unable to check for updates!" "failure"
       return 2
   fi
 
   # Parse current manifest from steam files
   CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
-  LogInfo "Current Version: $CURRENT_MANIFEST"
+  log_info "Current Version: $CURRENT_MANIFEST"
 
   # Log any updates available
   local updateAvailable=false
   if [ "$CURRENT_MANIFEST" != "$LATEST_MANIFEST" ]; then
-    LogInfo "An Update Is Available. Latest Version: $LATEST_MANIFEST."
+    log_info "An Update Is Available. Latest Version: $LATEST_MANIFEST."
     updateAvailable=true
   fi
 
@@ -96,18 +96,18 @@ UpdateRequired() {
   fi
 
   if [ -n "${TARGET_MANIFEST_ID}" ] && [ "$CURRENT_MANIFEST" != "${TARGET_MANIFEST_ID}" ]; then
-    LogInfo "Game not at target version. Target Version: ${TARGET_MANIFEST_ID}"
+    log_info "Game not at target version. Target Version: ${TARGET_MANIFEST_ID}"
     return 0
   fi
 
   # Warn if version is locked
   if [ "$updateAvailable" == false ]; then
-    LogSuccess "The Server is up to date!"
+    log_success "The Server is up to date!"
     return 1
   fi
 
   if [ -n "${TARGET_MANIFEST_ID}" ]; then
-    LogWarn "Unable to update. Locked by TARGET_MANIFEST_ID."
+    log_warn "Unable to update. Locked by TARGET_MANIFEST_ID."
     return 1
   fi
 }
@@ -121,23 +121,23 @@ InstallServer() {
 
   # Check kernel page size for arm64 hosts before running steamcmd
   if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
-    LogWarn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Expect server installation to fail."
+    log_warn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Expect server installation to fail."
   fi
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
-    DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
+    discord_message "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate  +quit
-    DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+    discord_message "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
     return
   fi
 
   local targetManifest
   targetManifest="${TARGET_MANIFEST_ID}"
 
-  LogWarn "Installing Target Version: $targetManifest"
-  DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
+  log_warn "Installing Target Version: $targetManifest"
+  discord_message "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
   /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
   cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   CreateACFFile "$targetManifest"
-  DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+  discord_message "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
 }

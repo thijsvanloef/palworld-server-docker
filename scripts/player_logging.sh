@@ -15,7 +15,7 @@ get_playername(){
 # Wait until rcon port is open
 while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
     sleep 5
-    LogInfo "Waiting for RCON port to open to show player logging..."
+    log_info "Waiting for RCON port to open to show player logging..."
 done
 
 while true; do
@@ -44,21 +44,21 @@ while true; do
         # Notify Discord and log all players who have left
         for player in "${players_who_left_list[@]}"; do
             player_name=$( get_playername "${player}" )
-            LogInfo "${player_name} has left"
+            log_info "${player_name} has left"
             broadcast_command "${player_name} has left"
 
 	    # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE//\$\{player_name\}/${player_name}}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
+            discord_message "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE//\$\{player_name\}/${player_name}}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
         done
 
         # Notify Discord and log all players who have joined
         for player in "${players_who_joined_list[@]}"; do
             player_name=$( get_playername "${player}" )
-            LogInfo "${player_name} has joined"
+            log_info "${player_name} has joined"
             broadcast_command "${player_name} has joined"
 
             # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE//\$\{player_name\}/${player_name}}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
+            discord_message "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE//\$\{player_name\}/${player_name}}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
         done
 
         old_player_list=("${current_player_list[@]}")

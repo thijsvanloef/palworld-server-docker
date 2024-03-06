@@ -8,18 +8,18 @@ engine_dir=$(dirname "$engine_file")
 mkdir -p "$engine_dir" || exit
 # If file exists then check if it is writable
 if [ -f "$engine_file" ]; then
-    if ! isWritable "$engine_file"; then
-        LogError "Unable to create $engine_file"
+    if ! is_writable "$engine_file"; then
+        log_error "Unable to create $engine_file"
         exit 1
     fi
 # If file does not exist then check if the directory is writable
-elif ! isWritable "$engine_dir"; then
+elif ! is_writable "$engine_dir"; then
     # Exiting since the file does not exist and the directory is not writable.
-    LogError "Unable to create $engine_file"
+    log_error "Unable to create $engine_file"
     exit 1
 fi
 
-LogAction "Compiling Engine.ini"
+log_action "Compiling Engine.ini"
 
 export LAN_SERVER_MAX_TICK_RATE=${LAN_SERVER_MAX_TICK_RATE:-120}
 export NET_SERVER_MAX_TICK_RATE=${NET_SERVER_MAX_TICK_RATE:-120}
@@ -57,4 +57,4 @@ cat > "$engine_file" <<EOF
 $(envsubst < /home/steam/server/files/Engine.ini.template)
 EOF
 
-LogSuccess "Compiling Engine.ini done!"
+log_success "Compiling Engine.ini done!"

@@ -4,7 +4,7 @@
 # Checks if a given path is a directory
 # Returns 0 if the path is a directory
 # Returns 1 if the path is not a directory or does not exists and produces an output message
-dirExists() {
+dir_exists() {
     local path="$1"
     local return_val=0
     if ! [ -d "${path}" ]; then
@@ -17,7 +17,7 @@ dirExists() {
 # Checks if a given path is a regular file
 # Returns 0 if the path is a regular file
 # Returns 1 if the path is not a regular file or does not exists and produces an output message
-fileExists() {
+file_exists() {
     local path="$1"
     local return_val=0
     if ! [ -f "${path}" ]; then
@@ -30,7 +30,7 @@ fileExists() {
 # Checks if a given path exists and is readable
 # Returns 0 if the path exists and is readable
 # Returns 1 if the path is not readable or does not exists and produces an output message
-isReadable() {
+is_readable() {
     local path="$1"
     local return_val=0
     if ! [ -e "${path}" ]; then
@@ -43,7 +43,7 @@ isReadable() {
 # Checks if a given path is writable
 # Returns 0 if the path is writable
 # Returns 1 if the path is not writable or does not exists and produces an output message
-isWritable() {
+is_writable() {
     local path="$1"
     local return_val=0
     # Directories may be writable but not deletable causing -w to return false
@@ -66,7 +66,7 @@ isWritable() {
 # Checks if a given path is executable
 # Returns 0 if the path is executable
 # Returns 1 if the path is not executable or does not exists and produces an output message
-isExecutable() {
+is_executable() {
     local path="$1"
     local return_val=0
     if ! [ -x "${path}" ]; then
@@ -85,7 +85,7 @@ get_players_list() {
         return_val=1
     fi
 
-    RCON "ShowPlayers"
+    rcon "ShowPlayers"
     return "$return_val"
 }
 
@@ -116,22 +116,22 @@ export GreenBoldText='\033[1;32m'       # Green
 export YellowBoldText='\033[1;33m'      # Yellow
 export CyanBoldText='\033[1;36m'        # Cyan
 
-LogInfo() {
-  Log "$1" "$WhiteText"
+log_info() {
+  log "$1" "$WhiteText"
 }
-LogWarn() {
-  Log "$1" "$YellowBoldText"
+log_warn() {
+  log "$1" "$YellowBoldText"
 }
-LogError() {
-  Log "$1" "$RedBoldText"
+log_error() {
+  log "$1" "$RedBoldText"
 }
-LogSuccess() {
-  Log "$1" "$GreenBoldText"
+log_success() {
+  log "$1" "$GreenBoldText"
 }
-LogAction() {
-  Log "$1" "$CyanBoldText" "****" "****"
+log_action() {
+  log "$1" "$CyanBoldText" "****" "****"
 }
-Log() {
+log() {
   local message="$1"
   local color="$2"
   local prefix="$3"
@@ -141,7 +141,7 @@ Log() {
 
 # Send Discord Message
 # Level is optional variable defaulting to info
-DiscordMessage() {
+discord_message() {
   local title="$1"
   local message="$2"
   local level="$3"
@@ -156,7 +156,7 @@ DiscordMessage() {
 }
 
 # RCON Call
-RCON() {
+rcon() {
   local args="$1"
   rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
@@ -170,9 +170,9 @@ broadcast_command() {
     # Replaces spaces with underscore
     local message="${1// /_}"
     if [[ $TEXT = *[![:ascii:]]* ]]; then
-        LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
+        log_warn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
         return_val=1
-    elif ! RCON "broadcast ${message}" > /dev/null; then
+    elif ! rcon "broadcast ${message}" > /dev/null; then
         return_val=1
     fi
     return "$return_val"
@@ -183,7 +183,7 @@ broadcast_command() {
 # Returns 1 if it is not able to save
 save_server() {
     local return_val=0
-    if ! RCON save; then
+    if ! rcon save; then
         return_val=1
     fi
     return "$return_val"
@@ -196,7 +196,7 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if ! RCON "DoExit"; then
+        if !"DoExit"; then
             return_val=1
         fi
     else
