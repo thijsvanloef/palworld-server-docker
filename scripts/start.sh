@@ -12,10 +12,7 @@ isExecutable "/palworld" || exit
 
 cd /palworld || exit
 
-# Get the architecture using dpkg
-architecture=$(dpkg --print-architecture)
-
-if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
+if [ "${ARCH}" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
     LogInfo "ARM compatibility mode enabled"
     export DEBUGGER="/usr/bin/qemu-i386-static"
 
@@ -31,18 +28,7 @@ if [ "$ServerInstalled" == 1 ]; then
     InstallServer
 fi
 
-# Update Only If Already Installed
-if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    UpdateRequired
-    IsUpdateRequired=$?
-    if [ "$IsUpdateRequired" == 0 ]; then
-        LogAction "Starting Update"
-        InstallServer
-    fi
-fi
-
-# Check if the architecture is arm64
-if [ "$architecture" == "arm64" ]; then
+if [ "${ARCH}" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     cp ./PalServer.sh ./PalServer-arm64.sh
 
@@ -70,6 +56,18 @@ if [ "$architecture" == "arm64" ]; then
 else
     STARTCOMMAND=("./PalServer.sh")
 fi
+
+
+# Update Only If Already Installed
+if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
+    UpdateRequired
+    IsUpdateRequired=$?
+    if [ "$IsUpdateRequired" == 0 ]; then
+        LogAction "Starting Update"
+        InstallServer
+    fi
+fi
+
 
 
 #Validate Installation
@@ -111,7 +109,7 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
       LogAction "GENERATING CONFIG"
       # Server will generate all ini files after first run.
-      if [ "$architecture" == "arm64" ]; then
+      if [ "${ARCH}" == "arm64" ]; then
           timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
       else
           timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
@@ -153,14 +151,6 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
-if { [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; } || [ "${BACKUP_ENABLED,,}" = true ] || \
-    [ "${AUTO_REBOOT_ENABLED,,}" = true ]; then
-    supercronic "/home/steam/server/crontab" &
-    LogInfo "Cronjobs started"
-else
-    LogInfo "No Cronjobs found"
-fi
-
 # Configure RCON settings
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
@@ -168,19 +158,14 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && [ "${RCON_ENABLED,,}" = true ]; then
-    if [[ "$(id -u)" -eq 0 ]]; then
-        su steam -c /home/steam/server/player_logging.sh &
+if [ "${ENABLE_PLAYER_LOGGING,,}" = true ]; then
+    if [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && [ "${RCON_ENABLED}" = true ]; then
+        LogInfo "Player Logging enabled"
+        mv -f /home/steam/server/services/conf.d/palworld_player_logging.disabled /home/steam/server/services/conf.d/palworld_player_logging.conf
     else
-        /home/steam/server/player_logging.sh &
+        LogWarn "Unable to enable player logging" 
+        mv -f /home/steam/server/services/conf.d/palworld_player_logging.conf /home/steam/server/services/conf.d/palworld_player_logging.disabled
     fi
 fi
 
-LogAction "Starting Server"
-DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success"
-
-echo "${STARTCOMMAND[*]}"
-"${STARTCOMMAND[@]}"
-
-DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure"
 exit 0

@@ -23,42 +23,11 @@ if ! [ -w "/palworld" ]; then
 fi
 
 mkdir -p /palworld/backups
-
-# shellcheck disable=SC2317
-term_handler() {
-  DiscordMessage "Shutdown" "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
-
-    if ! shutdown_server; then
-        # Does not save
-        kill -SIGTERM "$(pidof PalServer-Linux-Test)"
-    fi
-
-    tail --pid="$killpid" -f 2>/dev/null
-}
-
-trap 'term_handler' SIGTERM
-
 if [[ "$(id -u)" -eq 0 ]]; then
-    su steam -c ./start.sh &
+    su steam -c ./start.sh
 else
-    ./start.sh &
-fi
-# Process ID of su
-killpid="$!"
-wait "$killpid"
-
-mapfile -t backup_pids < <(pgrep backup)
-if [ "${#backup_pids[@]}" -ne 0 ]; then
-    LogInfo "Waiting for backup to finish"
-    for pid in "${backup_pids[@]}"; do
-        tail --pid="$pid" -f 2>/dev/null
-    done
+    ./start.sh
 fi
 
-mapfile -t restore_pids < <(pgrep restore)
-if [ "${#restore_pids[@]}" -ne 0 ]; then
-    LogInfo "Waiting for restore to finish"
-    for pid in "${restore_pids[@]}"; do
-        tail --pid="$pid" -f 2>/dev/null
-    done
-fi
+cp /home/steam/server/services/supervisord.conf /etc/supervisor/supervisord.conf
+exec /usr/bin/supervisord --configuration=/etc/supervisor/supervisord.conf

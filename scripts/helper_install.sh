@@ -141,3 +141,45 @@ InstallServer() {
   CreateACFFile "$targetManifest"
   DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success"
 }
+
+# Builds the start command of the palworld server
+# Returns 0 and outputs the start command if everything is ok
+# Returns 1 if the Server is not found or has the wrong permissions
+BuildStartCommand() {
+    local command
+    # Check if the architecture is arm64
+    if [ "${ARCH}" == "arm64" ]; then
+        command=("/palworld/PalServer-arm64.sh")
+    else
+        command=("/palworld/PalServer.sh")
+    fi
+
+    #Validate Installation
+    if ! fileExists "${command[0]}"; then
+        LogError "Server Not Installed Properly"
+        return 1
+    fi
+
+    isReadable "${command[0]}" || return 1
+    isExecutable "${command[0]}" || return 1
+
+    # Prepare Arguments
+    if [ -n "${PORT}" ]; then
+        command+=("-port=${PORT}")
+    fi
+
+    if [ -n "${QUERY_PORT}" ]; then
+        command+=("-queryport=${QUERY_PORT}")
+    fi
+
+    if [ "${COMMUNITY,,}" = true ]; then
+        command+=("EpicApp=PalServer")
+    fi
+
+    if [ "${MULTITHREADING,,}" = true ]; then
+        command+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    fi
+
+    echo "${command[*]}"
+    return 0
+}

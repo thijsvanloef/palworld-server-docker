@@ -52,6 +52,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
     netcat-traditional=1.10-47 \
+    supervisor=4.2.5-1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -71,6 +72,7 @@ RUN case ${TARGETARCH} in \
     && mv supercronic /usr/local/bin/supercronic
 
 ENV HOME=/home/steam \
+    ARCH=${TARGETARCH} \
     PORT= \
     PUID=1000 \
     PGID=1000 \
@@ -115,8 +117,9 @@ ENV HOME=/home/steam \
     DISABLE_GENERATE_ENGINE=true
 
 COPY ./scripts /home/steam/server/
+COPY ./services /home/steam/server/services/
 
-RUN chmod +x /home/steam/server/*.sh && \
+RUN chmod +x /home/steam/server/*.sh /home/steam/server/services/listener/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
     mv /home/steam/server/restore.sh /usr/local/bin/restore
@@ -133,4 +136,4 @@ HEALTHCHECK --start-period=5m \
     CMD pgrep "PalServer-Linux" > /dev/null || exit 1
 
 EXPOSE ${PORT} ${RCON_PORT}
-ENTRYPOINT ["/home/steam/server/init.sh"]
+ENTRYPOINT [ "/home/steam/server/init.sh" ]
