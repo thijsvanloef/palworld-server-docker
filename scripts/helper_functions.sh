@@ -196,7 +196,7 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if !"DoExit"; then
+        if ! "DoExit"; then
             return_val=1
         fi
     else
