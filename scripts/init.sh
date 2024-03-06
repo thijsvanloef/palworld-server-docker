@@ -26,7 +26,7 @@ mkdir -p /palworld/backups
 
 # shellcheck disable=SC2317
 term_handler() {
-  DiscordMessage "Shutdown" "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress"
+  DiscordMessage "Shutdown" "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress" "${DISCORD_PRE_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_PRE_SHUTDOWN_MESSAGE_URL}"
 
     if ! shutdown_server; then
         # Does not save

@@ -16,6 +16,8 @@ DISCORD_GREEN=52224
 TITLE=$1
 MESSAGE=$2
 LEVEL=$3
+ENABLED=$4
+URL=$5
 
 if [ -n "${DISCORD_CONNECT_TIMEOUT}" ] && [[ "${DISCORD_CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
     CONNECT_TIMEOUT=$DISCORD_CONNECT_TIMEOUT
@@ -58,5 +60,13 @@ else
 fi
 
 JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)")
-LogInfo "Sending Discord json: ${JSON}"
-curl -sfSL --connect-timeout "$CONNECT_TIMEOUT" --max-time "$MAX_TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_WEBHOOK_URL"
+
+if [ "$ENABLED" = true ]; then
+    if [ "$URL" == "" ]; then
+        DISCORD_URL="$DISCORD_WEBHOOK_URL"
+    else
+        DISCORD_URL="$URL"
+    fi
+    LogInfo "Sending Discord json: ${JSON}"
+    curl -sfSL --connect-timeout "$CONNECT_TIMEOUT" --max-time "$MAX_TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_URL"
+fi
