@@ -23,21 +23,21 @@ if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; t
     export CPU_MHZ=2000
 fi
 
-IsInstalled
+is_installed
 ServerInstalled=$?
 if [ "$ServerInstalled" == 1 ]; then
     log_info "Server installation not detected."
     log_action "Starting Installation"
-    InstallServer
+    install_server
 fi
 
 # Update Only If Already Installed
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    UpdateRequired
+    update_required
     IsUpdateRequired=$?
     if [ "$IsUpdateRequired" == 0 ]; then
         log_action "Starting Update"
-        InstallServer
+        install_server
     fi
 fi
 

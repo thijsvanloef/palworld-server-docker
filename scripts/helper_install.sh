@@ -6,13 +6,13 @@ source "/home/steam/server/helper_functions.sh"
 
 # Returns 0 if game is installed
 # Returns 1 if game is not installed
-IsInstalled() {
+is_installed() {
   if  [ -e /palworld/PalServer.sh ] && [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
     return 0
   fi
   return 1
 }
-CreateACFFile() {
+create_acf_file() {
   local manifestId="$1"
 cat > /palworld/steamapps/appmanifest_2394010.acf  << EOL
 "AppState" {
@@ -52,7 +52,7 @@ EOL
 # Returns 0 if Update Required
 # Returns 1 if Update NOT Required
 # Returns 2 if Check Failed
-UpdateRequired() {
+update_required() {
   log_action "Checking for new update"
 
   #define local variables
@@ -112,7 +112,7 @@ UpdateRequired() {
   fi
 }
 
-InstallServer() {
+install_server() {
   # Get the architecture using dpkg
   architecture=$(dpkg --print-architecture)
 
@@ -138,6 +138,6 @@ InstallServer() {
   discord_message "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
   /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
   cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
-  CreateACFFile "$targetManifest"
+  create_acf_file "$targetManifest"
   discord_message "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
 }

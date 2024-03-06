@@ -6,7 +6,7 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
-UpdateRequired
+update_required
 updateRequired=$?
 # Check if Update was actually required
 if [ "$updateRequired" != 0 ]; then
