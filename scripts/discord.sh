@@ -60,13 +60,13 @@ else
 fi
 
 JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)")
-LogInfo "Sending Discord json: ${JSON}"
 
-if [ "$ENABLED" ]; then
+if [ "$ENABLED" = true ]; then
     if [ "$URL" == "" ]; then
         DISCORD_URL="$DISCORD_WEBHOOK_URL"
     else
         DISCORD_URL="$URL"
     fi
+    LogInfo "Sending Discord json: ${JSON}"
     curl -sfSL --connect-timeout "$CONNECT_TIMEOUT" --max-time "$MAX_TIMEOUT" -H "Content-Type: application/json" -d "$JSON" "$DISCORD_URL"
 fi
