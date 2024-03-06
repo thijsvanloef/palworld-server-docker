@@ -70,6 +70,7 @@ RUN case ${TARGETARCH} in \
     && chmod +x supercronic \
     && mv supercronic /usr/local/bin/supercronic
 
+# hadolint ignore=DL3044
 ENV HOME=/home/steam \
     PORT= \
     PUID=1000 \
