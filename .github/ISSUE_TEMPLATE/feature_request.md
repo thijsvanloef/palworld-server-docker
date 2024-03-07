@@ -24,4 +24,4 @@ Add any other context or screenshots about the feature request here.
 
 ## Feature Report Checklist
 
-* [ ] I am willing to implement this feature
+- [ ] I am willing to implement this feature

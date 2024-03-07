@@ -13,7 +13,7 @@
 
 ## Checklist before requesting a review
 
-* [ ] I have performed a self-review/test of my code
-* [ ] I've added documentation about this change to the [docs](https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus/docs).
-* [ ] I've not introduced breaking changes.
-* [ ] My changes do not violate linting rules.
+- [ ] I have performed a self-review/test of my code
+- [ ] I've added documentation about this change to the [docs](https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus/docs).
+- [ ] I've not introduced breaking changes.
+- [ ] My changes do not violate linting rules.

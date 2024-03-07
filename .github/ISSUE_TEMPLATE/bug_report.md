@@ -72,3 +72,4 @@ Steps to reproduce the behavior:
 - [ ] I searched for my issue on the [Known issues page](https://palworld-server-docker.loef.dev/known-issues)
 - [ ] I searched for my issue in the [Closed issues](https://github.com/thijsvanloef/palworld-server-docker/issues?q=is%3Aissue+is%3Aclosed)
 - [ ] I have included all relevant information required above.
+- [ ] I am willing to fox this bug
