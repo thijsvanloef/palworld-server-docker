@@ -35,8 +35,8 @@ Steps to reproduce the behavior:
 ## OS information (IMPORTANT)
 
 - OS:  <!-- e.g. Windows 10, Ubuntu, Synology DSM -->
-- Palworld Version:  <!--e.g. 0.1.4.0 -->
-- Docker Image Version:  <!--e.g. 0.21.0 -->
+- Palworld Version:  <!--e.g. 0.1.5.1 -->
+- Docker Image Version:  <!--e.g. 0.32.0 -->
 
 ## Hardware information (IMPORTANT)
 
@@ -72,4 +72,4 @@ Steps to reproduce the behavior:
 - [ ] I searched for my issue on the [Known issues page](https://palworld-server-docker.loef.dev/known-issues)
 - [ ] I searched for my issue in the [Closed issues](https://github.com/thijsvanloef/palworld-server-docker/issues?q=is%3Aissue+is%3Aclosed)
 - [ ] I have included all relevant information required above.
-- [ ] I am willing to fox this bug
+- [ ] I am willing to fix this bug
