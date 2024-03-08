@@ -2,7 +2,7 @@
 name: Bug/issue report
 about: IF YOU ARE UNSURE, USE THIS ONE!
 title: ''
-labels: ''
+labels: 'triage'
 assignees: ''
 
 ---
@@ -32,29 +32,44 @@ Steps to reproduce the behavior:
 
 <!-- If applicable, add screenshots to help explain your problem. -->
 
-## OS information
+## OS information (IMPORTANT)
 
 - OS:  <!-- e.g. Windows 10, Ubuntu, Synology DSM -->
 - Palworld Version:  <!--e.g. 0.1.4.0 -->
 - Docker Image Version:  <!--e.g. 0.21.0 -->
 
-## Hardware information
+## Hardware information (IMPORTANT)
 
 - CPU:  <!-- e.g. quad core Intel, duo core AMD -->
 - Memory:  <!-- e.g. 8GB, 16GB ddr3/4/5 -->
 
-## docker-compose.yml contents
+## docker-compose.yml contents (IMPORTANT)
+<!-- markdownlint-disable-next-line -->
+<details><summary>docker-compose.yml</summary>
 
 ```yaml
 # docker-compose.yml contents here
 ```
 
-## Container/Host Logs
+</details>
+
+## Container/Host Logs (IMPORTANT)
+<!-- markdownlint-disable-next-line -->
+<details><summary>Logs</summary>
 
 ```log
 <!-- Insert logs here -->
 ```
 
+</details>
+
 ## Additional context
 
 <!-- Add any other context about the problem here. -->
+
+## Bug Report Checklist
+
+- [ ] I searched for my issue on the [Known issues page](https://palworld-server-docker.loef.dev/known-issues)
+- [ ] I searched for my issue in the [Closed issues](https://github.com/thijsvanloef/palworld-server-docker/issues?q=is%3Aissue+is%3Aclosed)
+- [ ] I have included all relevant information required above.
+- [ ] I am willing to fox this bug
