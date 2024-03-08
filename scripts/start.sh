@@ -184,3 +184,17 @@ echo "${STARTCOMMAND[*]}"
 
 DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
 exit 0
+
+# Temporarily adding here before we determine where in the sequence it should be added
+
+# Read the local version from the VERSION file
+current_version=$(head -n 1 /home/steam/server/VERSION)
+
+# Query GitHub API to get the latest tag version
+latest_version=$(curl -s "https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest" | grep -oP '"tag_name": "\K[^"]+')
+
+# Check if the local version is older than the latest version and link to documentation if not
+if [[ "$current_version" != "$latest_version" ]]; then
+    echo "Your container image is outdated. Current Version is ${current_version}, Latest version is v${latest_version}."
+    echo -e "See '\e]8;;https://palworld-server-docker.loef.dev/guides/updating-container\ahttps://palworld-server-docker.loef.dev/guides/updating-container\e]8;;\a' for instructions on how to update."
+fi
