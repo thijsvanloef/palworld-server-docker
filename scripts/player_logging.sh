@@ -48,7 +48,7 @@ while true; do
             broadcast_command "${player_name} has left"
 
 	    # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE//\$\{player_name\}/${player_name}}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
+            DiscordMessage "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE//player_name/${player_name}}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
         done
 
         # Notify Discord and log all players who have joined
@@ -58,7 +58,7 @@ while true; do
             broadcast_command "${player_name} has joined"
 
             # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE//\$\{player_name\}/${player_name}}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
+            DiscordMessage "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE//player_name/${player_name}}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
         done
 
         old_player_list=("${current_player_list[@]}")
