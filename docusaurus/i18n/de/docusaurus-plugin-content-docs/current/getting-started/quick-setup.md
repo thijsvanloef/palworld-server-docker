@@ -1,19 +1,25 @@
 ---
 sidebar_position: 1
 slug: /
+title: Palworld Dedicated Server-Schnelleinrichtung
+description: Diese Anleitung wird Ihnen dabei helfen, Ihren Palworld Dedicated Server mit Docker zu hosten! Mit dieser Anleitung dauert die Einrichtung des Palworld-Servers  nur ein paar Minuten, und Sie haben einen laufenden Server.
+keywords: [Palworld, palworld dedicated server, schnelleinrichtung palworld dedicated server, palworld server docker, palworld docker]
+image: ../assets/Palworld_Banner.jpg
+sidebar_label: Schnelleinrichtung
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated Server-Schnelleinrichtung
 
-# Schnelleinrichtung
+Diese Anleitung wird Ihnen dabei helfen, Ihren Palworld Dedicated Server mit Docker zu hosten!
+Mit dieser Anleitung dauert die Einrichtung des Palworld-Servers  nur ein paar Minuten, und Sie haben einen laufenden Server.
 
-Lassen Sie uns mit dem dedizierten Palworld-Server loslegen!
+## Voraussetzungen
 
 :::warning
 Zum aktuellen Zeitpunkt können Xbox Gamepass/Xbox-Konsolenspieler nicht an einem dedizierten Server teilnehmen.
 
 Sie müssen sich Spielern mit einem Einladungscode anschließen und sind auf Sitzungen mit maximal 4 Spielern beschränkt.
 :::
-
-## Voraussetzungen
 
 * Virtualisierung im BIOS/UEFI aktiviert
 * [Docker](https://docs.docker.com/engine/install/) installiert

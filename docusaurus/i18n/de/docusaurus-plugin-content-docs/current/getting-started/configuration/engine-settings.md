@@ -1,10 +1,15 @@
 ---
 sidebar_position: 3
+title: Palworld Server Engine-Einstellungen
+description: Anleitung zum Ändern der Palworld Engine-Einstellungen (Engine.ini-Datei) mithilfe von Docker-Umgebungsvariablen.
+keywords: [Palworld, palworld dedicated server, Palworld Engine.ini, palworld engine einstellungen]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Engine-Einstellungen
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Server Engine-Einstellungen
 
-# Engine-Einstellungen
-
-Ändern der Engine-Einstellungen mit Umgebungsvariablen.
+Anleitung zum Ändern der Palworld Engine-Einstellungen (Engine.ini-Datei) mithilfe von Docker-Umgebungsvariablen.
 
 ## Mit Umgebungsvariablen
 
