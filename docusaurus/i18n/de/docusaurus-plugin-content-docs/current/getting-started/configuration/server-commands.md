@@ -1,10 +1,16 @@
 ---
 sidebar_position: 4
+title: Palworld Dedicated Serverbefehle (RCON)
+description: Anleitung zur Verwendung von Palworld Dedicated Serverbefehlen zur Verwaltung Ihres Servers, einschließlich Kick, Ban und Teleport von Spielern.
+keywords: [Palworld, palworld dedicated server, Palworld Serverbefehle, Palworld server Spieler bannen, Palworld server Spieler kicken]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Serverbefehle (RCON)
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Dedicated Serverbefehle (RCON)
 
-# Serverbefehle (RCON)
-
-Wie man RCON verwendet, um mit dem Server zu interagieren.
+Anleitung zur Verwendung von Palworld Dedicated Serverbefehlen zur Verwaltung Ihres Servers,
+einschließlich Kick, Ban und Teleport von Spielern.
 
 ## RCON
 

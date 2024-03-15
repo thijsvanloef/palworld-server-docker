@@ -1,10 +1,15 @@
 ---
 sidebar_position: 2
+title: Palworld Server Spieleinstellungen
+description: Wie man die Palworld-Spieleinstellungen (PalWorldSettings.ini-Datei) mithilfe von Docker-Umgebungsvariablen ändert.
+keywords: [Palworld, palworld dedicated server, Palworld PalWorldSettings.ini, palworld spiel einstellungen, PalWorldSettings.ini]
+image: ../../assets/Palworld_Banner.jpg
+sidebar_label: Spieleinstellungen
 ---
+<!-- markdownlint-disable-next-line -->
+# Palworld Server Spieleinstellungen
 
-# Spiel-Einstellungen
-
-Ändern von Spiel-Einstellungen mit Umgebungsvariablen.
+Wie man die Palworld-Spieleinstellungen (PalWorldSettings.ini-Datei) mithilfe von Docker-Umgebungsvariablen ändert.
 
 ## Mit Umgebungsvariablen
 
