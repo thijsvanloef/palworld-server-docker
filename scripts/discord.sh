@@ -11,6 +11,7 @@ DISCORD_YELLOW=15258703
 DISCORD_ORANGE=14177041
 DISCORD_RED=14614528
 DISCORD_GREEN=52224
+DISCORD_FLAGS=0
 
 # Parse arguments
 TITLE=$1
@@ -18,6 +19,10 @@ MESSAGE=$2
 LEVEL=$3
 ENABLED=$4
 URL=$5
+
+if [ "$DISCORD_SUPPRESS_NOTIFICATIONS" = true ]; then
+    DISCORD_FLAGS=4096
+fi
 
 if [ -n "${DISCORD_CONNECT_TIMEOUT}" ] && [[ "${DISCORD_CONNECT_TIMEOUT}" =~ ^[0-9]+$ ]]; then
     CONNECT_TIMEOUT=$DISCORD_CONNECT_TIMEOUT
@@ -59,7 +64,7 @@ else
     COLOR=$DISCORD_BLUE
 fi
 
-JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)")
+JSON=$(jo embeds[]="$(jo title="$TITLE" description="$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
 
 if [ "$ENABLED" = true ]; then
     if [ "$URL" == "" ]; then
