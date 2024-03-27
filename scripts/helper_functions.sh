@@ -259,3 +259,24 @@ countdown_message() {
     fi
     return "$return_val"
 }
+
+# Checks if the container is up to date, links to update documentation if an update is available
+# Return 0 if the container is up to date
+# Return 1 if there is a container update available
+check_container_version() {
+    # Read the local version from the VERSION file
+    local current_version=$(head -n 1 /home/steam/server/VERSION)
+
+    # Query GitHub API to get the latest tag version
+    local latest_version=$(curl -s "https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest" | grep -oP '"tag_name": "\K[^"]+')
+
+    # Check if the local version is older than the latest version and link to documentation if not
+    if [[ "$current_version" != "$latest_version" ]]; then
+        echo "Your container image is outdated. Current Version is ${current_version}, Latest version is v${latest_version}."
+        echo -e "See '\e]8;;https://palworld-server-docker.loef.dev/guides/updating-container\ahttps://palworld-server-docker.loef.dev/guides/updating-container\e]8;;\a' for instructions on how to update."
+        local return_val=1
+    else
+        local return_val=0
+    fi
+    return "$return_val"
+}

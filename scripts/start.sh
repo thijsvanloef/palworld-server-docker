@@ -184,3 +184,6 @@ echo "${STARTCOMMAND[*]}"
 
 DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
 exit 0
+
+# Temporarily adding here before we determine where in the sequence it should be added
+check_container_version
