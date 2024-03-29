@@ -259,3 +259,28 @@ countdown_message() {
     fi
     return "$return_val"
 }
+
+container_version_check() {
+    local current_version
+    local latest_version
+
+    current_version=$(cat /home/steam/server/GIT_VERSION_TAG)
+    latest_version=$(get_latest_version)
+
+    if [ "${current_version}" != "${latest_version}" ]; then
+        LogWarn "New version available: ${latest_version}"
+        LogWarn "Learn how to update the container: https://palworld-server-docker.loef.dev/guides/update-the-container"
+    else
+        LogSuccess "The container is up to date!"
+
+    fi
+}
+# Get latest release version from thijsvanloef/palworld-server-docker repository
+# Returns the latest release version
+get_latest_version() {
+    local latest_version
+
+    latest_version=$(curl https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest -s | jq .name -r)
+
+    echo "$latest_version"
+}

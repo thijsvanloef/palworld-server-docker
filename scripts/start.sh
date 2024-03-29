@@ -103,6 +103,9 @@ if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431" ] && [ "${RCON_ENABLED,,}"
     STARTCOMMAND+=("-rcon")
 fi
 
+LogAction "Checking for available container updates"
+container_version_check
+
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   LogAction "GENERATING CONFIG"
   LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
@@ -130,8 +133,10 @@ fi
 if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
+
 LogAction "GENERATING CRONTAB"
 truncate -s 0  "/home/steam/server/crontab"
+
 if [ "${BACKUP_ENABLED,,}" = true ]; then
     LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
     LogInfo "Adding cronjob for auto backups"
