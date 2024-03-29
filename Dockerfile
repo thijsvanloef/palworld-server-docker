@@ -51,6 +51,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
+    jq=1.6-2.1 \
     netcat-traditional=1.10-47 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -145,6 +146,9 @@ ENV HOME=/home/steam \
     ARM_COMPATIBILITY_MODE=false \
     DISABLE_GENERATE_ENGINE=true
 
+# Passed from Github Actions
+ARG GIT_VERSION_TAG=unspecified
+
 COPY ./scripts /home/steam/server/
 
 RUN chmod +x /home/steam/server/*.sh && \
@@ -153,6 +157,10 @@ RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/restore.sh /usr/local/bin/restore
 
 WORKDIR /home/steam/server
+
+# Make GIT_VERSION_TAG file to be able to check the version
+RUN echo $GIT_VERSION_TAG > GIT_VERSION_TAG
+
 RUN touch rcon.yaml crontab && \
     mkdir -p /home/steam/Steam/package && \
     chown steam:steam /home/steam/Steam/package && \

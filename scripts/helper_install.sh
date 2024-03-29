@@ -53,7 +53,7 @@ EOL
 # Returns 1 if Update NOT Required
 # Returns 2 if Check Failed
 UpdateRequired() {
-  LogAction "Checking for new update"
+  LogAction "Checking for new Palworld Server updates"
 
   #define local variables
   local CURRENT_MANIFEST LATEST_MANIFEST temp_file http_code updateAvailable
@@ -102,7 +102,7 @@ UpdateRequired() {
 
   # Warn if version is locked
   if [ "$updateAvailable" == false ]; then
-    LogSuccess "The Server is up to date!"
+    LogSuccess "The server is up to date!"
     return 1
   fi
 
