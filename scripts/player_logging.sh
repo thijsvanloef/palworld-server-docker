@@ -19,7 +19,7 @@ while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
 done
 
 while true; do
-    server_pid=$(pidof PalServer-Linux-Test)
+    server_pid=$(pidof PalServer-Linux-Shipping)
     if [ -n "${server_pid}" ]; then
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros) while loading
         # Player ID is also 00000000 (8x zeros) when in character creation
