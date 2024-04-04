@@ -98,11 +98,6 @@ if [ "${MULTITHREADING,,}" = true ]; then
     STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
 fi
 
-# fix bug and enable rcon for v0.1.5.0 only
-if [ "${TARGET_MANIFEST_ID}" == "3750364703337203431" ] && [ "${RCON_ENABLED,,}" = true ]; then
-    STARTCOMMAND+=("-rcon")
-fi
-
 LogAction "Checking for available container updates"
 container_version_check
 
