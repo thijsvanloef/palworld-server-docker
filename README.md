@@ -76,7 +76,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
-        - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
+        # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
       environment:
          PUID: 1000
          PGID: 1000
@@ -109,7 +109,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
-        - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
+        # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
       env_file:
          -  .env
       volumes:
@@ -125,7 +125,6 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -p 8212:8212/tcp \
     -v ./palworld:/palworld/ \
     -e PUID=1000 \
     -e PGID=1000 \
@@ -154,7 +153,6 @@ docker run -d \
     --name palworld-server \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
-    -p 8212:8212/tcp \
     -v ./palworld:/palworld/ \
     --env-file .env \
     --restart unless-stopped \
