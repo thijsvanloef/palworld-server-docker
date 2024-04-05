@@ -12,7 +12,7 @@ FILE_PATH="/palworld/backups/palworld-save-${DATE}.tar.gz"
 cd /palworld/Pal/ || exit
 
 LogAction "Creating backup"
-tar -zcf "$FILE_PATH" "Saved/"
+tar -zcf "$FILE_PATH" --exclude "backup" "Saved/"
 
 if [ "$(id -u)" -eq 0 ]; then
     chown steam:steam "$FILE_PATH"
