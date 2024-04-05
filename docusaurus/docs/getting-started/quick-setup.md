@@ -48,6 +48,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
+        # - 8212:8212/tcp   # Port for REST API if REST_API_ENABLED: true
       environment:
          PUID: 1000
          PGID: 1000
@@ -83,6 +84,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
+        # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
       env_file:
          -  .env
       volumes:
