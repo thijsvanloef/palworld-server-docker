@@ -43,5 +43,6 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 | ShowPlayers                      | Show information on all connected players.          |
 | Info                             | Show server information.                            |
 | Save                             | Save the world data.                                |
+| UnBanPlayer (SteamID)            | Unban player (SteamID) from the server.             |
 
 For a full list of commands go to: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
