@@ -17,7 +17,9 @@ How to change the Palworld Engine Settings (Engine.ini file) using Docker Enviro
 These environment variables and settings are subject to change since the game is still in beta.
 :::
 
-To use these settings you must set `DISABLE_GENERATE_ENGINE: false`.
+:::info
+To use these settings you must set `DISABLE_GENERATE_ENGINE` to `false`.
+:::
 
 Converting engine settings to environment variables follow the same principles (with some exceptions):
 
