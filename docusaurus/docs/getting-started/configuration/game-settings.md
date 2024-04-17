@@ -93,6 +93,11 @@ For example:
 
 ### Manually
 
+:::info
+Manually changing the `PalWorldSettings.ini` requires you to set `DISABLE_GENERATE_SETTINGS` to `true`
+in the environment settings
+:::
+
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
 
 Please keep in mind that the ENV variables will always overwrite the changes made to `PalWorldSettings.ini`.
