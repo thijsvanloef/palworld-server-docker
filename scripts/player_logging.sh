@@ -12,10 +12,19 @@ get_playername(){
     echo "${player_info}" | sed -E 's/,([0-9]+),[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]//g'
 }
 
-# Wait until rcon port is open
-while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
+# Prefer REST API
+if [ "${REST_API_ENABLED,,}" = true ]; then
+    _PORT=${REST_API_PORT}
+    _LABEL="REST API"
+else
+    _PORT=${RCON_PORT}
+    _LABEL="RCON"
+fi
+
+# Wait until rcon/rest-api port is open
+while ! nc -z localhost "${_PORT}"; do
     sleep 5
-    LogInfo "Waiting for RCON port to open to show player logging..."
+    LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
 done
 
 while true; do

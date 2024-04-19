@@ -168,7 +168,7 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && [ "${RCON_ENABLED,,}" = true ]; then
+if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && ( [ "${REST_API_ENABLED,,}" = true ] || [ "${RCON_ENABLED,,}" = true ] ); then
     if [[ "$(id -u)" -eq 0 ]]; then
         su steam -c /home/steam/server/player_logging.sh &
     else
