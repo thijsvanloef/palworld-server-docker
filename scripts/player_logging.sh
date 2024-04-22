@@ -9,21 +9,30 @@ get_steamid(){
 
 get_playername(){
     local player_info="${1}"
-    echo "${player_info}" | sed -E 's/,([0-9]+),[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]//g'
+    echo "${player_info}" | sed -E 's/,([0-9A-Z]+),[0-9]+//g'
 }
 
-# Wait until rcon port is open
-while ! nc -z 127.0.0.1 "${RCON_PORT}"; do
+# Prefer REST API
+if [ "${REST_API_ENABLED,,}" = true ]; then
+    _PORT=${REST_API_PORT}
+    _LABEL="REST API"
+else
+    _PORT=${RCON_PORT}
+    _LABEL="RCON"
+fi
+
+# Wait until rcon/rest-api port is open
+while ! nc -z localhost "${_PORT}"; do
     sleep 5
-    LogInfo "Waiting for RCON port to open to show player logging..."
+    LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
 done
 
 while true; do
     server_pid=$(pidof PalServer-Linux-Shipping)
     if [ -n "${server_pid}" ]; then
-        # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros) while loading
-        # Player ID is also 00000000 (8x zeros) when in character creation
-        mapfile -t current_player_list < <( get_players_list | tail -n +2 | sed '/,00000000,[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]/d' | sort )
+        # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
+        # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation
+        mapfile -t current_player_list < <( get_players_list | tail -n +2 | sed -E '/,(0{8}|0{32}),[0-9]+/d' | sort )
 
         # If there are current players then some may have joined
         if [ "${#current_player_list[@]}" -gt 0 ]; then

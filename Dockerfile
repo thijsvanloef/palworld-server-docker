@@ -88,6 +88,7 @@ ENV HOME=/home/steam \
     RCON_ENABLED=true \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
+    REST_API_PORT=8212 \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \

@@ -76,16 +76,31 @@ isExecutable() {
     return "$return_val"
 }
 
+# Convert player list from JSON format
+convert_JSON_to_CSV_players(){
+    echo 'name,playeruid,steamid'
+    echo -n "${1}" | \
+        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
+        sed -re 's/"None"/"00000000000000000000000000000000"/' \
+        -re 's/"steam_/"/' \
+        -re 's/"//g'
+}
+
 # Lists players
-# Outputs nothing if RCON is not enabled and returns 1
-# Outputs player list if RCON is enabled and returns 0
+# Outputs nothing if REST API or RCON is not enabled and returns 1
+# Outputs player list if REST API or RCON is enabled and returns 0
 get_players_list() {
     local return_val=0
-    if [ "${RCON_ENABLED,,}" != true ]; then
-        return_val=1
-    fi
+    # Prefer REST API
+    if [ "${REST_API_ENABLED,,}" != true ]; then
+        if [ "${RCON_ENABLED,,}" != true ]; then
+            return_val=1
+        fi
 
-    RCON "ShowPlayers"
+        RCON "ShowPlayers"
+        return "$return_val"
+    fi
+    convert_JSON_to_CSV_players "$(REST_API players)"
     return "$return_val"
 }
 
@@ -155,6 +170,19 @@ DiscordMessage() {
   fi
 }
 
+# REST API Call
+REST_API(){
+  local DATA="${2}"
+  local URL="http://localhost:${REST_API_PORT}/v1/api/${1}"
+  local ACCEPT="Accept: application/json"
+  local USERPASS="admin:${ADMIN_PASSWORD}"
+  if [ "${DATA}" = "" ]; then
+    curl -s -L -X GET  "${URL}" -H "${ACCEPT}" -u "${USERPASS}"
+  else
+    curl -s -L -X POST "${URL}" -H "${ACCEPT}" -u "${USERPASS}" --json "${DATA}"
+  fi
+}
+
 # RCON Call
 RCON() {
   local args="$1"
@@ -167,6 +195,13 @@ RCON() {
 # Returns 1 if not able to broadcast
 broadcast_command() {
     local return_val=0
+    if [ "${REST_API_ENABLED,,}" = true ]; then
+        local json="{\"message\":\"${1}\"}"
+        if ! REST_API announce "${json}"; then
+	    return_val=1
+        fi
+        return "$return_val"
+    fi
     # Replaces spaces with underscore
     local message="${1// /_}"
     if [[ $TEXT = *[![:ascii:]]* ]]; then
@@ -284,3 +319,4 @@ get_latest_version() {
 
     echo "$latest_version"
 }
+
