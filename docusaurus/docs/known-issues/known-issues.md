@@ -35,6 +35,12 @@ As an example, if I use:
 
 only Hello is transmitted.
 
+:::note info
+Using REST API solves it.
+
+`docker exec -it palworld-server rest-cli announce "Hello world"`
+:::
+
 ## XBox GamePass players unable to join
 
 At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
