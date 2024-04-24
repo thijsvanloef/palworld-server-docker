@@ -153,9 +153,8 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
-if { [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT,,}" = true ]; } || [ "${BACKUP_ENABLED,,}" = true ] || \
-    [ "${AUTO_REBOOT_ENABLED,,}" = true ]; then
-    supercronic "/home/steam/server/crontab" &
+if [ -s "/home/steam/server/crontab" ]; then
+    supercronic -passthrough-logs "/home/steam/server/crontab" &
     LogInfo "Cronjobs started"
 else
     LogInfo "No Cronjobs found"
