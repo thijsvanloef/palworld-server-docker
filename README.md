@@ -333,6 +333,83 @@ This will open a CLI that uses RCON to write commands to the Palworld Server.
 
 For a full list of commands go to: [https://tech.palworldgame.com/settings-and-operation/commands](https://tech.palworldgame.com/settings-and-operation/commands)
 
+## Using REST API
+
+REST API is not enabled by default.
+If used, please set REST_API_ENABLED to true.
+
+docker-compose.override.yml
+
+```yaml
+services:
+  palworld:
+    environment:
+      REST_API_ENABLED: true
+```
+
+The palworld-server-docker image provides rcon-cli as well as rest-cli.
+
+```bash
+$ docker exec -it palworld-server rest-cli
+Usage: rest-cli <api> [options]
+api:
+  announce <json> ... announce message.
+  ban <json>      ... ban player.
+  info            ... show server informations.
+  kick <json>     ... kick player.
+  metrics         ... show server metrics.
+  players         ... show online players.
+  save            ... save the world.
+  settings        ... show server settings.
+  shutdown <json> ... shutdown server.
+  stop            ... force stop server.
+  unban <json>    ... unban player.
+options:
+  '{...}'         ... json.
+  -               ... json from stdin.
+  -h, --help      ... help.
+```
+
+For example, you can broadcast a message to everyone in the server with the following command:
+
+CLI parameter style:
+
+```bash
+docker exec -i palworld-server rest-cli announce "Broadcast Hello everyone"
+```
+
+JSON parameter style:
+
+```bash
+docker exec -i palworld-server rest-cli announce '{"message":"Broadcast Hello everyone"}'
+```
+
+JSON pipe style:
+
+```bash
+echo '{"message":"Broadcast Hello everyone"}' | docker exec -i palworld-server rest-cli announce -
+```
+
+rest-cli allows you to call REST APIs directly without exposing ports outside the container.
+
+### List of REST APIs
+
+| API                              | Info                                                |
+|----------------------------------|-----------------------------------------------------|
+| info                             | Get the server information.                         |
+| players                          | Get player list.                                    |
+| settings                         | Get the server settings.                            |
+| metrics                          | Get the server metrics.                             |
+| announce                         | Announce message.                                   |
+| kick {SteamID}                   | Kick player.                                        |
+| ban {SteamID}                    | Ban player.                                         |
+| unban {SteamID}                  | Unban player.                                       |
+| save                             | Save the world.                                     |
+| shutdown {Seconds} {MessageText} | Shutdown the server                                 |
+| stop                             | Force stop the server.                              |
+
+For an official documents go to: [https://tech.palworldgame.com/category/rest-api](https://tech.palworldgame.com/category/rest-api)
+
 ## Creating a backup
 
 To create a backup of the game's save at the current point in time, use the command:

@@ -176,7 +176,8 @@ REST_API(){
   local URL="http://localhost:${REST_API_PORT}/v1/api/${1}"
   local ACCEPT="Accept: application/json"
   local USERPASS="admin:${ADMIN_PASSWORD}"
-  if [ "${DATA}" = "" ]; then
+  local post_api="save|stop"
+  if [ "${DATA}" = "" ] && [[ ! ${1} =~ ${post_api} ]]; then
     curl -s -L -X GET  "${URL}" -H "${ACCEPT}" -u "${USERPASS}"
   else
     curl -s -L -X POST "${URL}" -H "${ACCEPT}" -u "${USERPASS}" --json "${DATA}"
