@@ -1,0 +1,18 @@
+---
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s
+    ports:
+      - 8211:8211/udp
+    environment:
+      SERVER_NAME: "palworld-server-docker by Thijs van Loef"
+      SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+      SERVER_PASSWORD: "worldofpals"
+      ADMIN_PASSWORD: "adminPasswordHere"
+      AUTO_PAUSE_ENABLED: true
+      AUTO_PAUSE_TIMEOUT_EST: 180  # Time to pause when absent. (sec)
+    volumes:
+      - ./palworld:/palworld/

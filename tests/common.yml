@@ -1,0 +1,16 @@
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop
+    ports:
+      - 8211:8211/udp
+    environment:
+      SERVER_NAME: "palworld-server-docker/tests"
+      SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+      SERVER_PASSWORD: ""  # Empty for test only
+      ADMIN_PASSWORD: "adminPasswordHere"
+      MULTITHREADING: true
+    volumes:
+      - ./palworld:/palworld/

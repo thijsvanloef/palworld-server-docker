@@ -1,0 +1,20 @@
+services:
+  palworld:
+    extends:
+      file: ../common.yml
+      service: palworld
+    image: thijsvanloef/palworld-server-docker:debug
+    restart: no
+    build: ../../
+    environment:
+      COMMUNITY: true  # Must be enabled to debug the community server list.
+      SERVER_NAME: "palworld-server-docker/tests/autopause"
+      PUBLIC_IP: "${PUBLIC_IP}"
+      PUBLIC_PORT: ${PUBLIC_PORT:-8211}
+      REST_API_ENABLED: true
+      REST_API_PORT: 8212
+      AUTO_PAUSE_ENABLED: true
+      AUTO_PAUSE_TIMEOUT_EST: 10  # Time to pause when absent.
+      AUTO_PAUSE_DEBUG: true
+    ports:
+      - 8081:8081  # Web UI http://localhost:8081/

@@ -22,10 +22,43 @@ if ! [ -w "/palworld" ]; then
     exit 1
 fi
 
+# launch proxy for keep community server list in paused.
+if isTrue "${AUTO_PAUSE_ENABLED}" && isTrue "${COMMUNITY}" && isTrue "${ENABLE_PLAYER_LOGGING}"; then
+    LogAction "AUTO PAUSE with Community"
+    LogInfo "Launch proxy."
+    if isTrue "${AUTO_PAUSE_DEBUG}"; then
+        mitmweb --web-host 0.0.0.0 --set block_global=false --ssl-insecure -s /home/steam/autopause/addons/PalIntercept.py  &
+        LogInfo "Web Interface URL: http://localhost:8081/"
+    else
+        mitmdump --set block_global=false --ssl-insecure -s /home/steam/autopause/addons/PalIntercept.py > /var/log/mitmdump.log &
+    fi
+
+    trap 'exit 1' SIGTERM
+    echo -n "Wait until proxy is initialized..."
+    while [ ! -f "/home/steam/.mitmproxy/mitmproxy-ca-cert.pem" ]; do
+        echo -n "."
+        sleep 0.5
+    done
+    echo "done."
+    chown -R "${PUID}:${PGID}" "/home/steam/.mitmproxy"
+    chown -R "${PUID}:${PGID}" "/home/steam/autopause/addons/__pycache__"
+
+    LogInfo "Update ca-certificates."
+    cp /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt
+    update-ca-certificates
+
+    LogInfo "Using proxy now."
+    export http_proxy="localhost:8080"
+    export https_proxy="localhost:8080"
+    export no_proxy="localhost,127.0.0.1,192.168.0.0/16,172.16.0.0/12,10.0.0.0/8"
+fi
+
 mkdir -p /palworld/backups
 
 # shellcheck disable=SC2317
 term_handler() {
+    autopause stop "term_handler"
+
   DiscordMessage "Shutdown" "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress" "${DISCORD_PRE_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_PRE_SHUTDOWN_MESSAGE_URL}"
 
     if ! shutdown_server; then
