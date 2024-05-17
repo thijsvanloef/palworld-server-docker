@@ -87,7 +87,7 @@ if [[ ${api} =~ ${api_required_json} ]]; then
             json="{\"userid\":\"${2}\"}"
             ;;
         esac
-        fi
+    fi
 fi
 
 REST_API "${api}" "${json}" && echo ""
