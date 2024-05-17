@@ -54,7 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq=1.6-2.1 \
     netcat-traditional=1.10-47 \
     iputils-ping libpcap0.8 \
-    mitmproxy \
+    mitmproxy sudo \
     iproute2 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -175,9 +175,12 @@ RUN chmod +x /home/steam/server/*.sh && \
     ln -sf /home/steam/server/autopause.sh /usr/local/bin/autopause && \
     ln -sf /home/steam/server/autopaused-ctl.sh /usr/local/sbin/autopaused-ctl
 
-# install mitmproxy addons
+# install mitmproxy addons & certs
 RUN mkdir -p /home/steam/autopause/addons && \
-    mv /home/steam/server/PalIntercept.py ../autopause/addons/
+    mv /home/steam/server/PalIntercept.py ../autopause/addons/ && \
+    chown -R steam:steam /home/steam/autopause && \
+    ln -sf /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt && \
+    mv /home/steam/server/files/sudoers-steam /etc/sudoers.d/
 
 WORKDIR /home/steam/server
 

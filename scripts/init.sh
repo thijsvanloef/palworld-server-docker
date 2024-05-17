@@ -40,12 +40,14 @@ if isTrue "${AUTO_PAUSE_ENABLED}" && isTrue "${COMMUNITY}" && isTrue "${ENABLE_P
         sleep 0.5
     done
     echo "done."
-    chown -R "${PUID}:${PGID}" "/home/steam/.mitmproxy"
-    chown -R "${PUID}:${PGID}" "/home/steam/autopause/addons/__pycache__"
+    if [ "$(id -u)" -eq 0 ]; then
+        chown -R "${PUID}:${PGID}" "/home/steam/.mitmproxy"
+        chown -R "${PUID}:${PGID}" "/home/steam/autopause/addons/__pycache__"
+    fi
 
     LogInfo "Update ca-certificates."
-    cp /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt
-    update-ca-certificates
+    #ln -sf /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt
+    sudo update-ca-certificates
 
     LogInfo "Using proxy now."
     export http_proxy="localhost:8080"

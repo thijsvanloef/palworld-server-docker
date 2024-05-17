@@ -106,7 +106,11 @@ AP_stopDaemon() {
 
 AP_skip() {
     if isTrue "${1:-on}"; then
-        su steam -c "touch ${AP_skip_file}"
+        if [[ "$(id -u)" -eq 0 ]]; then
+            su steam -c "touch ${AP_skip_file}"
+        else
+            touch "${AP_skip_file}"
+        fi
     else
         rm -f "${AP_skip_file}"
     fi
@@ -172,6 +176,10 @@ APComm_API() {
 }
 
 APComm_loadJSON() {
+    if [ ! -f "${APComm_datadir}/register.json" ] || [ ! -f "${APComm_datadir}/update.json" ]; then
+        APLog "Captured file not found. Perhaps your mitm proxy server is misconfigured, down, or has lost its connection to api.palworldgames.com."
+        return 1
+    fi
     local -i result=0 delta
     APComm_jsonRegister="$(jq -c < "${APComm_datadir}/register.json")"
     result=$?
