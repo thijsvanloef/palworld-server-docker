@@ -85,12 +85,17 @@ APLog_init() {
     echo -n "$$" > ${APLog_pid}
 }
 
+APLog_isRunning() {
+    test -e ${APLog_pid} && test -p "${APLog_pipe}"
+}
+
 #-------------------------------
 # AutoPause Core
 #-------------------------------
 
 AP_startDaemon() {
     autopaused-ctl start
+    local pid
     pid=$(pidof knockd)
     APLog_debug "Start knockd pid:${pid}"
 }
@@ -98,8 +103,8 @@ AP_startDaemon() {
 AP_stopDaemon() {
     local pid
     pid=$(pidof knockd)
-    if [ ! "${pid}" = "" ]; then
-        APLog_debug "Stop knockd pid:${pid}"
+    APLog_debug "Stop knockd pid:${pid}"
+    if [ -n "${pid}" ]; then
         autopaused-ctl stop
     fi
 }
@@ -122,10 +127,6 @@ AP_isSkipped() {
 
 AP_isEnabled() {
     isTrue "${AUTO_PAUSE_ENABLED}"
-}
-
-AP_isRunning() {
-    pidof ""
 }
 
 AP_isPaused() {
@@ -333,7 +334,7 @@ AutoPause_waitWakeup() {
 #-------------------------------
 
 AutoPauseEx_isEnabled() {
-    AP_isEnabled && test -e "${APLog_pid}"
+    AP_isEnabled && APLog_isRunning
 }
 
 AutoPauseEx_resume() {
