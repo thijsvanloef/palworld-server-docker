@@ -175,12 +175,15 @@ RUN chmod +x /home/steam/server/*.sh && \
     ln -sf /home/steam/server/autopause.sh /usr/local/bin/autopause && \
     ln -sf /home/steam/server/autopaused-ctl.sh /usr/local/sbin/autopaused-ctl
 
-# install mitmproxy addons & certs
+# install mitmproxy addons
 RUN mkdir -p /home/steam/autopause/addons && \
     mv /home/steam/server/PalIntercept.py ../autopause/addons/ && \
-    chown -R steam:steam /home/steam/autopause && \
-    ln -sf /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt && \
-    mv /home/steam/server/files/sudoers-steam /etc/sudoers.d/
+    chown -R steam:steam /home/steam/autopause
+
+# Preparation to incorporate ca-cert generated at runtime by mitmproxy.
+RUN ln -sf /home/steam/.mitmproxy/mitmproxy-ca-cert.pem /usr/local/share/ca-certificates/mitmproxy.crt && \
+    mv /home/steam/server/files/sudoers-steam /etc/sudoers.d/steam && \
+    chmod 0440 /etc/sudoers.d/steam
 
 WORKDIR /home/steam/server
 

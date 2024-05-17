@@ -1,0 +1,1 @@
+steam ALL=(ALL:ALL) NOPASSWD: /usr/sbin/update-ca-certificates
