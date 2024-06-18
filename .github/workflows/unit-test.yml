@@ -161,6 +161,7 @@ jobs:
             -p 8211:8211/udp \
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
+            -v ./palworld-${{ github.run_id }}:/palworld/ \
             --env-file .env.example \
             --restart unless-stopped \
             --stop-timeout 30 \
