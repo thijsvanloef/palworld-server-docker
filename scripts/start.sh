@@ -1,6 +1,4 @@
 #!/bin/bash
-
-set -x
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
