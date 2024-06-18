@@ -259,7 +259,7 @@ jobs:
             if ! grep -q "^OptionSettings=\(.*\)" ./palworld-${{ github.run_id }}/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
               echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
               exit 13
-            
+
       - name: Stop server
         run: |
             docker stop palworld-server-${{ github.run_id }}
