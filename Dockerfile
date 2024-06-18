@@ -1,4 +1,4 @@
-FROM golang:1.22.3-alpine as rcon-cli_builder
+FROM golang:1.22.4-alpine as rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
@@ -39,9 +39,9 @@ LABEL maintainer="thijs@loef.dev" \
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="512f6736450c56555e01b363144c3c9d23abed4c"
-ARG SUPERCRONIC_SHA1SUM_AMD64="cd48d45c4b10f3f0bfdd3a57d054cd05ac96812b"
-ARG SUPERCRONIC_VERSION="0.2.29"
+ARG SUPERCRONIC_SHA1SUM_ARM64="d5e02aa760b3d434bc7b991777aa89ef4a503e49"
+ARG SUPERCRONIC_SHA1SUM_AMD64="9f27ad28c5c57cd133325b2a66bba69ba2235799"
+ARG SUPERCRONIC_VERSION="0.2.30"
 
 # update and install dependencies
 # hadolint ignore=DL3008
