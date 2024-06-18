@@ -1,4 +1,6 @@
 #!/bin/bash
+
+set -x
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
@@ -44,7 +46,6 @@ fi
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
-    echo "Copying palserver.sh"
     cp ./PalServer.sh ./PalServer-arm64.sh
 
     pagesize=$(getconf PAGESIZE)
