@@ -44,6 +44,7 @@ fi
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
+    echo "Copying palserver.sh"
     cp ./PalServer.sh ./PalServer-arm64.sh
 
     pagesize=$(getconf PAGESIZE)
