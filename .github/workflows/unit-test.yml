@@ -134,13 +134,15 @@ jobs:
 
   unit-test-arm64:
     name: Docker - Test (arm64)
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ARM64]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
+      #   with:
+      #     image: tonistiigi/binfmt:qemu-v8.1.5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -156,7 +158,7 @@ jobs:
       - name: Run server
         run: |
             docker run -d \
-            --name palworld-server \
+            --name palworld-server-${{ github.run_id }} \
             --platform linux/arm64 \
             -p 8211:8211/udp \
             -p 27015:27015/udp \
@@ -172,14 +174,14 @@ jobs:
             TIMEOUT_SECONDS=660
             START_TIME=$(date +%s)
 
-            while ! docker logs palworld-server 2>&1 | grep -q "Setting breakpad minidump AppID"; do
+            while ! docker logs palworld-server-${{ github.run_id }} 2>&1 | grep -q "Setting breakpad minidump AppID"; do
               CURRENT_TIME=$(date +%s)
               ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
 
               if [ $ELAPSED_TIME -gt $TIMEOUT_SECONDS ]; then
                 echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
                 printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
-                docker logs palworld-server
+                docker logs palworld-server-${{ github.run_id }}
                 exit 1
               fi
 
@@ -190,13 +192,13 @@ jobs:
       - name: Test if rcon.yaml is valid
         run: |
             printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
-            docker exec palworld-server cat /home/steam/server/rcon.yaml
+            docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml
 
-            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
-            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
+            RCON_PORT=$(docker exec palworld-server-${{ github.run_id }} env | grep RCON_PORT | cut -d'=' -f2)
+            ADMIN_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+            YAML_PORT=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
             if [ ! $RCON_PORT == $YAML_PORT ]; then
               echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
@@ -211,18 +213,18 @@ jobs:
         run: |
             sleep 100
 
-            if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+            if ! docker exec palworld-server-${{ github.run_id }} rcon-cli Info | grep -q "Welcome to Pal Server"; then
               echo "Server may not have started successfully."
               exit 4
             fi
 
-            OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
+            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli "Broadcast test" 2>&1)
             if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
               echo "Error: Unexpected output - $OUTPUT"
               exit 5
             fi
 
-            OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
+            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli save 2>&1)
             if [[ $OUTPUT != *"Complete Save"* ]]; then
               echo "Error: Unexpected output - $OUTPUT"
               exit 6
@@ -236,25 +238,31 @@ jobs:
 
       - name: Test the backup script
         run: |
-            docker exec palworld-server backup
-            if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
+            docker exec palworld-server-${{ github.run_id }} backup
+            if [ ! -f ./palworld-${{ github.run_id }}/backups/palworld-save-*.tar.gz ]; then
               echo "Backup file not found. Backup command may have failed."
               exit 10
             fi
 
       - name: Test if PalWorldSettings.ini is valid
         run: |
-            if [ ! -f ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
+            if [ ! -f ./palworld-${{ github.run_id }}/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
               echo "Error: PalWorldSettings.ini file is missing."
               exit 11
             fi
 
-            if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
+            if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld-${{ github.run_id }}/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
               echo "Error: PalWorldSettings.ini is missing the required section [/Script/Pal.PalGameWorldSettings]."
               exit 12
             fi
 
-            if ! grep -q "^OptionSettings=\(.*\)" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
+            if ! grep -q "^OptionSettings=\(.*\)" ./palworld-${{ github.run_id }}/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
               echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
               exit 13
             fi
+
+      - name: Stop server
+        if: always()
+        run: |
+            docker stop palworld-server-${{ github.run_id }}
+            docker rm palworld-server-${{ github.run_id }}
