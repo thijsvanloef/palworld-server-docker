@@ -262,6 +262,7 @@ jobs:
             fi
 
       - name: Stop server
+        if: always()
         run: |
             docker stop palworld-server-${{ github.run_id }}
             docker rm palworld-server-${{ github.run_id }}
