@@ -86,7 +86,7 @@ export BAN_LIST_URL=\"${BAN_LIST_URL:-https://api.palworldgame.com/api/banlist.t
 export REST_API_ENABLED=\"${REST_API_ENABLED:-False}\"
 export REST_API_PORT=\"${REST_API_PORT:-8212}\"
 export SHOW_PLAYER_LIST=${SHOW_PLAYER_LIST:-True}
-export ALLOW_CONNECT_PLATFORM=${ALLOW_CONNECT_PLATFORM:-"Steam"}
+export ALLOW_CONNECT_PLATFORM=${ALLOW_CONNECT_PLATFORM:-Steam}
 export USE_BACKUP_SAVE_DATA=${USE_BACKUP_SAVE_DATA:-True}
 
 if [ "${DEBUG,,}" = true ]; then

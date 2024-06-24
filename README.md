@@ -34,9 +34,7 @@ This Docker container has been tested and will work on the following OS:
 This container has also been tested and will work on both `x64` and `ARM64` based CPU architecture.
 
 > [!IMPORTANT]
-> At the moment, Xbox GamePass/Xbox Console players will not be able to join a dedicated server.
->
-> They will need to join players using the invite code and are limited to sessions of 4 players max.
+> Looking to host a server for Xbox players? [Follow this guide here!](https://palworld-server-docker.loef.dev/quick-setup-xbox)
 
 ## Sponsors
 
@@ -91,6 +89,7 @@ services:
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+         ALLOW_CONNECT_PLATFORM: "Steam" # Defaults to "Steam" if not set, set this to "Xbox" if you want to host a server for Xbox players. CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
       volumes:
          - ./palworld:/palworld/
 ```
@@ -139,6 +138,7 @@ docker run -d \
     -e COMMUNITY=false \
     -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
+    -e ALLOW_CONNECT_PLATFORM="Steam" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
@@ -224,7 +224,7 @@ It is highly recommended you set the following environment values before startin
 | REST_API_ENABLED                           | Enable REST API for the palworld server                                                                                                                                                             | false                                                                                              | true/false                                                                                                        | 0.35.0 |
 | REST_API_PORT                              | REST API port to connect to                                                                                                                                                                         | 8212                                                                                               | 1024-65535                                                                                                        | 0.35.0 |
 | QUERY_PORT                                 | Query port used to communicate with Steam servers                                                                                                                                                   | 27015                                                                                              | 1024-65535                                                                                                        | 0.1.0 |
-| ALLOW_CONNECT_PLATFORM                     | !!Doesn't work this version!!                                                                                                                                                                       | Steam                                                                                              | unknown                                                                                                           | 0.35.0 |
+| ALLOW_CONNECT_PLATFORM                     | Specify if you are hosting a dedicated server for Steam or Xbox players                                                                                                                                                                      | Steam                                                                                              | Steam/Xbox                                                                                                           | 0.38.0 |
 | BACKUP_CRON_EXPRESSION                     | Setting affects frequency of automatic backups.                                                                                                                                                     | 0 0 \* \* \*                                                                                       | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 0.19.0 |
 | BACKUP_ENABLED                             | Enables automatic backups                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        |  0.19.0 |
 | USE_BACKUP_SAVE_DATA                       | Enables native automatic backups                                                                                                                                                                    | true                                                                                               | true/false                                                                                                        | 0.35.0 |
