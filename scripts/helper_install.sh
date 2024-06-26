@@ -90,6 +90,11 @@ UpdateRequired() {
     updateAvailable=true
   fi
 
+  # If INSTALL_BETA_INSIDER is set to true, install the latest beta version
+  if [ "${INSTALL_BETA_INSIDER}" == true ]; then
+    return 0
+  fi
+
   # No TARGET_MANIFEST_ID env set & update needed
   if [ "$updateAvailable" == true ] && [ -z "${TARGET_MANIFEST_ID}" ]; then
     return 0
@@ -126,7 +131,13 @@ InstallServer() {
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
     DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
-    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate  +quit
+    ## If INSTALL_BETA_INSIDER is set to true, install the latest beta version
+    if [ "${INSTALL_BETA_INSIDER}" == true ]; then
+      LogWarn "Installing latest beta version"
+      /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit
+    else
+      /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+    fi
     DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
     return
   fi

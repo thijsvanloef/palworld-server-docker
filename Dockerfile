@@ -145,7 +145,8 @@ ENV HOME=/home/steam \
     ENABLE_PLAYER_LOGGING=true \
     PLAYER_LOGGING_POLL_PERIOD=5 \
     ARM_COMPATIBILITY_MODE=false \
-    DISABLE_GENERATE_ENGINE=true
+    DISABLE_GENERATE_ENGINE=true \
+    INSTALL_BETA_INSIDER=false
 
 # Passed from Github Actions
 ARG GIT_VERSION_TAG=unspecified
