@@ -13,13 +13,15 @@ sidebar_label: Quick Setup
 This guide will help you get setup with hosting your Palworld Dedicated server on Docker!
 This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
 
-## Prerequisites
+## Xbox Dedicated Server
 
-:::warning
-At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+:::important
 
-They will need to join players using the invite code and are limited to sessions of 4 players max.
+Looking to host a server for Xbox players? [Follow this guide here!](https://palworld-server-docker.loef.dev/quick-setup-xbox)
+
 :::
+
+## Prerequisites
 
 * Virtualization enabled in the BIOS/UEFI
 * Must have [Docker](https://docs.docker.com/engine/install/) installed
@@ -63,6 +65,7 @@ services:
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+         ALLOW_CONNECT_PLATFORM: "Steam" # Defaults to "Steam" if not set, set this to "Xbox" if you want to host a server for Xbox players. CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
       volumes:
          - ./palworld:/palworld/
 ```
@@ -123,6 +126,7 @@ docker run -d \
     -e COMMUNITY=false \
     -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
+    -e ALLOW_CONNECT_PLATFORM: "Steam" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest

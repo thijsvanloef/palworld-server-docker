@@ -41,11 +41,15 @@ Using REST API solves it.
 `docker exec -it palworld-server rest-cli announce "Hello world"`
 :::
 
-## XBox GamePass players unable to join
+## XBox Dedicated servers
 
-At the moment, Xbox Gamepass/Xbox Console players will not be able to join a dedicated server.
+:::tip
+Setup your Xbox dedicated server [following these steps](https://palworld-server-docker.loef.dev/quick-setup-xbox).
+:::
 
-They will need to join players using the invite code and are limited to sessions of 4 players max.
+At the moment, Xbox Gamepass/Xbox Console players will not be able to join Steam players on a dedicated server.
+
+Dedicated servers are only for Xbox players or only for Steam players and cross-play is not possible at this time.
 
 ## [S_API FAIL]
 

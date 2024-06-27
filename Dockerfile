@@ -146,6 +146,7 @@ ENV HOME=/home/steam \
     PLAYER_LOGGING_POLL_PERIOD=5 \
     ARM_COMPATIBILITY_MODE=false \
     DISABLE_GENERATE_ENGINE=true \
+    ALLOW_CONNECT_PLATFORM=Steam \
     INSTALL_BETA_INSIDER=false
 
 # Passed from Github Actions

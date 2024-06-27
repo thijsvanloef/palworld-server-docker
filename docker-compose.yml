@@ -23,5 +23,6 @@ services:
       COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
       SERVER_NAME: "palworld-server-docker by Thijs van Loef"
       SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+      ALLOW_CONNECT_PLATFORM: "Steam" # Defaults to "Steam" if not set, set this to "Xbox" if you want to host a server for Xbox players. CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
     volumes:
       - ./palworld:/palworld/
