@@ -35,10 +35,13 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 > Looking to host a server for Xbox players? [Follow this guide here!](https://palworld-server-docker.loef.dev/quick-setup-xbox)
 
 ## Sponsors
+| Company | About |
+|---------|-------|
+|<a href="https://indifferentbroccoli.com/palworld-server-hosting"><img src="https://github.com/thijsvanloef/palworld-server-docker/assets/58031337/f091b205-d6be-49fe-a508-4a23087023a1" width="150px" alt="IndifferentBroccoli" /></a><p align="center">IndifferentBroccoli</p> | Thank you to our sponsor indifferent broccoli. If you decide to rent a Palworld server, rather than host yourself, try indifferent broccoli's [Palword server hosting](https://indifferentbroccoli.com/palworld-server-hosting) 2-day free trial |
 
 ### Massive shoutout to the following individual sponsors
 
-<p align="center"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
+<p align="left"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
 <!-- sponsors --><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
