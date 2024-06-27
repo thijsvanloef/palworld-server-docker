@@ -38,7 +38,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 
 | Company | About |
 |---------|-------|
-|<!-- markdownlint-disable-line --><a href="https://indifferentbroccoli.com/palworld-server-hosting"><img src="https://github.com/thijsvanloef/palworld-server-docker/assets/58031337/f091b205-d6be-49fe-a508-4a23087023a1" width="150px" alt="Indifferent Broccoli" /></a><p align="center">indifferent broccoli (:|)</p> | Thank you to our sponsor indifferent broccoli. If you decide to rent a Palworld server, rather than host yourself, try indifferent broccoli's [Palword server hosting](https://indifferentbroccoli.com/palworld-server-hosting) 2-day free trial |
+|<!-- markdownlint-disable-line --><a href="https://indifferentbroccoli.com/palworld-server-hosting"><img src="https://github.com/thijsvanloef/palworld-server-docker/assets/58031337/f091b205-d6be-49fe-a508-4a23087023a1" width="150px" alt="Indifferent Broccoli" /></a><p align="center">indifferent broccoli \(\:\|\)</p> | Thank you to our sponsor indifferent broccoli. If you decide to rent a Palworld server, rather than host yourself, try indifferent broccoli's [Palword server hosting](https://indifferentbroccoli.com/palworld-server-hosting) 2-day free trial |
 
 ### Massive shoutout to the following individual sponsors
 
