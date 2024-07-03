@@ -97,7 +97,7 @@ Dies bedeutet, dass der Docker-Host ohne eine zusätzliche Kompatibilitätsschic
 in der Lage ist, AArch32-Binärdateien wie Box86 auszuführen.
 
 Docker Desktop löst dieses Problem, indem es seine Container in einer VM (QEMU) mit einem kompatiblen Kernel ausführt.
-Wenn Sie jedoch Docker Desktop nicht verwenden können, versuchen Sie, `ARM_COMPATIBILITY_MODE` auf `true` zu setzen.
+Wenn Sie jedoch Docker Desktop nicht verwenden können, versuchen Sie, `ARM_QEMU_MODE` auf `true` zu setzen.
 Dadurch wird der Container von der Verwendung von Box86 auf QEMU umgestellt, wenn steamcmd ausgeführt wird.
 
 ## FAQ
