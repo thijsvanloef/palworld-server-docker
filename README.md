@@ -60,6 +60,11 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 
 ## How to use
 
+> [!TIP]
+> For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
+> For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
+> For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
 ### Docker Compose

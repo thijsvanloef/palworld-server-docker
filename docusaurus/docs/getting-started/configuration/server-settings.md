@@ -11,6 +11,12 @@ sidebar_label: Server Settings
 
 How to change the Palworld Server Settings using Docker Environment variables.
 
+:::tip
+For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
+For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
+For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+:::
+
 ## Environment variables
 
 You can use the following values to change the settings of the server on boot.
