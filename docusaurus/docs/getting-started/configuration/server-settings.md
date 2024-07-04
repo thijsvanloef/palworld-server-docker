@@ -120,8 +120,9 @@ It is highly recommended you set the following environment values before startin
 
 The server needs the following ports by default.
 
-| Port  | Info             |
-|-------|------------------|
-| 8211  | Game Port (UDP)  |
-| 27015 | Query Port (UDP) |
-| 25575 | RCON Port (TCP)  |
+| Port  | Info                |
+|-------|---------------------|
+| 8211  | Game Port (UDP)     |
+| 8212  | REST API Port (TCP) |
+| 27015 | Query Port (UDP)    |
+| 25575 | RCON Port (TCP)     |
