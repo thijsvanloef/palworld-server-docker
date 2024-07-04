@@ -77,7 +77,7 @@ isExecutable() {
 }
 
 # Convert player list from JSON format
-convert_JSON_to_CSV_players(){
+convert_JSON_to_CSV_players() {
     echo 'name,playeruid,steamid'
     echo -n "${1}" | \
         jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
@@ -90,18 +90,16 @@ convert_JSON_to_CSV_players(){
 # Outputs nothing if REST API or RCON is not enabled and returns 1
 # Outputs player list if REST API or RCON is enabled and returns 0
 get_players_list() {
-    local return_val=0
     # Prefer REST API
-    if [ "${REST_API_ENABLED,,}" != true ]; then
-        if [ "${RCON_ENABLED,,}" != true ]; then
-            return_val=1
-        fi
-
-        RCON "ShowPlayers"
-        return "$return_val"
+    if [ "${REST_API_ENABLED,,}" = true ]; then
+        convert_JSON_to_CSV_players "$(REST_API players)"
+        return 0
     fi
-    convert_JSON_to_CSV_players "$(REST_API players)"
-    return "$return_val"
+    if [ "${RCON_ENABLED,,}" = true ]; then
+        RCON "ShowPlayers"
+        return 0
+    fi
+    return 1
 }
 
 # Checks how many players are currently connected
@@ -172,16 +170,21 @@ DiscordMessage() {
 
 # REST API Call
 REST_API(){
-  local DATA="${2}"
-  local URL="http://localhost:${REST_API_PORT}/v1/api/${1}"
-  local ACCEPT="Accept: application/json"
-  local USERPASS="admin:${ADMIN_PASSWORD}"
-  local post_api="save|stop"
-  if [ "${DATA}" = "" ] && [[ ! ${1} =~ ${post_api} ]]; then
-    curl -s -L -X GET  "${URL}" -H "${ACCEPT}" -u "${USERPASS}"
-  else
-    curl -s -L -X POST "${URL}" -H "${ACCEPT}" -u "${USERPASS}" --json "${DATA}"
-  fi
+    local -r api="${1}"
+    local -r data="${2}"
+    local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
+    local -r accept="Accept: application/json"
+    local -r userpass="admin:${ADMIN_PASSWORD}"
+    local -r post_api="save|stop"
+    local -i result=0
+    if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
+        curl -s -L -X GET  "${url}" -H "${accept}" -u "${userpass}"
+        result=$?
+    else
+        curl -s -L -X POST "${url}" -H "${accept}" -u "${userpass}" --json "${data}"
+        result=$?
+    fi
+    return ${result}
 }
 
 # RCON Call
@@ -197,9 +200,10 @@ RCON() {
 broadcast_command() {
     local return_val=0
     if [ "${REST_API_ENABLED,,}" = true ]; then
-        local json="{\"message\":\"${1}\"}"
-        if ! REST_API announce "${json}"; then
-	    return_val=1
+        local json="{\"message\":\"${1}\"}" result
+        result="$(REST_API announce "${json}")"
+        if [ ! "${result}" = "OK" ]; then
+            return_val=1
         fi
         return "$return_val"
     fi
