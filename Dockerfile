@@ -66,15 +66,16 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
 
 ARG TARGETARCH
-RUN case "${TARGETARCH}" in \
+RUN case ${TARGETARCH} in \
         "amd64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_AMD64} ;; \
         "arm64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_ARM64} ;; \
     esac \
     && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
     && chmod +x supercronic \
-    && mv supercronic /usr/local/bin/supercronic \
-    && case "${TARGETARCH}" in \
+    && mv supercronic /usr/local/bin/supercronic
+
+RUN case ${TARGETARCH} in \
         "amd64") DEPOT_DOWNLOADER_FILENAME=DepotDownloader-linux-x64.zip ;; \
         "arm64") DEPOT_DOWNLOADER_FILENAME=DepotDownloader-linux-arm64.zip ;; \
     esac \
