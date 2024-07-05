@@ -138,6 +138,7 @@ InstallServer() {
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files using DepotDownloader"
         DepotDownloader -app 2394010 -osarch 64 -dir /palworld -beta insiderprogram -validate
+        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /tmp -beta insiderprogram -manifest-only
       else
         /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit
       fi
@@ -145,10 +146,34 @@ InstallServer() {
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files using DepotDownloader"
         DepotDownloader -app 2394010 -osarch 64 -dir /palworld -validate
+        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /tmp -manifest-only
       else
         /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
       fi
     fi
+
+    # Create ACF file for DepoDownloader downloads for script compatibility
+    if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
+      local manifestFile
+      manifestFile=$(find /tmp -type f -name "manifest_2394012_*.txt" | head -n 1)
+
+      if [ -z "$manifestFile" ]; then
+        echo "DepotDownloader manifest file not found."
+      else
+        local manifestId
+        manifestId=$(grep -oP 'Manifest ID / date\s*:\s*\K[0-9]+' "$manifestFile")
+
+        if [ -z "$manifestId" ]; then
+          echo "Manifest ID not found in DepotDownloader manifest file."
+        else
+          mkdir -p /palworld/steamapps
+          CreateACFFile "$manifestId"
+        fi
+
+        rm -rf "$manifestfile"
+      fi
+    fi
+
     DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
     return
   fi
