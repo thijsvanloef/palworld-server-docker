@@ -127,7 +127,6 @@ InstallServer() {
   # Check kernel page size for arm64 hosts before running steamcmd
   if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ] && [ "${USE_DEPOT_DOWNLOADER}" != true ]; then
     LogWarn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Please set USE_DEPOT_DOWNLOADER to true."
-    return 1
   fi
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
