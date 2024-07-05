@@ -170,7 +170,7 @@ InstallServer() {
           CreateACFFile "$manifestId"
         fi
 
-        rm -rf "$manifestfile"
+        rm -rf "$manifestFile"
       fi
     fi
 
