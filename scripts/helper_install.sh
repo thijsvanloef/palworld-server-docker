@@ -137,16 +137,14 @@ InstallServer() {
       LogWarn "Installing latest beta version"
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files using DepotDownloader"
-        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /palworld -beta insiderprogram -validate
-        DepotDownloader -app 2394010 -depot 1006 -osarch 64 -dir /palworld -validate
+        DepotDownloader -app 2394010 -osarch 64 -dir /palworld -beta insiderprogram -validate
       else
         /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit
       fi
     else
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files using DepotDownloader"
-        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /palworld -validate
-        DepotDownloader -app 2394010 -depot 1006 -osarch 64 -dir /palworld -validate
+        DepotDownloader -app 2394010 -osarch 64 -dir /palworld -validate
       else
         /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
       fi
@@ -166,8 +164,8 @@ InstallServer() {
     DepotDownloader -app 2394010 -depot 1006 -osarch 64 -dir /palworld -validate
   else
     /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
+    cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   fi
-  cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   CreateACFFile "$targetManifest"
   DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
 }
