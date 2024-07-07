@@ -127,9 +127,11 @@ See [Box64 usage documentation](https://github.com/ptitSeb/box64/blob/main/docs/
 Also, the container should have multiple Box64 variants for different host devices. This can be set using the `ARM64_DEVICE`
 environment variable.
 
+:::tip
 For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
 For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
 For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+:::
 
 These builds are from the [ARM64 base image](https://github.com/sonroyaalmerol/steamcmd-arm64). If your device is not listed
 above, consider creating an issue on the base image's repository.

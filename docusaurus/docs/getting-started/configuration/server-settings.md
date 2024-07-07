@@ -11,12 +11,6 @@ sidebar_label: Server Settings
 
 How to change the Palworld Server Settings using Docker Environment variables.
 
-:::tip
-For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
-For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
-For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
-:::
-
 ## Environment variables
 
 You can use the following values to change the settings of the server on boot.
@@ -107,14 +101,35 @@ It is highly recommended you set the following environment values before startin
 | DISABLE_GENERATE_ENGINE                    | Whether to automatically generate the Engine.ini                                                                                                                                                    | true                                                                                               | true/false                                                                                                                                      | 0.30.0           |
 | ENABLE_PLAYER_LOGGING                      | Enables Logging and announcing when players join and leave                                                                                                                                          | true                                                                                               | true/false                                                                                                                                      | 0.31.0           |
 | PLAYER_LOGGING_POLL_PERIOD                 | Polling period (in seconds) to check for players who have joined or left                                                                                                                            | 5                                                                                                  | !0                                                                                                                                              | 0.31.0           |
-| ARM64_DEVICE                     | Specify Box64 build to be used based on host device. This setting is only applicable for ARM64 hosts.                                                    | generic                                                                                              | generic, m1, rpi5, adlink                                                                                                        | 0.39.0           |
-| USE_DEPOT_DOWNLOADER                     | Uses DepotDownloader to download game server files instead of steamcmd. This will help hosts incompatible with steamcmd (e.g. M-series Mac)                                                    | false                                                                                              | true/false                                                                                                        | 0.39.0           |
 
 *highly recommended to set
 
 ** Make sure you know what you are doing when running this option enabled
 
 *** Required for docker stop to save and gracefully close the server
+
+## ARM64-exclusive environment variables
+
+ARM64 hosts can use the following variables to tweak their server setup. This includes
+known relevant Box64 configurations one can modify for better server stability/performance.
+For the Box64 configurations, please see their [USAGE](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md) documentation for more info.
+
+:::tip
+For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
+For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
+For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+:::
+
+| Variable                                   | Info                                                                                                                                                                                                | Default Values                                                                                     | Allowed Values                                                                                                                                  | Added in Version |
+|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
+| BOX64_DYNAREC_STRONGMEM                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Enable/Disable simulation of Strong Memory model                                                    | 1                                                                                              | 0, 1, 2,3                                                                                                        | 0.23.0           |
+| BOX64_DYNAREC_BIGBLOCK                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Enables/Disables Box64's Dynarec building BigBlock.                                                    | 1                                                                                              | 0, 1, 2, 3                                                                                                        | 0.23.0           |
+| BOX64_DYNAREC_SAFEFLAGS                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Handling of flags on CALL/RET opcodes                                                    | 1                                                                                              | 0, 1, 2                                                                                                        | 0.23.0           |
+| BOX64_DYNAREC_FASTROUND                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Enable/Disable generation of precise x86 rounding                                                    | 1                                                                                              | 0, 1                                                                                                        | 0.23.0           |
+| BOX64_DYNAREC_FASTNAN                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Enable/Disable generation of -NAN                                                    | 1                                                                                              | 0, 1                                                                                                        | 0.23.0           |
+| BOX64_DYNAREC_X87DOUBLE                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md)] Force the use of Double for x87 emulation                                                    | 0                                                                                              | 0, 1                                                                                                        | 0.23.0           |
+| ARM64_DEVICE                     | Specify Box64 build to be used based on host device. This setting is only applicable for ARM64 hosts.                                                    | generic                                                                                              | generic, m1, rpi5, adlink                                                                                                        | 0.39.0           |
+| USE_DEPOT_DOWNLOADER                     | Uses DepotDownloader to download game server files instead of steamcmd. This will help hosts incompatible with steamcmd (e.g. M-series Mac)                                                    | false                                                                                              | true/false                                                                                                        | 0.39.0           |
 
 ### Game Ports
 
