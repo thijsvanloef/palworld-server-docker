@@ -90,7 +90,7 @@ This means that the Docker host is unable to run AArch32 binaries such as Box86 
 compatibility layer which is the case for Apple Silicon.
 
 Docker Desktop solves this by running its containers inside a VM (QEMU) with a compatible kernel.
-However, if you're unable to use Docker Desktop, then try setting `ARM_QEMU_MODE` to `true`.
+However, if you're unable to use Docker Desktop, then try setting `ARM_COMPATIBILITY_MODE` to `true`.
 This will switch the container from using Box86 to QEMU when running steamcmd.
 
 ## FAQ
