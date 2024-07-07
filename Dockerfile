@@ -20,7 +20,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
 FROM cm2network/steamcmd:root as base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-07-04 as base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-07-08 as base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
@@ -158,12 +158,20 @@ ENV HOME=/home/steam \
     DISCORD_ERR_BACKUP_DELETE_MESSAGE_ENABLED=true \
     ENABLE_PLAYER_LOGGING=true \
     PLAYER_LOGGING_POLL_PERIOD=5 \
-    ARM_QEMU_MODE=false \
     ARM64_DEVICE=generic \
     DISABLE_GENERATE_ENGINE=true \
     ALLOW_CONNECT_PLATFORM=Steam \
     USE_DEPOT_DOWNLOADER=false \
     INSTALL_BETA_INSIDER=false
+
+# Sane Box64 config defaults
+# hadolint ignore=DL3044
+ENV BOX64_DYNAREC_STRONGMEM=1 \
+    BOX64_DYNAREC_BIGBLOCK=1 \
+    BOX64_DYNAREC_SAFEFLAGS=1 \
+    BOX64_DYNAREC_FASTROUND=1 \
+    BOX64_DYNAREC_FASTNAN=1 \
+    BOX64_DYNAREC_X87DOUBLE=0
 
 # Passed from Github Actions
 ARG GIT_VERSION_TAG=unspecified
