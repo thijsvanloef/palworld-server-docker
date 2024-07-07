@@ -117,9 +117,10 @@ known relevant Box64 configurations one can modify for better server stability/p
 For the Box64 configurations, please see the their official documentation for more info.
 
 :::tip
-For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
-For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
-For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+Set `ARM64_DEVICE` to the most appropriate setting for your device. `generic` is expected
+to work on all devices but better stability can be found with specifying your device.
+For more specific device compatibility, create an issue on the
+[base image repo](https://github.com/sonroyaalmerol/steamcmd-arm64).
 :::
 
 | Variable                                   | Info                                                                                                                                                                                                | Default Values                                                                                     | Allowed Values                                                                                                                                  | Added in Version |
