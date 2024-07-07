@@ -112,7 +112,8 @@ It is highly recommended you set the following environment values before startin
 
 ARM64 hosts can use the following variables to tweak their server setup. This includes
 known relevant Box64 configurations one can modify for better server stability/performance.
-For the Box64 configurations, please see their [USAGE](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md) documentation for more info.
+
+For the Box64 configurations, please see the their official documentation for more info.
 
 :::tip
 For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
