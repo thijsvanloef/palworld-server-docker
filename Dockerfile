@@ -38,10 +38,12 @@ LABEL maintainer="thijs@loef.dev" \
 # set envs
 # SUPERCRONIC: Latest releases available at https://github.com/aptible/supercronic/releases
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
+# DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
 ARG SUPERCRONIC_SHA1SUM_ARM64="d5e02aa760b3d434bc7b991777aa89ef4a503e49"
 ARG SUPERCRONIC_SHA1SUM_AMD64="9f27ad28c5c57cd133325b2a66bba69ba2235799"
 ARG SUPERCRONIC_VERSION="0.2.30"
+ARG DEPOT_DOWNLOADER_VERSION="2.6.0"
 
 # update and install dependencies
 # hadolint ignore=DL3008
@@ -53,6 +55,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jo=1.9-1 \
     jq=1.6-2.1 \
     netcat-traditional=1.10-47 \
+    libicu72=72.1-3 \
+    unzip=6.0-28 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -62,14 +66,24 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --from=rcon-cli_builder /build/gorcon /usr/bin/rcon-cli
 
 ARG TARGETARCH
-RUN case ${TARGETARCH} in \
+RUN case "${TARGETARCH}" in \
         "amd64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_AMD64} ;; \
         "arm64") SUPERCRONIC_SHA1SUM=${SUPERCRONIC_SHA1SUM_ARM64} ;; \
     esac \
-    && wget --progress=dot:giga https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH} -O supercronic \
+    && wget --progress=dot:giga "https://github.com/aptible/supercronic/releases/download/v${SUPERCRONIC_VERSION}/supercronic-linux-${TARGETARCH}" -O supercronic \
     && echo "${SUPERCRONIC_SHA1SUM}" supercronic | sha1sum -c - \
     && chmod +x supercronic \
     && mv supercronic /usr/local/bin/supercronic
+
+RUN case "${TARGETARCH}" in \
+        "amd64") DEPOT_DOWNLOADER_FILENAME=DepotDownloader-linux-x64.zip ;; \
+        "arm64") DEPOT_DOWNLOADER_FILENAME=DepotDownloader-linux-arm64.zip ;; \
+    esac \
+    && wget --progress=dot:giga "https://github.com/SteamRE/DepotDownloader/releases/download/DepotDownloader_${DEPOT_DOWNLOADER_VERSION}/${DEPOT_DOWNLOADER_FILENAME}" -O DepotDownloader.zip \
+    && unzip DepotDownloader.zip \
+    && rm -rf DepotDownloader.xml \
+    && chmod +x DepotDownloader \
+    && mv DepotDownloader /usr/local/bin/DepotDownloader
 
 # hadolint ignore=DL3044
 ENV HOME=/home/steam \
@@ -148,6 +162,7 @@ ENV HOME=/home/steam \
     ARM64_DEVICE=generic \
     DISABLE_GENERATE_ENGINE=true \
     ALLOW_CONNECT_PLATFORM=Steam \
+    USE_DEPOT_DOWNLOADER=false \
     INSTALL_BETA_INSIDER=false
 
 # Passed from Github Actions
