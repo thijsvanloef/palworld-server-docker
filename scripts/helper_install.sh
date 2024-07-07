@@ -125,8 +125,8 @@ InstallServer() {
   kernel_page_size=$(getconf PAGESIZE)
 
   # Check kernel page size for arm64 hosts before running steamcmd
-  if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ]; then
-    LogWarn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Expect server installation to fail."
+  if [ "$architecture" == "arm64" ] && [ "$kernel_page_size" != "4096" ] && [ "${USE_DEPOT_DOWNLOADER}" != true ]; then
+    LogWarn "WARNING: Only ARM64 hosts with 4k page size is supported when running steamcmd. Please set USE_DEPOT_DOWNLOADER to true."
   fi
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
@@ -134,10 +134,45 @@ InstallServer() {
     ## If INSTALL_BETA_INSIDER is set to true, install the latest beta version
     if [ "${INSTALL_BETA_INSIDER}" == true ]; then
       LogWarn "Installing latest beta version"
-      /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit
+      if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
+        LogWarn "Downloading server files using DepotDownloader"
+        DepotDownloader -app 2394010 -osarch 64 -dir /palworld -beta insiderprogram -validate
+        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /tmp -beta insiderprogram -manifest-only
+      else
+        /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit
+      fi
     else
-      /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+      if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
+        LogWarn "Downloading server files using DepotDownloader"
+        DepotDownloader -app 2394010 -osarch 64 -dir /palworld -validate
+        DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /tmp -manifest-only
+      else
+        /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit
+      fi
     fi
+
+    # Create ACF file for DepoDownloader downloads for script compatibility
+    if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
+      local manifestFile
+      manifestFile=$(find /tmp -type f -name "manifest_2394012_*.txt" | head -n 1)
+
+      if [ -z "$manifestFile" ]; then
+        echo "DepotDownloader manifest file not found."
+      else
+        local manifestId
+        manifestId=$(grep -oP 'Manifest ID / date\s*:\s*\K[0-9]+' "$manifestFile")
+
+        if [ -z "$manifestId" ]; then
+          echo "Manifest ID not found in DepotDownloader manifest file."
+        else
+          mkdir -p /palworld/steamapps
+          CreateACFFile "$manifestId"
+        fi
+
+        rm -rf "$manifestFile"
+      fi
+    fi
+
     DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
     return
   fi
@@ -147,8 +182,14 @@ InstallServer() {
 
   LogWarn "Installing Target Version: $targetManifest"
   DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
-  /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
-  cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
+  if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
+    LogWarn "Downloading server files using DepotDownloader"
+    DepotDownloader -app 2394010 -depot 2394012 -manifest "$targetManifest" -osarch 64 -dir /palworld -validate
+    DepotDownloader -app 2394010 -depot 1006 -osarch 64 -dir /palworld -validate
+  else
+    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
+    cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
+  fi
   CreateACFFile "$targetManifest"
   DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
 }
