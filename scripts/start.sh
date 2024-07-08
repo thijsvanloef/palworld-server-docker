@@ -15,14 +15,6 @@ cd /palworld || exit
 # Get the architecture using dpkg
 architecture=$(dpkg --print-architecture)
 
-if [ "$architecture" == "arm64" ] && [ "${ARM_COMPATIBILITY_MODE,,}" = true ]; then
-    LogInfo "ARM compatibility mode enabled"
-    export DEBUGGER="/usr/bin/qemu-i386-static"
-
-    # Arbitrary number to avoid CPU_MHZ warning due to qemu and steamcmd
-    export CPU_MHZ=2000
-fi
-
 IsInstalled
 ServerInstalled=$?
 if [ "$ServerInstalled" == 1 ]; then
@@ -45,26 +37,8 @@ fi
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     cp ./PalServer.sh ./PalServer-arm64.sh
-
-    pagesize=$(getconf PAGESIZE)
-    box64_binary="box64"
-
-    case $pagesize in
-        8192)
-            LogInfo "Using Box64 for 8k pagesize"
-            box64_binary="box64-8k"
-            ;;
-        16384)
-            LogInfo "Using Box64 for 16k pagesize"
-            box64_binary="box64-16k"
-            ;;
-        65536)
-            LogInfo "Using Box64 for 64k pagesize"
-            box64_binary="box64-64k"
-            ;;
-    esac
     
-    sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH $box64_binary \1|" ./PalServer-arm64.sh
+    sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
     chmod +x ./PalServer-arm64.sh
     STARTCOMMAND=("./PalServer-arm64.sh")
 else

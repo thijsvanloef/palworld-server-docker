@@ -74,6 +74,11 @@ it means that you'll need to look at the following:
 
 ## Only ARM64 hosts with 4k page size is supported
 
+:::tip
+This issue should not occur anymore after the addition of `USE_DEPOT_DOWNLOADER`. Instead, it should ask you to set the
+said configuration to `true`.
+:::
+
 This error occurs when the container detects that the host kernel does not have a 4k page size,
 which is required for the emulation used for ARM64 architecture. The container relies on this specific page
 size for proper execution.
@@ -100,9 +105,36 @@ problematic machine to prevent steamcmd from executing.
 This means that the Docker host is unable to run AArch32 binaries such as Box86 without an additional
 compatibility layer which is the case for Apple Silicon.
 
-Docker Desktop solves this by running its containers inside a VM (QEMU) with a compatible kernel.
-However, if you're unable to use Docker Desktop, then try setting `ARM_COMPATIBILITY_MODE` to `true`.
-This will switch the container from using Box86 to QEMU when running steamcmd.
+Try setting `USE_DEPOT_DOWNLOADER` to `true`. This will switch the container from using steamcmd to
+DepotDownloader instead. This should avoid the need for any AArch32 emulation.
+
+## Server keeps on crashing randomly! (ARM64 hosts)
+
+For ARM64 hosts, emulation of the server binaries and libraries is required. As such, huge updates can cause Box64
+(the emulator we use) to crash due to many reasons. Box64 has a lot of configuration options to tweak the emulator
+for specific binaries. We will try to set appropriate defaults for these configs as we receive more reports. In general,
+setting the following environment variables will give you the best chance of stability in exchange for performance:
+
+* `BOX64_DYNAREC_BIGBLOCK=0` (Default: 1)
+* `BOX64_DYNAREC_SAFEFLAGS=2` (Default: 1)
+* `BOX64_DYNAREC_STRONGMEM=3` (Default: 1)
+* `BOX64_DYNAREC_FASTROUND=0` (Default: 1)
+* `BOX64_DYNAREC_FASTNAN=0` (Default: 1)
+* `BOX64_DYNAREC_X87DOUBLE=1` (Default: 0)
+
+See [Box64 usage documentation](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md) for more info.
+
+Also, the container should have multiple Box64 variants for different host devices. This can be set using the `ARM64_DEVICE`
+environment variable.
+
+:::tip
+For best compatibility with **Apple Silicon**, set `ARM64_DEVICE` to `m1`.
+For best compatibility with **Oracle ARM**, set `ARM64_DEVICE` to  `adlink`.
+For best compatibility with **Raspberry Pi 5**, set `ARM64_DEVICE` to  `rpi5`.
+:::
+
+These builds are from the [ARM64 base image](https://github.com/sonroyaalmerol/steamcmd-arm64). If your device is not listed
+above, consider creating an issue on the base image's repository.
 
 ## FAQ
 

@@ -64,7 +64,6 @@ sidebar_label: Server Settings
 | DISABLE_GENERATE_ENGINE          | 엔진설정의 생성을 비활성화 합니다.ini                                                                                                                                          | true                      | true/false                                                                                                        |
 | ENABLE_PLAYER_LOGGING      | 플레이어가 접속 또는 종료시 로깅과 공지를 활성화 | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | 플레이어의 접속과 종료를 확인하기위한 폴링시간(초) 설정 | 5                      | !0 |
-| ARM_COMPATIBILITY_MODE          | 서버 업데이트를하기 위해 steamcmd를 실행시 호환성 레이어를 Box86에서 QEMU로 변경. 이 설정은 ARM64 호스트 전용입니다. | false                      | true/false |
 
 *설정하는 것을 적극 권장합니다.
 
