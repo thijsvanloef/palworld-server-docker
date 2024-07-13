@@ -5,131 +5,131 @@
 # Returns 0 if the path is a directory
 # Returns 1 if the path is not a directory or does not exists and produces an output message
 dirExists() {
-    local path="$1"
-    local return_val=0
-    if ! [ -d "${path}" ]; then
-        echo "${path} does not exist."
-        return_val=1
-    fi
-    return "$return_val"
+  local path="$1"
+  local return_val=0
+  if ! [ -d "${path}" ]; then
+    echo "${path} does not exist."
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Checks if a given path is a regular file
 # Returns 0 if the path is a regular file
 # Returns 1 if the path is not a regular file or does not exists and produces an output message
 fileExists() {
-    local path="$1"
-    local return_val=0
-    if ! [ -f "${path}" ]; then
-        echo "${path} does not exist."
-        return_val=1
-    fi
-    return "$return_val"
+  local path="$1"
+  local return_val=0
+  if ! [ -f "${path}" ]; then
+    echo "${path} does not exist."
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Checks if a given path exists and is readable
 # Returns 0 if the path exists and is readable
 # Returns 1 if the path is not readable or does not exists and produces an output message
 isReadable() {
-    local path="$1"
-    local return_val=0
-    if ! [ -e "${path}" ]; then
-        echo "${path} is not readable."
-        return_val=1
-    fi
-    return "$return_val"
+  local path="$1"
+  local return_val=0
+  if ! [ -e "${path}" ]; then
+    echo "${path} is not readable."
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Checks if a given path is writable
 # Returns 0 if the path is writable
 # Returns 1 if the path is not writable or does not exists and produces an output message
 isWritable() {
-    local path="$1"
-    local return_val=0
-    # Directories may be writable but not deletable causing -w to return false
-    if [ -d "${path}" ]; then
-        temp_file=$(mktemp -q -p "${path}")
-        if [ -n "${temp_file}" ]; then
-            rm -f "${temp_file}"
-        else
-            echo "${path} is not writable."
-            return_val=1
-        fi
-    # If it is a file it must be writable
-    elif ! [ -w "${path}" ]; then
-        echo "${path} is not writable."
-        return_val=1
+  local path="$1"
+  local return_val=0
+  # Directories may be writable but not deletable causing -w to return false
+  if [ -d "${path}" ]; then
+    temp_file=$(mktemp -q -p "${path}")
+    if [ -n "${temp_file}" ]; then
+      rm -f "${temp_file}"
+    else
+      echo "${path} is not writable."
+      return_val=1
     fi
-    return "$return_val"
+  # If it is a file it must be writable
+  elif ! [ -w "${path}" ]; then
+    echo "${path} is not writable."
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Checks if a given path is executable
 # Returns 0 if the path is executable
 # Returns 1 if the path is not executable or does not exists and produces an output message
 isExecutable() {
-    local path="$1"
-    local return_val=0
-    if ! [ -x "${path}" ]; then
-        echo "${path} is not executable."
-        return_val=1
-    fi
-    return "$return_val"
+  local path="$1"
+  local return_val=0
+  if ! [ -x "${path}" ]; then
+    echo "${path} is not executable."
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Convert player list from JSON format
-convert_JSON_to_CSV_players(){
-    echo 'name,playeruid,steamid'
-    echo -n "${1}" | \
-        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
-        sed -re 's/"None"/"00000000000000000000000000000000"/' \
-        -re 's/"steam_/"/' \
-        -re 's/"//g'
+convert_JSON_to_CSV_players() {
+  echo 'name,playeruid,steamid'
+  echo -n "${1}" |
+    jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' |
+    sed -re 's/"None"/"00000000000000000000000000000000"/' \
+      -re 's/"steam_/"/' \
+      -re 's/"//g'
 }
 
 # Lists players
 # Outputs nothing if REST API or RCON is not enabled and returns 1
 # Outputs player list if REST API or RCON is enabled and returns 0
 get_players_list() {
-    local return_val=0
-    # Prefer REST API
-    if [ "${REST_API_ENABLED,,}" != true ]; then
-        if [ "${RCON_ENABLED,,}" != true ]; then
-            return_val=1
-        fi
-
-        RCON "ShowPlayers"
-        return "$return_val"
+  local return_val=0
+  # Prefer REST API
+  if [ "${REST_API_ENABLED,,}" != true ]; then
+    if [ "${RCON_ENABLED,,}" != true ]; then
+      return_val=1
     fi
-    convert_JSON_to_CSV_players "$(REST_API players)"
+
+    RCON "ShowPlayers"
     return "$return_val"
+  fi
+  convert_JSON_to_CSV_players "$(REST_API players)"
+  return "$return_val"
 }
 
 # Checks how many players are currently connected
 # Outputs 0 if RCON is not enabled and returns 1
 # Outputs the player count if rcon is enabled and returns 0
 get_player_count() {
-    local player_list
-    local return_val=0
-    if ! player_list=$(get_players_list); then
-        return_val=1
-    fi
-    
-    echo -n "${player_list}" | wc -l
-    return "$return_val"
+  local player_list
+  local return_val=0
+  if ! player_list=$(get_players_list); then
+    return_val=1
+  fi
+
+  echo -n "${player_list}" | wc -l
+  return "$return_val"
 }
 
 #
 # Log Definitions
 #
 export LINE='\n'
-export RESET='\033[0m'       # Text Reset
-export WhiteText='\033[0;37m'        # White
+export RESET='\033[0m'        # Text Reset
+export WhiteText='\033[0;37m' # White
 
 # Bold
-export RedBoldText='\033[1;31m'         # Red
-export GreenBoldText='\033[1;32m'       # Green
-export YellowBoldText='\033[1;33m'      # Yellow
-export CyanBoldText='\033[1;36m'        # Cyan
+export RedBoldText='\033[1;31m'    # Red
+export GreenBoldText='\033[1;32m'  # Green
+export YellowBoldText='\033[1;33m' # Yellow
+export CyanBoldText='\033[1;36m'   # Cyan
 
 LogInfo() {
   Log "$1" "$WhiteText"
@@ -171,14 +171,14 @@ DiscordMessage() {
 }
 
 # REST API Call
-REST_API(){
+REST_API() {
   local DATA="${2}"
   local URL="http://localhost:${REST_API_PORT}/v1/api/${1}"
   local ACCEPT="Accept: application/json"
   local USERPASS="admin:${ADMIN_PASSWORD}"
   local post_api="save|stop"
   if [ "${DATA}" = "" ] && [[ ! ${1} =~ ${post_api} ]]; then
-    curl -s -L -X GET  "${URL}" -H "${ACCEPT}" -u "${USERPASS}"
+    curl -s -L -X GET "${URL}" -H "${ACCEPT}" -u "${USERPASS}"
   else
     curl -s -L -X POST "${URL}" -H "${ACCEPT}" -u "${USERPASS}" --json "${DATA}"
   fi
@@ -195,50 +195,50 @@ RCON() {
 # Returns 0 on success
 # Returns 1 if not able to broadcast
 broadcast_command() {
-    local return_val=0
-    if [ "${REST_API_ENABLED,,}" = true ]; then
-        local json="{\"message\":\"${1}\"}"
-        if ! REST_API announce "${json}"; then
-	    return_val=1
-        fi
-        return "$return_val"
-    fi
-    # Replaces spaces with underscore
-    local message="${1// /_}"
-    if [[ $TEXT = *[![:ascii:]]* ]]; then
-        LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
-        return_val=1
-    elif ! RCON "broadcast ${message}" > /dev/null; then
-        return_val=1
+  local return_val=0
+  if [ "${REST_API_ENABLED,,}" = true ]; then
+    local json="{\"message\":\"${1}\"}"
+    if ! REST_API announce "${json}"; then
+      return_val=1
     fi
     return "$return_val"
+  fi
+  # Replaces spaces with underscore
+  local message="${1// /_}"
+  if [[ $TEXT = *[![:ascii:]]* ]]; then
+    LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
+    return_val=1
+  elif ! RCON "broadcast ${message}" >/dev/null; then
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Saves the server
 # Returns 0 if it saves
 # Returns 1 if it is not able to save
 save_server() {
-    local return_val=0
-    if ! RCON save; then
-        return_val=1
-    fi
-    return "$return_val"
+  local return_val=0
+  if ! RCON save; then
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Saves then shutdowns the server
 # Returns 0 if it is shutdown
 # Returns 1 if it is not able to be shutdown
 shutdown_server() {
-    local return_val=0
-    # Do not shutdown if not able to save
-    if save_server; then
-        if ! RCON "Shutdown 1"; then
-            return_val=1
-        fi
-    else
-        return_val=1
+  local return_val=0
+  # Do not shutdown if not able to save
+  if save_server; then
+    if ! RCON "Shutdown 1"; then
+      return_val=1
     fi
-    return "$return_val"
+  else
+    return_val=1
+  fi
+  return "$return_val"
 }
 
 # Given an amount of time in minutes and a message prefix
@@ -247,77 +247,93 @@ shutdown_server() {
 # Returns 1 if mtime is empty
 # Returns 2 if mtime is not an integer
 countdown_message() {
-    local mtime="$1"
-    local message_prefix="$2"
-    local return_val=0
+  local mtime="$1"
+  local message_prefix="$2"
+  local return_val=0
 
-    # Only do countdown if there are players
-    if [ "$(get_player_count)" -gt 0 ]; then
-        if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
-            for ((i = "${mtime}" ; i > 0 ; i--)); do
-                case "$i" in
-                    1 ) 
-                        broadcast_command "${message_prefix} in ${i} minute"
-                        sleep 30s
-                        broadcast_command "${message_prefix} in 30 seconds"
-                        sleep 20s
-                        broadcast_command "${message_prefix} in 10 seconds"
-                        sleep 10s
-                        ;;
-                    2 )
-                        ;&
-                    3 )
-                        ;&
-                    10 )
-                        ;&
-                    15 )
-                        ;&
-                    "$mtime" )
-                        broadcast_command "${message_prefix} in ${i} minutes"
-                        ;&
-                    * ) 
-                        sleep 1m
-                        # Checking for players every minute
-                        # Checking after sleep since it is ran in the beginning of the function
-                        if [ "$(get_player_count)" -eq 0 ]; then
-                            break
-                        fi
-                        ;;
-                esac
-            done
-        # If there are players but mtime is empty
-        elif [ -z "${mtime}" ]; then
-            return_val=1
-        # If there are players but mtime is not an integer
-        else
-            return_val=2
-        fi
+  # Only do countdown if there are players
+  if [ "$(get_player_count)" -gt 0 ]; then
+    if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
+      for ((i = "${mtime}"; i > 0; i--)); do
+        case "$i" in
+        1)
+          broadcast_command "${message_prefix} in ${i} minute"
+          sleep 30s
+          broadcast_command "${message_prefix} in 30 seconds"
+          sleep 20s
+          broadcast_command "${message_prefix} in 10 seconds"
+          sleep 10s
+          ;;
+        2) ;&
+        3) ;&
+        10) ;&
+        15) ;&
+        "$mtime")
+          broadcast_command "${message_prefix} in ${i} minutes"
+          ;&
+        *)
+          sleep 1m
+          # Checking for players every minute
+          # Checking after sleep since it is ran in the beginning of the function
+          if [ "$(get_player_count)" -eq 0 ]; then
+            break
+          fi
+          ;;
+        esac
+      done
+    # If there are players but mtime is empty
+    elif [ -z "${mtime}" ]; then
+      return_val=1
+    # If there are players but mtime is not an integer
+    else
+      return_val=2
     fi
-    return "$return_val"
+  fi
+  return "$return_val"
 }
 
 container_version_check() {
-    local current_version
-    local latest_version
+  local current_version
+  local latest_version
 
-    current_version=$(cat /home/steam/server/GIT_VERSION_TAG)
-    latest_version=$(get_latest_version)
+  current_version=$(cat /home/steam/server/GIT_VERSION_TAG)
+  latest_version=$(get_latest_version)
 
-    if [ "${current_version}" != "${latest_version}" ]; then
-        LogWarn "New version available: ${latest_version}"
-        LogWarn "Learn how to update the container: https://palworld-server-docker.loef.dev/guides/update-the-container"
-    else
-        LogSuccess "The container is up to date!"
+  if [ "${current_version}" != "${latest_version}" ]; then
+    LogWarn "New version available: ${latest_version}"
+    LogWarn "Learn how to update the container: https://palworld-server-docker.loef.dev/guides/update-the-container"
+  else
+    LogSuccess "The container is up to date!"
 
-    fi
+  fi
 }
 # Get latest release version from thijsvanloef/palworld-server-docker repository
 # Returns the latest release version
 get_latest_version() {
-    local latest_version
+  local latest_version
 
-    latest_version=$(curl https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest -s | jq .name -r)
+  latest_version=$(curl https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest -s | jq .name -r)
 
-    echo "$latest_version"
+  echo "$latest_version"
 }
 
+MAX_RETRIES=5
+START_DELAY=2
+MAX_DELAY=32
+
+# https://www.deploymastery.com/2023/05/24/how-to-implement-exponential-backoff-in-bash/
+function exponential_backoff {
+  local delay=$START_DELAY
+  for i in $(seq 1 "$MAX_RETRIES"); do
+    # Try the operation
+    if "$@"; then
+      return 0
+    fi
+
+    if [[ $i -lt "$MAX_RETRIES" ]]; then
+      sleep "$delay"
+      delay=$((delay * 2))
+    fi
+  done
+  return 1
+}
