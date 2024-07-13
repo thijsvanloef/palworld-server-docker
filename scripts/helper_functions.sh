@@ -79,11 +79,11 @@ isExecutable() {
 # Convert player list from JSON format
 convert_JSON_to_CSV_players() {
     echo 'name,playeruid,steamid'
-    echo -n "${1}" | \
-        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
+    echo -n "${1}" |
+        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' |
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
-        -re 's/"steam_/"/' \
-        -re 's/"//g'
+            -re 's/"steam_/"/' \
+            -re 's/"//g'
 }
 
 # Lists players
@@ -120,56 +120,56 @@ get_player_count() {
 # Log Definitions
 #
 export LINE='\n'
-export RESET='\033[0m'       # Text Reset
-export WhiteText='\033[0;37m'        # White
+export RESET='\033[0m'        # Text Reset
+export WhiteText='\033[0;37m' # White
 
 # Bold
-export RedBoldText='\033[1;31m'         # Red
-export GreenBoldText='\033[1;32m'       # Green
-export YellowBoldText='\033[1;33m'      # Yellow
-export CyanBoldText='\033[1;36m'        # Cyan
+export RedBoldText='\033[1;31m'    # Red
+export GreenBoldText='\033[1;32m'  # Green
+export YellowBoldText='\033[1;33m' # Yellow
+export CyanBoldText='\033[1;36m'   # Cyan
 
 LogInfo() {
-  Log "$1" "$WhiteText"
+    Log "$1" "$WhiteText"
 }
 LogWarn() {
-  Log "$1" "$YellowBoldText"
+    Log "$1" "$YellowBoldText"
 }
 LogError() {
-  Log "$1" "$RedBoldText"
+    Log "$1" "$RedBoldText"
 }
 LogSuccess() {
-  Log "$1" "$GreenBoldText"
+    Log "$1" "$GreenBoldText"
 }
 LogAction() {
-  Log "$1" "$CyanBoldText" "****" "****"
+    Log "$1" "$CyanBoldText" "****" "****"
 }
 Log() {
-  local message="$1"
-  local color="$2"
-  local prefix="$3"
-  local suffix="$4"
-  printf "$color%s$RESET$LINE" "$prefix$message$suffix"
+    local message="$1"
+    local color="$2"
+    local prefix="$3"
+    local suffix="$4"
+    printf "$color%s$RESET$LINE" "$prefix$message$suffix"
 }
 
 # Send Discord Message
 # Level is optional variable defaulting to info
 DiscordMessage() {
-  local title="$1"
-  local message="$2"
-  local level="$3"
-  local enabled="$4"
-  local webhook_url="$5"
-  if [ -z "$level" ]; then
-    level="info"
-  fi
-  if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
-    /home/steam/server/discord.sh "$title" "$message" "$level" "$enabled" "$webhook_url" &
-  fi
+    local title="$1"
+    local message="$2"
+    local level="$3"
+    local enabled="$4"
+    local webhook_url="$5"
+    if [ -z "$level" ]; then
+        level="info"
+    fi
+    if [ -n "${DISCORD_WEBHOOK_URL}" ]; then
+        /home/steam/server/discord.sh "$title" "$message" "$level" "$enabled" "$webhook_url" &
+    fi
 }
 
 # REST API Call
-REST_API(){
+REST_API() {
     local -r api="${1}"
     local -r data="${2}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
@@ -178,7 +178,7 @@ REST_API(){
     local -r post_api="save|stop"
     local -i result=0
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
-        curl -s -L -X GET  "${url}" -H "${accept}" -u "${userpass}"
+        curl -s -L -X GET "${url}" -H "${accept}" -u "${userpass}"
         result=$?
     else
         curl -s -L -X POST "${url}" -H "${accept}" -u "${userpass}" --json "${data}"
@@ -189,8 +189,8 @@ REST_API(){
 
 # RCON Call
 RCON() {
-  local args="$1"
-  rcon-cli -c /home/steam/server/rcon.yaml "$args"
+    local args="$1"
+    rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
 
 # Given a message this will broadcast in game
@@ -212,7 +212,7 @@ broadcast_command() {
     if [[ $TEXT = *[![:ascii:]]* ]]; then
         LogWarn "Unable to broadcast since the message contains non-ascii characters: \"${message}\""
         return_val=1
-    elif ! RCON "broadcast ${message}" > /dev/null; then
+    elif ! RCON "broadcast ${message}" >/dev/null; then
         return_val=1
     fi
     return "$return_val"
@@ -258,35 +258,31 @@ countdown_message() {
     # Only do countdown if there are players
     if [ "$(get_player_count)" -gt 0 ]; then
         if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
-            for ((i = "${mtime}" ; i > 0 ; i--)); do
+            for ((i = "${mtime}"; i > 0; i--)); do
                 case "$i" in
-                    1 ) 
-                        broadcast_command "${message_prefix} in ${i} minute"
-                        sleep 30s
-                        broadcast_command "${message_prefix} in 30 seconds"
-                        sleep 20s
-                        broadcast_command "${message_prefix} in 10 seconds"
-                        sleep 10s
-                        ;;
-                    2 )
-                        ;&
-                    3 )
-                        ;&
-                    10 )
-                        ;&
-                    15 )
-                        ;&
-                    "$mtime" )
-                        broadcast_command "${message_prefix} in ${i} minutes"
-                        ;&
-                    * ) 
-                        sleep 1m
-                        # Checking for players every minute
-                        # Checking after sleep since it is ran in the beginning of the function
-                        if [ "$(get_player_count)" -eq 0 ]; then
-                            break
-                        fi
-                        ;;
+                1)
+                    broadcast_command "${message_prefix} in ${i} minute"
+                    sleep 30s
+                    broadcast_command "${message_prefix} in 30 seconds"
+                    sleep 20s
+                    broadcast_command "${message_prefix} in 10 seconds"
+                    sleep 10s
+                    ;;
+                2) ;&
+                3) ;&
+                10) ;&
+                15) ;&
+                "$mtime")
+                    broadcast_command "${message_prefix} in ${i} minutes"
+                    ;&
+                *)
+                    sleep 1m
+                    # Checking for players every minute
+                    # Checking after sleep since it is ran in the beginning of the function
+                    if [ "$(get_player_count)" -eq 0 ]; then
+                        break
+                    fi
+                    ;;
                 esac
             done
         # If there are players but mtime is empty
@@ -325,3 +321,23 @@ get_latest_version() {
     echo "$latest_version"
 }
 
+MAX_RETRIES=5
+START_DELAY=2
+MAX_DELAY=32
+
+# https://www.deploymastery.com/2023/05/24/how-to-implement-exponential-backoff-in-bash/
+function exponential_backoff {
+    local delay=$START_DELAY
+    for i in $(seq 1 "$MAX_RETRIES"); do
+        # Try the operation
+        if "$@"; then
+            return 0
+        fi
+
+        if [[ $i -lt "$MAX_RETRIES" ]]; then
+            sleep "$delay"
+            delay=$((delay * 2))
+        fi
+    done
+    return 1
+}
