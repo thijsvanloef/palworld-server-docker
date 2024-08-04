@@ -69,4 +69,5 @@ RESTAPIPort=$REST_API_PORT,
 bShowPlayerList=$SHOW_PLAYER_LIST,
 AllowConnectPlatform=$ALLOW_CONNECT_PLATFORM,
 bIsUseBackupSaveData=$USE_BACKUP_SAVE_DATA,
+SupplyDropSpan=$SUPPLY_DROP_SPAN
 )
