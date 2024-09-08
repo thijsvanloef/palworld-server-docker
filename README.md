@@ -43,7 +43,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 ### Massive shoutout to the following individual sponsors
 
 <p align="left"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/stoprx"><img src="https://github.com/stoprx.png" width="50px" alt="stoprx" /></a>&nbsp;&nbsp;<a href="https://github.com/indifferentbroc"><img src="https://github.com/indifferentbroc.png" width="50px" alt="indifferentbroc" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/indifferentbroc"><img src="https://github.com/indifferentbroc.png" width="50px" alt="indifferentbroc" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Official Documentation
