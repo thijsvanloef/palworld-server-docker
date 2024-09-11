@@ -1,4 +1,4 @@
-FROM golang:1.23.1-alpine as rcon-cli_builder
+FROM golang:1.23.1-alpine AS rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
@@ -17,10 +17,10 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM cm2network/steamcmd:root as base-amd64
+FROM cm2network/steamcmd:root AS base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-07-08 as base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-07-08 AS base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
@@ -40,9 +40,9 @@ LABEL maintainer="thijs@loef.dev" \
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="d5e02aa760b3d434bc7b991777aa89ef4a503e49"
-ARG SUPERCRONIC_SHA1SUM_AMD64="9f27ad28c5c57cd133325b2a66bba69ba2235799"
-ARG SUPERCRONIC_VERSION="0.2.30"
+ARG SUPERCRONIC_SHA1SUM_ARM64="920e9fdc269b827b96a8b4e11281b72ae99537db"
+ARG SUPERCRONIC_SHA1SUM_AMD64="fb4242e9d28528a76b70d878dbf69fe8d94ba7d2"
+ARG SUPERCRONIC_VERSION="0.2.31"
 ARG DEPOT_DOWNLOADER_VERSION="2.6.0"
 
 # update and install dependencies
