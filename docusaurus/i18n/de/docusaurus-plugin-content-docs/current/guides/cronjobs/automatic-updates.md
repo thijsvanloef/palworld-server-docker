@@ -25,6 +25,7 @@ Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in
 | AUTO_UPDATE_CRON_EXPRESSION | Einstellung beeinflusst die Häufigkeit automatischer Updates.                                                              | 0 \* \* \* \*  | Erfordert einen Cron-Ausdruck - Siehe [Konfiguration automatischer Backups mit Cron](https://palworld-server-docker.loef.dev/de/guides/backup/automated-backup) |
 | AUTO_UPDATE_ENABLED         | Aktiviert automatische Updates                                                                                            | false          | true/false                                                                                                                                      |
 | AUTO_UPDATE_WARN_MINUTES    | Wie lange gewartet werden soll, bis der Server nach dem Informieren der Spieler aktualisiert wird. (Dies wird ignoriert, wenn keine Spieler verbunden sind) | 30             | !0                                                                                                                                              |
+
 :::tip
 Dieses Image verwendet Supercronic für Cron-Jobs.
 Siehe [Supercronic](https://github.com/aptible/supercronic#crontab-format)

@@ -24,6 +24,7 @@ already use the needed policy
 | AUTO_UPDATE_CRON_EXPRESSION | Setting affects frequency of automatic updates.                                                                            | 0 \* \* \* \*  | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](https://palworld-server-docker.loef.dev/guides/backup/automated-backup) |
 | AUTO_UPDATE_ENABLED         | Enables automatic updates                                                                                                  | false          | true/false                                                                                                                                      |
 | AUTO_UPDATE_WARN_MINUTES    | How long to wait to update the server, after the player were informed. (This will be ignored, if no Players are connected) | 30             | !0                                                                                                                                              |
+
 :::tip
 This image uses Supercronic for crons
 see [supercronic](https://github.com/aptible/supercronic#crontab-format)
