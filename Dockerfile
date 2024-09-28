@@ -40,9 +40,9 @@ LABEL maintainer="thijs@loef.dev" \
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="920e9fdc269b827b96a8b4e11281b72ae99537db"
-ARG SUPERCRONIC_SHA1SUM_AMD64="fb4242e9d28528a76b70d878dbf69fe8d94ba7d2"
-ARG SUPERCRONIC_VERSION="0.2.31"
+ARG SUPERCRONIC_SHA1SUM_ARM64="7f89438e7810669d3e0ea488a202aaf422cc2fdf"
+ARG SUPERCRONIC_SHA1SUM_AMD64="7da26ce6ab48d75e97f7204554afe7c80779d4e0"
+ARG SUPERCRONIC_VERSION="0.2.32"
 ARG DEPOT_DOWNLOADER_VERSION="2.6.0"
 
 # update and install dependencies
