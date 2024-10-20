@@ -20,7 +20,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
 FROM cm2network/steamcmd:root AS base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-07-08 AS base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-10-20 AS base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
@@ -40,10 +40,10 @@ LABEL maintainer="thijs@loef.dev" \
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="7f89438e7810669d3e0ea488a202aaf422cc2fdf"
-ARG SUPERCRONIC_SHA1SUM_AMD64="7da26ce6ab48d75e97f7204554afe7c80779d4e0"
-ARG SUPERCRONIC_VERSION="0.2.32"
-ARG DEPOT_DOWNLOADER_VERSION="2.6.0"
+ARG SUPERCRONIC_SHA1SUM_ARM64="e0f0c06ebc5627e43b25475711e694450489ab00 "
+ARG SUPERCRONIC_SHA1SUM_AMD64="71b0d58cc53f6bd72cf2f293e09e294b79c666d8 "
+ARG SUPERCRONIC_VERSION="0.2.33"
+ARG DEPOT_DOWNLOADER_VERSION="2.7.3"
 
 # update and install dependencies
 # hadolint ignore=DL3008
