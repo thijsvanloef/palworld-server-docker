@@ -130,7 +130,7 @@ InstallServer() {
   fi
 
   if [ -z "${TARGET_MANIFEST_ID}" ]; then
-    DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
+    DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_TITLE}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
     ## If INSTALL_BETA_INSIDER is set to true, install the latest beta version
     if [ "${INSTALL_BETA_INSIDER}" == true ]; then
       LogWarn "Installing latest beta version"
@@ -173,7 +173,7 @@ InstallServer() {
       fi
     fi
 
-    DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+    DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE_TITLE}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
     return
   fi
 
@@ -181,7 +181,7 @@ InstallServer() {
   targetManifest="${TARGET_MANIFEST_ID}"
 
   LogWarn "Installing Target Version: $targetManifest"
-  DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
+  DiscordMessage "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_TITLE}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
   if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
     LogWarn "Downloading server files using DepotDownloader"
     DepotDownloader -app 2394010 -depot 2394012 -manifest "$targetManifest" -osarch 64 -dir /palworld -validate
@@ -191,5 +191,5 @@ InstallServer() {
     cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   fi
   CreateACFFile "$targetManifest"
-  DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+  DiscordMessage "${DISCORD_POST_UPDATE_BOOT_MESSAGE_TITLE}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
 }
