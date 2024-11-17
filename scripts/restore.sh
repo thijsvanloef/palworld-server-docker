@@ -42,7 +42,7 @@ fi
 
 # Show up backup list
 LogInfo "Backup List:"
-mapfile -t BACKUP_FILES < <(find "$BACKUP_DIRECTORY_PATH" -type f -name "*.tar.gz" | sort)
+mapfile -t BACKUP_FILES < <(find "$BACKUP_DIRECTORY_PATH" -type f -name "*.tar.gz" | sort -r)
 select BACKUP_FILE in "${BACKUP_FILES[@]}"; do
     if [ -n "$BACKUP_FILE" ]; then
         LogInfo "Selected backup: $BACKUP_FILE"
