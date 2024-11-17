@@ -109,6 +109,19 @@ if [ -f "$BACKUP_FILE" ]; then
             # Decompress the backup file in tmp directory
             tar -zxvf "$BACKUP_FILE" -C "$TMP_PATH"
 
+            # Find backup folders
+            mapfile -t backup_folders < <(find "$RESTORE_PATH" -name "backup" -type d | sed "s|^$RESTORE_PATH||")
+
+            # Check if backup folder parents exist in restore
+            for backup_folder in "${backup_folders[@]}"
+            do
+                backup_folder_dirname=$( dirname "$backup_folder" )
+                if [ -d "$TMP_PATH/$backup_folder_dirname" ]; then
+                    # Move backup folder into restore
+                    mv "$RESTORE_PATH/$backup_folder_dirname/backup" "$TMP_PATH/$backup_folder_dirname"
+                fi
+            done
+
             # Make sure Saves with a different ID are removed before restoring the save
             rm -rf "$RESTORE_PATH/Saved/"
 

@@ -1,4 +1,4 @@
-FROM golang:1.23.2-alpine AS rcon-cli_builder
+FROM golang:1.23.3-alpine AS rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
@@ -20,7 +20,7 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
 FROM cm2network/steamcmd:root AS base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-10-20 AS base-arm64
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-2024-11-17 AS base-arm64
 
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
