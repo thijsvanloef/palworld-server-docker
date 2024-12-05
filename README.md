@@ -17,9 +17,6 @@
 
 [Chat with the community on Discord](https://discord.gg/UxBxStPAAE)
 
-> [!TIP]
-> Unsure how to get started? Check out [this guide I wrote!](https://tice.tips/containerization/palworld-server-docker/)
-
 This is a Docker container to help you get started with hosting your own
 [Palworld](https://store.steampowered.com/app/1623730/Palworld/) dedicated server.
 
