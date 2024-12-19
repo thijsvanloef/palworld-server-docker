@@ -37,9 +37,12 @@ fi
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
     if ! fileExists "./PalServer.sh" && [ "${USE_DEPOT_DOWNLOADER,,}" != true ]; then
-        LogAction "SteamCMD failed to download the server properly, attempting to use DepotDownloader."
+        LogInfo "SteamCMD failed to download the server properly, attempting to use DepotDownloader."
         export USE_DEPOT_DOWNLOADER=true
         InstallServer
+
+        # reset env var after installation
+        unset USE_DEPOT_DOWNLOADER
     fi
 
     cp ./PalServer.sh ./PalServer-arm64.sh
