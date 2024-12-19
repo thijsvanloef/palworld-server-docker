@@ -36,6 +36,15 @@ fi
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
+    if ! fileExists "./PalServer.sh" && [ "${USE_DEPOT_DOWNLOADER,,}" != true ]; then
+        LogInfo "SteamCMD failed to download the server properly, attempting to use DepotDownloader."
+        export USE_DEPOT_DOWNLOADER=true
+        InstallServer
+
+        # reset env var after installation
+        unset USE_DEPOT_DOWNLOADER
+    fi
+
     cp ./PalServer.sh ./PalServer-arm64.sh
     
     sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
