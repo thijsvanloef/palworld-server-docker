@@ -29,6 +29,7 @@ if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
     IsUpdateRequired=$?
     if [ "$IsUpdateRequired" == 0 ]; then
         LogAction "Starting Update"
+        rm /palworld/steamapps/appmanifest_2394010.acf
         InstallServer
     fi
 fi
