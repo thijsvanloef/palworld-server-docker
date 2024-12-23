@@ -23,15 +23,10 @@ if [ "$ServerInstalled" == 1 ]; then
     InstallServer
 fi
 
-# Update Only If Already Installed
+# Always update on boot even if the server is installed, to prevent appmanifest issues
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    UpdateRequired
-    IsUpdateRequired=$?
-    if [ "$IsUpdateRequired" == 0 ]; then
-        LogAction "Starting Update"
-        rm /palworld/steamapps/appmanifest_2394010.acf
-        InstallServer
-    fi
+    rm /palworld/steamapps/appmanifest_2394010.acf
+    InstallServer
 fi
 
 # Check if the architecture is arm64
