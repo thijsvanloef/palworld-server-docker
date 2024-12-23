@@ -643,9 +643,6 @@ For example:
 | MAX_BUILDING_LIMIT_NUM                          |  Maximum number of buildings per base                                                                                                                                         | 0 (unlimited)                                                                                         | Integer                                |
 | SERVER_REPLICATE_PAWN_CULL_DISTANCE                          |  Server Replicate Pawn Cull Distance                                                                                                                                       | 15000.000000                                                                                         | Float                                |
 
-ENABLE_PREDATOR_BOSS_PALL = $ENABLE_PREDATOR_BOSS_PALL,
-MAX_BUILDING_LIMIT_NUM = $MAX_BUILDING_LIMIT_NUM,
-SERVER_REPLICATE_PAWN_CULL_DISTANCE = $SERVER_REPLICATE_PAWN_CULL_DISTANCE
 ### Manually
 
 When the server starts, a `PalWorldSettings.ini` file will be created in the following location: `<mount_folder>/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini`
