@@ -6,7 +6,8 @@ sidebar_position: 7
 
 :::warning
 Downgrading to a lower game version is possible, but it is unknown what impact it will have on existing saves.
-
+This requires you to set STEAM_USERNAME and STEAM_PASSWORD to a Steam account that owns the game.
+Accounts with Steam Guard enabled are currently not supported.
 **Please do so at your own risk!**
 :::
 
