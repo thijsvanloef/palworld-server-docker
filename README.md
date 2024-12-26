@@ -25,11 +25,12 @@ This Docker container has been tested and will work on the following OS:
 * Linux (Ubuntu/Debian)
 * Windows 10,11
 * MacOS (including Apple Silicon M1/M2/M3).
+* Raspberry Pi 4/5
 
 This container has also been tested and will work on both `x64` and `ARM64` based CPU architecture.
 
 > [!IMPORTANT]
-> Looking to host a server for Xbox players? [Follow this guide here!](https://palworld-server-docker.loef.dev/quick-setup-xbox)
+> Get up and running in no time with the [Quickstart Guide](https://palworld-server-docker.loef.dev/)!
 
 ## Sponsors
 
