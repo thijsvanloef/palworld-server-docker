@@ -181,13 +181,18 @@ InstallServer() {
   targetManifest="${TARGET_MANIFEST_ID}"
 
   LogWarn "Installing Target Version: $targetManifest"
+  if [ -z "${STEAM_USERNAME}" ] || [ -z "${STEAM_PASSWORD}" ]; then
+    LogError "STEAM_USERNAME or STEAM_PASSWORD is not set. Please set these variables to install a specific version."
+    DiscordMessage "Install" "STEAM_USERNAME or STEAM_PASSWORD is not set. Please set these variables to install a specific version." "failure"
+    return 2
+  fi
   DiscordMessage "Install" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE}" "in-progress" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_PRE_UPDATE_BOOT_MESSAGE_URL}"
   if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
     LogWarn "Downloading server files using DepotDownloader"
-    DepotDownloader -app 2394010 -depot 2394012 -manifest "$targetManifest" -osarch 64 -dir /palworld -validate
-    DepotDownloader -app 2394010 -depot 1006 -osarch 64 -dir /palworld -validate
+    DepotDownloader -app 2394010 -username "${STEAM_USERNAME}" -password "${STEAM_PASSWORD}" -depot 2394012 -manifest "$targetManifest" -osarch 64 -dir /palworld -validate
+    DepotDownloader -app 2394010 -username "${STEAM_USERNAME}" -password "${STEAM_PASSWORD}" -depot 1006 -osarch 64 -dir /palworld -validate
   else
-    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +download_depot 2394010 2394012 "$targetManifest" +quit
+    /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}"  +download_depot 2394010 2394012 "$targetManifest" +quit
     cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"
   fi
   CreateACFFile "$targetManifest"
