@@ -51,18 +51,20 @@ EOL
 }
 
 GetManifestIdDepotDownloader() {
-  local directory="$1"
-  local filename=$(ls -1 "$directory" | head -n 1)
-  
-  if [ -z "$filename" ]; then
-    echo "No file found in directory" >&2
+  local depotManifestDirectory="$1"
+  local manifestFile
+  manifestFile=$(find "$depotManifestDirectory" -type f -name "manifest_2394012_*.txt" | head -n 1)
+
+  if [ -z "$manifestFile" ]; then
+    echo "DepotDownloader manifest file not found."
     return 1
+
+  else
+    local manifestId
+    manifestId=$(grep -oP 'Manifest ID / date\s*:\s*\K[0-9]+' "$manifestFile")
+
+    echo "$manifestId"
   fi
-  
-  local temp=${filename#manifest_*_}
-  local manifest_id=${temp%%.*}
-  
-  echo "$manifest_id"
 }
 
 # Returns 0 if Update Required
