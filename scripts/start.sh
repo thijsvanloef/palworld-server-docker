@@ -41,6 +41,11 @@ if [ "$architecture" == "arm64" ]; then
         unset USE_DEPOT_DOWNLOADER
     fi
 
+    if ! fileExists "./PalServer.sh"; then
+        LogError "Critical server files are missing after installation attempts."
+	exit 1
+    fi
+
     cp ./PalServer.sh ./PalServer-arm64.sh
     
     sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
