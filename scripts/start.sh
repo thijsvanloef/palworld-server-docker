@@ -29,32 +29,23 @@ if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
     InstallServer
 fi
 
+STARTCOMMAND=("./PalServer.sh")
+
+#Validate Installation
+if ! fileExists "${STARTCOMMAND[0]}"; then
+    LogError "Server Not Installed Properly"
+    exit 1
+fi
+
 # Check if the architecture is arm64
 if [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
-    if ! fileExists "./PalServer.sh" && [ "${USE_DEPOT_DOWNLOADER,,}" != true ]; then
-        LogInfo "SteamCMD failed to download the server properly, attempting to use DepotDownloader."
-        export USE_DEPOT_DOWNLOADER=true
-        InstallServer
-
-        # reset env var after installation
-        unset USE_DEPOT_DOWNLOADER
-    fi
 
     cp ./PalServer.sh ./PalServer-arm64.sh
     
     sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
     chmod +x ./PalServer-arm64.sh
     STARTCOMMAND=("./PalServer-arm64.sh")
-else
-    STARTCOMMAND=("./PalServer.sh")
-fi
-
-
-#Validate Installation
-if ! fileExists "${STARTCOMMAND[0]}"; then
-    LogError "Server Not Installed Properly"
-    exit 1
 fi
 
 isReadable "${STARTCOMMAND[0]}" || exit
@@ -74,7 +65,7 @@ if [ "${COMMUNITY,,}" = true ]; then
 fi
 
 if [ "${MULTITHREADING,,}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS" "-NumberOfWorkerThreadsServer=$(nproc --all)")
 fi
 
 LogAction "Checking for available container updates"
