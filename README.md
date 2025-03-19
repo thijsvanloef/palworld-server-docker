@@ -89,7 +89,7 @@ services:
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
-         ALLOW_CONNECT_PLATFORM: "Steam" # Defaults to "Steam" if not set, set this to "Xbox" if you want to host a server for Xbox players. CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
+         CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -138,7 +138,7 @@ docker run -d \
     -e COMMUNITY=false \
     -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
-    -e ALLOW_CONNECT_PLATFORM="Steam" \
+    -e CROSSPLAY_PLATFORMS="(Steam,Xbox,PS5,Mac)" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
@@ -224,7 +224,7 @@ It is highly recommended you set the following environment values before startin
 | REST_API_ENABLED                           | Enable REST API for the palworld server                                                                                                                                                             | false                                                                                              | true/false                                                                                                        | 0.35.0           |
 | REST_API_PORT                              | REST API port to connect to                                                                                                                                                                         | 8212                                                                                               | 1024-65535                                                                                                        | 0.35.0           |
 | QUERY_PORT                                 | Query port used to communicate with Steam servers                                                                                                                                                   | 27015                                                                                              | 1024-65535                                                                                                        | 0.1.0            |
-| ALLOW_CONNECT_PLATFORM                     | Specify if you are hosting a dedicated server for Steam or Xbox players                                                                                                                             | Steam                                                                                              | Steam/Xbox                                                                                                        | 0.38.0           |
+| ALLOW_CONNECT_PLATFORM `DEPRECATED`                    | Specify if you are hosting a dedicated server for Steam or Xbox players                                                                                                                             | Steam                                                                                              | Steam/Xbox                                                                                                        | 0.38.0           |
 | BACKUP_CRON_EXPRESSION                     | Setting affects frequency of automatic backups.                                                                                                                                                     | 0 0 \* \* \*                                                                                       | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 0.19.0           |
 | BACKUP_ENABLED                             | Enables automatic backups                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        | 0.19.0           |
 | USE_BACKUP_SAVE_DATA                       | Enables native automatic backups                                                                                                                                                                    | true                                                                                               | true/false                                                                                                        | 0.35.0           |
@@ -648,6 +648,9 @@ For example:
 | ENABLE_PREDATOR_BOSS_PAL                          |  Enable Predator boss as pals                                                                                                                                         | true                                                                                         | boolean                                |
 | MAX_BUILDING_LIMIT_NUM                          |  Maximum number of buildings per base                                                                                                                                         | 0 (unlimited)                                                                                         | Integer                                |
 | SERVER_REPLICATE_PAWN_CULL_DISTANCE                          |  Server Replicate Pawn Cull Distance                                                                                                                                       | 15000.000000                                                                                         | Float                                |
+| CROSSPLAY_PLATFORMS           | Allowed platform to connect the server.                                                                                                                               | (Steam,Xbox,PS5,Mac) Please make sure you use the "()"                                                                                        | List                                |
+| ALLOW_GLOBAL_PALBOX_EXPORT           | 	If set to True, saving to the global palbox is possible.                                                                                                                               | True                                                                                         | Boolean                                |
+| ALLOW_GLOBAL_PALBOX_IMPORT           | If set to True, importing from the global palbox is possible.                                                                                                                               | False                                                                                         | Boolean                                |
 
 ### Manually
 
