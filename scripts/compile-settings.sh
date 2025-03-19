@@ -23,7 +23,7 @@ LogAction "Compiling PalWorldSettings.ini"
 
 # Deprecation warnings
 if [ -n "$ALLOW_CONNECT_PLATFORM" ]; then
-    LogWarning "ALLOW_CONNECT_PLATFORM is deprecated and will be removed in a future release. Please use CROSSPLAY_PLATFORMS instead."
+    LogWarn "ALLOW_CONNECT_PLATFORM is deprecated and will not be applied to the PalWorldSettings.ini. Please use CROSSPLAY_PLATFORMS instead."
 fi
 
 export DIFFICULTY=${DIFFICULTY:-None}
