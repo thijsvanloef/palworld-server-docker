@@ -237,6 +237,10 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_ENABLED                        | Enables automatic reboots                                                                                                                                                                           | false                                                                                              | true/false                                                                                                        | 0.21.0           |
 | AUTO_REBOOT_WARN_MINUTES                   | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                                                                                                  | Integer                                                                                                           | 0.21.0           |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE         | Restart the Server even if there are players online.                                                                                                                                                | false                                                                                              | true/false                                                                                                        | 0.21.0           |
+| AUTO_PAUSE_ENABLED                         | Enables automatic pause (with ENABLE_PLAYER_LOGGING=true required.)                                                                                                                                 | false                                                                                              | true/false                                                                                                        | 1.4.0           |
+| AUTO_PAUSE_TIMEOUT_EST                     | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established)                                                            | 180                                                                                                | Integer                                                                                                           | 1.4.0           |
+| AUTO_PAUSE_LOG                             | Enable auto-pause logging                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        | 1.4.0           |
+| AUTO_PAUSE_DEBUG                           | Enable auto-pause debug logging                                                                                                                                                                     | false                                                                                              | true/false                                                                                                        | 1.4.0           |
 | TARGET_MANIFEST_ID                         | Locks game version to corespond with Manifest ID from Steam Download, use with STEAM_USERNAME/STEAM_PASSWORD Depot.                                                                                                                         |                                                                                                    | See [Manifest ID Table](#locking-specific-game-version)                                                           | 0.27.0           |
 | STEAM_USERNAME                            | Steam username for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                                    |                                                                                                    | "string"                                                                                                          | 1.2.2           |
 | STEAM_PASSWORD                           | Steam password for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                                    |                                                                                                    | "string"                                                                                                          | 1.2.2           |
@@ -555,6 +559,52 @@ AUTO_REBOOT_CRON_EXPRESSION is a cron expression, in a Cron-Expression you defin
 
 Set AUTO_REBOOT_CRON_EXPRESSION to change the set the schedule, default is everynight at midnight according to the
 timezone set with TZ
+
+## Configuring Automatic Pause
+
+The AUTO_PAUSE feature puts the PalServer process to sleep when there are no online players.
+
+It saves data before going to sleep.
+
+It wakes up when it detects a client connection.
+
+When in paused state, the world time stops.
+
+This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENABLED` to "true".
+
+| Variable               | Info                                                                                                                                     | Default Values | Allowed Values |
+|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
+| AUTO_PAUSE_ENABLED     | Enables automatic pause (Puts the server to sleep to save power when there are no online players)                                        | false          | true/false     |
+| AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established) | 180            | Integer        |
+| AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                | true           | true/false     |
+| AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                          | false          | true/false     |
+
+### Resume manually
+
+A file called `.paused` is created in `/palworld` directory when the server is paused and removed when the server is resumed.
+
+Other services may check for this file's existence before waking the server.
+
+Alternatively, resume with the following command:
+
+```shell
+docker exec -it palworld-server autopause resume
+```
+
+### Service control manually
+
+A `.autopause-disabled` file can be created in the `/palworld` directory to make the server skip autopausing,
+for as long as the file is present.
+
+Alternatively, you can control with the following command:
+
+```shell
+docker exec -it palworld-server autopause stop
+docker exec -it palworld-server autopause continue
+```
+
+This `autopause stop` command is also used during automatic reboots, automatic updates, and container stops.
+It is also used to shutdown command via REST API/RCON.
 
 ## Editing Server Settings
 

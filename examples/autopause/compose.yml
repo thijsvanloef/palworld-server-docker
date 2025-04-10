@@ -1,0 +1,13 @@
+services:
+  palworld:
+    extends:
+      file: ../../docker-compose.yml
+      service: palworld
+    build: ../../
+    environment:
+      SERVER_NAME: "palworld-server-docker/examples/autopause"
+      REST_API_ENABLED: true  # Enable to avoid multi-byte bug in RCON.
+      AUTO_PAUSE_ENABLED: true
+      AUTO_PAUSE_TIMEOUT_EST: 10  # Number of seconds before auto pausing.
+      #AUTO_PAUSE_LOG: true
+      #AUTO_PAUSE_DEBUG: false

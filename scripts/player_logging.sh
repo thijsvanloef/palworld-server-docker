@@ -1,6 +1,8 @@
 #!/bin/bash
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
+# shellcheck source=scripts/autopause/services.sh
+source "/home/steam/server/autopause/services.sh"
 
 get_steamid(){
     local player_info="${1}"
@@ -27,12 +29,20 @@ while ! nc -z localhost "${_PORT}"; do
     LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
 done
 
+AutoPause_init
 while true; do
     server_pid=$(pidof PalServer-Linux-Shipping)
     if [ -n "${server_pid}" ]; then
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation
-        mapfile -t current_player_list < <( get_players_list | tail -n +2 | sed -E '/,(0{8}|0{32}),[0-9A-Z]+/d' | sort )
+        online_players="$(get_players_list | tail -n +2)"
+        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),[0-9A-Z]+/d' | sort )
+        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),[0-9A-Z]+/p' | sort)
+
+        # Players still loading or creating characters
+        if [ "${#current_no_id_list[@]}" -gt 0 ]; then
+            AutoPause_resetTimer
+        fi
 
         # If there are current players then some may have joined
         if [ "${#current_player_list[@]}" -gt 0 ]; then
@@ -40,6 +50,7 @@ while true; do
             mapfile -t players_who_joined_list < <( comm -13 \
                 <(printf '%s\n' "${old_player_list[@]}") \
                 <(printf '%s\n' "${current_player_list[@]}") )
+            AutoPause_resetTimer
         fi
 
         # If there are old players then some may have left
@@ -73,6 +84,11 @@ while true; do
         old_player_list=("${current_player_list[@]}")
         players_who_left_list=( )
         players_who_joined_list=( )
+        AutoPause_main
+    else
+        break
     fi
     sleep "${PLAYER_LOGGING_POLL_PERIOD}"
+    AutoPause_addTimer "${PLAYER_LOGGING_POLL_PERIOD}"
 done
+AutoPause_end
