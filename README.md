@@ -606,6 +606,15 @@ docker exec -it palworld-server autopause continue
 This `autopause stop` command is also used during automatic reboots, automatic updates, and container stops.
 It is also used to shutdown command via REST API/RCON.
 
+### With Community Server
+
+If the environment variable `COMMUNITY` is true, A proxy server is started within the container to
+maintain registration on the community server list.
+
+The proxy server captures communication with `api.palworldgames.com`.
+
+The auto-pause service will replay captured data in the paused state.
+
 ## Editing Server Settings
 
 ### With Environment Variables

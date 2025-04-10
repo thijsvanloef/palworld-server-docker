@@ -24,6 +24,9 @@ fi
 
 mkdir -p /palworld/backups
 
+# shellcheck source=scripts/autopause/community/init.sh
+source "/home/steam/server/autopause/community/init.sh"
+
 # shellcheck disable=SC2317
 term_handler() {
     autopause stop "term_handler"

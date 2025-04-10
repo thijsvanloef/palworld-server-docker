@@ -2,6 +2,8 @@
 # This file included from player_logging.sh only.
 # shellcheck source=scripts/autopause/functions.sh
 source "/home/steam/server/autopause/functions.sh"
+# shellcheck source=scripts/autopause/community/functions.sh
+source "/home/steam/server/autopause/community/functions.sh"
 
 #-------------------------------
 # AutoPause vars
@@ -118,6 +120,13 @@ AutoPause_preSave() {
 }
 
 AutoPause_challengeToPause() {
+    if isTrue "${COMMUNITY}"; then
+        if ! APComm_isCaptured; then
+            APLog "Waiting for capture the community update data before pause."
+            return 1
+        fi
+    fi
+
     if ! local -r result=$(AutoPause_preSave); then
         APLog "Save failed before pausing... ${result}"
         return 1
@@ -128,6 +137,7 @@ AutoPause_challengeToPause() {
 
 AutoPause_waitWakeup() {
     AP_startDaemon
+    isTrue "${COMMUNITY}" && APComm_init
     while true; do
         sleep 0.5
         AutoPause_checkRequest true
@@ -140,6 +150,10 @@ AutoPause_waitWakeup() {
             AP_pause off
             break
         fi
+        # During PAUSE,
+        # it will continue to register and update
+        # the community server list as a dummy.
+        isTrue "${COMMUNITY}" && APComm_proc
     done
     AP_stopDaemon
 }

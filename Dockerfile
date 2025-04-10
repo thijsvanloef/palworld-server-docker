@@ -58,6 +58,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libicu72=72.1-3 \
     unzip=6.0-28 \
     libcap2-bin libpcap0.8 \
+    mitmproxy \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -200,6 +201,15 @@ RUN chmod +x /home/steam/server/*.sh && \
 RUN chmod +x /home/steam/server/autopause/*.sh && \
     ln -sf /home/steam/server/autopause/autopause.sh /usr/local/bin/autopause && \
     ln -sf /home/steam/server/autopause/knockd-ctl.sh /usr/local/sbin/knockd-ctl
+
+# AUTO_PAUSE with Community
+RUN mkdir -p /home/steam/.mitmproxy && \
+    openssl genrsa -out ca.key 2048 && \
+    openssl req -x509 -new -nodes -key ca.key -sha256 -out ca.crt -addext keyUsage=critical,keyCertSign -subj "/CN=rootca" && \
+    cat ca.key ca.crt > /home/steam/.mitmproxy/mitmproxy-ca.pem && \
+    rm ca.key && \
+    mv ca.crt /usr/local/share/ca-certificates/mitmproxy.crt && \
+    update-ca-certificates
 
 WORKDIR /home/steam/server
 
