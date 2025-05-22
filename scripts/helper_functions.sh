@@ -76,6 +76,15 @@ isExecutable() {
     return "$return_val"
 }
 
+isTrue() {
+    if [[ "${1,,}" =~ (true|on|1) ]]; then return 0; fi
+    return 1
+}
+
+PlayerLogging_isEnabled() {
+    isTrue "${ENABLE_PLAYER_LOGGING}" && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && { isTrue "${REST_API_ENABLED}" || isTrue "${RCON_ENABLED}"; }
+}
+
 # Convert player list from JSON format
 convert_JSON_to_CSV_players() {
     echo 'name,playeruid,steamid'
@@ -91,11 +100,11 @@ convert_JSON_to_CSV_players() {
 # Outputs player list if REST API or RCON is enabled and returns 0
 get_players_list() {
     # Prefer REST API
-    if [ "${REST_API_ENABLED,,}" = true ]; then
+    if isTrue "${REST_API_ENABLED}"; then
         convert_JSON_to_CSV_players "$(REST_API players)"
         return 0
     fi
-    if [ "${RCON_ENABLED,,}" = true ]; then
+    if isTrue "${RCON_ENABLED}"; then
         RCON "ShowPlayers"
         return 0
     fi
@@ -169,13 +178,15 @@ DiscordMessage() {
 }
 
 # REST API Call
-REST_API(){
+REST_API() {
+    autopause resume "REST_API ${1}" > /dev/null
     local -r api="${1}"
     local -r data="${2}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
     local -r accept="Accept: application/json"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
+    local -r down_api="shutdown|stop"
     local -i result=0
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
         curl -s -L -X GET  "${url}" -H "${accept}" -u "${userpass}"
@@ -183,6 +194,9 @@ REST_API(){
     else
         curl -s -L -X POST "${url}" -H "${accept}" -u "${userpass}" --json "${data}"
         result=$?
+    fi
+    if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
+        autopause stop > /dev/null
     fi
     return ${result}
 }
@@ -199,7 +213,7 @@ RCON() {
 # Returns 1 if not able to broadcast
 broadcast_command() {
     local return_val=0
-    if [ "${REST_API_ENABLED,,}" = true ]; then
+    if isTrue "${REST_API_ENABLED}"; then
         local json="{\"message\":\"${1}\"}" result
         result="$(REST_API announce "${json}")"
         if [ ! "${result}" = "OK" ]; then
@@ -258,6 +272,7 @@ countdown_message() {
     # Only do countdown if there are players
     if [ "$(get_player_count)" -gt 0 ]; then
         if [[ "${mtime}" =~ ^[0-9]+$ ]]; then
+            autopause stop "countdown_message"
             for ((i = "${mtime}" ; i > 0 ; i--)); do
                 case "$i" in
                     1 ) 
