@@ -57,6 +57,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-traditional=1.10-47 \
     libicu72=72.1-3 \
     unzip=6.0-28 \
+    libcap2-bin libpcap0.8 \
+    mitmproxy \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -84,6 +86,13 @@ RUN case "${TARGETARCH}" in \
     && rm -rf DepotDownloader.xml \
     && chmod +x DepotDownloader \
     && mv DepotDownloader /usr/local/bin/DepotDownloader
+
+# install patched knockd (as same as https://github.com/itzg/docker-minecraft-server/blob/master/build/ubuntu/install-packages.sh)
+RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
+    tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz && \
+    ln -s /usr/local/sbin/knockd /usr/sbin/knockd && \
+    setcap cap_net_raw=ep /usr/local/sbin/knockd && \
+    find /usr/lib -name 'libpcap.so.0.8' -execdir cp '{}' libpcap.so.1 \;
 
 # hadolint ignore=DL3044
 ENV HOME=/home/steam \
@@ -116,6 +125,10 @@ ENV HOME=/home/steam \
     AUTO_REBOOT_WARN_MINUTES=5 \
     AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE=false \
     AUTO_REBOOT_CRON_EXPRESSION="0 0 * * *" \
+    AUTO_PAUSE_ENABLED=false \
+    AUTO_PAUSE_TIMEOUT_EST=180 \
+    AUTO_PAUSE_LOG=true \
+    AUTO_PAUSE_DEBUG=false \
     DISCORD_SUPPRESS_NOTIFICATIONS= \
     DISCORD_WEBHOOK_URL= \
     DISCORD_CONNECT_TIMEOUT=30 \
@@ -183,6 +196,20 @@ RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/update.sh /usr/local/bin/update && \
     mv /home/steam/server/restore.sh /usr/local/bin/restore && \
     ln -sf /home/steam/server/rest_api.sh /usr/local/bin/rest-cli
+
+# AUTO_PAUSE
+RUN chmod +x /home/steam/server/autopause/*.sh && \
+    ln -sf /home/steam/server/autopause/autopause.sh /usr/local/bin/autopause && \
+    ln -sf /home/steam/server/autopause/knockd-ctl.sh /usr/local/sbin/knockd-ctl
+
+# AUTO_PAUSE with Community
+RUN mkdir -p /home/steam/.mitmproxy && \
+    openssl genrsa -out ca.key 2048 && \
+    openssl req -x509 -new -nodes -key ca.key -sha256 -out ca.crt -addext keyUsage=critical,keyCertSign -subj "/CN=rootca" && \
+    cat ca.key ca.crt > /home/steam/.mitmproxy/mitmproxy-ca.pem && \
+    rm ca.key && \
+    mv ca.crt /usr/local/share/ca-certificates/mitmproxy.crt && \
+    update-ca-certificates
 
 WORKDIR /home/steam/server
 

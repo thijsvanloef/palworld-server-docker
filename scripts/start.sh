@@ -137,12 +137,14 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-if [ "${ENABLE_PLAYER_LOGGING,,}" = true ] && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && { [ "${REST_API_ENABLED,,}" = true ] || [ "${RCON_ENABLED,,}" = true ] ;} then
+CHILD_PID=""
+if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
         su steam -c /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
     fi
+    CHILD_PID=$!
 fi
 
 LogAction "Starting Server"
@@ -150,6 +152,10 @@ DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_S
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
+
+if [ -n "${CHILD_PID}" ]; then
+    wait "${CHILD_PID}"
+fi
 
 DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
 exit 0
