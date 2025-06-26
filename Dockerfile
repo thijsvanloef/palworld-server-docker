@@ -59,6 +59,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip=6.0-28 \
     libcap2-bin libpcap0.8 \
     mitmproxy \
+    ca-certificates \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
