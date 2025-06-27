@@ -1,4 +1,4 @@
-FROM golang:1.23.9-alpine AS rcon-cli_builder
+FROM golang:1.23.10-alpine AS rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
