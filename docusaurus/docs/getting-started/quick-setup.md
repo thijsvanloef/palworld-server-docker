@@ -46,17 +46,17 @@ services:
       image: thijsvanloef/palworld-server-docker:latest
       restart: unless-stopped
       container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
+      stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop
       ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-        # - 8212:8212/tcp   # Port for REST API if REST_API_ENABLED: true
+         - 8211:8211/udp
+         - 27015:27015/udp  # Required if you want your server to show up in the community servers tab
+         # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
       environment:
          PUID: 1000
          PGID: 1000
-         PORT: 8211 # Optional but recommended
-         PLAYERS: 16 # Optional but recommended
-         SERVER_PASSWORD: "worldofpals" # Optional but recommended
+         PORT: 8211  # Optional but recommended
+         PLAYERS: 16  # Optional but recommended
+         SERVER_PASSWORD: "worldofpals"  # Optional but recommended
          MULTITHREADING: true
          RCON_ENABLED: true
          RCON_PORT: 25575
@@ -65,7 +65,7 @@ services:
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
-         ALLOW_CONNECT_PLATFORM: "Steam" # Defaults to "Steam" if not set, set this to "Xbox" if you want to host a server for Xbox players. CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
+         CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
       volumes:
          - ./palworld:/palworld/
 ```
@@ -126,7 +126,7 @@ docker run -d \
     -e COMMUNITY=false \
     -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
-    -e ALLOW_CONNECT_PLATFORM: "Steam" \
+    -e CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
