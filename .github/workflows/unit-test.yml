@@ -152,7 +152,7 @@ jobs:
 
       - name: Run server
         run: |
-            sed -i 's/^USE_DEPOT_DOWNLOADER=false/USE_DEPOT_DOWNLOADER=true/' .env.example && \
+            sed -i 's/^USE_DEPOT_DOWNLOADER=False/USE_DEPOT_DOWNLOADER=True/' .env.example && \
             docker run -d \
             --name palworld-server \
             -p 8211:8211/udp \
