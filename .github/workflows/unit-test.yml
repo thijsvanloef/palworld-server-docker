@@ -9,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit-test-amd64:
-    name: Docker - Test (amd64)
+  unit-test-amd64-steamcmd:
+    name: Docker - Test (amd64-steamcmd)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -29,6 +29,130 @@ jobs:
 
       - name: Run server
         run: |
+            docker run -d \
+            --name palworld-server \
+            -p 8211:8211/udp \
+            -p 27015:27015/udp \
+            -p 25575:25575/tcp \
+            -v ./palworld:/palworld/ \
+            --env-file .env.example \
+            --restart unless-stopped \
+            --stop-timeout 30 \
+            ${{ github.run_id }}
+
+      - name: Wait for server to start
+        run: |
+            TIMEOUT_SECONDS=180
+            START_TIME=$(date +%s)
+
+            while ! docker logs palworld-server 2>&1 | grep -q "Setting breakpad minidump AppID"; do
+              CURRENT_TIME=$(date +%s)
+              ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+
+              if [ $ELAPSED_TIME -gt $TIMEOUT_SECONDS ]; then
+                echo "Timeout reached. Server failed to start within $TIMEOUT_SECONDS seconds."
+                printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
+                docker logs palworld-server
+                exit 1
+              fi
+
+              echo "Waiting for server to start..."
+              sleep 5
+            done
+
+      - name: Test if rcon.yaml is valid
+        run: |
+            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
+            docker exec palworld-server cat /home/steam/server/rcon.yaml
+
+            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
+            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
+
+            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+
+            if [ ! $RCON_PORT == $YAML_PORT ]; then
+              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
+              exit 2
+            fi
+            if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
+              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
+              exit 3
+            fi
+
+      - name: Test if rcon works
+        run: |
+            sleep 5
+
+            if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+              echo "Server may not have started successfully."
+              exit 4
+            fi
+
+            OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
+            if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
+              echo "Error: Unexpected output - $OUTPUT"
+              exit 5
+            fi
+
+            OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
+            if [[ $OUTPUT != *"Complete Save"* ]]; then
+              echo "Error: Unexpected output - $OUTPUT"
+              exit 6
+            fi
+
+      - name: Test if port 8211, 27015 and 25575 are listening
+        run: |
+            nc -z -u -v 127.0.0.1 8211 || exit 7
+            nc -z -u -v 127.0.0.1 27015 || exit 8
+            nc -z -v 127.0.0.1 25575 || exit 9
+
+      - name: Test the backup script
+        run: |
+            docker exec palworld-server backup
+            if [ ! -f ./palworld/backups/palworld-save-*.tar.gz ]; then
+              echo "Backup file not found. Backup command may have failed."
+              exit 10
+            fi
+
+      - name: Test if PalWorldSettings.ini is valid
+        run: |
+            if [ ! -f ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini ]; then
+              echo "Error: PalWorldSettings.ini file is missing."
+              exit 11
+            fi
+
+            if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
+              echo "Error: PalWorldSettings.ini is missing the required section [/Script/Pal.PalGameWorldSettings]."
+              exit 12
+            fi
+
+            if ! grep -q "^OptionSettings=\(.*\)" ./palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini; then
+              echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
+              exit 13
+            fi
+
+  unit-test-amd64-depotdownloader:
+    name: Docker - Test (amd64-depotdownloader)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v6
+        with:
+          file: ./Dockerfile
+          load: true
+          tags: ${{ github.run_id }}
+          platforms: linux/amd64
+
+      - name: Run server
+        run: |
+            sed -i 's/^USE_DEPOT_DOWNLOADER=false/USE_DEPOT_DOWNLOADER=true/' .env.example && \
             docker run -d \
             --name palworld-server \
             -p 8211:8211/udp \
