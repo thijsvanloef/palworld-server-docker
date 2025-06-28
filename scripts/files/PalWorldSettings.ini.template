@@ -82,5 +82,7 @@ EnablePredatorBossPal=$ENABLE_PREDATOR_BOSS_PAL,
 MaxBuildingLimitNum=$MAX_BUILDING_LIMIT_NUM,
 ServerReplicatePawnCullDistance=$SERVER_REPLICATE_PAWN_CULL_DISTANCE,
 bAllowGlobalPalboxExport=$ALLOW_GLOBAL_PALBOX_EXPORT,
-bAllowGlobalPalboxImport=$ALLOW_GLOBAL_PALBOX_IMPORT
+bAllowGlobalPalboxImport=$ALLOW_GLOBAL_PALBOX_IMPORT,
+EquipmentDurabilityDamageRate=$EQUIPMENT_DURABILITY_DAMAGE_RATE,
+ItemContainerForceMarkDirtyInterval=$ITEM_CONTAINER_FORCE_MARK_DIRTY_INTERVAL
 )
