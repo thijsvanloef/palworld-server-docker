@@ -2,6 +2,7 @@ OptionSettings=(
 Difficulty=$DIFFICULTY,
 RandomizerType=$RANDOMIZER_TYPE,
 RandomizerSeed=$RANDOMIZER_SEED,
+bIsRandomizerPalLevelRandom=$IS_RANDOMIZER_PAL_LEVEL_RANDOM,
 DayTimeSpeedRate=$DAYTIME_SPEEDRATE,
 NightTimeSpeedRate=$NIGHTTIME_SPEEDRATE,
 ExpRate=$EXP_RATE,
