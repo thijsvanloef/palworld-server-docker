@@ -35,6 +35,7 @@ AP_stopDaemon() {
 #-------------------------------
 
 AutoPause_init() {
+    AP_isEnabled || return
     APLog "Service ... start"
     AP_clean
     AutoPause_resetTimer
@@ -159,6 +160,7 @@ AutoPause_waitWakeup() {
 }
 
 AutoPause_main() {
+    AP_isEnabled || return
     AutoPause_checkRequest false
     if AutoPause_checkTimer; then
         # Safely pause the server when it is not writing files.
@@ -172,6 +174,7 @@ AutoPause_main() {
 }
 
 AutoPause_end() {
+    AP_isEnabled || return
     AP_clean
     APLog "Service ... stopped"
 }
