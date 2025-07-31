@@ -206,7 +206,7 @@ RUN chmod +x /home/steam/server/autopause/*.sh && \
 # AUTO_PAUSE with Community
 RUN mkdir -p /home/steam/.mitmproxy && \
     openssl genrsa -out ca.key 2048 && \
-    openssl req -x509 -new -nodes -key ca.key -sha256 -out ca.crt -addext keyUsage=critical,keyCertSign -subj "/CN=rootca" && \
+    openssl req -x509 -new -nodes -key ca.key -sha256 -days 3650 -out ca.crt -addext keyUsage=critical,keyCertSign -subj "/CN=rootca" && \
     cat ca.key ca.crt > /home/steam/.mitmproxy/mitmproxy-ca.pem && \
     rm ca.key && \
     mv ca.crt /usr/local/share/ca-certificates/mitmproxy.crt && \
