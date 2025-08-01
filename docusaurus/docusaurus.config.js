@@ -34,25 +34,30 @@ const config = {
     defaultLocale: 'en',
     locales: ['en', 'ko', 'zh', 'nl', 'de', 'pt-PT'],
     localeConfigs:{
-      en: {
-        label: 'English',
+      en: { 
+        label: 'English', 
+        htmlLang: 'en-US'
       },
-      ko: {
-        label: 'Korean',
+      ko: { 
+        label: 'Korean', 
+        htmlLang: 'ko-KR' 
       },
       zh: {
         label: 'Simplified Chinese',
+        htmlLang: 'zh-CN',
       },
       nl: {
         label: 'Dutch',
+        htmlLang: 'nl-NL',
       },
-	  de: {
-		label: 'Deutsch'
-	  }
-    ,
-	  'pt-PT': {
-		label: 'Portuguese'
-	  }
+      de: {
+        label: 'Deutsch',
+        htmlLang: 'de-DE',
+      },
+      'pt-PT': {
+        label: 'Portuguese',
+        htmlLang: 'pt-PT',
+      }
     }
   },
 
@@ -68,6 +73,9 @@ const config = {
           editUrl:
             'https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus',
           routeBasePath: '/',
+          seo: {
+            canonicalBaseUrl: 'https://palworld-server-docker.loef.dev',
+          },
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -180,6 +188,7 @@ const config = {
       },
       metadata: [
         {name: 'keywords', content: 'palworld, palworld server docker, palworld docker'},
+        { name: 'description', content: 'Documentation to run a Palworld dedicated server using Docker with full multi-language support.' },
       ],
       algolia: {
         // The application ID provided by Algolia
