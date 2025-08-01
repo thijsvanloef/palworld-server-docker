@@ -73,9 +73,6 @@ const config = {
           editUrl:
             'https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus',
           routeBasePath: '/',
-          seo: {
-            canonicalBaseUrl: 'https://palworld-server-docker.loef.dev',
-          },
         },
         theme: {
           customCss: './src/css/custom.css',
