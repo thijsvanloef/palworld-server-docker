@@ -126,7 +126,7 @@ docker run -d \
     -e COMMUNITY=false \
     -e SERVER_NAME="palworld-server-docker by Thijs van Loef" \
     -e SERVER_DESCRIPTION="palworld-server-docker by Thijs van Loef" \
-    -e CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)" \
+    -e CROSSPLAY_PLATFORMS="(Steam,Xbox,PS5,Mac)" \
     --restart unless-stopped \
     --stop-timeout 30 \
     thijsvanloef/palworld-server-docker:latest
