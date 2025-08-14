@@ -11,13 +11,13 @@ RESTORE_PATH="/palworld/Pal"
 # Copy the save file before restore temporary path
 TMP_SAVE_PATH="/palworld/backups/restore-"$(date +"%Y-%m-%d_%H-%M-%S")
 
-# shellcheck disable=SC2317
+# shellcheck disable=SC2317,SC2329
 term_error_handler() {
     LogError "An error occurred during server shutdown."
     exit 1
 }
 
-# shellcheck disable=SC2317
+# shellcheck disable=SC2317,SC2329
 restore_error_handler() {
     LogError "Error occurred during restore."
     if [ -d "$TMP_SAVE_PATH/Saved" ]; then
