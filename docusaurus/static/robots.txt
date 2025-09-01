@@ -1,2 +1,3 @@
 User-agent: *
 Disallow:
+Sitemap: https://palworld-server-docker.loef.dev/sitemap.xml
