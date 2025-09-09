@@ -53,9 +53,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gettext-base=0.21-12 \
     xdg-user-dirs=0.18-1 \
     jo=1.9-1 \
-    jq=1.6-2.1 \
+    jq \
     netcat-traditional=1.10-47 \
-    libicu72=72.1-3 \
+    libicu72 \
     unzip=6.0-28 \
     libcap2-bin libpcap0.8 \
     mitmproxy \
