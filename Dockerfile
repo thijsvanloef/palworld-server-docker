@@ -55,7 +55,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jo=1.9-1 \
     jq \
     netcat-traditional=1.10-47 \
-    libicu72=72.1-3 \
+    libicu72 \
     unzip=6.0-28 \
     libcap2-bin libpcap0.8 \
     mitmproxy \
