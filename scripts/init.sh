@@ -2,6 +2,8 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+mkdir -p /palworld/backups
+
 if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
     if [[ "${PUID}" -ne 0 ]] && [[ "${PGID}" -ne 0 ]]; then
         LogAction "EXECUTING USERMOD"
@@ -21,8 +23,6 @@ if ! [ -w "/palworld" ]; then
     LogError "/palworld is not writable."
     exit 1
 fi
-
-mkdir -p /palworld/backups
 
 # shellcheck source=scripts/autopause/community/init.sh
 source "/home/steam/server/autopause/community/init.sh"
