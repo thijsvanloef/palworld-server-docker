@@ -48,15 +48,15 @@ ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
 # update and install dependencies
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    procps=2:4.0.2-3 \
-    wget \ 
-    gettext-base=0.21-12 \
-    xdg-user-dirs=0.18-1 \
-    jo=1.9-1 \
+    procps \
+    wget \
+    gettext-base \
+    xdg-user-dirs \
+    jo \
     jq \
-    netcat-traditional=1.10-47 \
+    netcat-traditional \
     libicu72 \
-    unzip=6.0-28 \
+    unzip \
     libcap2-bin libpcap0.8 \
     mitmproxy \
     ca-certificates \
