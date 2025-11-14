@@ -412,7 +412,7 @@ jobs:
             fi
             docker exec palworld-server-${{ github.run_id }} rest-cli save
             if docker logs palworld-server-${{ github.run_id }} 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
-                echo "Save OK — continuing.
+                echo "Save OK — continuing."
             else
                 echo "Required log entry not found — exiting with code 5."
                 exit 5
