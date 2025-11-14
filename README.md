@@ -367,7 +367,6 @@ For a full list of commands go to: [https://tech.palworldgame.com/settings-and-o
 ## Using REST API
 
 REST API is enabled by default.
-If used, please set REST_API_ENABLED to true.
 
 docker-compose.override.yml
 
