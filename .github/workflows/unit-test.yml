@@ -104,7 +104,7 @@ jobs:
       - name: Test if the REST API works
         run: |
             sleep 100
-
+            docker logs palworld-server
             if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
