@@ -105,11 +105,11 @@ jobs:
         run: |
             sleep 100
 
-            if ! docker exec palworld-server-${{ github.run_id }} rest-cli info | grep -q "\"version\"\:"; then
+            if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rest-cli announce "Hello, Palworld!" 2>&1)
+            OUTPUT=$(docker exec palworld-server rest-cli announce "Hello, Palworld!" 2>&1)
             if [[ $OUTPUT != *{"message":"Hello, Palworld!"}* ]]; then
               echo "Error: Unexpected output - $OUTPUT"
               exit 5
@@ -243,11 +243,11 @@ jobs:
         run: |
             sleep 100
 
-            if ! docker exec palworld-server-${{ github.run_id }} rest-cli info | grep -q "\"version\"\:"; then
+            if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rest-cli announce "Hello, Palworld!" 2>&1)
+            OUTPUT=$(docker exec palworld-server rest-cli announce "Hello, Palworld!" 2>&1)
             if [[ $OUTPUT != *{"message":"Hello, Palworld!"}* ]]; then
               echo "Error: Unexpected output - $OUTPUT"
               exit 5
