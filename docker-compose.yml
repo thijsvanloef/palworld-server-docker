@@ -1,7 +1,7 @@
 ---
 services:
   palworld:
-    image: test
+    image: thijsvanloef/palworld-server-docker:latest
     restart: unless-stopped
     container_name: palworld-server
     stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop

@@ -112,8 +112,6 @@ get_players_list() {
 }
 
 # Checks how many players are currently connected
-# Outputs 0 if RCON is not enabled and returns 1
-# Outputs the player count if rcon is enabled and returns 0
 get_player_count() {
     local player_list
     local return_val=0
@@ -204,6 +202,7 @@ REST_API() {
 # RCON Call
 RCON() {
   local args="$1"
+  LogWarn "RCON IS DEPRECATED AND WILL BE REMOVED IN A FUTURE RELEASE. PLEASE USE THE REST API INSTEAD."
   rcon-cli -c /home/steam/server/rcon.yaml "$args"
 }
 
@@ -237,7 +236,7 @@ broadcast_command() {
 # Returns 1 if it is not able to save
 save_server() {
     local return_val=0
-    if ! RCON save; then
+    if ! REST_API save; then
         return_val=1
     fi
     return "$return_val"
@@ -250,7 +249,7 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if ! RCON "Shutdown 1"; then
+        if ! rest-cli shutdown 1 "Shutting down"; then
             return_val=1
         fi
     else
