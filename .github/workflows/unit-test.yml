@@ -361,7 +361,7 @@ jobs:
       #         echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
       #         exit 3
       #       fi
-        
+
       # - name: Test if rcon works
       #   run: |
       #       sleep 100
