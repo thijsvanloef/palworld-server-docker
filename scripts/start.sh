@@ -118,7 +118,7 @@ fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; then
     LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
-    LogInfo "Adding cronjob for auto rebooting"
+    LogInfo "Adding cronjob for auto rebooting via REST API"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
