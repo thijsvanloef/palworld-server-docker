@@ -295,5 +295,7 @@
     },
   
     // MD056/table-column-count : Table column count : https://github.com/DavidAnson/markdownlint/blob/v0.33.0/doc/md056.md
-    "MD056": true
+    "MD056": true,
+    // MD060/table-column-style : Table column style : https://github.com/DavidAnson/markdownlint/blob/v0.39.0/doc/md060.md
+    "MD060": false
   }
