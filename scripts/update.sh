@@ -19,9 +19,9 @@ if [ "${UPDATE_ON_BOOT,,}" != true ]; then
     exit 1
 fi
 
-if [ "${REST_API_ENABLED,,}" != true ]; then
-    LogWarn "An update is available however auto updating without REST API is not supported"
-    DiscordMessage "Update" "An update is available however auto updating without REST API is not supported" "warn"
+if [ "${RCON_ENABLED,,}" != true ]; then
+    LogWarn "An update is available however auto updating without rcon is not supported"
+    DiscordMessage "Update" "An update is available however auto updating without rcon is not supported" "warn"
     exit 1
 fi
 

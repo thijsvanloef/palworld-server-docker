@@ -2,8 +2,8 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
-if [ "${REST_API_ENABLED,,}" != true ]; then
-    LogWarn "Unable to reboot. REST API is required."
+if [ "${RCON_ENABLED,,}" != true ]; then
+    LogWarn "Unable to reboot. RCON is required."
     exit 1
 fi
 

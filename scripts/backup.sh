@@ -3,7 +3,7 @@
 source "/home/steam/server/helper_functions.sh"
 
 DiscordMessage "Backup" "${DISCORD_PRE_BACKUP_MESSAGE}" "in-progress" "${DISCORD_PRE_BACKUP_MESSAGE_ENABLED}" "${DISCORD_PRE_BACKUP_MESSAGE_URL}"
-if [ "${REST_API_ENABLED,,}" = true ]; then
+if [ "${RCON_ENABLED,,}" = true ]; then
     save_server
 fi
 
