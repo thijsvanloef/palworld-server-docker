@@ -60,48 +60,70 @@ jobs:
               sleep 5
             done
 
-      - name: Test if rcon.yaml is valid
+      # - name: Test if rcon.yaml is valid
+      #   run: |
+      #       printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
+      #       docker exec palworld-server cat /home/steam/server/rcon.yaml
+
+      #       RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
+      #       ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
+
+      #       YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+      #       YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+
+      #       if [ ! $RCON_PORT == $YAML_PORT ]; then
+      #         echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
+      #         exit 2
+      #       fi
+      #       if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
+      #         echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
+      #         exit 3
+      #       fi
+
+      # - name: Test if rcon works
+      #   run: |
+      #       sleep 5
+
+      #       if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+      #         echo "Server may not have started successfully."
+      #         exit 4
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
+      #       if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 5
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
+      #       if [[ $OUTPUT != *"Complete Save"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 6
+      #       fi
+
+      - name: Test if the REST API works
         run: |
-            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
-            docker exec palworld-server cat /home/steam/server/rcon.yaml
-
-            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
-            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
-
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
-
-            if [ ! $RCON_PORT == $YAML_PORT ]; then
-              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
-              exit 2
-            fi
-            if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
-              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
-              exit 3
-            fi
-
-      - name: Test if rcon works
-        run: |
-            sleep 5
-
-            if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+            sleep 10
+            if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-
-            OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
-            if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 5
+            docker exec palworld-server rest-cli announce "Hello, Palworld!"
+            if docker logs palworld-server 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
+                echo "Announce OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
+            fi
+            docker exec palworld-server rest-cli save
+            if docker logs palworld-server 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
+                echo "Save OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
             fi
 
-            OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
-            if [[ $OUTPUT != *"Complete Save"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 6
-            fi
-
-      - name: Test if port 8211, 27015 and 25575 are listening
+      - name: Test if port 8211, 27015, 25575 and 8212 are listening
         run: |
             nc -z -u -v 127.0.0.1 8211 || exit 7
             nc -z -u -v 127.0.0.1 27015 || exit 8
@@ -184,48 +206,69 @@ jobs:
               sleep 5
             done
 
-      - name: Test if rcon.yaml is valid
+      # - name: Test if rcon.yaml is valid
+      #   run: |
+      #       printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
+      #       docker exec palworld-server cat /home/steam/server/rcon.yaml
+
+      #       RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
+      #       ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
+
+      #       YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+      #       YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+
+      #       if [ ! $RCON_PORT == $YAML_PORT ]; then
+      #         echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
+      #         exit 2
+      #       fi
+      #       if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
+      #         echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
+      #         exit 3
+      #       fi
+
+      # - name: Test if rcon works
+      #   run: |
+      #       sleep 5
+
+      #       if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+      #         echo "Server may not have started successfully."
+      #         exit 4
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
+      #       if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 5
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
+      #       if [[ $OUTPUT != *"Complete Save"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 6
+      #       fi
+      - name: Test if the REST API works
         run: |
-            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
-            docker exec palworld-server cat /home/steam/server/rcon.yaml
-
-            RCON_PORT=$(docker exec palworld-server env | grep RCON_PORT | cut -d'=' -f2)
-            ADMIN_PASSWORD=$(docker exec palworld-server env | grep ADMIN_PASSWORD | cut -d'=' -f2)
-
-            YAML_PORT=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
-
-            if [ ! $RCON_PORT == $YAML_PORT ]; then
-              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
-              exit 2
-            fi
-            if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
-              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
-              exit 3
-            fi
-
-      - name: Test if rcon works
-        run: |
-            sleep 5
-
-            if ! docker exec palworld-server rcon-cli Info | grep -q "Welcome to Pal Server"; then
+            sleep 10
+            if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-
-            OUTPUT=$(docker exec palworld-server rcon-cli "Broadcast test" 2>&1)
-            if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 5
+            docker exec palworld-server rest-cli announce "Hello, Palworld!"
+            if docker logs palworld-server 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
+                echo "Announce OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
+            fi
+            docker exec palworld-server rest-cli save
+            if docker logs palworld-server 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
+                echo "Save OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
             fi
 
-            OUTPUT=$(docker exec palworld-server rcon-cli save 2>&1)
-            if [[ $OUTPUT != *"Complete Save"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 6
-            fi
-
-      - name: Test if port 8211, 27015 and 25575 are listening
+      - name: Test if port 8211, 27015, 25575 and 8212 are listening
         run: |
             nc -z -u -v 127.0.0.1 8211 || exit 7
             nc -z -u -v 127.0.0.1 27015 || exit 8
@@ -312,49 +355,70 @@ jobs:
               echo "Waiting for server to start..."
               sleep 5
             done
+      # RCON is deprecated, so skipping this test for now
+      # - name: Test if rcon.yaml is valid
+      #   run: |
+      #       printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
+      #       docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml
 
-      - name: Test if rcon.yaml is valid
-        run: |
-            printf "\e[0;32m%s\e[0m\n" "*****RCON.YAML*****"
-            docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml
+      #       RCON_PORT=$(docker exec palworld-server-${{ github.run_id }} env | grep RCON_PORT | cut -d'=' -f2)
+      #       ADMIN_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} env | grep ADMIN_PASSWORD | cut -d'=' -f2)
 
-            RCON_PORT=$(docker exec palworld-server-${{ github.run_id }} env | grep RCON_PORT | cut -d'=' -f2)
-            ADMIN_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} env | grep ADMIN_PASSWORD | cut -d'=' -f2)
+      #       YAML_PORT=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
+      #       YAML_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
 
-            YAML_PORT=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  address:" | awk '{print $2}' | cut -d ':' -f2 | tr -d '"')
-            YAML_PASSWORD=$(docker exec palworld-server-${{ github.run_id }} cat /home/steam/server/rcon.yaml | grep "^  password:" | awk '{print $2}' | tr -d '"')
+      #       if [ ! $RCON_PORT == $YAML_PORT ]; then
+      #         echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
+      #         exit 2
+      #       fi
+      #       if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
+      #         echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
+      #         exit 3
+      #       fi
 
-            if [ ! $RCON_PORT == $YAML_PORT ]; then
-              echo "Error: $RCON_PORT in .env.example does not match $YAML_PORT in rcon.yaml."
-              exit 2
-            fi
-            if [ ! "$ADMIN_PASSWORD" == "$YAML_PASSWORD" ]; then
-              echo "Error: $ADMIN_PASSWORD in .env.example does not match $YAML_PASSWORD in rcon.yaml."
-              exit 3
-            fi
+      # - name: Test if rcon works
+      #   run: |
+      #       sleep 100
 
-      - name: Test if rcon works
+      #       if ! docker exec palworld-server-${{ github.run_id }} rcon-cli Info | grep -q "Welcome to Pal Server"; then
+      #         echo "Server may not have started successfully."
+      #         exit 4
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli "Broadcast test" 2>&1)
+      #       if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 5
+      #       fi
+
+      #       OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli save 2>&1)
+      #       if [[ $OUTPUT != *"Complete Save"* ]]; then
+      #         echo "Error: Unexpected output - $OUTPUT"
+      #         exit 6
+      #       fi
+      - name: Test if the REST API works
         run: |
             sleep 100
-
-            if ! docker exec palworld-server-${{ github.run_id }} rcon-cli Info | grep -q "Welcome to Pal Server"; then
+            if ! docker exec palworld-server-${{ github.run_id }} rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-
-            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli "Broadcast test" 2>&1)
-            if [[ $OUTPUT != *"Broadcasted: test"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 5
+            docker exec palworld-server-${{ github.run_id }} rest-cli announce "Hello, Palworld!"
+            if docker logs palworld-server-${{ github.run_id }} 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
+                echo "Announce OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
+            fi
+            docker exec palworld-server-${{ github.run_id }} rest-cli save
+            if docker logs palworld-server-${{ github.run_id }} 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
+                echo "Save OK — continuing."
+            else
+                echo "Required log entry not found — exiting with code 5."
+                exit 5
             fi
 
-            OUTPUT=$(docker exec palworld-server-${{ github.run_id }} rcon-cli save 2>&1)
-            if [[ $OUTPUT != *"Complete Save"* ]]; then
-              echo "Error: Unexpected output - $OUTPUT"
-              exit 6
-            fi
-
-      - name: Test if port 8211, 27015 and 25575 are listening
+      - name: Test if port 8211, 27015, 25575 and 8212 are listening
         run: |
             nc -z -u -v 127.0.0.1 8211 || exit 7
             nc -z -u -v 127.0.0.1 27015 || exit 8

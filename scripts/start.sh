@@ -116,9 +116,9 @@ if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
 
-if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${RCON_ENABLED,,}" = true ]; then
+if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; then
     LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
-    LogInfo "Adding cronjob for auto rebooting"
+    LogInfo "Adding cronjob for auto rebooting via REST API"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test "/home/steam/server/crontab" || exit
 fi
@@ -130,7 +130,8 @@ else
     LogInfo "No Cronjobs found"
 fi
 
-# Configure RCON settings
+# Configure RCON settings.
+# DEPRECATED: RCON will be removed in a future release.
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
