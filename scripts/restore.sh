@@ -35,8 +35,8 @@ restore_error_handler() {
     exit 1
 }
 
-if [ "${RCON_ENABLED}" != true ]; then
-    LogWarn "RCON is not enabled. Please enable RCON to use this feature."
+if [ "${REST_API_ENABLED}" != true ]; then
+    LogWarn "REST API is not enabled. Please enable REST API to use this feature."
     exit 1
 fi
 
@@ -61,11 +61,11 @@ if [ -f "$BACKUP_FILE" ]; then
         # Shutdown server
         trap 'term_error_handler' ERR
 
-        if [ "${RCON_ENABLED}" = true ]; then
+        if [ "${REST_API_ENABLED}" = true ]; then
             LogAction "Shutting Down Server"
             shutdown_server
         else
-            LogWarn "RCON is not enabled. Please enable RCON to use this feature. Unable to restore backup."
+            LogWarn "REST API is not enabled. Please enable REST API to use this feature. Unable to restore backup."
             exit 1
         fi
 

@@ -1,7 +1,7 @@
 ---
 services:
   palworld:
-    image: thijsvanloef/palworld-server:latest
+    image: thijsvanloef/palworld-server-docker:latest
     restart: unless-stopped
     container_name: palworld-server
     stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop
@@ -16,8 +16,8 @@ services:
       PLAYERS: 16  # Optional but recommended
       SERVER_PASSWORD: "worldofpals"  # Optional but recommended
       MULTITHREADING: true
-      RCON_ENABLED: true
-      RCON_PORT: 25575
+      REST_API_ENABLED: true
+      REST_API_PORT: 8212
       TZ: "UTC"
       ADMIN_PASSWORD: "adminPasswordHere"
       COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
