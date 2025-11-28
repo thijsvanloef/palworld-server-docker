@@ -82,8 +82,8 @@ services:
          PLAYERS: 16 # Optional but recommended
          SERVER_PASSWORD: "worldofpals" # Optional but recommended
          MULTITHREADING: true
-         RCON_ENABLED: true
-         RCON_PORT: 25575
+         REST_API_ENABLED: true
+         REST_API_PORT: 8212
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
@@ -130,8 +130,8 @@ docker run -d \
     -e PORT=8211 \
     -e PLAYERS=16 \
     -e MULTITHREADING=true \
-    -e RCON_ENABLED=true \
-    -e RCON_PORT=25575 \
+    -e REST_API_ENABLED=true \
+    -e REST_API_PORT=8212 \
     -e TZ=UTC \
     -e ADMIN_PASSWORD="adminPasswordHere" \
     -e SERVER_PASSWORD="worldofpals" \
