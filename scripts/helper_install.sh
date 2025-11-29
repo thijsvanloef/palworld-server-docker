@@ -148,6 +148,11 @@ InstallServer() {
     USE_DEPOT_DOWNLOADER=true
   fi
 
+  WarmupSteamCMD() {
+    LogInfo "Warming up SteamCMD..."
+    /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+  }
+
   UseSteamCmd() {
     if [ "${1}" == "beta" ]; then
       if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit; then
@@ -199,9 +204,7 @@ InstallServer() {
       else
         LogWarn "Downloading server files with SteamCMD"
 
-        # WARM UP before steamcmd install (beta)
-        echo "Warming up SteamCMD..."
-        /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+        WarmupSteamCMD
 
         if ! UseSteamCmd "beta"; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
@@ -215,9 +218,7 @@ InstallServer() {
       else
         LogWarn "Downloading server files with SteamCMD"
 
-        # WARM UP before steamcmd install (normal)
-        echo "Warming up SteamCMD..."
-        /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+        WarmupSteamCMD
 
         if ! UseSteamCmd; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
@@ -248,9 +249,7 @@ InstallServer() {
   else
     LogWarn "Downloading server files with SteamCMD"
 
-    # WARM UP before steamcmd install (manifest target)
-    echo "Warming up SteamCMD..."
-    /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+    WarmupSteamCMD
 
     if ! UseSteamCmd "" "$targetManifest"; then
       LogWarn "SteamCMD failed, falling back to DepotDownloader"
