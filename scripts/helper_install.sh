@@ -198,6 +198,11 @@ InstallServer() {
         UseDepotDownloader "beta"
       else
         LogWarn "Downloading server files with SteamCMD"
+
+        # WARM UP before steamcmd install (beta)
+        echo "Warming up SteamCMD..."
+        /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+
         if ! UseSteamCmd "beta"; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
           UseDepotDownloader "beta"
@@ -209,6 +214,11 @@ InstallServer() {
         UseDepotDownloader
       else
         LogWarn "Downloading server files with SteamCMD"
+
+        # WARM UP before steamcmd install (normal)
+        echo "Warming up SteamCMD..."
+        /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+
         if ! UseSteamCmd; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
           UseDepotDownloader
@@ -237,6 +247,11 @@ InstallServer() {
     UseDepotDownloader "" "$targetManifest"
   else
     LogWarn "Downloading server files with SteamCMD"
+
+    # WARM UP before steamcmd install (manifest target)
+    echo "Warming up SteamCMD..."
+    /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+
     if ! UseSteamCmd "" "$targetManifest"; then
       LogWarn "SteamCMD failed, falling back to DepotDownloader"
       UseDepotDownloader "" "$targetManifest"
