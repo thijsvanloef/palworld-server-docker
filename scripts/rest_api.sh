@@ -90,4 +90,9 @@ if [[ ${api} =~ ${api_required_json} ]]; then
     fi
 fi
 
-REST_API "${api}" "${json}" && echo ""
+response=$(REST_API "${api}" "${json}")
+exit_code=$?
+if [ -n "${response}" ]; then
+    echo "${response}"
+fi
+exit ${exit_code}
