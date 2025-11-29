@@ -103,7 +103,7 @@ jobs:
 
       - name: Test if the REST API works
         run: |
-            sleep 10
+            sleep 100
             if ! docker exec palworld-server rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
@@ -398,7 +398,7 @@ jobs:
       #       fi
       - name: Test if the REST API works
         run: |
-            sleep 100
+            sleep 180
             if ! docker exec palworld-server-${{ github.run_id }} rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
