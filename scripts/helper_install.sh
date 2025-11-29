@@ -148,6 +148,11 @@ InstallServer() {
     USE_DEPOT_DOWNLOADER=true
   fi
 
+  WarmupSteamCMD() {
+    LogInfo "Warming up SteamCMD..."
+    /home/steam/steamcmd/steamcmd.sh +login anonymous +quit
+  }
+
   UseSteamCmd() {
     if [ "${1}" == "beta" ]; then
       if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit; then
@@ -198,6 +203,9 @@ InstallServer() {
         UseDepotDownloader "beta"
       else
         LogWarn "Downloading server files with SteamCMD"
+
+        WarmupSteamCMD
+
         if ! UseSteamCmd "beta"; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
           UseDepotDownloader "beta"
@@ -209,6 +217,9 @@ InstallServer() {
         UseDepotDownloader
       else
         LogWarn "Downloading server files with SteamCMD"
+
+        WarmupSteamCMD
+
         if ! UseSteamCmd; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
           UseDepotDownloader
@@ -237,6 +248,9 @@ InstallServer() {
     UseDepotDownloader "" "$targetManifest"
   else
     LogWarn "Downloading server files with SteamCMD"
+
+    WarmupSteamCMD
+
     if ! UseSteamCmd "" "$targetManifest"; then
       LogWarn "SteamCMD failed, falling back to DepotDownloader"
       UseDepotDownloader "" "$targetManifest"
