@@ -147,7 +147,7 @@ function stdout_filter() {
 # PalServer Log filter (stderr)
 function stderr_filter() {
     while IFS= read -r line; do
-        LogFlush  # The order of lines is not necessarily guaranteed.
+        LogFlushAsync  # The order of lines is not necessarily guaranteed.
         echo "$line" >&2
     done
 }

@@ -153,9 +153,14 @@ LogSuccess() {
 LogAction() {
     Log "****$1****" "$CyanBoldText" "ACTION"
 }
-LogFlush() {
+LogFlushAsync() {
     if [ -p "${PalServerLog_fifo}" ]; then
         echo "LOG_FLUSH" > "${PalServerLog_fifo}" &
+    fi
+}
+LogFlush() {
+    if [ -p "${PalServerLog_fifo}" ]; then
+        echo "LOG_FLUSH" > "${PalServerLog_fifo}"
     fi
 }
 Log() {
