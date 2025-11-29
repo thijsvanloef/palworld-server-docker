@@ -138,6 +138,20 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
+# PalServer Log filter (stdout)
+function stdout_filter() {
+    # Compress repeated log lines within PLAYER_LOGGING_POLL_PERIOD + 5 seconds.
+    exec python3 /home/steam/server/pal_logger.py
+}
+
+# PalServer Log filter (stderr)
+function stderr_filter() {
+    while IFS= read -r line; do
+        LogFlush  # The order of lines is not necessarily guaranteed.
+        echo "$line" >&2
+    done
+}
+
 CHILD_PID=""
 if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
@@ -146,14 +160,22 @@ if PlayerLogging_isEnabled; then
         /home/steam/server/player_logging.sh &
     fi
     CHILD_PID=$!
+    # Note: The log filter is enabled only when player logging is enabled.
+    #       If you have problems with logging, explicitly define LOG_FILTER_ENABLED=false.
+    LOG_FILTER_ENABLED=${LOG_FILTER_ENABLED:-true}
 fi
 
 LogAction "Starting Server"
 DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
 
 echo "${STARTCOMMAND[*]}"
-"${STARTCOMMAND[@]}"
+if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
+    "${STARTCOMMAND[@]}" 1> >(stdout_filter) 2> >(stderr_filter)
+else
+    "${STARTCOMMAND[@]}"
+fi
 
+LogAction "Ending Server"
 if [ -n "${CHILD_PID}" ]; then
     wait "${CHILD_PID}"
 fi

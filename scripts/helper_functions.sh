@@ -136,27 +136,63 @@ export GreenBoldText='\033[1;32m'       # Green
 export YellowBoldText='\033[1;33m'      # Yellow
 export CyanBoldText='\033[1;36m'        # Cyan
 
+PalServerLog_fifo="/home/steam/server/.palserver_log_fifo"
+
 LogInfo() {
-  Log "$1" "$WhiteText"
+    Log "$1" "$WhiteText" "INFO"
 }
 LogWarn() {
-  Log "$1" "$YellowBoldText"
+    Log "$1" "$YellowBoldText" "WARN"
 }
 LogError() {
-  Log "$1" "$RedBoldText"
+    Log "$1" "$RedBoldText" "ERROR"
 }
 LogSuccess() {
-  Log "$1" "$GreenBoldText"
+    Log "$1" "$GreenBoldText" "SUCCESS"
 }
 LogAction() {
-  Log "$1" "$CyanBoldText" "****" "****"
+    Log "****$1****" "$CyanBoldText" "ACTION"
+}
+LogFlush() {
+    if [ -p "${PalServerLog_fifo}" ]; then
+        echo "LOG_FLUSH" > "${PalServerLog_fifo}" &
+    fi
 }
 Log() {
-  local message="$1"
-  local color="$2"
-  local prefix="$3"
-  local suffix="$4"
-  printf "$color%s$RESET$LINE" "$prefix$message$suffix"
+    local message="$1"
+    local color="$2"
+    local level="$3"
+    local now time timestamp
+    now="$(date +"%s")"
+    time="$(date -d @"$now" +"%Y-%m-%dT%H:%M:%S%:z")"
+    timestamp="$(date -d @"$now" +"%Y-%m-%d %H:%M:%S")"
+    local type="${LOG_FORMAT_TYPE,,}"
+    if [ "${type}" = "auto" ]; then
+        if [ -t 1 ]; then
+            type="colored"
+        else
+            type="plain"
+        fi
+    fi
+    local formatted_message=""
+    case "${type}" in
+    "json")
+        formatted_message="{\"time\":\"${time}\",\"level\":\"${level}\",\"message\":\"${message//\"/\\\"}\"}";;
+    "logfmt")
+        formatted_message="time=\"${time}\" level=\"${level}\" msg=\"${message//\"/\\\"}\"";;
+    "colored")
+        formatted_message=$(echo -e "[${timestamp}] [${level^^}] ${color}${message}${RESET}");;
+    "plain")
+        formatted_message="[${timestamp}] [${level^^}] ${message}";;
+    *) # default (original format)
+        formatted_message=$(echo -e "${color}${message}${RESET}");;
+    esac
+
+    if [ -p "${PalServerLog_fifo}" ]; then
+        echo "LOG:${formatted_message}" > "${PalServerLog_fifo}" &
+    else
+        echo "${formatted_message}"
+    fi
 }
 
 # Send Discord Message
