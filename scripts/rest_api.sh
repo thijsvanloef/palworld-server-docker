@@ -5,6 +5,18 @@ source "${SCRIPT_DIR}/helper_functions.sh"
 
 SCRIPT=$(basename "${0}")
 
+# Parse arguments to handle --no-flush-log
+args=()
+flush_log=true
+for arg in "$@"; do
+    if [ "$arg" == "--no-flush-log" ]; then
+        flush_log=false
+    else
+        args+=("$arg")
+    fi
+done
+set -- "${args[@]}"
+
 help="-h|--help"
 if [ $# -lt 1 ] || [[ ${1} =~ ${help} ]]; then
     cat << EOF
@@ -24,6 +36,7 @@ api:
 options:
   '{...}'         ... json.
   -               ... json from stdin.
+  --no-flush-log  ... do not flush log after API call.
   -h, --help      ... help.
 EOF
     exit 1
@@ -94,5 +107,8 @@ response=$(REST_API "${api}" "${json}")
 exit_code=$?
 if [ -n "${response}" ]; then
     echo "${response}"
+fi
+if [ "$flush_log" = true ]; then
+    LogFlush
 fi
 exit ${exit_code}
