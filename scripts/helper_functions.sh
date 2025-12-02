@@ -126,37 +126,73 @@ get_player_count() {
 #
 # Log Definitions
 #
-export LINE='\n'
-export RESET='\033[0m'       # Text Reset
-export WhiteText='\033[0;37m'        # White
+export LINE=$'\n'
+export RESET=$'\033[0m'       # Text Reset
+export WhiteText=$'\033[0;37m'        # White
 
 # Bold
-export RedBoldText='\033[1;31m'         # Red
-export GreenBoldText='\033[1;32m'       # Green
-export YellowBoldText='\033[1;33m'      # Yellow
-export CyanBoldText='\033[1;36m'        # Cyan
+export RedBoldText=$'\033[1;31m'         # Red
+export GreenBoldText=$'\033[1;32m'       # Green
+export YellowBoldText=$'\033[1;33m'      # Yellow
+export CyanBoldText=$'\033[1;36m'        # Cyan
+
+PalServerLog_fifo="/home/steam/server/.palserver_log_fifo"
 
 LogInfo() {
-  Log "$1" "$WhiteText"
+    Log "$1" "$WhiteText" "INFO"
 }
 LogWarn() {
-  Log "$1" "$YellowBoldText"
+    Log "$1" "$YellowBoldText" "WARN"
 }
 LogError() {
-  Log "$1" "$RedBoldText"
+    Log "$1" "$RedBoldText" "ERROR"
 }
 LogSuccess() {
-  Log "$1" "$GreenBoldText"
+    Log "$1" "$GreenBoldText" "SUCCESS"
 }
 LogAction() {
-  Log "$1" "$CyanBoldText" "****" "****"
+    Log "****$1****" "$CyanBoldText" "ACTION"
+}
+LogFlush() {
+    if [ -p "${PalServerLog_fifo}" ]; then
+        if ! timeout 1s echo "LOG_FLUSH" > "${PalServerLog_fifo}"; then
+            echo "WARNING: Failed to flush log to FIFO" >&2
+        fi
+    fi
 }
 Log() {
-  local message="$1"
-  local color="$2"
-  local prefix="$3"
-  local suffix="$4"
-  printf "$color%s$RESET$LINE" "$prefix$message$suffix"
+    local message="$1"
+    local color="$2"
+    local level="$3"
+    local now time timestamp
+    now="$(date +"%s")"
+    printf -v time '%(%Y-%m-%dT%H:%M:%S%:z)T' "$now"
+    printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' "$now"
+    local type="${LOG_FORMAT_TYPE,,}"
+    local formatted_message=""
+    case "${type}" in
+    "json")
+        formatted_message="$(jq -n --arg time "$time" --arg level "$level" --arg message "$message" \
+            '{time: $time, level: $level, message: $message}')";;
+    "logfmt")
+        local escaped_message="${message//\\/\\\\}"
+        escaped_message="${escaped_message//\"/\\\"}"
+        formatted_message="time=\"${time}\" level=\"${level}\" msg=\"${escaped_message}\"";;
+    "colored")
+        formatted_message=$(printf '%s\n' "[${timestamp}] [${level^^}] ${color}${message}${RESET}");;
+    "plain")
+        formatted_message="[${timestamp}] [${level^^}] ${message}";;
+    *) # default (original format)
+        formatted_message=$(printf '%s\n' "${color}${message}${RESET}");;
+    esac
+
+    if [ -p "${PalServerLog_fifo}" ]; then
+        if ! timeout 1s echo "LOG:${formatted_message}" > "${PalServerLog_fifo}"; then
+            echo "${formatted_message}"
+        fi
+    else
+        echo "${formatted_message}"
+    fi
 }
 
 # Send Discord Message
