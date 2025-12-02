@@ -139,30 +139,27 @@ default:
 EOL
 
 # PalServer Log filter (stdout)
-function stdout_filter() {
+log_filter() {
     # Compress repeated log lines within PLAYER_LOGGING_POLL_PERIOD + 5 seconds.
     exec python3 /home/steam/server/pal_logger.py
 }
 
 # PalServer Log filter (stderr)
-function stderr_filter() {
+log_filter_stderr() {
     while IFS= read -r line; do
-        LogFlushAsync  # The order of lines is not necessarily guaranteed.
+        LogFlush  # The order of lines is not necessarily guaranteed.
         echo "$line" >&2
     done
 }
 
-CHILD_PID=""
+CHILD_PIDS=()
 if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
         su steam -c /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
     fi
-    CHILD_PID=$!
-    # Note: The log filter is enabled only when player logging is enabled.
-    #       If you have problems with logging, explicitly define LOG_FILTER_ENABLED=false.
-    LOG_FILTER_ENABLED=${LOG_FILTER_ENABLED:-true}
+    CHILD_PIDS+=($!)
 fi
 
 LogAction "Starting Server"
@@ -170,14 +167,19 @@ DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_S
 
 echo "${STARTCOMMAND[*]}"
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
-    "${STARTCOMMAND[@]}" 1> >(stdout_filter) 2> >(stderr_filter)
+    exec 3> >(log_filter);        CHILD_PIDS+=($!)
+    exec 4> >(log_filter_stderr); CHILD_PIDS+=($!)
+
+    "${STARTCOMMAND[@]}" 1>&3 2>&4
+
+    exec 3>&- 4>&-
 else
     "${STARTCOMMAND[@]}"
 fi
 
 LogAction "Ending Server"
-if [ -n "${CHILD_PID}" ]; then
-    wait "${CHILD_PID}"
+if [ ${#CHILD_PIDS[@]} -ne 0 ]; then
+    wait "${CHILD_PIDS[@]}"
 fi
 
 DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"

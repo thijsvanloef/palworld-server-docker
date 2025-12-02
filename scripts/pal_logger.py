@@ -1,6 +1,7 @@
 import sys
 import select
 import os
+import errno
 import time
 import signal
 
@@ -17,14 +18,13 @@ if os.path.exists(FIFO_PATH):
         pass
 try:
     os.mkfifo(FIFO_PATH)
-except OSError:
-    pass # Already exists?
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
 
 # Open FIFO in non-blocking mode for reading
-# We need to open read-write to avoid EOF when the writer closes, 
-# OR re-open it in the loop. 
-# Actually, for FIFO, if we open O_RDWR, select will block until data comes.
-# If we open O_RDONLY | O_NONBLOCK, select works.
+# We need to open read-write to avoid EOF when the writer closes.
+# This prevents the select loop from spinning at 100% CPU when no writers are connected.
 try:
     fifo_fd = os.open(FIFO_PATH, os.O_RDWR | os.O_NONBLOCK)
 except OSError as e:
@@ -48,20 +48,29 @@ def flush_buffer():
         last_content = ""
         count = 0
 
-def cleanup(*args):
+running = True
+
+def cleanup():
     flush_buffer()
+    try:
+        os.close(fifo_fd)
+    except (OSError, NameError):
+        pass  # Ignore if fifo_fd was never opened
     if os.path.exists(FIFO_PATH):
         try:
             os.remove(FIFO_PATH)
         except OSError:
-            pass
-    sys.exit(0)
+            pass  # Ignore errors if the FIFO does not exist or cannot be removed during cleanup
 
-signal.signal(signal.SIGTERM, cleanup)
-signal.signal(signal.SIGINT, cleanup)
+def signal_handler(signum, frame):
+    global running
+    running = False
+
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)
 
 try:
-    while True:
+    while running:
         # Wait for input on stdin or fifo
         # select blocks until one is ready
         # Add timeout to ensure signal handling works even if select doesn't wake up immediately
@@ -85,8 +94,9 @@ try:
                         else:
                             print(line)
                     sys.stdout.flush()
-            except OSError:
-                pass
+            except OSError as e:
+                if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
+                    sys.stderr.write(f"Error reading from FIFO: {e}\n")
 
         if sys.stdin in r:
             line = sys.stdin.readline()
@@ -98,6 +108,9 @@ try:
             
             # Parse content for deduplication
             # bash: new_content="${line#*] }"
+            # Split by '] ' to extract content after timestamp.
+            # If the pattern is not found (e.g. custom log format), use the whole line.
+            # This ensures that lines without the pattern are treated as unique content unless identical.
             parts = line.split('] ', 1)
             new_content = parts[1] if len(parts) > 1 else line
             

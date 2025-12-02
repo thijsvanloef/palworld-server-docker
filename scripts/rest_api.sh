@@ -15,7 +15,12 @@ for arg in "$@"; do
         args+=("$arg")
     fi
 done
-set -- "${args[@]}"
+
+if [ ${#args[@]} -ne 0 ]; then
+    set -- "${args[@]}"
+else
+    set --
+fi
 
 help="-h|--help"
 if [ $# -lt 1 ] || [[ ${1} =~ ${help} ]]; then
