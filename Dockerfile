@@ -1,4 +1,4 @@
-FROM golang:1.25.4-alpine AS rcon-cli_builder
+FROM golang:1.25.5-alpine AS rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
@@ -40,9 +40,9 @@ LABEL maintainer="thijs@loef.dev" \
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="37842646e4c95b193c469afae400966565c383d3"
-ARG SUPERCRONIC_SHA1SUM_AMD64="bc072eba2ae083849d5f86c6bd1f345f6ed902d0"
-ARG SUPERCRONIC_VERSION="0.2.38"
+ARG SUPERCRONIC_SHA1SUM_ARM64="5ef4ccc3d43f12d0f6c3763758bc37cc4e5af76e"
+ARG SUPERCRONIC_SHA1SUM_AMD64="c98bbf82c5f648aaac8708c182cc83046fe48423"
+ARG SUPERCRONIC_VERSION="0.2.39"
 ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
 
 # update and install dependencies
