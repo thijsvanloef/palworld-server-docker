@@ -6,7 +6,7 @@ import time
 import signal
 import re
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Constants
 FIFO_PATH = "/home/steam/server/.palserver_log_fifo"
@@ -22,6 +22,9 @@ if os.path.exists(FIFO_PATH):
         pass
 try:
     os.mkfifo(FIFO_PATH)
+    # Use 0o600 to restrict access to the owner only.
+    # The owner will be updated to 'steam' by init.sh via chown, ensuring correct access permissions.
+    # We avoid 0o666 to prevent security warnings (e.g. CodeFactor).
     os.chmod(FIFO_PATH, 0o600)
 except OSError as e:
     if e.errno != errno.EEXIST:
@@ -45,7 +48,12 @@ def get_iso_timestamp(timestamp_str=None):
     if timestamp_str:
         try:
             dt = datetime.strptime(timestamp_str, '%Y-%m-%d %H:%M:%S')
-            dt = dt.replace(tzinfo=datetime.now().astimezone().tzinfo)
+            # Fallback to UTC if local timezone is not available
+            local_tz = datetime.now().astimezone().tzinfo
+            if local_tz:
+                dt = dt.replace(tzinfo=local_tz)
+            else:
+                dt = dt.replace(tzinfo=timezone.utc)
         except ValueError:
             try:
                 dt = datetime.fromisoformat(timestamp_str)
@@ -56,7 +64,7 @@ def get_iso_timestamp(timestamp_str=None):
     return dt.isoformat(timespec='seconds')
 
 def parse_log_line(line):
-    # Remove ANSI escape sequences
+    # Remove ANSI escape sequences for non-colored formats
     if LOG_FORMAT_TYPE in ['json', 'logfmt', 'plain']:
         line = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
 
@@ -66,7 +74,7 @@ def parse_log_line(line):
 
     # Check for logfmt style (e.g. supercron)
     # Example: time="2025-12-03T13:09:02+09:00" level=warning msg="..."
-    match_logfmt = re.search(r'time="([^"]+)"\s+level=("?)([^"\s]+)\2\s+msg="([^"]+)"', line)
+    match_logfmt = re.search(r'time="([^"]+)"\s+level=("?)([^"\s]+)\2\s+msg="((?:[^"\\]|\\.)*)"', line)
     if match_logfmt:
         timestamp_str = match_logfmt.group(1)
         level = match_logfmt.group(3)
@@ -96,6 +104,10 @@ def flush_buffer():
     if buffer:
         timestamp_str, level, message, _ = parse_log_line(buffer)
         
+        # Normalize level to uppercase for consistency
+        if level:
+            level = level.upper()
+        
         if count > 1:
             message_suffix = f" (x{count})"
         else:
@@ -108,12 +120,12 @@ def flush_buffer():
                 "level": level if level else "INFO",
                 "message": message + message_suffix
             }
-            print(json.dumps(log_entry))
+            print(json.dumps(log_entry, ensure_ascii=False))
         elif LOG_FORMAT_TYPE == 'logfmt':
             iso_time = get_iso_timestamp(timestamp_str)
             lvl = level if level else "INFO"
             msg = message + message_suffix
-            msg_escaped = msg.replace('"', '\\"')
+            msg_escaped = msg.replace('\\', '\\\\').replace('"', '\\"')
             print(f'time="{iso_time}" level="{lvl}" msg="{msg_escaped}"')
         elif LOG_FORMAT_TYPE in ['colored', 'plain']:
             # plain or colored
@@ -161,12 +173,7 @@ def process_line(line):
     now = time.time()
     
     # Parse content for deduplication
-    # bash: new_content="${line#*] }"
-    # Split by '] ' to extract content after timestamp.
-    # If the pattern is not found (e.g. custom log format), use the whole line.
-    # This ensures that lines without the pattern are treated as unique content unless identical.
-    parts = line.split('] ', 1)
-    new_content = parts[1] if len(parts) > 1 else line
+    _, _, new_content, _ = parse_log_line(line)
     
     if new_content == last_content and (now - buffer_timing) < TIMEOUT:
         count += 1
@@ -194,6 +201,7 @@ try:
             try:
                 data = os.read(fifo_fd, 4096)
                 if data:
+                    flush_buffer()
                     text = data.decode('utf-8', errors='replace')
                     lines = text.splitlines()
                     
