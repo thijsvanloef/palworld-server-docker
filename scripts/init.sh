@@ -2,6 +2,10 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
+    exec > >(python3 /home/steam/server/pal_logger.py) 2>&1
+fi
+
 mkdir -p /palworld/backups
 
 if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
