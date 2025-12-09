@@ -106,25 +106,25 @@ if [ "${BACKUP_ENABLED,,}" = true ]; then
     LogInfo "BACKUP_ENABLED=${BACKUP_ENABLED,,}"
     LogInfo "Adding cronjob for auto backups"
     echo "$BACKUP_CRON_EXPRESSION bash /usr/local/bin/backup" >> "/home/steam/server/crontab"
-    supercronic -quiet -test "/home/steam/server/crontab" || exit
+    supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_UPDATE_ENABLED,,}" = true ] && [ "${UPDATE_ON_BOOT}" = true ]; then
     LogInfo "AUTO_UPDATE_ENABLED=${AUTO_UPDATE_ENABLED,,}"
     LogInfo "Adding cronjob for auto updating"
     echo "$AUTO_UPDATE_CRON_EXPRESSION bash /usr/local/bin/update" >> "/home/steam/server/crontab"
-    supercronic -quiet -test "/home/steam/server/crontab" || exit
+    supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
 if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; then
     LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
     LogInfo "Adding cronjob for auto rebooting via REST API"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
-    supercronic -quiet -test "/home/steam/server/crontab" || exit
+    supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
 if [ -s "/home/steam/server/crontab" ]; then
-    supercronic -passthrough-logs "/home/steam/server/crontab" &
+    supercronic -passthrough-logs -no-reap "/home/steam/server/crontab" &
     LogInfo "Cronjobs started"
 else
     LogInfo "No Cronjobs found"
