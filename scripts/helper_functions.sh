@@ -164,27 +164,21 @@ Log() {
     local message="$1"
     local color="$2"
     local level="$3"
-    local now time timestamp
+    local now timestamp
     now="$(date +"%s")"
-    printf -v time '%(%Y-%m-%dT%H:%M:%S%:z)T' "$now"
     printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' "$now"
     local type="${LOG_FORMAT_TYPE,,}"
     local formatted_message=""
-    case "${type}" in
-    "json")
-        formatted_message="$(jq -n --arg time "$time" --arg level "$level" --arg message "$message" \
-            '{time: $time, level: $level, message: $message}')";;
-    "logfmt")
-        local escaped_message="${message//\\/\\\\}"
-        escaped_message="${escaped_message//\"/\\\"}"
-        formatted_message="time=\"${time}\" level=\"${level}\" msg=\"${escaped_message}\"";;
-    "colored")
-        formatted_message=$(printf '%s\n' "[${timestamp}] [${level^^}] ${color}${message}${RESET}");;
-    "plain")
-        formatted_message="[${timestamp}] [${level^^}] ${message}";;
-    *) # default (original format)
-        formatted_message=$(printf '%s\n' "${color}${message}${RESET}");;
-    esac
+
+    # If LOG_FILTER_ENABLED is true AND LOG_FORMAT_TYPE is one of the structured types or explicit 'colored'/'plain',
+    # output in the format that pal_logger.py expects for parsing ([time] [level] msg).
+    if isTrue "${LOG_FILTER_ENABLED}" && [[ "${type}" =~ ^(json|logfmt|colored|plain)$ ]]; then
+        formatted_message=$(printf '%s\n' "[${timestamp}] [${level^^}] ${color}${message}${RESET}")
+    else
+        # Otherwise (filter disabled OR type is default/empty/unknown), use the simple colored format.
+        # This preserves the original behavior for users who haven't opted into the new logging system.
+        formatted_message=$(printf '%s\n' "${color}${message}${RESET}")
+    fi
 
     if [ -p "${PalServerLog_fifo}" ]; then
         if ! timeout 1s echo "LOG:${formatted_message}" > "${PalServerLog_fifo}"; then

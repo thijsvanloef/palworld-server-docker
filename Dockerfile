@@ -60,6 +60,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin libpcap0.8 \
     mitmproxy \
     ca-certificates \
+    python3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -138,20 +138,6 @@ default:
   password: "${ADMIN_PASSWORD}"
 EOL
 
-# PalServer Log filter (stdout)
-log_filter() {
-    # Compress repeated log lines within PLAYER_LOGGING_POLL_PERIOD + 5 seconds.
-    exec python3 /home/steam/server/pal_logger.py
-}
-
-# PalServer Log filter (stderr)
-log_filter_stderr() {
-    while IFS= read -r line; do
-        LogFlush  # The order of lines is not necessarily guaranteed.
-        echo "$line" >&2
-    done
-}
-
 CHILD_PIDS=()
 if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
@@ -166,16 +152,7 @@ LogAction "Starting Server"
 DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
 
 echo "${STARTCOMMAND[*]}"
-if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
-    exec 3> >(log_filter);        CHILD_PIDS+=($!)
-    exec 4> >(log_filter_stderr); CHILD_PIDS+=($!)
-
-    "${STARTCOMMAND[@]}" 1>&3 2>&4
-
-    exec 3>&- 4>&-
-else
-    "${STARTCOMMAND[@]}"
-fi
+"${STARTCOMMAND[@]}"
 
 LogAction "Ending Server"
 if [ ${#CHILD_PIDS[@]} -ne 0 ]; then
