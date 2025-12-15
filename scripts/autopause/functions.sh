@@ -14,11 +14,23 @@ declare -r AP_disable_file="${DATA_DIR}/.autopause-disabled" # for shutdown and 
 #-------------------------------
 
 APLog() {
-    isTrue "${AUTO_PAUSE_LOG:-true}" && LogInfo "[AUTO PAUSE] ${1}"
+    local msg="${1:-(no message)}"
+    isTrue "${AUTO_PAUSE_LOG:-true}" && LogInfo "[AUTO PAUSE] ${msg}"
+}
+
+APLog_warn() {
+    local msg="${1:-(no message)}"
+    isTrue "${AUTO_PAUSE_LOG:-true}" && LogWarn "[AUTO PAUSE] ${msg}"
+}
+
+APLog_error() {
+    local msg="${1:-(no message)}"
+    isTrue "${AUTO_PAUSE_LOG:-true}" && LogError "[AUTO PAUSE] ${msg}"
 }
 
 APLog_debug() {
-    isTrue "${AUTO_PAUSE_DEBUG:-false}" && LogInfo "[AUTO PAUSE DEBUG] ${1}"
+    local msg="${1:-(no message)}"
+    isTrue "${AUTO_PAUSE_DEBUG:-false}" && LogInfo "[AUTO PAUSE DEBUG] ${msg}"
 }
 
 #-------------------------------
@@ -71,7 +83,7 @@ AP_pause() {
     local -r pid=$(pidof PalServer-Linux-Shipping)
     if isTrue "${on}"; then
         if AP_isSleep; then
-            APLog "[WARNING] Already sleeped..."
+            APLog_warn "Already sleeped..."
             return 0
         fi
         APLog "Paused. (PID:${pid})"
@@ -79,7 +91,7 @@ AP_pause() {
         AP_touch on "${AP_pause_file}"
     else
         if ! AP_isSleep; then
-            APLog "[WARNING] Already wakeuped..."
+            APLog_warn "Already wakeuped..."
             return 0
         fi
         APLog "Wakeup!!! (PID:${pid})"
