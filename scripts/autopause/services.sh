@@ -91,7 +91,7 @@ AutoPause_checkRequest() {
             fi
             ;;
         *)
-            APLog "Unkown request ... '${request}'"
+            APLog_error "Unkown request ... '${request}'"
             ;;
         esac
     fi
@@ -123,13 +123,13 @@ AutoPause_preSave() {
 AutoPause_challengeToPause() {
     if isTrue "${COMMUNITY}"; then
         if ! APComm_isCaptured; then
-            APLog "Waiting for capture the community update data before pause."
+            APLog_warn "Waiting for capture the community update data before pause."
             return 1
         fi
     fi
 
     if ! local -r result=$(AutoPause_preSave); then
-        APLog "Save failed before pausing... ${result}"
+        APLog_error "Save failed before pausing... ${result}"
         return 1
     fi
 
