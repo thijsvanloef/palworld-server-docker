@@ -4,6 +4,8 @@ services:
       file: ../../docker-compose.yml
       service: palworld
     build: ../../
+    cap_add:
+      - NET_RAW # for podman (docker default has it)
     environment:
       SERVER_NAME: "palworld-server-docker/examples/autopause"
       AUTO_PAUSE_ENABLED: true

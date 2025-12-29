@@ -581,6 +581,17 @@ This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENAB
 | AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                | true           | true/false     |
 | AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                          | false          | true/false     |
 
+> [!NOTE]
+> When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
+> Alternatively, add the following `cap_add:` to your `compose.yml`:
+>
+> ```yaml
+> services:
+>   palworld:
+>     cap_add:
+>       - NET_RAW
+> ```
+
 ### Resume manually
 
 A file called `.paused` is created in `/palworld` directory when the server is paused and removed when the server is resumed.

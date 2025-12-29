@@ -28,8 +28,8 @@ if ! [ -w "/palworld" ]; then
     exit 1
 fi
 
-# shellcheck source=scripts/autopause/community/init.sh
-source "/home/steam/server/autopause/community/init.sh"
+# shellcheck source=scripts/autopause/init.sh
+source "/home/steam/server/autopause/init.sh"
 
 # shellcheck disable=SC2317
 term_handler() {
