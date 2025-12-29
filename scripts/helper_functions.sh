@@ -143,15 +143,19 @@ LogInfo() {
 }
 LogWarn() {
     Log "$1" "$YellowBoldText" "WARN"
+    LogFlush
 }
 LogError() {
     Log "$1" "$RedBoldText" "ERROR"
+    LogFlush
 }
 LogSuccess() {
     Log "$1" "$GreenBoldText" "SUCCESS"
+    LogFlush
 }
 LogAction() {
     Log "****$1****" "$CyanBoldText" "ACTION"
+    LogFlush
 }
 LogFlush() {
     if [ -p "${PalServerLog_fifo}" ]; then
