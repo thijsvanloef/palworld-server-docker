@@ -36,10 +36,12 @@ APComm_loadJSON() {
         return 1
     fi
     local -i result=0 delta
-    APComm_jsonRegister="$(jq -c < "${APComm_register_file}")"
-    result=$?
-    APComm_jsonUpdate="$(jq -c < "${APComm_update_file}")"
-    ((result=result+$?))
+    if ! APComm_jsonRegister="$(jq -c -n 'input' < "${APComm_register_file}" 2>/dev/null)"; then
+        result=1
+    fi
+    if ! APComm_jsonUpdate="$(jq -c -n 'input' < "${APComm_update_file}" 2>/dev/null)"; then
+        result=1
+    fi
     if [ ${result} -eq 0 ]; then
         # It's not fresh after 120 seconds.
         ((delta=$(date +%s)-$(date +%s -r "${APComm_update_file}")))
@@ -54,7 +56,7 @@ APComm_loadJSON() {
 APComm_register() {
     local data response id key
     
-    if ! data=$(echo "${APComm_jsonRegister}" | jq -c --arg name "${SERVER_NAME} (paused)" '.name = $name'); then
+    if ! data=$(echo "${APComm_jsonRegister}" | jq -c -n 'input | .name = $name' --arg name "${SERVER_NAME} (paused)"); then
         APLog_error "Error creating register data JSON"
         return 1
     fi
@@ -64,17 +66,17 @@ APComm_register() {
         return 1
     fi
 
-    if ! echo "${response}" | jq empty > /dev/null 2>&1; then
+    if ! echo "${response}" | jq -n 'input | empty' > /dev/null 2>&1; then
         APLog_error "server/register API returned invalid JSON response: $(printf '%.200s' "${response}")"
         return 1
     fi
 
-    id=$(echo "${response}" | jq -r '.server_id // empty')
-    key=$(echo "${response}" | jq -r '.update_key // empty')
+    id=$(echo "${response}" | jq -n -r 'input | .server_id // empty')
+    key=$(echo "${response}" | jq -n -r 'input | .update_key // empty')
 
     if [ -n "${id}" ] && [ -n "${key}" ]; then
         # Update APComm_jsonUpdate safely
-        APComm_jsonUpdate=$(echo "${APComm_jsonUpdate:-{}}" | jq -c --arg id "${id}" --arg key "${key}" '.server_id = $id | .update_key = $key')
+        APComm_jsonUpdate=$(echo "${APComm_jsonUpdate:-{}}" | jq -c -n 'input | .server_id = $id | .update_key = $key' --arg id "${id}" --arg key "${key}" 2>/dev/null)
         APLog "Community server registered ID: ${id}"
         return 0
     fi
@@ -92,13 +94,13 @@ APComm_update() {
         return 1
     fi
 
-    if ! echo "${response}" | jq empty > /dev/null 2>&1; then
+    if ! echo "${response}" | jq -n 'input | empty' > /dev/null 2>&1; then
         APLog_error "server/update API returned invalid JSON response: $(printf '%.200s' "${response}")"
         return 1
     fi
 
-    status=$(echo "${response}" | jq -r '.status // empty')
-    message=$(echo "${response}" | jq -r '.error_message // empty')
+    status=$(echo "${response}" | jq -n -r 'input | .status // empty')
+    message=$(echo "${response}" | jq -n -r 'input | .error_message // empty')
 
     if [ "${status}" = "ok" ]; then
         return 0

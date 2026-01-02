@@ -16,9 +16,13 @@ When in paused state, the world time stops.
 
 This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENABLED` to "true".
 
+:::info
+This feature requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true` to be set.
+:::
+
 | Variable               | Info                                                                                                                                     | Default Values | Allowed Values |
 |------------------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
-| AUTO_PAUSE_ENABLED     | Enables automatic pause (Puts the server to sleep to save power when there are no online players)                                        | false          | true/false     |
+| AUTO_PAUSE_ENABLED     | Enables automatic pause (Puts the server to sleep to save power when there are no online players). Requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true`. | false          | true/false     |
 | AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established) | 180            | Integer        |
 | AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                | true           | true/false     |
 | AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                          | false          | true/false     |
