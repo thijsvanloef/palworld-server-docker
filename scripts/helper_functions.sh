@@ -177,11 +177,11 @@ Log() {
     # If LOG_FILTER_ENABLED is true AND LOG_FORMAT_TYPE is one of the structured types or explicit 'colored'/'plain',
     # output in the format that pal_logger.py expects for parsing ([time] [level] msg).
     if isTrue "${LOG_FILTER_ENABLED}" && [[ "${type}" =~ ^(json|logfmt|colored|plain)$ ]]; then
-        formatted_message=$(printf '%s\n' "[${timestamp}] [${level^^}] ${color}${message}${RESET}")
+        formatted_message=$(printf '%s' "[${timestamp}] [${level^^}] ${color}${message}${RESET}")
     else
         # Otherwise (filter disabled OR type is default/empty/unknown), use the simple colored format.
         # This preserves the original behavior for users who haven't opted into the new logging system.
-        formatted_message=$(printf '%s\n' "${color}${message}${RESET}")
+        formatted_message=$(printf '%s' "${color}${message}${RESET}")
     fi
 
     if [ -p "${PalServerLog_fifo}" ]; then
