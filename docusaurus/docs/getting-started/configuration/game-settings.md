@@ -102,7 +102,7 @@ For example:
 | CHAT_POST_LIMIT_PER_MINUTE                | Amount of messages players can send per minute                 | 10                                                                                         | Integer                                |
 | SUPPLY_DROP_SPAN                          | Interval for supply drop (minutes)                            | 180                                                                                          | Integer                                |
 | TARGET_MANIFEST_ID | Locks game version to corespond with Manfiest ID from Steam Download Depot. | | See [Manifest ID Table](https://palworld-server-docker.loef.dev/guides/pinning-game-version) |
-| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave | true         | true/false |
+| ENABLE_PLAYER_LOGGING      | Enables Logging and announcing when players join and leave (with `REST_API_ENABLED=true` required.) | true         | true/false |
 | PLAYER_LOGGING_POLL_PERIOD          | Polling period (in seconds) to check for players who have joined or left | 5                      | !0 |
 | ENABLE_PREDATOR_BOSS_PAL                 |  Enable Predator boss as pals                                 | true                                                                                         | boolean                                |
 | MAX_BUILDING_LIMIT_NUM                    |  Maximum number of buildings per base                         | 0 (unlimited)                                                                                         | Integer                                |
