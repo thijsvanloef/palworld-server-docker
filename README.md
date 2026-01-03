@@ -738,6 +738,8 @@ Please keep in mind that the ENV variables will always overwrite the changes mad
 > Changes can only be made to `PalWorldSettings.ini` while the server is off.
 >
 > Any changes made while the server is live will be overwritten when the server stops.
+> 
+> Remember to disable generate settings on the environment variables, or the `PalWorldSettings.ini` file will be overwritten at startup with the default settings. See `DISABLE_GENERATE_SETTINGS` in environment variables.
 
 For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
 
