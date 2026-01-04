@@ -23,12 +23,11 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
         mitmdump "${MITMPROXY_OPTIONS[@]}" > /var/log/mitmdump.log &
     fi
 
-    echo -n "Wait until proxy is initialized..."
+    LogInfo "Wait until proxy is initialized..."
     while [ ! -d "${MITMPROXY_ADDONS_DIR}/__pycache__" ]; do
-        echo -n "."
         sleep 0.5
     done
-    echo "done."
+    LogInfo "Proxy initialized."
     if [ "$(id -u)" -eq 0 ]; then
         chown -R "${PUID}:${PGID}" "${MITMPROXY_ADDONS_DIR}/__pycache__"
         chown -R "${PUID}:${PGID}" "/home/steam/.mitmproxy"

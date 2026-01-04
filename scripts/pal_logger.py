@@ -170,8 +170,11 @@ signal.signal(signal.SIGINT, signal_handler)
 def process_line(line):
     global buffer, last_content, count, buffer_timing
     
+    # Use strip to remove \r, \n and trailing/leading whitespace
+    line = line.strip()
+    
     # Ignore empty lines to avoid breaking deduplication
-    if not line.strip():
+    if not line:
         return
 
     now = time.time()
