@@ -3,6 +3,8 @@
 source "/home/steam/server/helper_functions.sh"
 
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
+    # Remove old FIFO to prevent deadlock on restart
+    rm -f "${PalServerLog_fifo}"
     exec > >(python3 /home/steam/server/pal_logger.py) 2>&1
 fi
 

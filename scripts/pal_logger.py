@@ -170,12 +170,21 @@ signal.signal(signal.SIGINT, signal_handler)
 def process_line(line):
     global buffer, last_content, count, buffer_timing
     
+    # Use strip to remove \r, \n and trailing/leading whitespace
+    line = line.strip()
+    
+    # Ignore empty lines to avoid breaking deduplication
+    if not line:
+        return
+
     now = time.time()
     
     # Parse content for deduplication
+    # Use rstrip to remove \r and trailing whitespace
+    line = line.rstrip()
     _, _, new_content, _ = parse_log_line(line)
     
-    if new_content == last_content and (now - buffer_timing) < TIMEOUT:
+    if buffer and new_content == last_content and (now - buffer_timing) < TIMEOUT:
         count += 1
     else:
         flush_buffer()
@@ -201,12 +210,11 @@ try:
             try:
                 data = os.read(fifo_fd, 4096)
                 if data:
-                    flush_buffer()
                     text = data.decode('utf-8', errors='replace')
                     lines = text.splitlines()
                     
                     for line in lines:
-                        if line == "LOG_FLUSH":
+                        if line.startswith("LOG_FLUSH"):
                             flush_buffer()
                             continue
                         if line.startswith("LOG:"):
