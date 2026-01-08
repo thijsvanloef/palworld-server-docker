@@ -10,28 +10,8 @@ sidebar_label: Quick Setup Xbox
 <!-- markdownlint-disable-next-line -->
 # Palworld Dedicated server Xbox
 
-:::warning
-PLEASE NOT THAT CROSSPLAY BETWEEN XBOX-STEAM IS NOT YET SUPPORTED
+:::important
+DEPRECATED: Palworld has released crossplay support for dedicated servers on all platforms.
+You can now use the standard dedicated server setup to host servers for Xbox players:
+[Follow the standard quick setup guide here!](https://palworld-server-docker.loef.dev/)
 :::
-
-Servers set up using these steps will be able to accept connections from the Xbox Series X version, Xbox Series S version,
-Xbox One version, and the Windows PC version downloaded from the Microsoft Store. [^1]
-
-Setting up a dedicated server for Xbox is the same as deploying for Steam.
-You would only need to change the following environment variable.
-
-Change:
-
-```yaml
-ALLOW_CONNECT_PLATFORM: "Steam"
-```
-
-to:
-
-```yaml
-ALLOW_CONNECT_PLATFORM: "Xbox"
-```
-
----
-
-[^1]: [Official documentation](https://tech.palworldgame.com/getting-started/for-xbox-dedicated-server)
