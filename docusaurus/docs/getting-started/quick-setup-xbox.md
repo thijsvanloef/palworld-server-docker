@@ -11,6 +11,7 @@ sidebar_label: Quick Setup Xbox
 # Palworld Dedicated server Xbox
 
 :::important
-DEPRECATED: Palworld has released crossplay support for dedicated servers on all platforms. 
-You can now use the standard dedicated server setup to host servers for Xbox players: [Follow the standard quick setup guide here!](https://palworld-server-docker.loef.dev/)
+DEPRECATED: Palworld has released crossplay support for dedicated servers on all platforms.
+You can now use the standard dedicated server setup to host servers for Xbox players:
+[Follow the standard quick setup guide here!](https://palworld-server-docker.loef.dev/)
 :::
