@@ -1,0 +1,52 @@
+name: Kubernetes
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  Validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: v1.29.0
+
+      - name: Install kind
+        uses: helm/kind-action@v1
+        with:
+          version: v0.22.0
+
+      - name: Create kind cluster
+        run: |
+          kind create cluster --wait 60s
+
+      - name: Install kubeconform
+        run: |
+          curl -L https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz \
+          | tar xz
+          sudo mv kubeconform /usr/local/bin/kubeconform
+
+      - name: Validate manifests with kubeconform
+        run: |
+          kubeconform \
+            -strict \
+            -summary \
+            -kubernetes-version 1.34.1 \
+            kubernetes/
+
+      - name: Server-side dry run
+        run: |
+          kubectl apply \
+            --dry-run=server \
+            -f kubernetes/
+
+      - name: Show diff
+        run: |
+          kubectl diff -f kubernetes/ || true

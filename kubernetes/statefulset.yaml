@@ -1,14 +1,11 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  labels:
-    app: palworld-server
   name: palworld-server
 spec:
+  serviceName: palworld-server
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app: palworld-server
@@ -19,28 +16,38 @@ spec:
     spec:
       containers:
         - name: palworld-server
-          image: thijsvanloef/palworld-server-docker:v2.2.2
-          # image: ghcr.io/thijsvanloef/palworld-server-docker:v2.2.2 for GitHub Container Registry
-          imagePullPolicy: IfNotPresent
+          image: thijsvanloef/palworld-server-docker:v2.3.0
           ports:
-            - containerPort: 8211
-              name: server
+            - name: server
+              containerPort: 8211
               protocol: UDP
-            - containerPort: 27015
-              name: query
+            - name: query
+              containerPort: 27015
               protocol: UDP
+          envFrom:
+            - configMapRef:
+                name: palworld-cm
           env:
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: palworld-secrets
                   key: adminPassword
-          envFrom:
-            - configMapRef:
-                name: palworld-cm
+            - name: SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: palworld-secrets
+                  key: serverPassword
+          resources:
+            requests:
+              cpu: "2"
+              memory: "6Gi"
+            limits:
+              cpu: "8"
+              memory: "16Gi"
           volumeMounts:
-            - mountPath: /palworld
-              name: datadir
+            - name: datadir
+              mountPath: /palworld
           startupProbe:
             exec:
               command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
@@ -49,7 +56,6 @@ spec:
           readinessProbe:
             exec:
               command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
-            initialDelaySeconds: 15
             periodSeconds: 10
           livenessProbe:
             exec:
