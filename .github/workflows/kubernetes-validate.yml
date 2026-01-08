@@ -1,4 +1,4 @@
-name: Kubernetes Validation
+name: Kubernetes
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  validate-k8s:
+  Validate:
     runs-on: ubuntu-latest
 
     steps:
