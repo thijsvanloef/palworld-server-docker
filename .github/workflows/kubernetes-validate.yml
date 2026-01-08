@@ -2,8 +2,8 @@ name: Kubernetes Validation
 
 on:
   pull_request:
-    branches: 
-        - main
+    branches:
+      - main
 
 jobs:
   validate-k8s:
