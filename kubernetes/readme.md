@@ -10,7 +10,7 @@ Files:
 * configmap.yaml
 * secret.yaml
 * service.yaml
-* deployment.yaml
+* statefulset.yaml
 
 Use the following command to setup this Palworld container in Kubernetes:
 

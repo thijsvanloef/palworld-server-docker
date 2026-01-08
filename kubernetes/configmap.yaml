@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: palworld-cm
+data:
+  PUID: "1000"
+  PGID: "1000"
+  PORT: "8211"
+  PLAYERS: "16"
+  MULTITHREADING: "true"
+  REST_API_ENABLED: "true"
+  TZ: UTC
+  COMMUNITY: "false"
+  SERVER_NAME: "World of Pals"
+  SERVER_DESCRIPTION: ""
