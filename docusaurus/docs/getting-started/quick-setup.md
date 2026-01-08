@@ -13,14 +13,6 @@ sidebar_label: Quick Setup
 This guide will help you get setup with hosting your Palworld Dedicated server on Docker!
 This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
 
-## Xbox Dedicated Server
-
-:::important
-
-Looking to host a server for Xbox players? [Follow this guide here!](https://palworld-server-docker.loef.dev/quick-setup-xbox)
-
-:::
-
 ## Prerequisites
 
 * Virtualization enabled in the BIOS/UEFI
@@ -50,7 +42,7 @@ services:
       ports:
          - 8211:8211/udp
          - 27015:27015/udp  # Required if you want your server to show up in the community servers tab
-         # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
+         - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
       environment:
          PUID: 1000
          PGID: 1000
@@ -87,7 +79,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
-        # - 8212:8212/tcp  # Port for REST API if REST_API_ENABLED: true
+        - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
       env_file:
          -  .env
       volumes:
