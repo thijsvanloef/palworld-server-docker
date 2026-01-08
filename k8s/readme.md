@@ -5,6 +5,7 @@ Please make sure to configure the configmap.yaml and secret.yaml files to your n
 [Read more about the configuration options here.](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings)
 
 Files:
+
 * pvc.yaml
 * configmap.yaml
 * secret.yaml
