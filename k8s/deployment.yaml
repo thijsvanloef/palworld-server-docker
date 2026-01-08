@@ -34,13 +34,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: palworld-secrets
-                  key: rconPassword
+                  key: adminPassword
           envFrom:
             - configMapRef:
                 name: palworld-cm
           volumeMounts:
             - mountPath: /palworld
               name: datadir
+          startupProbe:
+            exec:
+              command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
+            failureThreshold: 120
+            periodSeconds: 5
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
+            periodSeconds: 20
       volumes:
         - name: datadir
           persistentVolumeClaim:
