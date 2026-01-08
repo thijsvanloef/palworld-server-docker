@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: palworld-server
-          image: thijsvanloef/palworld-server-docker:v2.2.2
+          image: thijsvanloef/palworld-server-docker:v2.3.0
           ports:
             - name: server
               containerPort: 8211
