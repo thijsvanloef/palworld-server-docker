@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: palworld-server
-          image: ghcr.io/thijsvanloef/palworld-server-docker:v2.2.2
+          image: thijsvanloef/palworld-server-docker:v2.2.2
+          # image: ghcr.io/thijsvanloef/palworld-server-docker:v2.2.2 for GitHub Container Registry
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8211
