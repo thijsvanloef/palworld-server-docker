@@ -33,7 +33,7 @@ APComm_API() {
     local agent="X-UnrealEngine-Agent"
     local raw response meta exit_code http_code error_message
 
-    raw=$(curl -s --fail --max-time 10 --retry 2 --retry-delay 3 -L -X POST "${url}" -H "${accept}" -A "${agent}" --json "${data}" --write-out "\n${APComm_curl_meta_sep}\n%{exitcode}\n%{response_code}\n%{errormsg}")
+    raw=$(curl -s --fail --max-time 10 --retry 2 --retry-delay 3 -L -X POST "${url}" -H "${accept}" -H "Content-Type: application/json" -A "${agent}" -d "${data}" --write-out "\n${APComm_curl_meta_sep}\n%{exitcode}\n%{response_code}\n%{errormsg}")
     meta="${raw##*$'\n'"${APComm_curl_meta_sep}"$'\n'}"
     response="${raw%$'\n'"${APComm_curl_meta_sep}"$'\n'*}"
 
