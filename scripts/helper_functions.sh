@@ -224,7 +224,7 @@ REST_API() {
         curl -s -L -X GET  "${url}" -H "${accept}" -u "${userpass}"
         result=$?
     else
-        curl -s -L -X POST "${url}" -H "${accept}" -u "${userpass}" --json "${data}"
+        curl -s -L -X POST "${url}" -H "${accept}" -H "Content-Type: application/json" -u "${userpass}" -d "${data}"
         result=$?
     fi
     if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
