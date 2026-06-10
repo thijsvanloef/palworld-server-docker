@@ -24,7 +24,7 @@ slug: /
 ## Docker Compose
 
 此存储库包含一个示例
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 文件，您可以使用它来设置专用服务器。
 
 ```yml
@@ -58,7 +58,7 @@ services:
 <!-- markdownlint-disable-next-line -->
 或者，可以将 [.env.example](https://github.com/thijsvanloef/palworld-server-docker/blob/main/.env.example) 文件复制到一个名为 **.env** 的新文件中。<!-- markdownlint-disable-next-line -->
 根据需要进行修改，并查看 [环境变量](#/zh/入门/配置/服务器设置#环境变量) 部分以检查正确的 <!-- markdownlint-disable-next-line -->
-值。将 [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 修改为以下内容：
+值。将 [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml) 修改为以下内容：
 
 ```yml
 services:

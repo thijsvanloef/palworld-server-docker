@@ -18,7 +18,7 @@
     drwxrwxr-x  4 ubuntu ubuntu 4096 Jan 26 03:31 ./
     drwxr-x--- 12 ubuntu ubuntu 4096 Jan 26 03:31 ../
     drwxr-xr-x  2 ubuntu ubuntu 4096 Jan 26 03:30 74406BE1D7B54114AA5984CCF1236865/
-    -rw-r--r--  1 ubuntu ubuntu  840 Jan 25 05:51 docker-compose.yml
+    -rw-r--r--  1 ubuntu ubuntu  840 Jan 25 05:51 compose.yaml
     -rw-rw-r--  1 ubuntu ubuntu  848 Jan 26 03:31 migrate.sh
     drwxrwxr-x  7 ubuntu ubuntu 4096 Jan 26 03:31 palworld/
     ```

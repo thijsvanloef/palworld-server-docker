@@ -29,7 +29,7 @@ Eles podem se juntar a outros jogadores com códigos de convite e estão limitad
 ## Docker Compose
 
 Este repositório inclui o ficheiro exemplo
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 que podes utilizar para configurar o teu servidor.
 
 ```yml
@@ -74,7 +74,7 @@ para verificar os valores corretos.
 
 <!-- markdownlint-disable-next-line -->
 
-Modifica o teu [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+Modifica o teu [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 para:
 
 ```yml
@@ -95,13 +95,13 @@ services:
 
 ### Iniciar o servidor
 
-Usa `docker compose up -d` na mesma diretoria que `docker-compose.yml` para iniciar o servidor em segundo plano.
+Usa `docker compose up -d` na mesma diretoria que `compose.yaml` para iniciar o servidor em segundo plano.
 
 ### Parar o servidor
 
-Usa `docker compose stop` na mesma diretoria que `docker-compose.yml` para parar o servidor.
+Usa `docker compose stop` na mesma diretoria que `compose.yaml` para parar o servidor.
 
-Usa `docker compose down --rmi all` na mesma diretoria que `docker-compose.yml` para parar,
+Usa `docker compose down --rmi all` na mesma diretoria que `compose.yaml` para parar,
 remover o servidor e remover a imagem docker do teu computador.
 
 ## Docker Run

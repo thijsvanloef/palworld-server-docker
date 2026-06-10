@@ -18,7 +18,7 @@ sidebar_position: 6
 以下假设您的 UID 为 1000，GID 为 1001
 
 * 在 docker run 中添加 `--user 1000:1001 \` 到最后一行上方。
-* 在 docker-compose 中添加 `user: 1000:1001` 到端口上方。
+* 在 compose 中添加 `user: 1000:1001` 到端口上方。
 
 如果希望使用与您自己不同的 UID/GID 运行它，您需要更改正在绑定的目录的所有权：`chown UID:GID palworld/`
 或通过更改所有其他用户的权限：`chmod o=rwx palworld/`

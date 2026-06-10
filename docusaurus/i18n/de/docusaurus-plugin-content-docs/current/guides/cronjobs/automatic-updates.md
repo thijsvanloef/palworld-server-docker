@@ -16,7 +16,7 @@ Um automatische Updates mit diesem Server verwenden zu können, **müssen** die 
 Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` gesetzt ist, wird der Server
 heruntergefahren und muss manuell neu gestartet werden.
 
-Der Beispiel-Docker-Befehl und die Docker-Compose-Datei in
+Der Beispiel-Docker-Befehl und die compose-Datei in
 [der Schnellstartanleitung](https://palworld-server-docker.loef.dev/de/) verwenden bereits die benötigte Richtlinie.
 :::
 

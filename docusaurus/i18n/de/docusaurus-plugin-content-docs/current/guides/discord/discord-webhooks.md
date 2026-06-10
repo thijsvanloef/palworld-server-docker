@@ -26,7 +26,7 @@ Senden Sie Discord-Nachrichten mit `docker run`:
 -e DISCORD_PRE_UPDATE_BOOT_MESSAGE="Der Server wird aktualisiert..." \
 ```
 
-Senden Sie Discord-Nachrichten mit `docker-compose`:
+Senden Sie Discord-Nachrichten mit `compose`:
 
 ```yaml
 - DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1234567890/abcde

@@ -19,7 +19,7 @@ Alles wat met de Palworld-gegevens te maken heeft, bevindt zich in de map `/palw
 ## Gegevensdirectory aan hostbestandssysteem koppelen
 
 De eenvoudigste manier om de palworld-folder aan uw hostsysteem te koppelen is
-om het voorbeeld uit het docker-compose.yml-bestand te gebruiken:
+om het voorbeeld uit het compose.yaml-bestand te gebruiken:
 
 ```yml
       volumes:

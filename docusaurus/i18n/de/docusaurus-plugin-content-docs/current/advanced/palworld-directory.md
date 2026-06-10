@@ -18,7 +18,7 @@ Alles was mit den Palworld-Dateien zusammenhängt, befindet sich im Ordner `/pal
 
 ## Datenverzeichnis an das Host-Dateisystem anbinden
 
-Der einfachste Weg das Palworld-Verzeichnis an Ihr Host-System anzubinden, ist es, das mittels docker-compose.yml
+Der einfachste Weg das Palworld-Verzeichnis an Ihr Host-System anzubinden, ist es, das mittels compose.yaml
 bereitgestellte Beispiel zu verwenden:
 
 ```yml

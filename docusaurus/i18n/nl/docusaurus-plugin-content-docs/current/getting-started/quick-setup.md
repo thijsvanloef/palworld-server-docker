@@ -29,7 +29,7 @@ Ze moeten spelers die de uitnodigingscode gebruiken om deel te nemen en zijn bep
 ## Docker Compose
 
 Deze repository bevat een voorbeeld
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 bestand dat je kunt gebruiken om je server in te stellen.
 
 ```yml
@@ -64,7 +64,7 @@ Als alternatief kun je het [.env.example](https://github.com/thijsvanloef/palwor
 <!-- markdownlint-disable-next-line -->
 Pas het aan naar jouw behoeften, bekijk de [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) sectie om de juiste waarden te controleren.
 <!-- markdownlint-disable-next-line -->
-Pas je [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) aan naar dit:
+Pas je [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml) aan naar dit:
 
 ```yml
 services:
@@ -84,13 +84,13 @@ services:
 
 ### De server starten
 
-Gebruik `docker compose up -d` in dezelfde map als de `docker-compose.yml` om de server op de achtergrond te starten.
+Gebruik `docker compose up -d` in dezelfde map als de `compose.yaml` om de server op de achtergrond te starten.
 
 ### De server stoppen
 
-Gebruik `docker compose stop` in dezelfde map als de `docker-compose.yml` om de server te stoppen.
+Gebruik `docker compose stop` in dezelfde map als de `compose.yaml` om de server te stoppen.
 
-Gebruik `docker compose down --rmi all` in dezelfde map als de `docker-compose.yml`
+Gebruik `docker compose down --rmi all` in dezelfde map als de `compose.yaml`
 om de server te stoppen en te verwijderen, en om het docker-image van je computer te verwijderen.
 
 ## Docker Run

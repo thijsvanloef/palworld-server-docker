@@ -29,7 +29,7 @@ This Palworld server quick setup will only take a couple of minutes and you'll h
 ## Docker Compose
 
 This repository includes an example
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 file you can use to set up your server.
 
 ```yml
@@ -67,7 +67,7 @@ As an alternative, you can copy the [.env.example](https://github.com/thijsvanlo
 Modify it to your needs, check out the [environment variables](https://palworld-server-docker.loef.dev/getting-started/configuration/server-settings#environment-variables) section to check the correct 
 values.
 <!-- markdownlint-disable-next-line -->
-Modify your [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) to this:
+Modify your [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml) to this:
 
 ```yml
 services:
@@ -88,13 +88,13 @@ services:
 
 ### Starting the server
 
-Use `docker compose up -d` in the same folder as the `docker-compose.yml` to start the server in the background
+Use `docker compose up -d` in the same folder as the `compose.yaml` to start the server in the background
 
 ### Stopping the server
 
-Use `docker compose stop` in the same folder as the `docker-compose.yml` to stop the server
+Use `docker compose stop` in the same folder as the `compose.yaml` to stop the server
 
-Use `docker compose down --rmi all` in the same folder as the `docker-compose.yml`
+Use `docker compose down --rmi all` in the same folder as the `compose.yaml`
 to stop and remove the server and remove the docker image from your computer
 
 ## Docker Run

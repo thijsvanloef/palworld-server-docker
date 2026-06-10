@@ -43,12 +43,12 @@ Steps to reproduce the behavior:
 - CPU:  <!-- e.g. quad core Intel, duo core AMD -->
 - Memory:  <!-- e.g. 8GB, 16GB ddr3/4/5 -->
 
-## docker-compose.yml contents (IMPORTANT)
+## compose.yaml contents (IMPORTANT)
 <!-- markdownlint-disable-next-line -->
-<details><summary>docker-compose.yml</summary>
+<details><summary>compose.yaml</summary>
 
 ```yaml
-# docker-compose.yml contents here
+# compose.yaml contents here
 ```
 
 </details>

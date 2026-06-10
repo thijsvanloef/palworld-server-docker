@@ -15,7 +15,7 @@ sidebar_position: 4
 如果 docker 重启未设置为策略 `always` 或 `unless-stopped`，
 则服务器将关闭并需要手动重新启动。
 
-[快速设置](https://palworld-server-docker.loef.dev/zh/)中的示例 docker run 命令和 docker-compose 文件已使用所需的策略。
+[快速设置](https://palworld-server-docker.loef.dev/zh/)中的示例 docker run 命令和 compose 文件已使用所需的策略。
 :::
 
 | 变量                              | 信息                                                                       | 默认值          | 允许的值                                                                                                            |

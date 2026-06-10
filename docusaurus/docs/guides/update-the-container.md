@@ -13,7 +13,7 @@ How to update your Palworld dedicated server docker container to enjoy the lates
 
 ## docker compose
 
-1. Open the docker-compose.yml
+1. Open the compose.yaml
 2. Check if your image is either:
 
     ```yml
