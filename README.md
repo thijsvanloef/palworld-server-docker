@@ -62,7 +62,7 @@ Keep in mind that you'll need to change the [environment variables](#environment
 
 ### Docker Compose
 
-This repository includes an example [docker-compose.yml](/docker-compose.yml) file you can use to set up your server.
+This repository includes an example [compose.yaml](/compose.yaml) file you can use to set up your server.
 
 ```yml
 services:
@@ -96,7 +96,7 @@ services:
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
 Modify it to your needs, check out the [environment variables](#environment-variables) section to check the correct
-values. Modify your [docker-compose.yml](docker-compose.yml) to this:
+values. Modify your [compose.yaml](compose.yaml) to this:
 
 ```yml
 services:
@@ -370,7 +370,7 @@ For a full list of commands go to: [https://tech.palworldgame.com/settings-and-o
 
 REST API is enabled by default.
 
-docker-compose.override.yml
+compose.override.yml
 
 ```yaml
 services:
@@ -592,7 +592,7 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 
 > [!NOTE]
 > When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
-> Alternatively, add the following `cap_add:` to your `compose.yml`:
+> Alternatively, add the following `cap_add:` to your `compose.yaml`:
 >
 > ```yaml
 > services:

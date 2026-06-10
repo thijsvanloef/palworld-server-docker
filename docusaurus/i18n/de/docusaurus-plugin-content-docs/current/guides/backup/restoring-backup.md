@@ -17,7 +17,7 @@ Die Umgebungsvariable `RCON_ENABLED` muss auf `true` gesetzt sein, um diesen Bef
 Wenn der Docker-Neustart nicht auf die Richtlinie `always` oder `unless-stopped` eingestellt ist, wird der Server
 heruntergefahren und muss manuell neu gestartet werden.
 <!-- markdownlint-disable-next-line -->
-Das Beispiel für den Docker-Befehl und die Docker-Compose-Datei in [der Schnellinstallation](https://palworld-server-docker.loef.dev/de/) verwendet bereits die benötigte Richtlinie.
+Das Beispiel für den Docker-Befehl und die compose-Datei in [der Schnellinstallation](https://palworld-server-docker.loef.dev/de/) verwendet bereits die benötigte Richtlinie.
 :::
 
 ## Manuell aus einem Backup wiederherstellen

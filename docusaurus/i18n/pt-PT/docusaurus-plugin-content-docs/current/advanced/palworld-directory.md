@@ -18,7 +18,7 @@ Tudo relacionado com os dados do Palworld pode ser encontrado na diretoria `/pal
 
 ## Anexar o diretório de dados ao sistema de ficheiros do anfitrião
 
-A maneira mais fácil de anexar o diretório de dados ao sistema de ficheiros do anfitrião é usar o exemplo do [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml):
+A maneira mais fácil de anexar o diretório de dados ao sistema de ficheiros do anfitrião é usar o exemplo do [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml):
 
 ```yml
 volumes:

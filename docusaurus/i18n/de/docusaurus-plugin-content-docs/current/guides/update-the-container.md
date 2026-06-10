@@ -13,7 +13,7 @@ So aktualisieren Sie Ihren dedizierten Palworld-Server-Docker-Container, um die 
 
 ## Docker Compose
 
-1. Öffnen Sie die docker-compose.yml.
+1. Öffnen Sie die compose.yaml.
 2. Überprüfen Sie, ob Ihr Abbild entweder:
 
     ```yml

@@ -35,7 +35,7 @@ Sie müssen sich Spielern mit einem Einladungscode anschließen und sind auf Sit
 ## Docker Compose
 
 Dieses Repository enthält eine Beispiel
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)
 Datei, die Sie verwenden können, um Ihren Server aufzusetzen.
 
 ```yml
@@ -70,7 +70,7 @@ Als Alternative können Sie die [.env.example](https://github.com/thijsvanloef/p
 <!-- markdownlint-disable-next-line -->
 Passen Sie es an Ihre Bedürfnisse an, sehen Sie sich die [Umgebungsvariablen-Übersicht](https://palworld-server-docker.loef.dev/de/getting-started/configuration/server-settings#umgebungsvariablen) an, um die korrekten Werte zu überprüfen.
 <!-- markdownlint-disable-next-line -->
-Ändern Sie Ihre [docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) wie folgt:
+Ändern Sie Ihre [compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml) wie folgt:
 
 ```yml
 services:
@@ -90,14 +90,14 @@ services:
 
 ### Starten des Servers
 
-Verwenden Sie `docker compose up -d` im gleichen Ordner wie die `docker-compose.yml`, um den Server im Hintergrund zu
+Verwenden Sie `docker compose up -d` im gleichen Ordner wie die `compose.yaml`, um den Server im Hintergrund zu
 starten.
 
 ### Stoppen des Servers
 
-Verwenden Sie `docker compose stop` im gleichen Ordner wie die `docker-compose.yml`, um den Server zu stoppen.
+Verwenden Sie `docker compose stop` im gleichen Ordner wie die `compose.yaml`, um den Server zu stoppen.
 
-Nutzen Sie `docker compose down --rmi all` im gleichen Ordner wie die `docker-compose.yml`, um den Server zu stoppen und
+Nutzen Sie `docker compose down --rmi all` im gleichen Ordner wie die `compose.yaml`, um den Server zu stoppen und
 zu entfernen und das Docker-Image von Ihrem System zu entfernen.
 
 ## Docker Run

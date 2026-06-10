@@ -18,7 +18,7 @@ Palworld 데이터와 관련된 모든 것은 컨테이너 내부의 `/palworld`
 
 ## 호스트의 파일 시스템에 데이터 디렉터리 연결
 
-Palworld 폴더를 호스트 시스템에 연결하는 가장 간단한 방법은 아래의 docker-compose.yml 파일 예시를 사용하는 것입니다:
+Palworld 폴더를 호스트 시스템에 연결하는 가장 간단한 방법은 아래의 compose.yaml 파일 예시를 사용하는 것입니다:
 
 ```yml
       volumes:

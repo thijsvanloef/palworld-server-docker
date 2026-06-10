@@ -63,7 +63,7 @@ Please use the official docs: [https://palworld-server-docker.loef.dev/](https:/
 
 ### Docker Compose
 
-이 저장소에는 서버를 설정하는 데 사용할 수 있는 [docker-compose.yml](/docker-compose.yml)예제 파일이 포함되어 있습니다.
+이 저장소에는 서버를 설정하는 데 사용할 수 있는 [compose.yaml](/compose.yaml)예제 파일이 포함되어 있습니다.
 
 ```yml
 services:
@@ -94,7 +94,7 @@ services:
 
 환경 변수를 설정하는 또 다른 방법은 **.env** 파일을 사용하는 것입니다. [.env.example](/.env.example) 파일을 **.env**라는 새 파일로 복사한 후 필요에 따라 내용을 수정하세요.
 환경 변수에 대한 올바른 값을 확인하려면 [환경 변수](#환경-변수) 섹션을 참조하세요.
-[docker-compose.yml](/docker-compose.yml) 파일을 다음과 같이 수정하세요:
+[compose.yaml](/compose.yaml) 파일을 다음과 같이 수정하세요:
 
 ```yml
 services:

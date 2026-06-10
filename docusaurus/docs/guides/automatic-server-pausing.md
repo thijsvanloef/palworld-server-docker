@@ -36,7 +36,7 @@ so `LOG_FILTER_ENABLED` and `LOG_FORMAT_TYPE` apply to them too.
 
 :::note
 When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
-Alternatively, add the following `cap_add:` to your `compose.yml`:
+Alternatively, add the following `cap_add:` to your `compose.yaml`:
 
 ```yaml
 services:

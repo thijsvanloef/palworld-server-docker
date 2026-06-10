@@ -1,7 +1,7 @@
 services:
   palworld:
     extends:
-      file: ../../docker-compose.yml
+      file: ../../compose.yaml
       service: palworld
     build: ../../
     cap_add:

@@ -67,7 +67,7 @@ N'oubliez pas que vous devrez modifier les [variables d'environnement](#variable
 
 ### Docker Compose
 
-Ce référentiel comprend un exemple de fichier [docker-compose.yml](/docker-compose.yml)
+Ce référentiel comprend un exemple de fichier [compose.yaml](/compose.yaml)
 que vous pouvez utiliser pour configurer votre serveur.
 
 ```yml
@@ -100,7 +100,7 @@ services:
 
 En alternative, vous pouvez copier le fichier [.env.example](.env.example) dans un nouveau fichier appelé **.env**.
 Modifiez-le selon vos besoins, consultez la section [environment variables](#variables-d-environnement) pour vérifier les
-valeurs correctes. Modifiez votre fichier [docker-compose.yml](docker-compose.yml) comme suit :
+valeurs correctes. Modifiez votre fichier [compose.yaml](compose.yaml) comme suit :
 
 ```yml
 services:
@@ -185,7 +185,7 @@ Vous devez définir l'utilisateur sur `UID_NUMÉRIQUE:GID_NUMÉRIQUE`
 Ci-dessous, nous supposons que votre UID est 1000 et votre GID est 1001.
 
 - Dans la commande docker run, ajoutez `--user 1000:1001 \` au-dessus de la dernière ligne.
-- Dans le fichier docker-compose, ajoutez `user: 1000:1001` au-dessus des ports.
+- Dans le fichier compose, ajoutez `user: 1000:1001` au-dessus des ports.
 
 Si vous souhaitez l'exécuter avec un UID/GID différent du vôtre, vous devrez changer la
 propriété du répertoire qui est monté : `chown UID:GID palworld/`
@@ -323,7 +323,7 @@ La variable d'environnement `RCON_ENABLED` doit être définie sur `true` pour u
 > Si la redémarrage de Docker n'est pas configuré avec la politique `always` ou `unless-stopped`
 > le serveur s'éteindra et devra être redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#comment-utiliser)
+> La commande docker run exemple et le fichier compose dans [Comment utiliser](#comment-utiliser)
 > utilisent déjà la politique nécessaire
 
 ## Restauration manuelle à partir d'une sauvegarde
@@ -384,7 +384,7 @@ suivantes **doivent** être définies sur `true`:
 > le serveur s'éteindra et devra être
 > redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#comment-utiliser)
+> La commande docker run exemple et le fichier compose dans [Comment utiliser](#comment-utiliser)
 > utilisent déjà la politique nécessaire
 
 Définissez AUTO_UPDATE_ENABLED pour activer ou désactiver les mises à jour automatiques (par défaut, c'est désactivé).
@@ -409,7 +409,7 @@ Pour pouvoir utiliser les redémarrages automatiques avec ce serveur, RCON_ENABL
 > le serveur s'éteindra et devra être
 > redémarré manuellement.
 >
-> La commande docker run exemple et le fichier docker-compose dans [Comment utiliser](#comment-utiliser)
+> La commande docker run exemple et le fichier compose dans [Comment utiliser](#comment-utiliser)
 > utilisent déjà la politique nécessaire
 
 Définissez AUTO_REBOOT_ENABLED pour activer ou désactiver les redémarrages automatiques (par défaut, c'est désactivé).

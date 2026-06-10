@@ -66,7 +66,7 @@ Please use the official docs: [https://palworld-server-docker.loef.dev/](https:/
 
 ### Docker Compose
 
-您可以直接使用 [docker-compose.yml](/docker-compose.yml) 来配置您的服务器：
+您可以直接使用 [compose.yaml](/compose.yaml) 来配置您的服务器：
 
 ```yml
 services:

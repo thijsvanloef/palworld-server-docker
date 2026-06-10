@@ -19,7 +19,7 @@ Everything related to the Palworld data is inside the `/palworld` folder inside 
 ## Attaching data directory to host filesystem
 
 The simplest way of attaching the palworld folder to your host system is
-to use the example given in the docker-compose.yml file:
+to use the example given in the compose.yaml file:
 
 ```yml
       volumes:

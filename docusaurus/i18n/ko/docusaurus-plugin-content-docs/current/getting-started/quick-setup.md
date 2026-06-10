@@ -29,7 +29,7 @@ Palworld 전용 서버를 이용해 보세요!
 ## Docker Compose
 
 이 저장소에는 서버를 설정하는 데 사용할 수 있는
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml) 예제 파일이 포함되어 있습니다.
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml) 예제 파일이 포함되어 있습니다.
 
 ```yml
 services:
@@ -63,7 +63,7 @@ services:
 <!-- markdownlint-disable-next-line -->
 필요에 맞게 수정하고 [환경 변수](https://palworld-server-docker.loef.dev/ko/getting-started/configuration/server-settings/#환경-변수) 섹션에서 올바른 값을 확인해보세요. 
 <!-- markdownlint-disable-next-line -->
-[docker-compose.yml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/docker-compose.yml)을 다음과 같이 수정합니다:
+[compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/compose.yaml)을 다음과 같이 수정합니다:
 
 ```yml
 services:
@@ -83,13 +83,13 @@ services:
 
 ### 서버 시작하기
 
-`docker compose up -d` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 백그라운드에서 실행하세요.
+`docker compose up -d` 명령어를 `compose.yaml`가 들어있는 폴더안에서 입력해 백그라운드에서 실행하세요.
 
 ### 서버 정지하기
 
-`docker compose stop` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 서버를 정지하세요.
+`docker compose stop` 명령어를 `compose.yaml`가 들어있는 폴더안에서 입력해 서버를 정지하세요.
 
-`docker compose down --rmi all` 명령어를 `docker-compose.yml`가 들어있는 폴더안에서 입력해 서버와 이미지를 정지해 지우세요.
+`docker compose down --rmi all` 명령어를 `compose.yaml`가 들어있는 폴더안에서 입력해 서버와 이미지를 정지해 지우세요.
 
 ### Docker Run
 
