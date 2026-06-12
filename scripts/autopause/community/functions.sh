@@ -26,14 +26,13 @@ APComm_formatLogMessage() {
 
 # api.palworldgame.com/server Call
 APComm_API() {
-    local api="${1}"
-    local data="${2}"
-    local url="${APComm_API_URL}${api}"
-    local accept="Accept: application/json"
-    local agent="X-UnrealEngine-Agent"
+    local -r api="${1}"
+    local -r data="${2}"
+    local -r url="${APComm_API_URL}${api}"
+    local -r agent="X-UnrealEngine-Agent"
     local raw response meta exit_code http_code error_message
 
-    raw=$(curl -s --fail --max-time 10 --retry 2 --retry-delay 3 -L -X POST "${url}" -H "${accept}" -H "Content-Type: application/json" -A "${agent}" -d "${data}" --write-out "\n${APComm_curl_meta_sep}\n%{exitcode}\n%{response_code}\n%{errormsg}")
+    raw=$(curl -s --fail --max-time 10 --retry 2 --retry-delay 3 -L -X POST "${url}" -A "${agent}" --json "${data}" --write-out "\n${APComm_curl_meta_sep}\n%{exitcode}\n%{response_code}\n%{errormsg}")
     meta="${raw##*$'\n'"${APComm_curl_meta_sep}"$'\n'}"
     response="${raw%$'\n'"${APComm_curl_meta_sep}"$'\n'*}"
 

@@ -215,16 +215,15 @@ REST_API() {
     local -r api="${1}"
     local -r data="${2}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
-    local -r accept="Accept: application/json"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
     local -i result=0
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
-        curl -s -L -X GET  "${url}" -H "${accept}" -u "${userpass}"
+        curl -s -L -X GET  "${url}" -u "${userpass}" -H "Accept: application/json"
         result=$?
     else
-        curl -s -L -X POST "${url}" -H "${accept}" -H "Content-Type: application/json" -u "${userpass}" -d "${data}"
+        curl -s -L -X POST "${url}" -u "${userpass}" --json "${data}"
         result=$?
     fi
     if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
