@@ -17,11 +17,10 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && rm -rf rcon-cli-${RCON_VERSION} \
     && go build -v ./cmd/gorcon
 
-FROM cm2network/steamcmd:root AS base-amd64
+FROM cm2network/steamcmd:root-trixie AS base-amd64
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
-FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-bookworm-2026-06-07 AS base-arm64
-
+FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-trixie-2026-06-07 AS base-arm64
 ARG TARGETARCH
 # Ignoring the lack of a tag here because the tag is defined in the above FROM lines
 # and hadolint isn't aware of those.
