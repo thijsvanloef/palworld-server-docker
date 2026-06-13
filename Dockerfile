@@ -43,6 +43,7 @@ ARG SUPERCRONIC_SHA1SUM_ARM64="639ab81a72771990790df7ee87d9acfe88e5fa83"
 ARG SUPERCRONIC_SHA1SUM_AMD64="5bcefed628e32adc08e32634db2d10e9230dbca0"
 ARG SUPERCRONIC_VERSION="0.2.46"
 ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
+ARG KNOCK_VERSION="0.8.1"
 
 # update and install dependencies
 # hadolint ignore=DL3008
@@ -94,7 +95,7 @@ RUN case "${TARGETARCH}" in \
     && mv DepotDownloader /usr/local/bin/DepotDownloader
 
 # install patched knockd (as same as https://github.com/itzg/docker-minecraft-server/blob/master/build/ubuntu/install-packages.sh)
-RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-0.8.1-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
+RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-${KNOCK_VERSION}-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
     tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz && \
     ln -s /usr/local/sbin/knockd /usr/sbin/knockd && \
     setcap cap_net_raw=ep /usr/local/sbin/knockd && \
