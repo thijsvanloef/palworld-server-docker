@@ -54,14 +54,14 @@ if [ "$architecture" == "arm64" ]; then
     STARTCOMMAND=("./PalServer-arm64.sh")
 fi
 
-StartCommandIsReadableAndWritable=true
+StartCommandIsReadableAndExecutable=true
 if ! isReadable "${STARTCOMMAND[0]}"; then;
-    StartCommandIsReadableAndWritable=false
+    StartCommandIsReadableAndExecutable=false
 fi
 if ! isExecutable "${STARTCOMMAND[0]}"; then
-    StartCommandIsReadableAndWritable=false
+    StartCommandIsReadableAndExecutable=false
 fi
-isTrue "${StartCommandIsReadableAndWritable}" || exit
+isTrue "${StartCommandIsReadableAndExecutable}" || exit
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
