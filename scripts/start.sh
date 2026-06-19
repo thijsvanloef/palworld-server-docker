@@ -7,14 +7,14 @@ source "/home/steam/server/helper_functions.sh"
 source "/home/steam/server/helper_install.sh"
 
 dirExists "/palworld" || exit
-PalworldDirIsReadableAndWritable=true
+PalworldDirIsWritableAndWritable=true
 if ! isWritable "/palworld"; then
-    PalworldDirIsReadableAndWritable=false
+    PalworldDirIsWritableAndWritable=false
 fi
 if ! isExecutable "/palworld"; then
-    PalworldDirIsReadableAndWritable=false
+    PalworldDirIsWritableAndWritable=false
 fi
-isTrue "${PalworldDirIsReadableAndWritable}" || exit
+isTrue "${PalworldDirIsWritableAndWritable}" || exit
 
 cd /palworld || exit
 
