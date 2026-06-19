@@ -55,7 +55,7 @@ if [ "$architecture" == "arm64" ]; then
 fi
 
 StartCommandIsReadableAndExecutable=true
-if ! isReadable "${STARTCOMMAND[0]}"; then;
+if ! isReadable "${STARTCOMMAND[0]}"; then
     StartCommandIsReadableAndExecutable=false
 fi
 if ! isExecutable "${STARTCOMMAND[0]}"; then
