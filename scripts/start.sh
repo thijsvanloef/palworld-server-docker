@@ -6,17 +6,12 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
-if ! dirExists "/palworld"; then
-    LogError "/palworld does not exist"
-    exit 1
-fi
+dirExists "/palworld" || exit
 PalworldDirIsReadableAndWritable=true
 if ! isWritable "/palworld"; then
-    LogError "/palworld is not writable"
     PalworldDirIsReadableAndWritable=false
 fi
 if ! isExecutable "/palworld"; then
-    LogError "/palworld is not executable"
     PalworldDirIsReadableAndWritable=false
 fi
 isTrue "${PalworldDirIsReadableAndWritable}" || exit
@@ -61,11 +56,9 @@ fi
 
 StartCommandIsReadableAndWritable=true
 if ! isReadable "${STARTCOMMAND[0]}"; then;
-    LogError "${STARTCOMMAND[0]} is not readable"
     StartCommandIsReadableAndWritable=false
 fi
 if ! isExecutable "${STARTCOMMAND[0]}"; then
-    LogError "${STARTCOMMAND[0]} is not executable"
     StartCommandIsReadableAndWritable=false
 fi
 isTrue "${StartCommandIsReadableAndWritable}" || exit

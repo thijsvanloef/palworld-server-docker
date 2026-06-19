@@ -8,7 +8,7 @@ dirExists() {
     local path="$1"
     local return_val=0
     if ! [ -d "${path}" ]; then
-        echo "${path} does not exist."
+        LogError "${path} does not exist."
         return_val=1
     fi
     return "$return_val"
@@ -21,7 +21,7 @@ fileExists() {
     local path="$1"
     local return_val=0
     if ! [ -f "${path}" ]; then
-        echo "${path} does not exist."
+        LogError "${path} does not exist."
         return_val=1
     fi
     return "$return_val"
@@ -34,7 +34,7 @@ isReadable() {
     local path="$1"
     local return_val=0
     if ! [ -e "${path}" ]; then
-        echo "${path} is not readable."
+        LogError "${path} is not readable."
         return_val=1
     fi
     return "$return_val"
@@ -52,12 +52,12 @@ isWritable() {
         if [ -n "${temp_file}" ]; then
             rm -f "${temp_file}"
         else
-            echo "${path} is not writable."
+            LogError "${path} is not writable."
             return_val=1
         fi
     # If it is a file it must be writable
     elif ! [ -w "${path}" ]; then
-        echo "${path} is not writable."
+        LogError "${path} is not writable."
         return_val=1
     fi
     return "$return_val"
@@ -70,7 +70,7 @@ isExecutable() {
     local path="$1"
     local return_val=0
     if ! [ -x "${path}" ]; then
-        echo "${path} is not executable."
+        LogError "${path} is not executable."
         return_val=1
     fi
     return "$return_val"
