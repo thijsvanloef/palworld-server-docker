@@ -6,9 +6,18 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
-dirExists "/palworld" || exit
-isWritable "/palworld" || exit
-isExecutable "/palworld" || exit
+if ! dirExists "/palworld"; then
+    LogError "/palworld does not exist"
+    exit 1
+fi
+if ! isWritable "/palworld"; then
+    LogError "/palworld is not writable"
+    exit 1
+fi
+if ! isExecutable "/palworld"; then
+    LogError "/palworld is not executable"
+    exit 1
+fi
 
 cd /palworld || exit
 
@@ -48,8 +57,14 @@ if [ "$architecture" == "arm64" ]; then
     STARTCOMMAND=("./PalServer-arm64.sh")
 fi
 
-isReadable "${STARTCOMMAND[0]}" || exit
-isExecutable "${STARTCOMMAND[0]}" || exit
+if ! isReadable "${STARTCOMMAND[0]}"; then;
+    LogError "${STARTCOMMAND[0]} is not readable"
+    exit 1
+fi
+if ! isExecutable "${STARTCOMMAND[0]}"; then
+    LogError "${STARTCOMMAND[0]} is not executable"
+    exit 1
+fi
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
