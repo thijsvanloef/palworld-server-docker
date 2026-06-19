@@ -10,14 +10,16 @@ if ! dirExists "/palworld"; then
     LogError "/palworld does not exist"
     exit 1
 fi
+PalworldDirIsReadableAndWritable=true
 if ! isWritable "/palworld"; then
     LogError "/palworld is not writable"
-    exit 1
+    PalworldDirIsReadableAndWritable=false
 fi
 if ! isExecutable "/palworld"; then
     LogError "/palworld is not executable"
-    exit 1
+    PalworldDirIsReadableAndWritable=false
 fi
+isTrue "${PalworldDirIsReadableAndWritable}" || exit
 
 cd /palworld || exit
 
@@ -57,14 +59,16 @@ if [ "$architecture" == "arm64" ]; then
     STARTCOMMAND=("./PalServer-arm64.sh")
 fi
 
+StartCommandIsReadableAndWritable=true
 if ! isReadable "${STARTCOMMAND[0]}"; then;
     LogError "${STARTCOMMAND[0]} is not readable"
-    exit 1
+    StartCommandIsReadableAndWritable=false
 fi
 if ! isExecutable "${STARTCOMMAND[0]}"; then
     LogError "${STARTCOMMAND[0]} is not executable"
-    exit 1
+    StartCommandIsReadableAndWritable=false
 fi
+isTrue "${StartCommandIsReadableAndWritable}" || exit
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
