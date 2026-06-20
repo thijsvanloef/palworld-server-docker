@@ -7,14 +7,8 @@ source "/home/steam/server/helper_functions.sh"
 source "/home/steam/server/helper_install.sh"
 
 dirExists "/palworld" || exit
-PalworldDirIsWritableAndWritable=true
-if ! isWritable "/palworld"; then
-    PalworldDirIsWritableAndWritable=false
-fi
-if ! isExecutable "/palworld"; then
-    PalworldDirIsWritableAndWritable=false
-fi
-isTrue "${PalworldDirIsWritableAndWritable}" || exit
+isWritable "/palworld" || exit
+isExecutable "/palworld" || exit
 
 cd /palworld || exit
 
@@ -54,14 +48,8 @@ if [ "$architecture" == "arm64" ]; then
     STARTCOMMAND=("./PalServer-arm64.sh")
 fi
 
-StartCommandIsReadableAndExecutable=true
-if ! isReadable "${STARTCOMMAND[0]}"; then
-    StartCommandIsReadableAndExecutable=false
-fi
-if ! isExecutable "${STARTCOMMAND[0]}"; then
-    StartCommandIsReadableAndExecutable=false
-fi
-isTrue "${StartCommandIsReadableAndExecutable}" || exit
+isReadable "${STARTCOMMAND[0]}" || exit
+isExecutable "${STARTCOMMAND[0]}" || exit
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
