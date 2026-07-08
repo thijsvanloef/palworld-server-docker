@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: palworld-server
-          image: thijsvanloef/palworld-server-docker:v2.3.0
+          # Using latest by default, for production, consider pinning to a specific version: https://hub.docker.com/r/thijsvanloef/palworld-server-docker/tags
+          image: thijsvanloef/palworld-server-docker:latest
           ports:
             - name: server
               containerPort: 8211
