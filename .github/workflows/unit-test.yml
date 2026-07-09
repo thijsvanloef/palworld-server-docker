@@ -324,6 +324,7 @@ jobs:
 
       - name: Run server
         run: |
+            sed -i 's/^USE_DEPOT_DOWNLOADER=False/USE_DEPOT_DOWNLOADER=True/' .env.example && \
             docker run -d \
             --name palworld-server-${{ github.run_id }} \
             --platform linux/arm64 \
