@@ -1,5 +1,9 @@
 # Palworld Dedicated Server Docker
 
+> [!IMPORTANT]
+> ## 1.0.0 release of Palworld is releasing on 10-07-2026!
+> Please check https://github.com/thijsvanloef/palworld-server-docker/issues/834 to see if there are any known issues with the 1.0.0 release of Palworld.
+
 [![Release](https://img.shields.io/github/v/release/thijsvanloef/palworld-server-docker)](https://github.com/thijsvanloef/palworld-server-docker/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
 [![Docker Stars](https://img.shields.io/docker/stars/thijsvanloef/palworld-server-docker)](https://hub.docker.com/r/thijsvanloef/palworld-server-docker)
