@@ -75,7 +75,7 @@ else
     JSON=$(jo embeds[]="$(jo title="\\$TITLE" description="\\$MESSAGE" color=$COLOR)" flags="$DISCORD_FLAGS")
 fi
 
-if [ "$ENABLED" = true ]; then
+if [ "${ENABLED,,}" = true ]; then
     if [ "$URL" == "" ]; then
         DISCORD_URL="$DISCORD_WEBHOOK_URL"
     else
