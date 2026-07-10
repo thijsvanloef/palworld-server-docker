@@ -32,6 +32,7 @@ api:
   info            ... show server informations.
   kick <json>     ... kick player.
   metrics         ... show server metrics.
+  game-data       ... get world actor snapshot.
   players         ... show online players.
   save            ... save the world.
   settings        ... show server settings.
