@@ -601,7 +601,7 @@ Le manifeste correspond aux dates de sortie/mises à jour. Les manifestes peuven
 | 0.7.1   | 2194336714352902668 |
 | 0.7.2   | 7743228609268535996 |
 | 0.7.3   | 5125159522749666228 |
-| 1.0     | 3392720560779800260 |
+| 1.0.0   | 3392720560779800260 |
 
 ## Signalement de Problèmes/Demandes de Fonctionnalités
 
