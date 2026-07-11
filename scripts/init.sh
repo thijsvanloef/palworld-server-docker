@@ -57,6 +57,11 @@ fi
 # Process ID of su
 killpid="$!"
 wait "$killpid"
+# Propagate the server exit code. When the server crashes (e.g. box64
+# emulation segfaults / LowLevelFatalError on ARM), start.sh now exits
+# non-zero, so this entrypoint (PID 1) also exits non-zero and Docker's
+# restart policy (e.g. restart: unless-stopped) can recover the container.
+server_exit_code=$?
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then
@@ -73,3 +78,15 @@ if [ "${#restore_pids[@]}" -ne 0 ]; then
         tail --pid="$pid" -f 2>/dev/null
     done
 fi
+
+# When the server crashes there is no SIGTERM (so term_handler never runs),
+# and leftover background helpers (e.g. supercronic) can keep the stdout pipe
+# to pal_logger.py open. That prevents the log filter from receiving EOF and
+# would keep the container "Up (unhealthy)" with a dead server forever.
+# Reap them so this entrypoint can exit and hand control back to Docker.
+if [ "${server_exit_code}" -ne 0 ]; then
+    pkill -P $$ 2>/dev/null || true
+    pkill supercronic 2>/dev/null || true
+fi
+
+exit "${server_exit_code}"

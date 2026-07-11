@@ -153,11 +153,20 @@ DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_S
 
 echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
+# Capture the server exit code so we can propagate crashes (e.g. box64
+# emulation segfaults / LowLevelFatalError on ARM) up to the entrypoint.
+# Without this the container would keep running with a dead server and
+# Docker's restart policy would never kick in.
+server_exit_code=$?
 
 LogAction "Ending Server"
+if [ "${server_exit_code}" -ne 0 ]; then
+    LogError "Server exited unexpectedly with code ${server_exit_code}"
+fi
+
 if [ ${#CHILD_PIDS[@]} -ne 0 ]; then
     wait "${CHILD_PIDS[@]}"
 fi
 
 DiscordMessage "Stop" "${DISCORD_POST_SHUTDOWN_MESSAGE}" "failure" "${DISCORD_POST_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_POST_SHUTDOWN_MESSAGE_URL}"
-exit 0
+exit "${server_exit_code}"
