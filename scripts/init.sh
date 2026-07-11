@@ -57,6 +57,7 @@ fi
 # Process ID of su
 killpid="$!"
 wait "$killpid"
+server_exit_code=$?
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then
@@ -73,3 +74,10 @@ if [ "${#restore_pids[@]}" -ne 0 ]; then
         tail --pid="$pid" -f 2>/dev/null
     done
 fi
+
+if [ "${server_exit_code}" -ne 0 ]; then
+    pkill -P $$ 2>/dev/null || true
+    pkill supercronic 2>/dev/null || true
+fi
+
+exit "${server_exit_code}"
