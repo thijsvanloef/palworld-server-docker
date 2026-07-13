@@ -127,9 +127,9 @@ The old `MULTITHREADING` variable is still supported for backward compatibility,
 Use the new variables for explicit control:
 
 * `ENABLE_PERF_THREADING_ARGS=true` adds
-	`-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS`
+    `-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS`
 * `WORKER_THREADS_SERVER=<number>` sets
-	`-NumberOfWorkerThreadsServer=<number>`
+    `-NumberOfWorkerThreadsServer=<number>`
 
 When `MULTITHREADING=true` is used and the new variables are not set,
 the container will automatically apply threading args and set worker threads
