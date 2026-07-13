@@ -64,8 +64,28 @@ if [ "${COMMUNITY,,}" = true ]; then
     STARTCOMMAND+=("-publiclobby")
 fi
 
+if [ "${ENABLE_PERF_THREADING_ARGS,,}" = true ]; then
+    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+fi
+
+if [ -n "${WORKER_THREADS_SERVER}" ]; then
+    STARTCOMMAND+=("-NumberOfWorkerThreadsServer=${WORKER_THREADS_SERVER}")
+fi
+
+# Backward compatibility (deprecated)
 if [ "${MULTITHREADING,,}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS" "-NumberOfWorkerThreadsServer=$(nproc --all)")
+    LogWarn "MULTITHREADING is deprecated. Use ENABLE_PERF_THREADING_ARGS and WORKER_THREADS_SERVER instead."
+    if [ "${ENABLE_PERF_THREADING_ARGS,,}" != true ]; then
+        STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    fi
+
+    if [ -z "${WORKER_THREADS_SERVER}" ]; then
+        STARTCOMMAND+=("-NumberOfWorkerThreadsServer=$(nproc --all)")
+    fi
+fi
+
+if [ "${ENABLE_GAMEDATA_API,,}" = true ]; then
+    STARTCOMMAND+=("-enable-gamedata-api")
 fi
 
 LogAction "Checking for available container updates"
