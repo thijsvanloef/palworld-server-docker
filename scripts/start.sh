@@ -49,7 +49,11 @@ if [ "$architecture" == "arm64" ]; then
 fi
 
 isReadable "${STARTCOMMAND[0]}" || exit
-isExecutable "${STARTCOMMAND[0]}" || exit
+if ! isExecutable "${STARTCOMMAND[0]}"; then
+    LogWarn "Attempt to make \"${STARTCOMMAND[0]}\" executable"
+    chmod +x "${STARTCOMMAND[0]}" || exit
+    isExecutable "${STARTCOMMAND[0]}" || exit
+fi
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
