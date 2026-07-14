@@ -28,6 +28,7 @@ while ! nc -z localhost "${_PORT}"; do
     sleep 5
     LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
 done
+LogInfo "${_LABEL}(${_PORT}) port is open, player logging started"
 
 AutoPause_init
 while true; do
