@@ -15,7 +15,6 @@ services:
       PORT: 8211  # Optional but recommended
       PLAYERS: 16  # Optional but recommended
       SERVER_PASSWORD: "worldofpals"  # Optional but recommended
-      MULTITHREADING: true
       REST_API_ENABLED: true
       REST_API_PORT: 8212
       TZ: "UTC"
