@@ -65,7 +65,7 @@ if [ "${COMMUNITY,,}" = true ]; then
 fi
 
 if [ "${MULTITHREADING,,}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS" "-NumberOfWorkerThreadsServer=$(nproc --all)")
+    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS" "-NumberOfWorkerThreadsServer=${WORKER_THREADS:-$(nproc --all)}")
 fi
 
 LogAction "Checking for available container updates"
