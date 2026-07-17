@@ -69,7 +69,7 @@ if [ -f "$BACKUP_FILE" ]; then
             exit 1
         fi
 
-        server_pid=$(pidof PalServer-Linux-Shipping)
+        server_pid=$(PalworldServerPid)
         if [ -n "${server_pid}" ]; then
             LogInfo "Waiting for Palworld to exit.."
             tail --pid="${server_pid}" -f /dev/null

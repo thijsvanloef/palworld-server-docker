@@ -2,7 +2,7 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
-config_file="/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini"
+config_file="$(PalworldSettingsFilePath)"
 config_dir=$(dirname "$config_file")
 
 mkdir -p "$config_dir" || exit
