@@ -4,14 +4,15 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/autopause/services.sh
 source "/home/steam/server/autopause/services.sh"
 
-get_steamid(){
+get_platform(){
+    # <name>,<player_id>,(steam|ps5|xbox)_<id>
     local player_info="${1}"
-    echo "${player_info: -17}"
+    echo "${player_info}" | sed -E 's/.*,([0-9a-zA-Z]+)_([0-9A-Z]+)$/\1/'
 }
 
 get_playername(){
     local player_info="${1}"
-    echo "${player_info}" | sed -E 's/,([0-9A-Z]+),[0-9A-Z]+//g'
+    echo "${player_info}" | sed -E 's/,[0-9A-Z]+,\w+$//'
 }
 
 # Prefer REST API
@@ -37,8 +38,8 @@ while true; do
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation
         online_players="$(get_players_list | tail -n +2)"
-        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),[0-9A-Z]+/d' | sort )
-        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),[0-9A-Z]+/p' | sort)
+        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),\w+/d' | sort )
+        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),\w+/p' | sort)
 
         # Players still loading or creating characters
         if [ "${#current_no_id_list[@]}" -gt 0 ]; then
@@ -65,21 +66,27 @@ while true; do
         # Notify Discord and log all players who have left
         for player in "${players_who_left_list[@]}"; do
             player_name=$( get_playername "${player}" )
-            LogInfo "${player_name} has left"
-            broadcast_command "${player_name} has left"
+            player_platform=$( get_platform "${player}" )
+            LogInfo "${player_name} (${player_platform}) has left"
+            broadcast_command "${player_name} (${player_platform}) has left"
 
-	    # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Left" "${DISCORD_PLAYER_LEAVE_MESSAGE//player_name/${player_name}}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
+	        # Replace ${player_name} with actual player's name
+            msg="${DISCORD_PLAYER_LEAVE_MESSAGE//player_name/${player_name}}"
+            msg="${msg//player_platform/${player_platform}}"
+            DiscordMessage "Player Left" "${msg}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
         done
 
         # Notify Discord and log all players who have joined
         for player in "${players_who_joined_list[@]}"; do
             player_name=$( get_playername "${player}" )
-            LogInfo "${player_name} has joined"
-            broadcast_command "${player_name} has joined"
+            player_platform=$( get_platform "${player}" )
+            LogInfo "${player_name} (${player_platform}) has joined"
+            broadcast_command "${player_name} (${player_platform}) has joined"
 
             # Replace ${player_name} with actual player's name
-            DiscordMessage "Player Joined" "${DISCORD_PLAYER_JOIN_MESSAGE//player_name/${player_name}}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
+            msg="${DISCORD_PLAYER_JOIN_MESSAGE//player_name/${player_name}}"
+            msg="${msg//player_platform/${player_platform}}"
+            DiscordMessage "Player Joined" "${msg}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
         done
 
         old_player_list=("${current_player_list[@]}")
