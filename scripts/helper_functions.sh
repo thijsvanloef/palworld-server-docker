@@ -95,6 +95,103 @@ isTrue() {
     return 1
 }
 
+ServerPlatform() {
+    local platform="${SERVER_PLATFORM:-Linux}"
+    platform="${platform,,}"
+
+    case "${platform}" in
+        linux)
+            echo "linux"
+            ;;
+        windows)
+            echo "windows"
+            ;;
+        *)
+            echo "linux"
+            ;;
+    esac
+}
+
+PalworldConfigSubdir() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "WindowsServer"
+        return 0
+    fi
+
+    echo "LinuxServer"
+}
+
+PalworldSettingsFilePath() {
+    echo "/palworld/Pal/Saved/Config/$(PalworldConfigSubdir)/PalWorldSettings.ini"
+}
+
+PalworldEngineFilePath() {
+    echo "/palworld/Pal/Saved/Config/$(PalworldConfigSubdir)/Engine.ini"
+}
+
+PalworldInstallMarkerPath() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "/palworld/PalServer.exe"
+        return 0
+    fi
+
+    echo "/palworld/PalServer.sh"
+}
+
+PalworldServerBinaryPath() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "/palworld/PalServer.exe"
+        return 0
+    fi
+
+    echo "/palworld/PalServer.sh"
+}
+
+PalworldServerProcessMatch() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo 'PalServer-Win64-Shipping-Cmd.exe'
+        return 0
+    fi
+
+    echo "PalServer-Linux-Shipping"
+}
+
+PalworldServerPid() {
+    pgrep -f "$(PalworldServerProcessMatch)"
+}
+
+PalworldSteamPlatformType() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "windows"
+        return 0
+    fi
+
+    echo "linux"
+}
+
+PalworldDepotDownloaderOS() {
+    PalworldSteamPlatformType
+}
+
+PalworldDepotId() {
+    echo "${PALWORLD_DEPOT_ID:-2394012}"
+}
+
 PlayerLogging_isEnabled() {
     isTrue "${ENABLE_PLAYER_LOGGING}" && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && { isTrue "${REST_API_ENABLED}" || isTrue "${RCON_ENABLED}"; }
 }
@@ -259,7 +356,7 @@ DiscordMessage() {
 REST_API() {
     autopause resume "REST_API ${1}" > /dev/null
     local -r api="${1}"
-    local -r data="${2}"
+    local -r data="${2:-}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"

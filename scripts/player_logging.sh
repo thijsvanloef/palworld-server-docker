@@ -44,7 +44,7 @@ LogInfo "${_LABEL}(${_PORT}) port is open, player logging started"
 
 AutoPause_init
 while true; do
-    server_pid=$(pidof PalServer-Linux-Shipping)
+    server_pid=$(PalworldServerPid)
     if [ -n "${server_pid}" ]; then
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation

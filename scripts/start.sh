@@ -14,6 +14,8 @@ fi
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
+LogAction "Checking Installation"
+
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
@@ -22,6 +24,101 @@ cd /palworld || exit
 
 # Get the architecture using dpkg
 architecture=$(dpkg --print-architecture)
+platform=$(ServerPlatform)
+settings_file=$(PalworldSettingsFilePath)
+settings_dir=$(dirname "${settings_file}")
+
+LogInfo "Server platform is ${SERVER_PLATFORM:-Linux}"
+
+clean_platform() {
+    LogInfo "Cleaning up other platform files on /palworld"
+
+    rm -vf /palworld/PalServer.exe /palworld/Manifest_*_Win64.txt /palworld/steam*.dll /palworld/tier0*.dll /palworld/vstdlib*.dll
+    rm -vf /palworld/PalServer.sh  /palworld/Manifest_*_Linux.txt /palworld/steam*.so  /palworld/libsteamwebrtc.so
+    rm -vf /palworld/PalServer-arm64.sh
+    rm -vrf /palworld/_CommonRedist /palworld/Mods
+    rm -vrf /palworld/linux64
+    rm -vrf /palworld/Engine /palworld/steamapps
+    rm -vrf /palworld/Pal/.sentry-native /palworld/Pal/Binaries /palworld/Pal/Content /palworld/Pal/Intermediate /palworld/Pal/Plugins
+}
+
+migrate_GUS() {
+    local -r windows_gus_file="/palworld/Pal/Saved/Config/WindowsServer/GameUserSettings.ini"
+    local -r linux_gus_file="/palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini"
+    local new_gus_file old_gus_file new_platform old_platform
+    if [ "${platform}" = "windows" ]; then
+        new_gus_file="${windows_gus_file}"
+        old_gus_file="${linux_gus_file}"
+        new_platform="Windows"
+        old_platform="Linux"
+    else
+        new_gus_file="${linux_gus_file}"
+        old_gus_file="${windows_gus_file}"
+        new_platform="Linux"
+        old_platform="Windows"
+    fi
+    if [ -f "${old_gus_file}" ]; then
+        LogWarn "Migrating GameUserSettings.ini from ${old_platform} to ${new_platform}"
+        if [ -f "${new_gus_file}" ]; then
+            local old_dedicated_server_name
+            old_dedicated_server_name=$(grep -E 'DedicatedServerName=' "${old_gus_file}" | sed -E 's/.*DedicatedServerName=([0-9A-Z]+).*/\1/g')
+            LogInfo "Preserving DedicatedServerName=${old_dedicated_server_name} in ${new_gus_file}"
+            sed -i "s/DedicatedServerName=.*/DedicatedServerName=${old_dedicated_server_name}/g" "${new_gus_file}"
+        else
+            mkdir -p "$(dirname "${new_gus_file}")"
+            cp -v "${old_gus_file}" "${new_gus_file}"
+        fi
+        rm -v "${old_gus_file}"
+    fi
+}
+
+
+if [ "${platform}" = "windows" ] && { [ -f /palworld/PalServer.sh ] || [ ! -f /palworld/PalServer.exe ] ; }; then
+    clean_platform
+    migrate_GUS
+elif [ "${platform}" = "linux" ] && { [ -f /palworld/PalServer.exe ] || [ ! -f /palworld/PalServer.sh ] ; }; then
+    clean_platform
+    migrate_GUS
+fi
+
+ensure_windows_runtime() {
+    if [ "${architecture}" != "amd64" ]; then
+        LogError "SERVER_PLATFORM=Windows is supported only on amd64 hosts. Current architecture: ${architecture}."
+        exit 1
+    fi
+
+    export WINEPREFIX="${WINEPREFIX:-/opt/wine}"
+    export WINEARCH="${WINEARCH:-win64}"
+    export WINEDEBUG="${WINEDEBUG:--all}"
+    export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree,mshtml=;dwmapi=n,b}"
+    export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/home/steam/.xdg-runtime}"
+
+    # Ensure XDG_RUNTIME_DIR exists with proper permissions
+    if [ ! -d "${XDG_RUNTIME_DIR}" ]; then
+        mkdir -p "${XDG_RUNTIME_DIR}"
+        chmod 700 "${XDG_RUNTIME_DIR}"
+    fi
+
+    if ! command -v wine > /dev/null 2>&1; then
+        LogError "wine binary is not installed in this image. Rebuild image with Wine dependencies."
+        exit 1
+    fi
+
+    # Wine prefix init and VCRT installation are delegated to update-wine-rt,
+    # which handles Xvfb, wine group ownership, and the vcrun2022 marker.
+    if [ ! -f "${WINEPREFIX}/.vcrun2022-installed" ]; then
+        if command -v update-wine-rt > /dev/null 2>&1; then
+            update-wine-rt
+        else
+            LogWarn "VCRT not installed and update-wine-rt not found. Server may not start correctly."
+        fi
+    fi
+}
+
+if [ "${platform}" = "windows" ] && [ "${architecture}" = "arm64" ]; then
+    LogError "SERVER_PLATFORM=Windows is not supported on arm64. Use SERVER_PLATFORM=Linux on arm64 hosts."
+    exit 1
+fi
 
 IsInstalled
 ServerInstalled=$?
@@ -33,20 +130,28 @@ fi
 
 # Always update on boot even if the server is installed, to prevent appmanifest issues
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    rm /palworld/steamapps/appmanifest_2394010.acf
+    rm -f /palworld/steamapps/appmanifest_2394010.acf
     InstallServer
 fi
 
-STARTCOMMAND=("./PalServer.sh")
-
 #Validate Installation
-if ! fileExists "${STARTCOMMAND[0]}"; then
+server_binary="$(PalworldServerBinaryPath)"
+if ! fileExists "${server_binary}"; then
     LogError "Server Not Installed Properly"
     exit 1
 fi
 
+STARTCOMMAND=("${server_binary}")
+STARTCOMMAND_NOARGS=("${server_binary}")
+
+if [ "${platform}" = "windows" ]; then
+    ensure_windows_runtime
+    STARTCOMMAND=("wine" "${STARTCOMMAND[@]}")
+    STARTCOMMAND_NOARGS=("wine" "${STARTCOMMAND_NOARGS[@]}")
+fi
+
 # Check if the architecture is arm64
-if [ "$architecture" == "arm64" ]; then
+if [ "${platform}" = "linux" ] && [ "$architecture" == "arm64" ]; then
     # create an arm64 version of ./PalServer.sh
 
     cp ./PalServer.sh ./PalServer-arm64.sh
@@ -54,13 +159,16 @@ if [ "$architecture" == "arm64" ]; then
     sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
     chmod +x ./PalServer-arm64.sh
     STARTCOMMAND=("./PalServer-arm64.sh")
+    STARTCOMMAND_NOARGS=("./PalServer-arm64.sh")
 fi
 
-isReadable "${STARTCOMMAND[0]}" || exit
-if ! isExecutable "${STARTCOMMAND[0]}"; then
-    LogWarn "Attempt to make \"${STARTCOMMAND[0]}\" executable"
-    chmod +x "${STARTCOMMAND[0]}" || exit
-    isExecutable "${STARTCOMMAND[0]}" || exit
+if [ "${platform}" = "linux" ]; then
+    isReadable "${STARTCOMMAND[0]}" || exit
+    if ! isExecutable "${STARTCOMMAND[0]}"; then
+        LogWarn "Attempt to make \"${STARTCOMMAND[0]}\" executable"
+        chmod +x "${STARTCOMMAND[0]}" || exit
+        isExecutable "${STARTCOMMAND[0]}" || exit
+    fi
 fi
 
 # Prepare Arguments
@@ -104,19 +212,27 @@ if [ "${ENABLE_GAMEDATA_API,,}" = true ]; then
     STARTCOMMAND+=("-enable-gamedata-api")
 fi
 
+if [ "${NOSTEAM,,}" = true ]; then
+    STARTCOMMAND+=("-nosteam")
+fi
+
 LogAction "Checking for available container updates"
 container_version_check
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   LogAction "GENERATING CONFIG"
   LogWarn "Env vars will not be applied due to DISABLE_GENERATE_SETTINGS being set to TRUE!"
+  mkdir -p "${settings_dir}" || exit
 
   # shellcheck disable=SC2143
-  if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
+  if [ ! "$(grep -s '[^[:space:]]' "${settings_file}")" ]; then
       LogAction "GENERATING CONFIG"
-      mkdir -p /palworld/Pal/Saved/Config/LinuxServer || exit
-      fileExists "/palworld/DefaultPalWorldSettings.ini" || exit
-      cp "/palworld/DefaultPalWorldSettings.ini" "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
+      # Server will generate all ini files after first run.
+      timeout --preserve-status 15s "${STARTCOMMAND_NOARGS[@]}" 1> /dev/null
+
+      # Wait for shutdown
+      sleep 5
+      cp /palworld/DefaultPalWorldSettings.ini "${settings_file}"
   fi
 else
   LogAction "GENERATING CONFIG"
@@ -126,6 +242,11 @@ fi
 
 if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
+fi
+
+if [ "${platform}" = "windows" ]; then
+    LogAction "Syncing workshop mods"
+    mods-update || exit
 fi
 
 LogAction "GENERATING CRONTAB"
@@ -149,6 +270,13 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; 
     LogInfo "AUTO_REBOOT_ENABLED=${AUTO_REBOOT_ENABLED,,}"
     LogInfo "Adding cronjob for auto rebooting via REST API"
     echo "$AUTO_REBOOT_CRON_EXPRESSION bash /home/steam/server/auto_reboot.sh" >> "/home/steam/server/crontab"
+    supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
+fi
+
+if [ "${platform}" = "windows" ] && [ -n "${WORKSHOP_MOD_UPDATE_CRON:-}" ]; then
+    LogInfo "WORKSHOP_MOD_UPDATE_CRON=${WORKSHOP_MOD_UPDATE_CRON}"
+    LogInfo "Adding cronjob for workshop mod updates"
+    echo "$WORKSHOP_MOD_UPDATE_CRON bash /home/steam/server/mods/update.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 

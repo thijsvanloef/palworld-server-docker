@@ -1,0 +1,12 @@
+---
+services:
+  palworld:
+    extends:
+      file: ./compose.yaml
+      service: palworld
+    image: thijsvanloef/palworld-server-docker:windows
+    build:
+      context: .
+      args:
+        TARGET_SERVER_PLATFORM: Windows
+    environment:

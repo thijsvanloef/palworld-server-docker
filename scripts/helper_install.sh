@@ -7,13 +7,15 @@ source "/home/steam/server/helper_functions.sh"
 # Returns 0 if game is installed
 # Returns 1 if game is not installed
 IsInstalled() {
-  if  [ -e /palworld/PalServer.sh ] && [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
+  if  [ -e "$(PalworldInstallMarkerPath)" ] && [ -e /palworld/steamapps/appmanifest_2394010.acf ]; then
     return 0
   fi
   return 1
 }
 CreateACFFile() {
   local manifestId="$1"
+  local depotId
+  depotId="$(PalworldDepotId)"
 cat > /palworld/steamapps/appmanifest_2394010.acf  << EOL
 "AppState" {
       "appid"        			 "2394010"
@@ -34,7 +36,7 @@ cat > /palworld/steamapps/appmanifest_2394010.acf  << EOL
               {
                       "manifest"      "4884950798805348056"
               }
-              "2394012"
+                    "${depotId}"
               {
                       "manifest"      "${manifestId}"
               }
@@ -52,8 +54,10 @@ EOL
 
 GetManifestIdDepotDownloader() {
   local depotManifestDirectory="$1"
+  local depotId
+  depotId="$(PalworldDepotId)"
   local manifestFile
-  manifestFile=$(find "$depotManifestDirectory" -type f -name "manifest_2394012_*.txt" | head -n 1)
+  manifestFile=$(find "$depotManifestDirectory" -type f -name "manifest_${depotId}_*.txt" | head -n 1)
 
   if [ -z "$manifestFile" ]; then
     echo "DepotDownloader manifest file not found."
@@ -74,7 +78,8 @@ UpdateRequired() {
   LogAction "Checking for new Palworld Server updates"
 
   #define local variables
-  local CURRENT_MANIFEST LATEST_MANIFEST temp_file http_code updateAvailable
+  local CURRENT_MANIFEST LATEST_MANIFEST temp_file http_code updateAvailable depot_id
+  depot_id="$(PalworldDepotId)"
 
   #check steam for latest version
   temp_file=$(mktemp)
@@ -88,7 +93,7 @@ UpdateRequired() {
   fi
 
   # Parse temp file for manifest id
-  LATEST_MANIFEST=$(grep -Po '"2394012".*"gid": "\d+"' <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/' | tr -d '"')
+  LATEST_MANIFEST=$(grep -Po "\"${depot_id}\".*\"gid\": \"\\d+\"" <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/' | tr -d '"')
   rm "$temp_file"
 
   if [ -z "$LATEST_MANIFEST" ]; then
@@ -98,7 +103,14 @@ UpdateRequired() {
   fi
 
   # Parse current manifest from steam files
-  CURRENT_MANIFEST=$(awk '/manifest/{count++} count==2 {print $2; exit}' /palworld/steamapps/appmanifest_2394010.acf | tr -d '"')
+  CURRENT_MANIFEST=$(awk -v depot_id="${depot_id}" '
+    index($0, "\"" depot_id "\"") > 0 { in_depot=1; next }
+    in_depot && /"manifest"/ {
+      gsub(/"/, "", $2)
+      print $2
+      exit
+    }
+  ' /palworld/steamapps/appmanifest_2394010.acf)
   LogInfo "Current Version: $CURRENT_MANIFEST"
 
   # Log any updates available
@@ -138,6 +150,12 @@ UpdateRequired() {
 InstallServer() {
   # Get the architecture using dpkg
   architecture=$(dpkg --print-architecture)
+  platform=$(ServerPlatform)
+
+  if [ "${platform}" = "windows" ] && [ "${architecture}" = "arm64" ]; then
+    LogError "SERVER_PLATFORM=Windows is not supported on arm64."
+    return 2
+  fi
 
   # Get host kernel page size
   kernel_page_size=$(getconf PAGESIZE)
@@ -154,18 +172,26 @@ InstallServer() {
   }
 
   UseSteamCmd() {
+    local steam_platform
+    local depot_id
+    local depot_content_path
+    steam_platform="$(PalworldSteamPlatformType)"
+    depot_id="$(PalworldDepotId)"
+    depot_content_path=""
+
     if [ "${1}" == "beta" ]; then
-      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit; then
+      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType "${steam_platform}" +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 -beta insiderprogram validate +quit; then
         return 0
       fi
     elif [ -n "${2}" ]; then
-      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}" +download_depot 2394010 2394012 "${2}" +quit; then
-        if cp -vr "/home/steam/steamcmd/linux32/steamapps/content/app_2394010/depot_2394012/." "/palworld/"; then
+      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType "${steam_platform}" +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}" +download_depot 2394010 "${depot_id}" "${2}" +quit; then
+        depot_content_path=$(find /home/steam -type d -path "*/steamapps/content/app_2394010/depot_${depot_id}" | head -n 1)
+        if [ -n "${depot_content_path}" ] && cp -vr "${depot_content_path}/." "/palworld/"; then
           return 0
         fi
       fi
     else
-      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType linux +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit; then
+      if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType "${steam_platform}" +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login anonymous +app_update 2394010 validate +quit; then
         return 0
       fi
     fi
@@ -175,17 +201,23 @@ InstallServer() {
   UseDepotDownloader() {
     local beta="${1}"
     local manifest="${2}"
+    local depot_os
+    local depot_id
+
+    depot_os="$(PalworldDepotDownloaderOS)"
+    depot_id="$(PalworldDepotId)"
+
     mkdir -p /palworld/steamapps/
 
     if [ -n "$manifest" ]; then
-      DepotDownloader -app 2394010 -username "${STEAM_USERNAME}" -password "${STEAM_PASSWORD}" -depot 2394012 -manifest "$manifest" -os linux -osarch 64 -dir /palworld -validate
+      DepotDownloader -app 2394010 -username "${STEAM_USERNAME}" -password "${STEAM_PASSWORD}" -depot "${depot_id}" -manifest "$manifest" -os "${depot_os}" -osarch 64 -dir /palworld -validate
     elif [ "$beta" == "beta" ]; then
-      DepotDownloader -app 2394010 -os linux -osarch 64 -dir /palworld -branch insiderprogram -validate
-      DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /palworld/.manifest -branch insiderprogram -manifest-only
+      DepotDownloader -app 2394010 -os "${depot_os}" -osarch 64 -dir /palworld -branch insiderprogram -validate
+      DepotDownloader -app 2394010 -depot "${depot_id}" -osarch 64 -dir /palworld/.manifest -branch insiderprogram -manifest-only
       manifest=$(GetManifestIdDepotDownloader "/palworld/.manifest")
     else
-      DepotDownloader -app 2394010 -os linux -osarch 64 -dir /palworld -validate
-      DepotDownloader -app 2394010 -depot 2394012 -osarch 64 -dir /palworld/.manifest -manifest-only
+      DepotDownloader -app 2394010 -os "${depot_os}" -osarch 64 -dir /palworld -validate
+      DepotDownloader -app 2394010 -depot "${depot_id}" -osarch 64 -dir /palworld/.manifest -manifest-only
       manifest=$(GetManifestIdDepotDownloader "/palworld/.manifest")
     fi
 

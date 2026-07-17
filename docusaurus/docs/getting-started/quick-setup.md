@@ -13,6 +13,9 @@ sidebar_label: Quick Setup
 This guide will help you get setup with hosting your Palworld Dedicated server on Docker!
 This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
 
+If you are setting up Windows-based Workshop mods or UE4SS,
+continue with [Workshop Mods and UE4SS Setup](../guides/workshop-mods-and-ue4ss.md) after this quick setup.
+
 ## Prerequisites
 
 * Virtualization enabled in the BIOS/UEFI
