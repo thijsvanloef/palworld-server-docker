@@ -1,0 +1,6 @@
+#
+# Palworld Workshop Mods [Browse](https://steamcommunity.com/workshop/browse/?appid=1623730)
+#
+3625223587  # [UE4SS Experimental](https://steamcommunity.com/sharedfiles/filedetails/?id=3625223587)
+3625280368  # [PalSchema](https://steamcommunity.com/sharedfiles/filedetails/?id=3625280368)
+3625287786  # [Creative Menu](https://steamcommunity.com/sharedfiles/filedetails/?id=3625287786)
