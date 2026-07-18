@@ -1,2 +1,3 @@
 # Ensure the scripts use LF line endings, not CRLF
 *.sh text eol=lf
+.env.example whitespace=cr-at-eol
