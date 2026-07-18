@@ -16,6 +16,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Test negative delta recovery setting
+        run: ./tests/test-negative-delta-recovery.sh
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
