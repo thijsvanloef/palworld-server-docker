@@ -227,14 +227,14 @@ REST_API() {
         output=$(curl -s -L -X POST "${url}" -u "${userpass}" --json "${data}")
         result=$?
     fi
-    if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
-        autopause stop > /dev/null
-    fi
     if [[ "${output}" =~ ^Unauthorized ]]; then
         LogError "${output}"
         return 1
     fi
-    echo -n "${output}"
+    if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
+        autopause stop > /dev/null
+    fi
+    printf '%s' "${output}"
     return ${result}
 }
 
