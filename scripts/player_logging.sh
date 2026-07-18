@@ -12,7 +12,7 @@ get_platform(){
 
 get_playername(){
     local player_info="${1}"
-    echo "${player_info}" | sed -E 's/,[0-9A-Z]+,\w+$//'
+    echo "${player_info}" | sed -E 's/,[0-9A-Z]+,[[:alnum:]_]+$//'
 }
 
 # Prefer REST API
