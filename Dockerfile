@@ -181,11 +181,13 @@ ENV HOME=/home/steam \
     ENABLE_PLAYER_LOGGING=true \
     PLAYER_LOGGING_POLL_PERIOD=5 \
     ARM64_DEVICE=generic \
+    PALWORLD_ALLOW_NEGATIVE_DELTA_TIME=false \
     DISABLE_GENERATE_ENGINE=true \
     CROSSPLAY_PLATFORMS="(Steam,Xbox,PS5,Mac)" \
     USE_DEPOT_DOWNLOADER=false \
     INSTALL_BETA_INSIDER=false \
     LOG_FILTER_ENABLED=true \
+    LOG_LEVEL=INFO \
     LOG_FORMAT_TYPE=default
 
 # Sane Box64 config defaults
