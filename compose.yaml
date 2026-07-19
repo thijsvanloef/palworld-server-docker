@@ -23,5 +23,6 @@ services:
       SERVER_NAME: "palworld-server-docker by Thijs van Loef"
       SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
+      LOG_LEVEL: "INFO"  # DEBUG/INFO/WARN/ERROR. Please be aware that DEBUG will log all command arguments, including secrets, to the logs. Share with caution.
     volumes:
       - ./palworld:/palworld/

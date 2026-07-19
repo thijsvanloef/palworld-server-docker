@@ -97,6 +97,12 @@ def parse_log_line(line):
             level = match_lvl.group(1)
             message = match_lvl.group(2)
 
+    # Bash xtrace output (set -x) starts with one or more '+' prefixes.
+    # Classify it as DEBUG instead of falling back to INFO.
+    if not level and re.match(r'^\+{1,}\s', line):
+        level = "DEBUG"
+        message = line
+
     return timestamp_str, level, message, line
 
 def flush_buffer():
@@ -138,8 +144,19 @@ def flush_buffer():
             final_msg = message + message_suffix
             print(f"[{time_output}] [{lvl_output}] {final_msg}")
         else:
-            # default
-            print(f"{buffer}{message_suffix}")
+            # default: preserve raw output for unstructured lines, but keep level/timestamp
+            # when a level was detected (e.g. bash xtrace classified as DEBUG).
+            if level or timestamp_str:
+                if timestamp_str:
+                    time_output = timestamp_str
+                else:
+                    time_output = datetime.now().astimezone().strftime('%Y-%m-%d %H:%M:%S')
+
+                lvl_output = level if level else "INFO"
+                final_msg = message + message_suffix
+                print(f"[{time_output}] [{lvl_output}] {final_msg}")
+            else:
+                print(f"{buffer}{message_suffix}")
 
         sys.stdout.flush()
         buffer = ""
