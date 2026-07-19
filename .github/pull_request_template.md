@@ -20,8 +20,8 @@
 
 ## AI Usage Disclosure
 
-Please read the [AI Usage Guidelines for Contributors](AI_GUIDELINES.md) before submitting this PR. 
+Please read the [AI Usage Guidelines for Contributors](AI_GUIDELINES.md) before submitting this PR.
 If you used an AI tool to assist in writing or refactoring code for this PR, please disclose it below.
 
-- [ ] I used [Tool Name] to assist in modifications for this PR. 
+- [ ] I used [Tool Name] to assist in modifications for this PR.
       I have manually reviewed the generated code and tested the container build locally.

@@ -14,7 +14,7 @@ If you use AI tools to assist in writing your pull request (PR), you must adhere
 
 ## **Respect Multi-Host & Multi-Architecture Reality**
 
-This container is run across a massive variety of hosts, configurations, 
+This container is run across a massive variety of hosts, configurations,
 and CPU architectures in the wild. A sample of supported environments includes:
 
 * **Linux** (Ubuntu / Debian)
