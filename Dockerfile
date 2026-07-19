@@ -187,6 +187,7 @@ ENV HOME=/home/steam \
     USE_DEPOT_DOWNLOADER=false \
     INSTALL_BETA_INSIDER=false \
     LOG_FILTER_ENABLED=true \
+    LOG_LEVEL=INFO \
     LOG_FORMAT_TYPE=default
 
 # Sane Box64 config defaults
