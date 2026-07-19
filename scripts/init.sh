@@ -2,6 +2,14 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+# shellcheck source=scripts/negative_delta_recovery.sh
+source "/home/steam/server/negative_delta_recovery.sh"
+
+if ! ValidateNegativeDeltaRecoverySetting; then
+    LogError "PALWORLD_ALLOW_NEGATIVE_DELTA_TIME must be true or false."
+    exit 1
+fi
+
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
     # Remove old FIFO to prevent deadlock on restart
     rm -f "${PalServerLog_fifo}"
