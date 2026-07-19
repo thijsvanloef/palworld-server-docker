@@ -17,3 +17,9 @@
 - [ ] I've added documentation about this change to the [docs](https://github.com/thijsvanloef/palworld-server-docker/tree/main/docusaurus/docs).
 - [ ] I've not introduced breaking changes.
 - [ ] My changes do not violate linting rules.
+
+## AI Usage Disclosure
+
+Please read the [AI Usage Guidelines for Contributors](AI_GUIDELINES.md) before submitting this PR. If you used an AI tool to assist in writing or refactoring code for this PR, please disclose it below.
+
+- [ ] I used [Tool Name] to assist in modifications for this PR. I have manually reviewed the generated code and tested the container build locally.

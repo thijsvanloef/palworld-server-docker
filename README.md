@@ -2,7 +2,7 @@
 
 > [!IMPORTANT]
 >
-> ## 1.0 release of Palworld is releasing on 10-07-2026
+> ## Fully compatible with Palworld 1.0 release
 >
 > Please check
 > [issue](https://github.com/thijsvanloef/palworld-server-docker/issues/834)
