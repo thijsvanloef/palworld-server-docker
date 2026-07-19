@@ -11,7 +11,7 @@ get_steamid(){
 
 get_playername(){
     local player_info="${1}"
-    echo "${player_info}" | sed -E 's/,([0-9A-Z]+),[0-9A-Z]+//g'
+    echo "${player_info}" | sed -E 's/,([0-9A-Z]+),[0-9A-Za-z_]+//g'
 }
 
 # Prefer REST API
@@ -37,8 +37,8 @@ while true; do
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation
         online_players="$(get_players_list | tail -n +2)"
-        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),[0-9A-Z]+/d' | sort )
-        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),[0-9A-Z]+/p' | sort)
+        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),[0-9A-Za-z_]+/d' | sort )
+        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),[0-9A-Za-z_]+/p' | sort)
 
         # Players still loading or creating characters
         if [ "${#current_no_id_list[@]}" -gt 0 ]; then
