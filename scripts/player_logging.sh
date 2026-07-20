@@ -4,15 +4,26 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/autopause/services.sh
 source "/home/steam/server/autopause/services.sh"
 
-get_platform(){
-    # <name>,<player_id>,(steam|ps5|xbox)_<id>
-    local player_info="${1}"
-    echo "${player_info}" | sed -E 's/.*,([0-9a-zA-Z]+)_([0-9A-Z]+)$/\1/'
+get_player_name(){
+    local player_csv="${1}"
+    echo "${player_csv}" | sed -E 's/,[[:alnum:]]+,[[:alnum:]_]+$//'
 }
 
-get_playername(){
-    local player_info="${1}"
-    echo "${player_info}" | sed -E 's/,[0-9A-Z]+,[[:alnum:]_]+$//'
+get_player_platform(){
+    # <name>,<player_id>,(steam|ps5|gdk)_<id>
+    local player_csv="${1}"
+    echo "${player_csv}" | sed -E 's/.*,([[:alnum:]]+)_([[:alnum:]]+)$/\1/'
+}
+
+get_player_info(){
+    local player_csv="${1}" player_name platform
+    player_name=$(get_player_name "${player_csv}")
+    platform=$(get_player_platform "${player_csv}")
+    if [ "${platform}" ] && [ "${platform}" != "unknown" ]; then
+        echo "${player_name} (${platform})"
+    else
+        echo "${player_name}"
+    fi
 }
 
 # Prefer REST API
@@ -38,8 +49,8 @@ while true; do
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation
         online_players="$(get_players_list | tail -n +2)"
-        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),\w+/d' | sort )
-        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),\w+/p' | sort)
+        mapfile -t current_player_list < <( echo -n "${online_players}" | sed -E '/,(0{8}|0{32}),[[:alnum:]_]+/d' | sort )
+        mapfile -t current_no_id_list < <( echo -n "${online_players}" | sed -n -E '/,(0{8}|0{32}),[[:alnum:]_]+/p' | sort)
 
         # Players still loading or creating characters
         if [ "${#current_no_id_list[@]}" -gt 0 ]; then
@@ -65,27 +76,27 @@ while true; do
 
         # Notify Discord and log all players who have left
         for player in "${players_who_left_list[@]}"; do
-            player_name=$( get_playername "${player}" )
-            player_platform=$( get_platform "${player}" )
-            LogInfo "${player_name} (${player_platform}) has left"
-            broadcast_command "${player_name} (${player_platform}) has left"
+            player_name=$(get_player_name "${player}")
+            player_info=$(get_player_info "${player}")
 
-	        # Replace ${player_name} with actual player's name
+            LogInfo "${player_info} has left"
+            broadcast_command "${player_name} has left"
+
+            # Replace ${player_name} with actual player's name
             msg="${DISCORD_PLAYER_LEAVE_MESSAGE//player_name/${player_name}}"
-            msg="${msg//player_platform/${player_platform}}"
             DiscordMessage "Player Left" "${msg}" "failure" "${DISCORD_PLAYER_LEAVE_MESSAGE_ENABLED}" "${DISCORD_PLAYER_LEAVE_MESSAGE_URL}"
         done
 
         # Notify Discord and log all players who have joined
         for player in "${players_who_joined_list[@]}"; do
-            player_name=$( get_playername "${player}" )
-            player_platform=$( get_platform "${player}" )
-            LogInfo "${player_name} (${player_platform}) has joined"
-            broadcast_command "${player_name} (${player_platform}) has joined"
+            player_name=$(get_player_name "${player}")
+            player_info=$(get_player_info "${player}")
+
+            LogInfo "${player_info} has joined"
+            broadcast_command "${player_name} has joined"
 
             # Replace ${player_name} with actual player's name
             msg="${DISCORD_PLAYER_JOIN_MESSAGE//player_name/${player_name}}"
-            msg="${msg//player_platform/${player_platform}}"
             DiscordMessage "Player Joined" "${msg}" "success" "${DISCORD_PLAYER_JOIN_MESSAGE_ENABLED}" "${DISCORD_PLAYER_JOIN_MESSAGE_URL}"
         done
 

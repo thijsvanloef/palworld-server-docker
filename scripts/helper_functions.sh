@@ -101,7 +101,7 @@ PlayerLogging_isEnabled() {
 
 # Convert player list from JSON format
 convert_JSON_to_CSV_players() {
-    echo 'name,playeruid,steamid'
+    echo 'name,playeruid,platform_userid'
     echo -n "${1}" | \
         jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
