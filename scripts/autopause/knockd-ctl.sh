@@ -38,7 +38,7 @@ EOF
     fi
     # Detects knocks coming from outside/inside the container, including WSL2 mirrored networking loopback (loopback0).
     for iface in eth0 lo loopback0; do
-        if ip link show "$iface" >/dev/null 2>&1; then
+        if [ -d "/sys/class/net/${iface}" ]; then
             knockd "${knockdArgs[@]}" -i "$iface"
         fi
     done
