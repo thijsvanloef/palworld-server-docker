@@ -36,7 +36,7 @@ EOF
     if isTrue "${AUTO_PAUSE_DEBUG:-false}"; then
         knockdArgs+=(-D)
     fi
-    # Detects knocks coming from outside, inside and wsl2 loopback of the container.
+    # Detects knocks coming from outside/inside the container, including WSL2 mirrored networking loopback (loopback0).
     for iface in eth0 lo loopback0; do
         if ip link show "$iface" >/dev/null 2>&1; then
             knockd "${knockdArgs[@]}" -i "$iface"
