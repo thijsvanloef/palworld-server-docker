@@ -101,11 +101,10 @@ PlayerLogging_isEnabled() {
 
 # Convert player list from JSON format
 convert_JSON_to_CSV_players() {
-    echo 'name,playeruid,steamid'
+    echo 'name,playeruid,platform_userid'
     echo -n "${1}" | \
         jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
-        -re 's/"steam_/"/' \
         -re 's/"//g'
 }
 
@@ -128,13 +127,12 @@ get_players_list() {
 # Checks how many players are currently connected
 get_player_count() {
     local player_list
-    local return_val=0
     if ! player_list=$(get_players_list); then
-        return_val=1
+        return 1
     fi
     
     echo -n "${player_list}" | wc -l
-    return "$return_val"
+    return 0
 }
 
 #
