@@ -36,10 +36,12 @@ EOF
     if isTrue "${AUTO_PAUSE_DEBUG:-false}"; then
         knockdArgs+=(-D)
     fi
-    # Detects knocks coming from outside the container.
-    knockd "${knockdArgs[@]}" -i eth0
-    # Detects knocks coming from inside the container.
-    knockd "${knockdArgs[@]}" -i lo
+    # Detects knocks coming from outside/inside the container, including WSL2 mirrored networking loopback (loopback0).
+    for iface in eth0 lo loopback0; do
+        if [ -d "/sys/class/net/${iface}" ]; then
+            knockd "${knockdArgs[@]}" -i "$iface"
+        fi
+    done
     ;;
 "stop")
     pid=$(pidof knockd)
