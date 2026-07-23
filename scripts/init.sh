@@ -14,7 +14,7 @@ if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
     # Recreate FIFO at every boot to avoid stale descriptors and permission drift.
     rm -f "${PalServerLog_fifo}"
 
-    if ! mkfifo "${PalServerLog_fifo}"; then
+    if ! mkfifo -m 600 "${PalServerLog_fifo}"; then
         echo "ERROR: Failed to create log FIFO: ${PalServerLog_fifo}" >&2
         exit 1
     fi
@@ -25,11 +25,6 @@ if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
             echo "ERROR: Failed to set log FIFO owner to steam:steam" >&2
             exit 1
         fi
-    fi
-
-    if ! chmod 600 "${PalServerLog_fifo}"; then
-        echo "ERROR: Failed to set log FIFO permissions to 600" >&2
-        exit 1
     fi
 
     exec > >(python3 /home/steam/server/pal_logger.py) 2>&1
