@@ -11,8 +11,22 @@ if ! ValidateNegativeDeltaRecoverySetting; then
 fi
 
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
-    # Remove old FIFO to prevent deadlock on restart
+    # Recreate FIFO at every boot to avoid stale descriptors and permission drift.
     rm -f "${PalServerLog_fifo}"
+
+    if ! mkfifo -m 600 "${PalServerLog_fifo}"; then
+        echo "ERROR: Failed to create log FIFO: ${PalServerLog_fifo}" >&2
+        exit 1
+    fi
+
+    # Keep FIFO owned by steam so child processes can always write.
+    if [[ "$(id -u)" -eq 0 ]]; then
+        if ! chown steam:steam "${PalServerLog_fifo}"; then
+            echo "ERROR: Failed to set log FIFO owner to steam:steam" >&2
+            exit 1
+        fi
+    fi
+
     exec > >(python3 /home/steam/server/pal_logger.py) 2>&1
 fi
 
@@ -24,6 +38,8 @@ if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
         usermod -o -u "${PUID}" steam
         groupmod -o -g "${PGID}" steam
         chown -R steam:steam /palworld /home/steam/
+        # NOTE: The recursive chown above covers ${PalServerLog_fifo} under /home/steam,
+        # so an explicit second chown/chmod for the FIFO is not required.
     else
         LogError "Running as root is not supported, please fix your PUID and PGID!"
         exit 1

@@ -2,6 +2,7 @@ import sys
 import select
 import os
 import errno
+import stat
 import time
 import signal
 import re
@@ -14,21 +15,14 @@ POLL_PERIOD = int(os.environ.get('PLAYER_LOGGING_POLL_PERIOD', 5))
 TIMEOUT = POLL_PERIOD + 5
 LOG_FORMAT_TYPE = os.environ.get('LOG_FORMAT_TYPE', 'default').lower()
 
-# Setup FIFO
-if os.path.exists(FIFO_PATH):
-    try:
-        os.remove(FIFO_PATH)
-    except OSError:
-        pass
-try:
-    os.mkfifo(FIFO_PATH)
-    # Use 0o600 to restrict access to the owner only.
-    # The owner will be updated to 'steam' by init.sh via chown, ensuring correct access permissions.
-    # We avoid 0o666 to prevent security warnings (e.g. CodeFactor).
-    os.chmod(FIFO_PATH, 0o600)
-except OSError as e:
-    if e.errno != errno.EEXIST:
-        raise
+# FIFO lifecycle (create/remove/chown) is managed by init.sh.
+# pal_logger.py only opens and consumes the FIFO.
+if not os.path.exists(FIFO_PATH):
+    sys.stderr.write(f"FIFO does not exist: {FIFO_PATH}\n")
+    sys.exit(1)
+if not stat.S_ISFIFO(os.stat(FIFO_PATH).st_mode):
+    sys.stderr.write(f"Path is not a FIFO: {FIFO_PATH}\n")
+    sys.exit(1)
 
 # Open FIFO in non-blocking mode for reading
 # We need to open read-write to avoid EOF when the writer closes.
@@ -171,11 +165,6 @@ def cleanup():
         os.close(fifo_fd)
     except (OSError, NameError):
         pass  # Ignore if fifo_fd was never opened
-    if os.path.exists(FIFO_PATH):
-        try:
-            os.remove(FIFO_PATH)
-        except OSError:
-            pass  # Ignore errors if the FIFO does not exist or cannot be removed during cleanup
 
 def signal_handler(signum, frame):
     global running
