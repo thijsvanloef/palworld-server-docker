@@ -60,7 +60,7 @@ AP_isSleep() {
 
 AP_do() {
     if [[ "$(id -u)" -eq 0 ]]; then
-        gosu steam -c "${1}"
+        gosu steam bash -c "${1}"
     else
         eval "${1}"
     fi
