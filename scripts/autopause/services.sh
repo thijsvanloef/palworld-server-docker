@@ -16,18 +16,10 @@ declare -i AP_no_player_sec=0
 
 AP_startDaemon() {
     knockd-ctl start
-    local pid
-    pid=$(pidof knockd)
-    APLog_debug "Start knockd (PID:${pid})"
 }
 
 AP_stopDaemon() {
-    local pid
-    pid=$(pidof knockd)
-    APLog_debug "Stop knockd (PID:${pid})"
-    if [ -n "${pid}" ]; then
-        knockd-ctl stop
-    fi
+    knockd-ctl stop
 }
 
 #-------------------------------

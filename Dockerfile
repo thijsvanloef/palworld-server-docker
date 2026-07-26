@@ -56,6 +56,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     netcat-traditional \
     unzip \
+    iproute2 \
+    iptables \
+    tcpdump \
     libcap2-bin libpcap0.8 \
     ca-certificates \
     python3 python3-venv python3-pip \
@@ -95,6 +98,10 @@ RUN case "${TARGETARCH}" in \
     && chmod +x DepotDownloader \
     && mv DepotDownloader /usr/local/bin/DepotDownloader
 
+# AUTO_PAUSE: install backend monitoring tools (iptables, tcpdump, knockd) and set capabilities for non-root usage
+# setcap for tcpdump/iptables to allow non-root NFLOG monitoring and rule updates
+RUN setcap cap_net_raw,cap_net_admin=ep "$(readlink -f "$(command -v tcpdump)")" && \
+    setcap cap_net_admin=ep "$(readlink -f "$(command -v iptables)")"
 # install patched knockd (as same as https://github.com/itzg/docker-minecraft-server/blob/master/build/ubuntu/install-packages.sh)
 RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-${KNOCK_VERSION}-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
     tar -xf /tmp/knock.tar.gz -C /usr/local/ && rm /tmp/knock.tar.gz && \
@@ -138,6 +145,7 @@ ENV HOME=/home/steam \
     AUTO_PAUSE_TIMEOUT_EST=180 \
     AUTO_PAUSE_LOG=true \
     AUTO_PAUSE_DEBUG=false \
+    AUTO_PAUSE_KNOCKD_IF=any \
     DISCORD_SUPPRESS_NOTIFICATIONS= \
     DISCORD_WEBHOOK_URL= \
     DISCORD_CONNECT_TIMEOUT=30 \

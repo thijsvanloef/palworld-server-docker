@@ -589,12 +589,13 @@ This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENAB
 > [!INFO]
 > This feature requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true` to be set.
 
-| Variable               | Info                                                                                                                                     | Default Values | Allowed Values |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
+| Variable               | Info                                                                                                                                                                  | Default Values | Allowed Values |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
 | AUTO_PAUSE_ENABLED     | Enables automatic pause (Puts the server to sleep to save power when there are no online players). Requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true`. | false          | true/false     |
-| AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established) | 180            | Integer        |
-| AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                | true           | true/false     |
-| AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                          | false          | true/false     |
+| AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established)                              | 180            | Integer        |
+| AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                                             | true           | true/false     |
+| AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                                                       | false          | true/false     |
+| AUTO_PAUSE_KNOCKD_IF   | Network interfaces to listen for connection knocks. Use `auto` (default) for automatic detection of active interfaces, or specify interfaces explicitly.              | auto           | auto/"eth0 lo" |
 
 If you want timestamps in the container logs for auto-pause events, either run `docker logs -t palworld-server`
 or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
@@ -604,6 +605,10 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 
 > [!NOTE]
 > When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
+> AUTO_PAUSE prefers an NFLOG packet monitor when available.
+> If NFLOG setup fails at startup/runtime, it automatically falls back to knockd.
+> Add the following capability only when you want to use NFLOG monitoring:
+> `--cap-add=NET_ADMIN`
 > Alternatively, add the following `cap_add:` to your `compose.yaml`:
 >
 > ```yaml
@@ -611,6 +616,7 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 >   palworld:
 >     cap_add:
 >       - NET_RAW
+>       - NET_ADMIN
 > ```
 
 ### Resume manually
