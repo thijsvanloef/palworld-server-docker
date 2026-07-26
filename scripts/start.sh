@@ -141,7 +141,7 @@ EOL
 CHILD_PIDS=()
 if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
-        su steam -c /home/steam/server/player_logging.sh &
+        gosu steam /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
     fi
