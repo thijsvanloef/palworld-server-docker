@@ -44,6 +44,9 @@ ARG SUPERCRONIC_SHA1SUM_AMD64="5bcefed628e32adc08e32634db2d10e9230dbca0"
 ARG SUPERCRONIC_VERSION="0.2.46"
 ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
 ARG KNOCK_VERSION="0.8.1"
+# Linux UE4SS: https://github.com/XarminaEu/ue4ss-linux/releases
+ARG UE4SS_LINUX_VERSION="v3.0.2"
+ARG UE4SS_LINUX_TGZ_SHA256="bbc85d0d0288afa5475f9eab871f28066b758f24e9a9e45472764cb3abc1df02"
 
 # update and install dependencies
 # hadolint ignore=DL3008
@@ -104,6 +107,7 @@ RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/downloa
 
 # hadolint ignore=DL3044
 ENV HOME=/home/steam \
+    ENABLE_UE4SS=false \
     PORT= \
     PUID=1000 \
     PGID=1000 \
@@ -203,6 +207,19 @@ ENV BOX64_DYNAREC_STRONGMEM=1 \
 ARG GIT_VERSION_TAG=unspecified
 
 COPY ./scripts /home/steam/server/
+
+# Install Linux UE4SS (amd64 only). Used when ENABLE_UE4SS=true.
+# See: https://github.com/XarminaEu/ue4ss-linux
+RUN mkdir -p /home/steam/server/ue4ss \
+    && if [ "${TARGETARCH}" = "amd64" ]; then \
+        wget --progress=dot:giga "https://github.com/XarminaEu/ue4ss-linux/releases/download/${UE4SS_LINUX_VERSION}/ue4ss-linux-${UE4SS_LINUX_VERSION}.tar.gz" -O /tmp/ue4ss-linux.tar.gz \
+        && echo "${UE4SS_LINUX_TGZ_SHA256}  /tmp/ue4ss-linux.tar.gz" | sha256sum -c - \
+        && tar -xzf /tmp/ue4ss-linux.tar.gz -C /home/steam/server/ue4ss \
+        && chmod 755 /home/steam/server/ue4ss/libUE4SS.so \
+        && rm -f /tmp/ue4ss-linux.tar.gz ; \
+    else \
+        echo "Skipping Linux UE4SS install on ${TARGETARCH} (amd64 only)" ; \
+    fi
 
 RUN chmod +x /home/steam/server/*.sh && \
     mv /home/steam/server/backup.sh /usr/local/bin/backup && \

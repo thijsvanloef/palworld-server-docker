@@ -15,6 +15,10 @@ Everything related to the Palworld data is inside the `/palworld` folder inside 
 | palworld                     | Root folder with all the Palworld Server files                    |
 | backups                      | Folder where all the backups from the `backup` command are stored |
 | Pal/Saved/Config/LinuxServer | Folder with all the .ini configuration files for manual config    |
+| Mods/NativeMods              | Source folder for UE4SS mods (synced when `ENABLE_UE4SS=true`)    |
+| Mods/Paks                    | Source folder for `.pak` mods (synced when `ENABLE_UE4SS=true`)   |
+| Pal/Binaries/Linux/Mods      | Runtime UE4SS Mods directory                                      |
+| Pal/Content/Paks/~Mods       | Runtime pak mods directory                                        |
 
 ## Attaching data directory to host filesystem
 
