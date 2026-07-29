@@ -44,6 +44,8 @@ ARG SUPERCRONIC_SHA1SUM_AMD64="5bcefed628e32adc08e32634db2d10e9230dbca0"
 ARG SUPERCRONIC_VERSION="0.2.46"
 ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
 ARG KNOCK_VERSION="0.8.1"
+ARG UE4SS_VERSION="3.0.2"
+ARG UE4SS_TGZ_SHA256="bbc85d0d0288afa5475f9eab871f28066b758f24e9a9e45472764cb3abc1df02"
 
 # update and install dependencies
 # hadolint ignore=DL3008
@@ -94,6 +96,8 @@ RUN case "${TARGETARCH}" in \
     && rm -rf DepotDownloader.xml \
     && chmod +x DepotDownloader \
     && mv DepotDownloader /usr/local/bin/DepotDownloader
+
+RUN if [ "${TARGETARCH}" = "amd64" ]; then wget --progress=dot:giga "https://github.com/XarminaEu/ue4ss-linux/releases/download/v${UE4SS_VERSION}/ue4ss-linux-v${UE4SS_VERSION}.tar.gz" -O ue4ss.tar.gz && echo "${UE4SS_TGZ_SHA256}  ue4ss.tar.gz" | sha256sum -c - && mkdir -p /opt/ue4ss && tar -xzf ue4ss.tar.gz -C /opt/ue4ss && rm ue4ss.tar.gz; fi
 
 # install patched knockd (as same as https://github.com/itzg/docker-minecraft-server/blob/master/build/ubuntu/install-packages.sh)
 RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-${KNOCK_VERSION}-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
@@ -188,7 +192,8 @@ ENV HOME=/home/steam \
     INSTALL_BETA_INSIDER=false \
     LOG_FILTER_ENABLED=true \
     LOG_LEVEL=INFO \
-    LOG_FORMAT_TYPE=default
+    LOG_FORMAT_TYPE=default \
+    UE4SS_ENABLED=false
 
 # Sane Box64 config defaults
 # hadolint ignore=DL3044

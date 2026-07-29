@@ -99,6 +99,8 @@ services:
          CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
       volumes:
          - ./palworld:/palworld/
+         - ./mods:/palworld/Pal/Binaries/Linux/Mods
+         - ./paks:/palworld/Pal/Content/Paks/~mods
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -120,6 +122,8 @@ services:
          -  .env
       volumes:
          - ./palworld:/palworld/
+         - ./mods:/palworld/Pal/Binaries/Linux/Mods
+         - ./paks:/palworld/Pal/Content/Paks/~mods
 ```
 
 ### Docker Run
@@ -132,6 +136,8 @@ docker run -d \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./palworld:/palworld/ \
+    -v ./mods:/palworld/Pal/Binaries/Linux/Mods \
+    -v ./paks:/palworld/Pal/Content/Paks/~mods \
     -e PUID=1000 \
     -e PGID=1000 \
     -e PORT=8211 \
@@ -160,6 +166,8 @@ docker run -d \
     -p 8211:8211/udp \
     -p 27015:27015/udp \
     -v ./palworld:/palworld/ \
+    -v ./mods:/palworld/Pal/Binaries/Linux/Mods \
+    -v ./paks:/palworld/Pal/Content/Paks/~mods \
     --env-file .env \
     --restart unless-stopped \
     --stop-timeout 30 \
@@ -220,6 +228,7 @@ It is highly recommended you set the following environment values before startin
 | ENABLE_PERF_THREADING_ARGS                | Enables performance-related threading startup arguments (`-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS`).                            | false                                                                                              | true/false                                                                                                        | 2.1.0            |
 | WORKER_THREADS_SERVER                      | Sets `-NumberOfWorkerThreadsServer`. Leave empty to use the game's default. When using deprecated MULTITHREADING=true, this defaults to all CPUs. |                                                                                                    | Positive integer                                                                                                  | 2.1.0            |
 | PALWORLD_ALLOW_NEGATIVE_DELTA_TIME         | Enables Palworld's built-in recovery for negative DeltaTime through an Engine ini override. This opt-in mitigation does not correct or synchronize the host or VM clock. | false                                                                                              | true/false                                                                                                        | 2.7.0            |
+| UE4SS_ENABLED                               | Enables the bundled x86-64 UE4SS Linux loader and preloads it when Palworld starts. ARM64 requires a patched Box64 (in progress). | false                                                                                              | true/false                                                                                                        | 2.7.0            |
 | COMMUNITY                                  | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false                                                                                              | true/false                                                                                                        | 0.1.0            |
 | PUBLIC_IP                                  | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                                                                                                    | x.x.x.x                                                                                                           | 0.1.0            |
 | PUBLIC_PORT                                | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                                                                                                    | 1024-65535                                                                                                        | 0.1.0            |

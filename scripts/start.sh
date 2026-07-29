@@ -54,6 +54,15 @@ if [ "$architecture" == "arm64" ]; then
     sed -i "s|\(\"\$UE_PROJECT_ROOT\/Pal\/Binaries\/Linux\/PalServer-Linux-Shipping\" Pal \"\$@\"\)|LD_LIBRARY_PATH=/home/steam/steamcmd/linux64:\$LD_LIBRARY_PATH /usr/local/bin/box64 \1|" ./PalServer-arm64.sh
     chmod +x ./PalServer-arm64.sh
     STARTCOMMAND=("./PalServer-arm64.sh")
+
+    if [ "${UE4SS_ENABLED,,}" = true ]; then
+        LogWarn "UE4SS mod loader is disabled on arm64; the bundled loader is x86-64 only. Continuing to boot."
+    fi
+elif [ "${UE4SS_ENABLED,,}" = true ]; then
+    ue4ss_library="/palworld/Pal/Binaries/Linux/libUE4SS.so"
+    install -m 755 /opt/ue4ss/libUE4SS.so "${ue4ss_library}" || exit
+    export LD_PRELOAD="${ue4ss_library}${LD_PRELOAD:+:${LD_PRELOAD}}"
+    LogInfo "UE4SS enabled; loading mods from /palworld/Pal/Binaries/Linux/Mods."
 fi
 
 isReadable "${STARTCOMMAND[0]}" || exit
