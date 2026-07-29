@@ -97,7 +97,13 @@ RUN case "${TARGETARCH}" in \
     && chmod +x DepotDownloader \
     && mv DepotDownloader /usr/local/bin/DepotDownloader
 
-RUN if [ "${TARGETARCH}" = "amd64" ]; then wget --progress=dot:giga "https://github.com/XarminaEu/ue4ss-linux/releases/download/v${UE4SS_VERSION}/ue4ss-linux-v${UE4SS_VERSION}.tar.gz" -O ue4ss.tar.gz && echo "${UE4SS_TGZ_SHA256}  ue4ss.tar.gz" | sha256sum -c - && mkdir -p /opt/ue4ss && tar -xzf ue4ss.tar.gz -C /opt/ue4ss && rm ue4ss.tar.gz; fi
+RUN if [ "${TARGETARCH}" = "amd64" ]; then \
+        wget --progress=dot:giga "https://github.com/XarminaEu/ue4ss-linux/releases/download/v${UE4SS_VERSION}/ue4ss-linux-v${UE4SS_VERSION}.tar.gz" -O ue4ss.tar.gz \
+        && echo "${UE4SS_TGZ_SHA256}  ue4ss.tar.gz" | sha256sum -c - \
+        && mkdir -p /opt/ue4ss \
+        && tar -xzf ue4ss.tar.gz -C /opt/ue4ss \
+        && rm ue4ss.tar.gz; \
+    fi
 
 # install patched knockd (as same as https://github.com/itzg/docker-minecraft-server/blob/master/build/ubuntu/install-packages.sh)
 RUN wget --progress=dot:giga https://github.com/Metalcape/knock/releases/download/0.8.1/knock-${KNOCK_VERSION}-${TARGETARCH}.tar.gz -O /tmp/knock.tar.gz && \
