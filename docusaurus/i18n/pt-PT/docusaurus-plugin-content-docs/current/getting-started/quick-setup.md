@@ -54,6 +54,7 @@ services:
       TZ: "UTC"
       ADMIN_PASSWORD: "adminPasswordHere"
       COMMUNITY: false # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+      # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
       SERVER_NAME: "palworld-server-docker by Thijs van Loef"
       SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
     volumes:
