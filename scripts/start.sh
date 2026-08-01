@@ -2,6 +2,14 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+# shellcheck source=scripts/negative_delta_recovery.sh
+source "/home/steam/server/negative_delta_recovery.sh"
+
+if ! ValidateNegativeDeltaRecoverySetting; then
+    LogError "PALWORLD_ALLOW_NEGATIVE_DELTA_TIME must be true or false."
+    exit 1
+fi
+
 # Helper Functions for installation & updates
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
@@ -49,7 +57,11 @@ if [ "$architecture" == "arm64" ]; then
 fi
 
 isReadable "${STARTCOMMAND[0]}" || exit
-isExecutable "${STARTCOMMAND[0]}" || exit
+if ! isExecutable "${STARTCOMMAND[0]}"; then
+    LogWarn "Attempt to make \"${STARTCOMMAND[0]}\" executable"
+    chmod +x "${STARTCOMMAND[0]}" || exit
+    isExecutable "${STARTCOMMAND[0]}" || exit
+fi
 
 # Prepare Arguments
 if [ -n "${PORT}" ]; then
@@ -64,8 +76,32 @@ if [ "${COMMUNITY,,}" = true ]; then
     STARTCOMMAND+=("-publiclobby")
 fi
 
+if [ "${ENABLE_PERF_THREADING_ARGS,,}" = true ]; then
+    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+fi
+
+if [ "${PALWORLD_ALLOW_NEGATIVE_DELTA_TIME,,}" = true ]; then
+    STARTCOMMAND+=("-ini:Engine:[ConsoleVariables]:Pal.AllowNegativeDeltaTime=1")
+fi
+
+if [ -n "${WORKER_THREADS_SERVER}" ]; then
+    STARTCOMMAND+=("-NumberOfWorkerThreadsServer=${WORKER_THREADS_SERVER}")
+fi
+
+# Backward compatibility (deprecated)
 if [ "${MULTITHREADING,,}" = true ]; then
-    STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS" "-NumberOfWorkerThreadsServer=$(nproc --all)")
+    LogWarn "MULTITHREADING is deprecated. Use ENABLE_PERF_THREADING_ARGS and WORKER_THREADS_SERVER instead."
+    if [ "${ENABLE_PERF_THREADING_ARGS,,}" != true ]; then
+        STARTCOMMAND+=("-useperfthreads" "-NoAsyncLoadingThread" "-UseMultithreadForDS")
+    fi
+
+    if [ -z "${WORKER_THREADS_SERVER}" ]; then
+        STARTCOMMAND+=("-NumberOfWorkerThreadsServer=$(nproc --all)")
+    fi
+fi
+
+if [ "${ENABLE_GAMEDATA_API,,}" = true ]; then
+    STARTCOMMAND+=("-enable-gamedata-api")
 fi
 
 LogAction "Checking for available container updates"
