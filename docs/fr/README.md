@@ -606,6 +606,7 @@ Le manifeste correspond aux dates de sortie/mises à jour. Les manifestes peuven
 | 1.0.2   | 1078324976643066553 |
 | 1.0.2.100993 | 6205737992414484907 |
 | 1.0.2.101103 | 1480973772525600530 |
+
 ## Signalement de Problèmes/Demandes de Fonctionnalités
 
 Les problèmes/Demandes de fonctionnalités peuvent être soumis en utilisant [ce lien](https://github.com/thijsvanloef/palworld-server-docker/issues/new/choose).
