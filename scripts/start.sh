@@ -33,9 +33,7 @@ fi
 
 # Always update on boot even if the server is installed, to prevent appmanifest issues
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    UpdateRequired
-    updateRequired=$?
-    if [ "$updateRequired" == 0 ]; then
+    if UpdateRequired; then
         rm /palworld/steamapps/appmanifest_2394010.acf
         InstallServer
     fi
