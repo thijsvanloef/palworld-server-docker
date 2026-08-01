@@ -1,6 +1,20 @@
 #!/bin/bash
 # This file contains functions which can be used in multiple scripts
 
+# Backward compatibility: DEBUG is deprecated, use LOG_LEVEL instead.
+if [ -n "${DEBUG}" ]; then
+    echo "WARNING: DEBUG is deprecated and will be removed in a future release. Use LOG_LEVEL=DEBUG instead." >&2
+    if [ -z "${LOG_LEVEL}" ] && [[ "${DEBUG,,}" =~ ^(true|on|1)$ ]]; then
+        export LOG_LEVEL="DEBUG"
+    fi
+fi
+
+# Enable shell tracing for all scripts that source this file when LOG_LEVEL=DEBUG.
+# This can expose command arguments (including secrets) in logs.
+if [ "${LOG_LEVEL^^}" = "DEBUG" ]; then
+    set -x
+fi
+
 # Checks if a given path is a directory
 # Returns 0 if the path is a directory
 # Returns 1 if the path is not a directory or does not exists and produces an output message
@@ -87,11 +101,10 @@ PlayerLogging_isEnabled() {
 
 # Convert player list from JSON format
 convert_JSON_to_CSV_players() {
-    echo 'name,playeruid,steamid'
+    echo 'name,playeruid,platform_userid'
     echo -n "${1}" | \
         jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
-        -re 's/"steam_/"/' \
         -re 's/"//g'
 }
 
@@ -114,13 +127,12 @@ get_players_list() {
 # Checks how many players are currently connected
 get_player_count() {
     local player_list
-    local return_val=0
     if ! player_list=$(get_players_list); then
-        return_val=1
+        return 1
     fi
     
     echo -n "${player_list}" | wc -l
-    return "$return_val"
+    return 0
 }
 
 #
@@ -138,24 +150,54 @@ export CyanBoldText=$'\033[1;36m'        # Cyan
 
 PalServerLog_fifo="/home/steam/server/.palserver_log_fifo"
 
+LogLevelToNumber() {
+    local level="${1^^}"
+    case "${level}" in
+        DEBUG)
+            echo 10
+            ;;
+        INFO|SUCCESS|ACTION)
+            echo 20
+            ;;
+        WARN|WARNING)
+            echo 30
+            ;;
+        ERROR)
+            echo 40
+            ;;
+        OFF)
+            echo 99
+            ;;
+        *)
+            # Invalid levels fall back to INFO behavior.
+            echo 20
+            ;;
+    esac
+}
+
+ShouldLogLevel() {
+    local current_level="$1"
+    local configured_level="${LOG_LEVEL:-INFO}"
+    [ "$(LogLevelToNumber "${current_level}")" -ge "$(LogLevelToNumber "${configured_level}")" ]
+}
+
+LogDebug() {
+    Log "$1" "$WhiteText" "DEBUG" && LogFlush
+}
 LogInfo() {
     Log "$1" "$WhiteText" "INFO"
 }
 LogWarn() {
-    Log "$1" "$YellowBoldText" "WARN"
-    LogFlush
+    Log "$1" "$YellowBoldText" "WARN" && LogFlush
 }
 LogError() {
-    Log "$1" "$RedBoldText" "ERROR"
-    LogFlush
+    Log "$1" "$RedBoldText" "ERROR" && LogFlush
 }
 LogSuccess() {
-    Log "$1" "$GreenBoldText" "SUCCESS"
-    LogFlush
+    Log "$1" "$GreenBoldText" "SUCCESS" && LogFlush
 }
 LogAction() {
-    Log "****$1****" "$CyanBoldText" "ACTION"
-    LogFlush
+    Log "****$1****" "$CyanBoldText" "ACTION" && LogFlush
 }
 LogFlush() {
     if [ -p "${PalServerLog_fifo}" ]; then
@@ -168,6 +210,10 @@ Log() {
     local message="$1"
     local color="$2"
     local level="$3"
+    if ! ShouldLogLevel "${level}"; then
+        return 1
+    fi
+
     local now timestamp
     now="$(date +"%s")"
     printf -v timestamp '%(%Y-%m-%d %H:%M:%S)T' "$now"
@@ -219,16 +265,22 @@ REST_API() {
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
     local -i result=0
+    local output
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
-        curl -s -L -X GET  "${url}" -u "${userpass}" -H "Accept: application/json"
+        output=$(curl -s -L -X GET  "${url}" -u "${userpass}" -H "Accept: application/json")
         result=$?
     else
-        curl -s -L -X POST "${url}" -u "${userpass}" --json "${data}"
+        output=$(curl -s -L -X POST "${url}" -u "${userpass}" --json "${data}")
         result=$?
+    fi
+    if [[ "${output}" =~ ^Unauthorized ]]; then
+        LogError "${output}"
+        return 1
     fi
     if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
         autopause stop > /dev/null
     fi
+    printf '%s' "${output}"
     return ${result}
 }
 
