@@ -49,6 +49,10 @@ spec:
           volumeMounts:
             - name: datadir
               mountPath: /palworld
+            - name: mods
+              mountPath: /palworld/Pal/Binaries/Linux/Mods
+            - name: paks
+              mountPath: /palworld/Pal/Content/Paks/~mods
           startupProbe:
             exec:
               command: ["sh", "-c", "pgrep PalServer-Linux >/dev/null"]
@@ -66,3 +70,9 @@ spec:
         - name: datadir
           persistentVolumeClaim:
             claimName: palworld-server-datadir
+        - name: mods
+          persistentVolumeClaim:
+            claimName: palworld-server-mods
+        - name: paks
+          persistentVolumeClaim:
+            claimName: palworld-server-paks

@@ -84,7 +84,9 @@ jobs:
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
             -v ./palworld:/palworld/ \
+            -v ./tests/fixtures/ue4ss-mods:/palworld/Pal/Binaries/Linux/Mods \
             --env-file .env.example \
+            -e UE4SS_ENABLED=true \
             --restart unless-stopped \
             --stop-timeout 30 \
             ${{ github.run_id }}
@@ -127,6 +129,16 @@ jobs:
               fi
             done
           '
+
+      - name: Test UE4SS Lua mod loading
+        run: |
+          docker exec palworld-server bash -c '
+            pal_pid="$(pidof PalServer-Linux-Shipping)"
+            pal_pid="${pal_pid%% *}"
+            grep -Fq "/palworld/Pal/Binaries/Linux/libUE4SS.so" "/proc/${pal_pid}/maps"
+          '
+          docker logs palworld-server 2>&1 | grep -Fq "UE4SS enabled; loading mods from /palworld/Pal/Binaries/Linux/Mods."
+          docker logs palworld-server 2>&1 | grep -Fq "[UE4SSStatus] Lua test mod loaded"
 
       # - name: Test if rcon.yaml is valid
       #   run: |
