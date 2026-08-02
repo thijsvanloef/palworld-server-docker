@@ -115,7 +115,8 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
       LogAction "GENERATING CONFIG"
       mkdir -p /palworld/Pal/Saved/Config/LinuxServer || exit
-      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+      fileExists "/palworld/DefaultPalWorldSettings.ini" || exit
+      cp "/palworld/DefaultPalWorldSettings.ini" "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
   fi
 else
   LogAction "GENERATING CONFIG"
