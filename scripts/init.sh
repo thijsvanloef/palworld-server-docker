@@ -78,7 +78,7 @@ if [[ "$(id -u)" -eq 0 ]]; then
 else
     ./start.sh &
 fi
-# Process ID of su
+# Process ID of start.sh
 killpid="$!"
 wait "$killpid"
 
