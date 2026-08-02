@@ -82,7 +82,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
-        - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
+        # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
       environment:
          PUID: 1000
          PGID: 1000
@@ -94,6 +94,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
          CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
@@ -648,6 +649,8 @@ The proxy server captures communication with `api.palworldgames.com`.
 
 The auto-pause service will replay captured data in the paused state.
 
+If using a different public port (Other than 8211) for the community server you must set `PUBLIC_PORT` to the public port being used.
+
 ## Editing Server Settings
 
 ### With Environment Variables
@@ -876,6 +879,10 @@ The manifest corresponds to the release date/update versions. Manifests can be f
 | 0.7.2   | 7743228609268535996 |
 | 0.7.3   | 5125159522749666228 |
 | 1.0.0   | 3392720560779800260 |
+| 1.0.1   | 2167164727892555341 |
+| 1.0.2   | 1078324976643066553 |
+| 1.0.2.100993 | 6205737992414484907 |
+| 1.0.2.101103 | 1480973772525600530 |
 
 ## Reporting Issues/Feature Requests
 
