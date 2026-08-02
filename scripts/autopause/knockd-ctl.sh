@@ -2,8 +2,10 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
+# shellcheck source=scripts/autopause/functions.sh
+source "/home/steam/server/autopause/functions.sh"
+
 basedir="/home/steam/server/autopause"
-monitorBackendFile="${basedir}/.monitor-backend"
 Knockd_baseConfig="${basedir}/knockd"
 Nflog_pidFile="${basedir}/.nflog.pid"
 Nflog_logFile="${basedir}/.nflog.log"
@@ -22,14 +24,11 @@ Nflog_group=""
 # (docker run --network=host or compose.yaml network_mode: host) where interface
 # names may change dynamically depending on host OS and network configuration.
 Knockd_interfaces="${AUTO_PAUSE_KNOCKD_IF:-auto}"
+Nflog_interfaces=(any)  # NFLOG backend always uses "any" to match all incoming packets via iptables rules.
 
-declare -a resolvedInterfaces=()
+declare -a Knockd_resolvedInterfaces=()
 
-_APLog_debug() {
-    isTrue "${AUTO_PAUSE_DEBUG:-false}" && LogInfo "[AUTO PAUSE DEBUG] ${1}"
-}
-
-# Add an interface to the resolvedInterfaces array if it exists and is not already present.
+# Add an interface to the Knockd_resolvedInterfaces array if it exists and is not already present.
 # Validates interface exists via /sys/class/net and prevents duplicates.
 Knockd_appendInterface() {
     local iface="${1}" existing
@@ -39,7 +38,7 @@ Knockd_appendInterface() {
     # "any" is not a valid interface for knockd.
     # Keep backward compatibility by warning and ignoring it.
     if [ "${iface}" = "any" ]; then
-        LogWarn "AUTO_PAUSE_KNOCKD_IF contains 'any', but knockd backend does not support it. Ignoring 'any'. Use 'auto' for automatic detection."
+        APLog_warn "AUTO_PAUSE_KNOCKD_IF contains 'any', but knockd backend does not support it. Ignoring 'any'. Use 'auto' for automatic detection."
         return
     fi
     
@@ -49,11 +48,11 @@ Knockd_appendInterface() {
     fi
 
     # Check for duplicates
-    for existing in "${resolvedInterfaces[@]}"; do
+    for existing in "${Knockd_resolvedInterfaces[@]}"; do
         [ "${existing}" = "${iface}" ] && return
     done
 
-    resolvedInterfaces+=("${iface}")
+    Knockd_resolvedInterfaces+=("${iface}")
 }
 
 # Automatically detect active network interfaces to listen on.
@@ -85,7 +84,7 @@ Knockd_resolveAutoInterfaces() {
 Knockd_resolveInterfaces() {
     local iface
 
-    resolvedInterfaces=()
+    Knockd_resolvedInterfaces=()
     if [ "${Knockd_interfaces}" = "auto" ]; then
         # Automatic detection mode: find default gateway and loopback interfaces
         Knockd_resolveAutoInterfaces
@@ -150,7 +149,7 @@ Nflog_setupRules() {
     iptables -A "${Nflog_chainName}" -p tcp --dport "${RCON_PORT:-25575}" -j NFLOG --nflog-group "${Nflog_group}" --nflog-prefix "RCON"
     iptables -A "${Nflog_chainName}" -p tcp --dport "${REST_API_PORT:-8212}" -j NFLOG --nflog-group "${Nflog_group}" --nflog-prefix "REST_API"
 
-    for iface in "${resolvedInterfaces[@]}"; do
+    for iface in "${Nflog_interfaces[@]}"; do
         if [ "${iface}" = "any" ]; then
             iptables -C INPUT -j "${Nflog_chainName}" 2>/dev/null || iptables -I INPUT 1 -j "${Nflog_chainName}"
         else
@@ -162,7 +161,7 @@ Nflog_setupRules() {
 Nflog_teardownRules() {
     local iface
 
-    for iface in "${resolvedInterfaces[@]}"; do
+    for iface in "${Nflog_interfaces[@]}"; do
         if [ "${iface}" = "any" ]; then
             while iptables -C INPUT -j "${Nflog_chainName}" 2>/dev/null; do
                 iptables -D INPUT -j "${Nflog_chainName}"
@@ -184,7 +183,7 @@ Nflog_startMonitor() {
     tcpdump -n -l -i "nflog:${Nflog_group}" 2>&1 | while read -r line; do
         printf '%s\n' "${line}" >> "${Nflog_logFile}"
         if isTrue "${AUTO_PAUSE_DEBUG:-false}"; then
-            LogInfo "nflog: ${line}"
+            APLog "nflog: ${line}"
         fi
 
         if [ "${detected}" = "false" ]; then
@@ -210,27 +209,23 @@ Nflog_startMonitor() {
 Nflog_startBackend() {
     local candidate monitorPid
 
-    # NFLOG uses iptables+tcpdump kernel socket, interface specification is ignored.
-    # Always use "any" to match all incoming packets via iptables rules.
-    resolvedInterfaces=("any")
-
     if isTrue "${AUTO_PAUSE_DEBUG:-false}"; then
-        LogInfo "NFLOG backend listening on all interfaces (kernel socket mode)"
+        APLog "NFLOG backend listening on all interfaces (kernel socket mode)"
     fi
 
     if [ -f "${Nflog_pidFile}" ] && kill -0 "$(cat "${Nflog_pidFile}")" 2>/dev/null; then
-        LogWarn "NFLOG monitor already running (PID:$(cat "${Nflog_pidFile}"))"
-        exit 0
+        APLog_warn "NFLOG monitor already running (PID:$(cat "${Nflog_pidFile}"))"
+        return 0
     fi
 
     if ! command -v iptables > /dev/null 2>&1; then
-        LogWarn "NFLOG backend requires iptables."
-        exit 1
+        APLog_warn "NFLOG backend requires iptables."
+        return 1
     fi
 
     if ! [[ "${Nflog_groupStart}" =~ ^[0-9]+$ ]] || ! [[ "${Nflog_groupEnd}" =~ ^[0-9]+$ ]] || [ "${Nflog_groupStart}" -gt "${Nflog_groupEnd}" ]; then
-        LogWarn "Invalid NFLOG range: start=${Nflog_groupStart}, max=${Nflog_groupEnd}"
-        exit 1
+        APLog_warn "Invalid NFLOG range: start=${Nflog_groupStart}, max=${Nflog_groupEnd}"
+        return 1
     fi
 
     rm -f "${Nflog_stateFile}"
@@ -261,32 +256,29 @@ Nflog_startBackend() {
         if kill -0 "${monitorPid}" 2>/dev/null; then
             echo "${monitorPid}" > "${Nflog_pidFile}"
             Nflog_saveState
-            _APLog_debug "Start NFLOG monitor (PID:${monitorPid}, chain:${Nflog_chainName}, group:${Nflog_group})"
+            APLog_debug "Start NFLOG monitor (PID:${monitorPid}, chain:${Nflog_chainName}, group:${Nflog_group})"
             return
         fi
 
         if [ -s "${Nflog_logFile}" ]; then
-            LogWarn "NFLOG monitor failed on chain=${Nflog_chainName}, group=${Nflog_group}: $(tail -n 1 "${Nflog_logFile}")"
+            APLog_warn "NFLOG monitor failed on chain=${Nflog_chainName}, group=${Nflog_group}: $(tail -n 1 "${Nflog_logFile}")"
             # Permission/capability problems are not solved by trying another number.
             if grep -qiE "operation not permitted|permission denied" "${Nflog_logFile}"; then
                 Nflog_teardownRules
-                exit 1
+                return 1
             fi
         else
-            LogWarn "NFLOG monitor failed on chain=${Nflog_chainName}, group=${Nflog_group}. Trying next candidate."
+            APLog_warn "NFLOG monitor failed on chain=${Nflog_chainName}, group=${Nflog_group}. Trying next candidate."
         fi
         Nflog_teardownRules
     done
 
-    LogWarn "No available NFLOG chain/group candidates in range ${Nflog_groupStart}-${Nflog_groupEnd}."
-    exit 1
+    APLog_warn "No available NFLOG chain/group candidates in range ${Nflog_groupStart}-${Nflog_groupEnd}."
+    return 1
 }
 
 Nflog_stopBackend() {
     local pid
-
-    # NFLOG always uses "any", just clean up without interface resolution
-    resolvedInterfaces=("any")
 
     # Restore the runtime-selected chain/group if available.
     Nflog_loadState || {
@@ -305,7 +297,7 @@ Nflog_stopBackend() {
     Nflog_teardownRules
     rm -f "${Nflog_stateFile}"
 
-    _APLog_debug "Stop NFLOG monitor (PID:${pid:-unknown}, chain:${Nflog_chainName}, group:${Nflog_group})"
+    APLog_debug "Stop NFLOG monitor (PID:${pid:-unknown}, chain:${Nflog_chainName}, group:${Nflog_group})"
 }
 
 # ============================================================================
@@ -315,28 +307,28 @@ Nflog_stopBackend() {
 Knockd_startBackend() {
     # Verify knockd is available and has NET_RAW capability
     if ! command -v knockd > /dev/null 2>&1; then
-        LogWarn "knockd backend requires knockd binary (not found)."
-        exit 1
+        APLog_warn "knockd backend requires knockd binary (not found)."
+        return 1
     fi
 
     if ! knockd --version > /dev/null 2>&1; then
-        LogWarn "knockd backend requires NET_RAW capability. e.g) podman run --cap-add=NET_RAW ..."
-        exit 1
+        APLog_warn "knockd backend requires NET_RAW capability. e.g) podman run --cap-add=NET_RAW ..."
+        return 1
     fi
 
     Knockd_resolveInterfaces
-    if [ "${#resolvedInterfaces[@]}" -eq 0 ]; then
-        LogWarn "AUTO_PAUSE_KNOCKD_IF=${Knockd_interfaces} did not resolve any usable interfaces."
-        exit 1
+    if [ "${#Knockd_resolvedInterfaces[@]}" -eq 0 ]; then
+        APLog_warn "AUTO_PAUSE_KNOCKD_IF=${Knockd_interfaces} did not resolve any usable interfaces."
+        return 1
     fi
     knockdArgs=(-d)
     if isTrue "${AUTO_PAUSE_DEBUG:-false}"; then
-        LogInfo "AUTO_PAUSE_KNOCKD_IF=\"${Knockd_interfaces}\" resolved to: \"${resolvedInterfaces[*]}\""
+        APLog "AUTO_PAUSE_KNOCKD_IF=\"${Knockd_interfaces}\" resolved to: \"${Knockd_resolvedInterfaces[*]}\""
         knockdArgs+=(-D -v)
     fi
     # Start knockd for each resolved interface with separate process/PID file
     # This allows listening on multiple interfaces simultaneously
-    for iface in "${resolvedInterfaces[@]}"; do
+    for iface in "${Knockd_resolvedInterfaces[@]}"; do
         config="${Knockd_baseConfig}-${iface}.cfg"
         cat - << EOF > "${config}"
 [options]
@@ -361,13 +353,13 @@ EOF
 
     local pids
     pids=$(pidof knockd)
-    _APLog_debug "Start knockd (PIDs:${pids})"
+    APLog_debug "Start knockd (PIDs:${pids})"
 }
 
 Knockd_stopBackend() {
     local pids
     pids=$(pidof knockd)
-    _APLog_debug "Stop knockd (PIDs:${pids})"
+    APLog_debug "Stop knockd (PIDs:${pids})"
 
     # Kill all knockd processes and clean up their PID files
     for pidFile in "${basedir}"/.knockd-*.pid; do
@@ -382,19 +374,11 @@ Knockd_stopBackend() {
 # Main Dispatcher
 # ============================================================================
 
-determineBackend() {
-    if [ -r "${monitorBackendFile}" ]; then
-        cat "${monitorBackendFile}"
-    else
-        echo "knockd"
-    fi
-}
-
 COMMAND="${1:-}"
 
 case "${COMMAND}" in
 "start")
-    backend=$(determineBackend)
+    backend=$(APMonitor_determineBackend)
     if [ "${backend}" = "nflog" ]; then
         Nflog_startBackend
     else
@@ -402,7 +386,7 @@ case "${COMMAND}" in
     fi
     ;;
 "stop")
-    backend=$(determineBackend)
+    backend=$(APMonitor_determineBackend)
     if [ "${backend}" = "nflog" ]; then
         Nflog_stopBackend
     else

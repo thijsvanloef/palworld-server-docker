@@ -606,7 +606,7 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 > [!NOTE]
 > When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
 > AUTO_PAUSE prefers an NFLOG packet monitor when available.
-> If NFLOG setup fails at startup/runtime, it automatically falls back to knockd.
+> If NFLOG setup fails at startup, the system will automatically fall back to knockd.
 > Add the following capability only when you want to use NFLOG monitoring:
 > `--cap-add=NET_ADMIN`
 > Alternatively, add the following `cap_add:` to your `compose.yaml`:
