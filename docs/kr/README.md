@@ -87,6 +87,7 @@ services:
       - TZ=Asia/Seoul
       - ADMIN_PASSWORD="adminPasswordHere"
       - COMMUNITY=false # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (USE WITH SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
+      # - PUBLIC_PORT=8211
       - SERVER_NAME="World of Pals"
     volumes:
       - ./palworld:/palworld/

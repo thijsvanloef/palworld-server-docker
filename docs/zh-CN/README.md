@@ -89,6 +89,7 @@ services:
       - TZ=Asia/Shanghai
       - ADMIN_PASSWORD=adminPasswordHere
       - COMMUNITY=false  # 如果您希望服务器显示在社区服务器页中，请启用此选项（注意配置SERVER_PASSWORD!）
+      # - PUBLIC_PORT=8211
       - SERVER_NAME=World of Pals
       - SERVER_DESCRIPTION=palworld-server-docker by Thijs van Loef
     volumes:

@@ -92,6 +92,7 @@ services:
       TZ: 'UTC'
       ADMIN_PASSWORD: 'adminPasswordHere'
       COMMUNITY: false # Activez ceci si vous souhaitez que votre serveur apparaisse dans l'onglet des serveurs communautaires, À UTILISER AVEC LE MOT DE PASSE DU SERVEUR !
+      # PUBLIC_PORT: 8211
       SERVER_NAME: 'palworld-server-docker par Thijs van Loef'
       SERVER_DESCRIPTION: 'palworld-server-docker par Thijs van Loef'
     volumes:
