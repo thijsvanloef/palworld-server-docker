@@ -114,16 +114,9 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   # shellcheck disable=SC2143
   if [ ! "$(grep -s '[^[:space:]]' /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini)" ]; then
       LogAction "GENERATING CONFIG"
-      # Server will generate all ini files after first run.
-      if [ "$architecture" == "arm64" ]; then
-          timeout --preserve-status 15s ./PalServer-arm64.sh 1> /dev/null
-      else
-          timeout --preserve-status 15s ./PalServer.sh 1> /dev/null
-      fi
-
-      # Wait for shutdown
-      sleep 5
-      cp /palworld/DefaultPalWorldSettings.ini /palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini
+      mkdir -p /palworld/Pal/Saved/Config/LinuxServer || exit
+      fileExists "/palworld/DefaultPalWorldSettings.ini" || exit
+      cp "/palworld/DefaultPalWorldSettings.ini" "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
   fi
 else
   LogAction "GENERATING CONFIG"
