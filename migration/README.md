@@ -7,6 +7,16 @@
 >
 > Please make sure you always have a backup!
 
+> [!IMPORTANT]
+> If you're migrating a save that was ever played on Windows (including via Steam's
+> "host from save data" co-op mode), that save's `WorldOption.sav` takes priority over
+> `PalWorldSettings.ini` and will silently prevent your new server's settings —
+> including `AdminPassword` — from applying. This causes RCON/REST API authentication
+> to fail with "AdminPassword is empty" even when the password is correctly configured
+> everywhere else (see #886). `migrate.sh` (below) handles this automatically by moving
+> any pre-existing `WorldOption.sav` aside; if you migrate manually, do the same
+> yourself (see step 3 in "Manually" below).
+
 1. Find a directory which is named by game server name and contains all saved game data,
    usually it will at `~/Steam/steamapps/common/PalServer/Pal/Saved/SaveGames/0/`
 2. Make sure `migration/migrate.sh`, saved game data directory and mounted volume
@@ -44,4 +54,9 @@
    DedicatedServerName=`2E85FD38BAA792EB1D4C09386F3A3CDA`.
 3. Delete the entire new server save at `PalServer\Pal\Saved\SaveGames\0\<your_save_here>`,
    and replace it with the folder from the old server.
-4. Restart the new server
+4. If the copied save folder contains a `WorldOption.sav` file and the save was ever played on
+   Windows, move (don't delete outright — keep it as a backup) that file out of the way, e.g.
+   `mv WorldOption.sav WorldOption.sav.bak`. Otherwise it takes priority over
+   `PalWorldSettings.ini` and silently blocks your new server's settings (including
+   `AdminPassword`) from applying — see #886.
+5. Restart the new server
