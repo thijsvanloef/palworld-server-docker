@@ -5,9 +5,9 @@ on:  # yamllint disable-line rule:truthy
     types: [published]
 
 jobs:
-  # Builds the Dockerfile and pushes it to dockerhub and GHCR
-  release:
-    name: Release - Docker image
+  # Builds Linux image and pushes it to dockerhub and GHCR
+  release-linux:
+    name: Release - Docker image (linux)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,6 +44,10 @@ jobs:
             type=semver,pattern=v{{version}}
             type=semver,pattern=v{{major}}.{{minor}}
             type=semver,pattern=v{{major}}
+            type=semver,pattern=v{{version}},suffix=-linux
+            type=semver,pattern=v{{major}}.{{minor}},suffix=-linux
+            type=semver,pattern=v{{major}},suffix=-linux
+            type=raw,value=latest-linux
           flavor: latest=true
 
       - name: Docker - Build / Push
@@ -55,3 +59,56 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           build-args: |
             GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+            TARGET_SERVER_PLATFORM=Linux
+
+  # Builds Windows (Wine) image and pushes it to dockerhub and GHCR
+  release-windows:
+    name: Release - Docker image (windows)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Docker - Login
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Docker - GHCR Login
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Docker - Metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: |
+            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=windows
+            type=semver,pattern=v{{version}},suffix=-windows
+            type=semver,pattern=v{{major}}.{{minor}},suffix=-windows
+            type=semver,pattern=v{{major}},suffix=-windows
+          flavor: latest=false
+
+      - name: Docker - Build / Push
+        id: docker_build
+        uses: docker/build-push-action@v7
+        with:
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: |
+            GIT_VERSION_TAG=${{ github.event.release.tag_name }}
+            TARGET_SERVER_PLATFORM=Windows

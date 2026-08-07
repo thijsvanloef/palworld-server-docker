@@ -1,0 +1,50 @@
+---
+services:
+  palworld:
+    extends:
+      file: ../../windows.yaml
+      service: palworld
+    build:
+      context: ../../
+    environment:
+      SERVER_NAME: "palworld-server-docker/examples/mods"
+
+      # ------------------------------------------------------------
+      # MOD install method A: Steam Workshop IDs in env var
+      # - Comma-separated workshop IDs
+      # - Works with periodic sync by WORKSHOP_MOD_UPDATE_CRON
+      # ------------------------------------------------------------
+      WORKSHOP_MOD_IDS: "3625223587,3625280368,3625287786"
+      WORKSHOP_MOD_UPDATE_CRON: "0 */6 * * *"
+
+      # ------------------------------------------------------------
+      # MOD install method B: Using workshop-mods.txt file
+      # - Line-separated IDs in /palworld/workshop-mods.txt
+      # - It is combined with WORKSHOP_MOD_IDS
+      # ------------------------------------------------------------
+
+      # ------------------------------------------------------------
+      # MOD install method C: NativeMods (manual mod folders)
+      # - Put extracted mods under:
+      #   ./palworld/Mods/NativeMods/<mod_name>/...
+      # - `mods-update` auto-deploys these on startup/sync
+      # ------------------------------------------------------------
+
+      # ------------------------------------------------------------
+      # Optional UE4SS helper
+      # - true: download zip and extract to Mods/NativeMods/ue4ss-experimental
+      # - false: no automatic UE4SS download
+      # ------------------------------------------------------------
+      UE4SS_EXPERIMENTAL_INSTALL: false
+      UE4SS_EXPERIMENTAL_URL: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+
+      # Remove old UE4SS runtime artifacts before redeploy
+      UE4SS_CLEANUP_LEGACY: true
+
+      # If workshop mods require account auth:
+      # 1) run ./save-login-credential.sh once before startup
+      # 2) provide only STEAM_USERNAME (no password in compose)
+      STEAM_USERNAME: "${STEAM_USERNAME:-}"
+
+    volumes:
+      - ../../palworld:/palworld/

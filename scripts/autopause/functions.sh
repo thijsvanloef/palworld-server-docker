@@ -56,7 +56,7 @@ AP_isForceDisabled() {
 
 # is realy paused
 AP_isSleep() {
-    test -n "$(pgrep -r T 'PalServer-Linux')"
+    test -n "$(pgrep -r T -f "$(PalworldServerProcessMatch)")"
 }
 
 AP_do() {
@@ -81,7 +81,7 @@ AP_disable() {
 
 AP_pause() {
     local -r on="${1:-on}"
-    local -r pid=$(pidof PalServer-Linux-Shipping)
+    local -r pid=$(PalworldServerPid)
     if isTrue "${on}"; then
         if AP_isSleep; then
             APLog_warn "Already sleeped..."
@@ -117,6 +117,7 @@ AP_pullRequest() {
 }
 
 AP_pushRequest() {
+    APLog_debug "AP_pushRequest: ${1}"
     AP_do "echo \"${1}\" > \"${AP_request_file}\""
 }
 
