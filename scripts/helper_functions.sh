@@ -424,3 +424,18 @@ get_latest_version() {
     echo "$latest_version"
 }
 
+fork_as_user() {
+    local -ar cmd=("$@")
+    if [[ "$(id -u)" -eq 0 ]]; then
+        local current_caps caps
+        local -a caps_list
+        current_caps="$(capsh --print | grep '^Current:')"
+        caps_list=()
+        echo "$current_caps" | grep -qw 'cap_net_raw' && caps_list+=("+net_raw")
+        echo "$current_caps" | grep -qw 'cap_net_admin' && caps_list+=("+net_admin")
+        caps=$(IFS=, ; echo "${caps_list[*]}")
+        setpriv --reuid=steam --regid=steam --init-groups --inh-caps="$caps" --ambient-caps="$caps" "${cmd[@]}" &
+    else
+        exec "${cmd[@]}" &
+    fi
+}

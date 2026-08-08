@@ -73,12 +73,9 @@ term_handler() {
 
 trap 'term_handler' SIGTERM
 
-if [[ "$(id -u)" -eq 0 ]]; then
-    su steam -c ./start.sh &
-else
-    ./start.sh &
-fi
-# Process ID of su
+fork_as_user ./start.sh
+
+# Process ID of start.sh
 killpid="$!"
 wait "$killpid"
 
