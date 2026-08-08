@@ -11,7 +11,7 @@ services:
       SERVER_NAME: "palworld-server-docker/examples/autopause"
       AUTO_PAUSE_ENABLED: true
       AUTO_PAUSE_TIMEOUT_EST: 10  # Number of seconds before auto pausing.
-      #AUTO_PAUSE_LOG: true
+      AUTO_PAUSE_LOG: true
       #AUTO_PAUSE_DEBUG: false
       COMMUNITY: true
       #PUBLIC_IP: "${PUBLIC_IP:-}"
