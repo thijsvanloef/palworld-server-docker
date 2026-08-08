@@ -8,7 +8,7 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
 
     LogInfo "Launch proxy."
     MITMPROXY_ADDONS_DIR="/home/steam/server/autopause/community/addons"
-    IGNORE_HOSTS="api.steamcmd.net,discord.com"
+    IGNORE_HOSTS="api.steamcmd.net,discord.com,api.github.com,.sentry.io"
     IGNORE_HOSTS_PATTERN=$(echo "$IGNORE_HOSTS" | tr ',' '\n' | sed 's/\./\\./g' | paste -sd '|' -)
     MITMPROXY_OPTIONS=(
         "--set" "block_global=false"
@@ -17,7 +17,7 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
         "-s" "${MITMPROXY_ADDONS_DIR}/PalCommCapture.py"
     )
     if isTrue "${AUTO_PAUSE_DEBUG}"; then
-        mitmweb --web-host 0.0.0.0 "${MITMPROXY_OPTIONS[@]}" &
+        PYTHONUNBUFFERED=1 mitmweb --web-host 0.0.0.0 "${MITMPROXY_OPTIONS[@]}" &
         LogInfo "Web Interface URL: http://localhost:8081/"
     else
         mitmdump "${MITMPROXY_OPTIONS[@]}" > /var/log/mitmdump.log &
