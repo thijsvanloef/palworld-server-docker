@@ -218,6 +218,10 @@ if [ "${NOSTEAM,,}" = true ]; then
     STARTCOMMAND+=("-nosteam")
 fi
 
+if [ "${NOMODS,,}" = true ]; then
+    STARTCOMMAND+=("-NoMods")
+fi
+
 LogAction "Checking for available container updates"
 container_version_check
 

@@ -13,6 +13,9 @@ if ! ValidateNegativeDeltaRecoverySetting; then
     exit 1
 fi
 
+# Remove old FIFO
+rm -f "${PalServerLog_fifo}"
+
 mkdir -p /palworld/backups
 
 init_steam_home() {
