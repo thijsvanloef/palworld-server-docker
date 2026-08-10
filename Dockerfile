@@ -152,6 +152,7 @@ ENV HOME=/home/steam \
     SERVER_NAME= \
     ADMIN_PASSWORD= \
     UPDATE_ON_BOOT=true \
+    UPDATE_MODS_ON_BOOT=true \
     RCON_ENABLED=false \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \

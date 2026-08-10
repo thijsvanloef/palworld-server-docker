@@ -250,8 +250,8 @@ if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
 
-if [ "${platform}" = "windows" ]; then
-    LogAction "Syncing workshop mods"
+if [ "${platform}" = "windows" ] && isTrue "${UPDATE_MODS_ON_BOOT}"; then
+    LogAction "UPDATE MODS"
     mods-update || exit
 fi
 
