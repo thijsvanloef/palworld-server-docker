@@ -34,6 +34,11 @@ _trim() {
     printf '%s' "${value}"
 }
 
+ModLog_debug() {
+    local msg="${1:-(no message)}"
+    isTrue "${MODS_DEBUG:-false}" && LogInfo "[MODS DEBUG] ${msg}"
+}
+
 #-------------------------------------------------
 # ue4ss functions
 #-------------------------------------------------
@@ -102,7 +107,7 @@ sync_ue4ss_experimental_source() {
     mkdir -p "${target_dir}"
 
     if unzip -o "${zip_file}" -d "${target_dir}" >/dev/null; then
-        LogDebug "Extracted UE4SS experimental package to ${target_dir}"
+        ModLog_debug "Extracted UE4SS experimental package to ${target_dir}"
     else
         LogWarn "Failed to extract UE4SS experimental package."
         rm -rf "${target_dir}"
@@ -138,16 +143,16 @@ add_deployed_ue4ss_file() {
 
 deploy_ue4ss_artifacts() {
     local source_dir="$1"
+    local ue4ss_bin_dir="${bin_dir}/ue4ss"
 
     if ! ue4ss_source_is_available "${source_dir}"; then
         return 0
     fi
 
-    mkdir -p "${bin_dir}"
+    mkdir -p "${ue4ss_bin_dir}"
 
     if [ -d "${source_dir}/ue4ss" ]; then
-        mkdir -p "${bin_dir}/ue4ss"
-        cp -a "${source_dir}/ue4ss/." "${bin_dir}/ue4ss/"
+        cp -a "${source_dir}/ue4ss/." "${ue4ss_bin_dir}/"
         add_deployed_ue4ss_file "ue4ss"
     fi
 
@@ -155,7 +160,7 @@ deploy_ue4ss_artifacts() {
         cp -f "${source_dir}/dwmapi.dll" "${bin_dir}/dwmapi.dll"
         add_deployed_ue4ss_file "dwmapi.dll"
     elif [ -f "${source_dir}/UE4SS.dll" ]; then
-        cp -f "${source_dir}/UE4SS.dll" "${bin_dir}/UE4SS.dll"
+        cp -f "${source_dir}/UE4SS.dll" "${ue4ss_bin_dir}/UE4SS.dll"
         cp -f "${source_dir}/UE4SS.dll" "${bin_dir}/dwmapi.dll"
         add_deployed_ue4ss_file "UE4SS.dll"
         add_deployed_ue4ss_file "dwmapi.dll"
@@ -163,7 +168,7 @@ deploy_ue4ss_artifacts() {
 
     for extra_file in "UE4SS-settings.ini" "MemberVariableLayout.ini" "Vindsent.dll"; do
         if [ -f "${source_dir}/${extra_file}" ]; then
-            cp -f "${source_dir}/${extra_file}" "${bin_dir}/${extra_file}"
+            cp -f "${source_dir}/${extra_file}" "${ue4ss_bin_dir}/${extra_file}"
             add_deployed_ue4ss_file "${extra_file}"
         fi
     done
@@ -298,9 +303,11 @@ _sync_dir() {
     local source_dir="$1"
     local dest_dir="$2"
     local src_ref_time dest_file rel_path dest_mtime
+    local verbose=""
+    isTrue "${MODS_DEBUG:-false}" && verbose="-v"
 
     mkdir -p "${dest_dir}"
-    cp -au "${source_dir}/." "${dest_dir}/"
+    cp -au ${verbose} "${source_dir}/." "${dest_dir}/"
 
     src_ref_time="$(find "${source_dir}" -type f -printf '%T@\n' 2>/dev/null | sort -nr | head -n1 | awk -F. '{print $1}')"
     [ -z "${src_ref_time}" ] && return 0
@@ -310,9 +317,9 @@ _sync_dir() {
         if [ ! -e "${source_dir}/${rel_path}" ]; then
             dest_mtime="$(stat -c '%Y' "${dest_file}" 2>/dev/null || echo 0)"
             if [ "${dest_mtime}" -le "${src_ref_time}" ]; then
-                rm -f "${dest_file}"
+                rm -f ${verbose} "${dest_file}"
             else
-                LogDebug "Kept user-modified file absent from source: ${rel_path}"
+                ModLog_debug "Kept user-modified file absent from source: ${rel_path}"
             fi
         fi
     done < <(find "${dest_dir}" -type f -print0 2>/dev/null)
@@ -329,7 +336,7 @@ cleanup_removed_mods() {
         done
         if [ "${found}" = false ]; then
             rm -rf "${mods_base_dir:?}/${prev_mod}"
-            LogDebug "Removed undeployed lua mod: ${prev_mod}"
+            ModLog_debug "Removed undeployed lua mod: ${prev_mod}"
         fi
     done < <(printf '%s' "${previous_state}" | jq -r '.deployed_lua_mods[]? // empty' 2>/dev/null)
 
@@ -341,7 +348,7 @@ cleanup_removed_mods() {
         done
         if [ "${found}" = false ]; then
             rm -rf "${mods_base_dir:?}/PalSchema/mods/${prev_mod}"
-            LogDebug "Removed undeployed palschema mod: ${prev_mod}"
+            ModLog_debug "Removed undeployed palschema mod: ${prev_mod}"
         fi
     done < <(printf '%s' "${previous_state}" | jq -r '.deployed_palschema_mods[]? // empty' 2>/dev/null)
 }
@@ -351,8 +358,10 @@ deploy_mod_via_rules() {
     local pkg_name="$2"
     local info_json="${dest_dir}/Info.json"
     local rules_json rule type target clean_target target_path dest
+    local verbose=""
+    isTrue "${MODS_DEBUG:-false}" && verbose="-v"
 
-    LogDebug "deploy_mod_via_rules: ${pkg_name}"
+    ModLog_debug "deploy_mod_via_rules: ${pkg_name}"
 
     if jq -e '.InstallRule[]? | select(.IsServer == true)' "${info_json}" >/dev/null 2>&1; then
         rules_json="$(jq -c '.InstallRule[]? | select(.IsServer == true)' "${info_json}" 2>/dev/null || true)"
@@ -380,26 +389,38 @@ deploy_mod_via_rules() {
             case "${type}" in
                 Lua)
                     dest="${mods_base_dir}/${pkg_name}"
-                    LogInfo "  [Lua] ${pkg_name} → ${dest}"
+                    dest_path="${dest}/${clean_target}"
+                    LogInfo "[Lua] ${pkg_name} → ${dest}"
+                    ModLog_debug "Syncing Lua mod from \"${target_path}\" to \"${dest_path}\""
                     mkdir -p "${dest}"
-                    if [ -d "${target_path}" ]; then _sync_dir "${target_path}" "${dest}"; else cp -u "${target_path}" "${dest}/"; fi
+                    if [ -d "${target_path}" ] && [ -d "${dest_path}" ]; then
+                        _sync_dir "${target_path}" "${dest_path}";
+                    else
+                        cp -aur ${verbose} "${target_path}" "${dest}/";
+                    fi
                     _track_lua_mod "${pkg_name}"
                     ;;
                 Paks)
-                    LogInfo "  [Paks] ${pkg_name} → LogicMods"
+                    LogInfo "[Paks] ${pkg_name} → LogicMods"
                     while IFS= read -r -d '' pak; do
                         deploy_pak_file "${pak}"
                     done < <(find "${target_path}" -type f -name '*.pak' -print0)
                     ;;
                 PalSchema)
                     dest="${mods_base_dir}/PalSchema/mods/${pkg_name}"
-                    LogInfo "  [PalSchema] ${pkg_name} → ${dest}"
+                    dest_path="${dest}/${clean_target}"
+                    LogInfo "[PalSchema] ${pkg_name} → ${dest}"
+                    ModLog_debug "Syncing PalSchema mod from \"${target_path}\" to \"${dest_path}\""
                     mkdir -p "${dest}"
-                    if [ -d "${target_path}" ]; then _sync_dir "${target_path}" "${dest}"; else cp -u "${target_path}" "${dest}/"; fi
+                    if [ -d "${target_path}" ] && [ -d "${dest_path}" ]; then
+                        _sync_dir "${target_path}" "${dest_path}";
+                    else
+                        cp -aur ${verbose} "${target_path}" "${dest}/";
+                    fi
                     _track_palschema_mod "${pkg_name}"
                     ;;
                 UE4SS)
-                    LogInfo "  [UE4SS] deploying framework from ${target_path}"
+                    LogInfo "[UE4SS] deploying framework from ${target_path}"
                     deploy_ue4ss_artifacts "${target_path}"
                     ;;
             esac
@@ -412,7 +433,7 @@ deploy_mod_auto_discover() {
     local pkg_name="$2"
     local d sub name dest found_flat pak
 
-    LogDebug "deploy_mod_auto_discover: ${pkg_name}"
+    ModLog_debug "deploy_mod_auto_discover: ${pkg_name}"
 
     while IFS= read -r -d '' pak; do
         deploy_pak_file "${pak}"
@@ -658,7 +679,7 @@ download_workshop_mods() {
     fi
 
     LogInfo "Downloading ${#ids[@]} Steam Workshop mod(s)..."
-    LogDebug "${steamcmd_bin} +login ${login_source} +workshop_download_item ... +quit"
+    ModLog_debug "${steamcmd_bin} +login ${login_source} +workshop_download_item ... +quit"
     if ! "${steamcmd_bin}" "${steamcmd_args[@]}"; then
         LogWarn "SteamCMD reported an error while downloading workshop mods. Continuing with any files that were downloaded."
     fi
@@ -716,9 +737,9 @@ for mod_id in "${WORKSHOP_IDS[@]}"; do
 
     pkg_name="$(collect_package_name "${source_dir}" "${mod_id}")"
     dest_dir="${workshop_staging_dir}/${pkg_name}"
+    LogInfo "Deploy workshop mod ${mod_id} (${pkg_name}) to ${dest_dir}"
     deploy_mod "${source_dir}" "${dest_dir}" "${pkg_name}"
     ACTIVE_PACKAGES+=("${pkg_name}")
-    LogInfo "Deployed workshop mod ${mod_id} (${pkg_name}) to ${dest_dir}"
 done
 
 # override with UE4SS experimental if enabled
@@ -734,8 +755,8 @@ current_state="$(build_state_json)"
 printf '%s\n' "${current_state}" | jq '.' > "${state_file}"
 chmod 644 "${state_file}"
 
-LogDebug "previous state: ${previous_state}"
-LogDebug "current state: ${current_state}"
+ModLog_debug "previous state: ${previous_state}"
+ModLog_debug "current state: ${current_state}"
 
 if [ "${current_state}" = "${previous_state}" ]; then
     LogInfo "No mod changes detected."
