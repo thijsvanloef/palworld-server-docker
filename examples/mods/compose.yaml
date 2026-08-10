@@ -9,6 +9,7 @@ services:
     environment:
       SERVER_NAME: "palworld-server-docker/examples/mods"
       NOMODS: false
+      UPDATE_MODS_ON_BOOT: true
 
       # ------------------------------------------------------------
       # MOD install method A: Steam Workshop IDs in env var
