@@ -24,6 +24,7 @@ steamcmd_bin="${steamcmd_bin:-/home/steam/steamcmd/steamcmd.sh}"
 steam_login_user_file="/palworld/.steam/.steam-login-user"
 workshop_mods_file="${workshop_mods_file:-/palworld/workshop-mods.txt}"
 previous_state='{}'
+v="$(isTrue "${MODS_DEBUG:-false}" && echo "v")"
 
 #-------------------------------------------------
 # helper functions
@@ -37,6 +38,52 @@ _trim() {
 ModLog_debug() {
     local msg="${1:-(no message)}"
     isTrue "${MODS_DEBUG:-false}" && LogInfo "[MODS DEBUG] ${msg}"
+}
+
+# Given a source path and a target path, remove only the contents of the source from the target.
+# $1: source_path
+# $2: target_path
+# $3: compare timestamp (true/false, default: true)
+#     do not remove target files if they are newer than source files
+_remove_source_from_target() {
+    local source_path="$1"
+    local target_path="$2"
+    local compare_timestamp="${3:-true}"
+
+    if [ -d "${source_path}" ]; then
+        ModLog_debug "Removing source directory from target: ${source_path} → ${target_path}"
+        if [ ! -d "${target_path}" ]; then
+            return 0
+        fi
+
+        local item
+        for item in "${source_path}/"*; do
+            [ -e "${item}" ] || continue
+            local relative_item="${item#"${source_path}/"}"
+            _remove_source_from_target "${item}" "${target_path}/${relative_item}" "${compare_timestamp}"
+        done
+
+        if [ -d "${target_path}" ] && [ -z "$(ls -A "${target_path}")" ]; then
+            ModLog_debug "Removing empty directory: ${target_path}"
+            rmdir "${target_path}"
+        fi
+    elif [ -f "${source_path}" ]; then
+        ModLog_debug "Removing source file from target: ${target_path}"
+        if [ -f "${target_path}" ]; then
+            if isTrue "${compare_timestamp}"; then
+                local source_mtime target_mtime
+                source_mtime="$(stat -c '%Y' "${source_path}" 2>/dev/null || echo 0)"
+                target_mtime="$(stat -c '%Y' "${target_path}" 2>/dev/null || echo 0)"
+                if [ "${target_mtime}" -le "${source_mtime}" ]; then
+                    rm "-f${v}" "${target_path}"
+                else
+                    ModLog_debug "Kept user-modified file: ${target_path}"
+                fi
+            else
+                rm "-f${v}" "${target_path}"
+            fi
+        fi
+    fi
 }
 
 #-------------------------------------------------
@@ -120,11 +167,12 @@ cleanup_previous_ue4ss_state() {
 
     while IFS= read -r tracked_path; do
         [ -z "${tracked_path}" ] && continue
-        rm -rf "${bin_dir:?}/${tracked_path}"
+        #rm -rf "${bin_dir:?}/${tracked_path}"
+        _remove_source_from_target "/palworld/Mods/.tmp/ue4ss-experimental/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
     done < <(printf '%s' "${state_json}" | jq -r '.ue4ss.files[]? // empty' 2>/dev/null)
 
     if isTrue "${UE4SS_CLEANUP_LEGACY}"; then
-        rm -f "${bin_dir:?}/dwmapi.dll" "${bin_dir:?}/UE4SS.dll" "${bin_dir:?}/UE4SS-settings.ini" "${bin_dir:?}/MemberVariableLayout.ini" "${bin_dir:?}/Vindsent.dll"
+        rm "-f${v}" "${bin_dir:?}/dwmapi.dll" "${bin_dir:?}/UE4SS.dll" "${bin_dir:?}/UE4SS-settings.ini" "${bin_dir:?}/MemberVariableLayout.ini" "${bin_dir:?}/Vindsent.dll"
     fi
 }
 
@@ -141,43 +189,46 @@ add_deployed_ue4ss_file() {
     DEPLOYED_UE4SS_FILES+=("${path}")
 }
 
+# Recursive copy and print the relative paths of copied files and directories.
+recursive_copy() {
+    local src_dir="$1"
+    local dst_dir="$2"
+    local opt="${3:-}"
+    local src_file dst_file rel_path
+
+    mkdir -p "${dst_dir}"
+
+    for src_file in "${src_dir}/"*; do
+        [ -e "${src_file}" ] || continue
+        rel_path="${src_file#"${src_dir}/"}"
+        dst_file="${dst_dir}/${rel_path}"
+
+        if [ -f "${src_file}" ]; then
+            cp "-af${opt}" "${src_file}" "${dst_file}" > /dev/null 2>&1
+            printf '%s\n' "${rel_path}"
+        elif [ -d "${src_file}" ]; then
+            mkdir -p "${dst_file}"
+            while IFS= read -r sub_rel_path; do
+                printf '%s/%s\n' "${rel_path}" "${sub_rel_path}"
+            done < <(recursive_copy "${src_file}" "${dst_file}" "${opt}")
+        fi
+    done
+}
+
 deploy_ue4ss_artifacts() {
     local source_dir="$1"
-    local ue4ss_bin_dir="${bin_dir}/ue4ss"
 
     if ! ue4ss_source_is_available "${source_dir}"; then
         return 0
     fi
 
-    mkdir -p "${ue4ss_bin_dir}"
-
-    if [ -d "${source_dir}/ue4ss" ]; then
-        cp -a "${source_dir}/ue4ss/." "${ue4ss_bin_dir}/"
-        add_deployed_ue4ss_file "ue4ss"
-    fi
-
-    if [ -f "${source_dir}/dwmapi.dll" ]; then
-        cp -f "${source_dir}/dwmapi.dll" "${bin_dir}/dwmapi.dll"
-        add_deployed_ue4ss_file "dwmapi.dll"
-    elif [ -f "${source_dir}/UE4SS.dll" ]; then
-        cp -f "${source_dir}/UE4SS.dll" "${ue4ss_bin_dir}/UE4SS.dll"
-        cp -f "${source_dir}/UE4SS.dll" "${bin_dir}/dwmapi.dll"
-        add_deployed_ue4ss_file "UE4SS.dll"
-        add_deployed_ue4ss_file "dwmapi.dll"
-    fi
-
-    for extra_file in "UE4SS-settings.ini" "MemberVariableLayout.ini" "Vindsent.dll"; do
-        if [ -f "${source_dir}/${extra_file}" ]; then
-            cp -f "${source_dir}/${extra_file}" "${ue4ss_bin_dir}/${extra_file}"
-            add_deployed_ue4ss_file "${extra_file}"
+    while IFS= read -r rel_path; do
+        # Only add depth=1 files and directory names.
+        if [[ "${rel_path}" == */* ]]; then
+            rel_path="${rel_path%%/*}"
         fi
-    done
-
-    if [ -d "${source_dir}/Mods" ]; then
-        mkdir -p "${mods_base_dir}"
-        cp -a "${source_dir}/Mods/." "${mods_base_dir}/"
-        add_deployed_ue4ss_file "$(realpath --relative-to="${bin_dir}" "${mods_base_dir}")"
-    fi
+        add_deployed_ue4ss_file "${rel_path}"
+    done < <(recursive_copy "${source_dir}" "${bin_dir}" "u")
 }
 
 #-------------------------------------------------
@@ -189,7 +240,8 @@ cleanup_previous_state() {
 
     while IFS= read -r item; do
         [ -z "${item}" ] && continue
-        rm -f "/palworld/Pal/Content/Paks/LogicMods/${item}"
+        ModLog_debug "Cleaning up previous deployed pak: ${item}"
+        rm "-f${v}" "/palworld/Pal/Content/Paks/LogicMods/${item}"
     done < <(printf '%s' "${state_json}" | jq -r '.deployed_paks[]? // empty' 2>/dev/null)
 
     cleanup_previous_ue4ss_state "${state_json}"
@@ -199,12 +251,18 @@ read_workshop_ids() {
     local ids=()
     local raw_id
     local line
+    local -r ue4ss_id="3625223587"  # UE4SS workshop mod ID
 
     if [ -n "${WORKSHOP_MOD_IDS:-}" ]; then
         IFS=',' read -r -a raw_ids <<< "${WORKSHOP_MOD_IDS}"
         for raw_id in "${raw_ids[@]}"; do
             raw_id="$(_trim "${raw_id}")"
             if [ -n "${raw_id}" ]; then
+                if [ "${raw_id}" = "${ue4ss_id}" ]; then
+                    export UE4SS_EXPERIMENTAL_INSTALL=true
+                    LogWarn "UE4SS workshop mod ID ${ue4ss_id} is not supported. Use UE4SS_EXPERIMENTAL_INSTALL=true instead."
+                    continue
+                fi
                 ids+=("${raw_id}")
             fi
         done
@@ -215,6 +273,11 @@ read_workshop_ids() {
             line="${line%%#*}"
             line="$(_trim "${line}")"
             if [ -n "${line}" ]; then
+                if [ "${line}" = "${ue4ss_id}" ]; then
+                    export UE4SS_EXPERIMENTAL_INSTALL=true
+                    LogWarn "UE4SS workshop mod ID ${ue4ss_id} is not supported. Use UE4SS_EXPERIMENTAL_INSTALL=true instead."
+                    continue
+                fi
                 ids+=("${line}")
             fi
         done < "${workshop_mods_file}"
@@ -262,17 +325,17 @@ copy_mod_files() {
     local source_dir="$1"
     local target_dir="$2"
 
-    rm -rf "${target_dir}"
     mkdir -p "${target_dir}"
-    cp -a "${source_dir}/." "${target_dir}/"
+    cp "-aur${v}" "${source_dir}/." "${target_dir}/"
 }
 
 deploy_pak_file() {
     local pak_file="$1"
     local pak_name
+
     pak_name="$(basename "${pak_file}")"
     mkdir -p "/palworld/Pal/Content/Paks/LogicMods"
-    cp -f "${pak_file}" "/palworld/Pal/Content/Paks/LogicMods/"
+    cp "-auf${v}" "${pak_file}" "/palworld/Pal/Content/Paks/LogicMods/"
     local existing
     for existing in "${DEPLOYED_PAKS[@]}"; do
         [ "${existing}" = "${pak_name}" ] && return 0
@@ -298,33 +361,6 @@ _track_palschema_mod() {
     DEPLOYED_PALSCHEMA_MODS+=("${name}")
 }
 
-# Sync dest from source: copy new/updated files (cp -au), remove unmodified obsolete files.
-_sync_dir() {
-    local source_dir="$1"
-    local dest_dir="$2"
-    local src_ref_time dest_file rel_path dest_mtime
-    local verbose=""
-    isTrue "${MODS_DEBUG:-false}" && verbose="-v"
-
-    mkdir -p "${dest_dir}"
-    cp -au ${verbose} "${source_dir}/." "${dest_dir}/"
-
-    src_ref_time="$(find "${source_dir}" -type f -printf '%T@\n' 2>/dev/null | sort -nr | head -n1 | awk -F. '{print $1}')"
-    [ -z "${src_ref_time}" ] && return 0
-
-    while IFS= read -r -d '' dest_file; do
-        rel_path="${dest_file#"${dest_dir}"/}"
-        if [ ! -e "${source_dir}/${rel_path}" ]; then
-            dest_mtime="$(stat -c '%Y' "${dest_file}" 2>/dev/null || echo 0)"
-            if [ "${dest_mtime}" -le "${src_ref_time}" ]; then
-                rm -f ${verbose} "${dest_file}"
-            else
-                ModLog_debug "Kept user-modified file absent from source: ${rel_path}"
-            fi
-        fi
-    done < <(find "${dest_dir}" -type f -print0 2>/dev/null)
-}
-
 # Remove mod dirs from previous state that are no longer in the current deployment.
 cleanup_removed_mods() {
     local prev_mod current_mod found
@@ -335,7 +371,9 @@ cleanup_removed_mods() {
             [ "${current_mod}" = "${prev_mod}" ] && found=true && break
         done
         if [ "${found}" = false ]; then
-            rm -rf "${mods_base_dir:?}/${prev_mod}"
+            #rm -rf "${mods_base_dir:?}/${prev_mod}"
+            _remove_source_from_target "/palworld/Mods/.workshop/${prev_mod}" "${mods_base_dir:?}/${prev_mod}" true
+            _remove_source_from_target "/palworld/Mods/NativeMods/${prev_mod}" "${mods_base_dir:?}/${prev_mod}" true
             ModLog_debug "Removed undeployed lua mod: ${prev_mod}"
         fi
     done < <(printf '%s' "${previous_state}" | jq -r '.deployed_lua_mods[]? // empty' 2>/dev/null)
@@ -347,7 +385,9 @@ cleanup_removed_mods() {
             [ "${current_mod}" = "${prev_mod}" ] && found=true && break
         done
         if [ "${found}" = false ]; then
-            rm -rf "${mods_base_dir:?}/PalSchema/mods/${prev_mod}"
+            #rm -rf "${mods_base_dir:?}/PalSchema/mods/${prev_mod}"
+            _remove_source_from_target "/palworld/Mods/.workshop/${prev_mod}" "${mods_base_dir:?}/PalSchema/mods/${prev_mod}" true
+            _remove_source_from_target "/palworld/Mods/NativeMods/${prev_mod}" "${mods_base_dir:?}/PalSchema/mods/${prev_mod}" true
             ModLog_debug "Removed undeployed palschema mod: ${prev_mod}"
         fi
     done < <(printf '%s' "${previous_state}" | jq -r '.deployed_palschema_mods[]? // empty' 2>/dev/null)
@@ -357,9 +397,7 @@ deploy_mod_via_rules() {
     local dest_dir="$1"
     local pkg_name="$2"
     local info_json="${dest_dir}/Info.json"
-    local rules_json rule type target clean_target target_path dest
-    local verbose=""
-    isTrue "${MODS_DEBUG:-false}" && verbose="-v"
+    local rules_json rule type target target_path dest
 
     ModLog_debug "deploy_mod_via_rules: ${pkg_name}"
 
@@ -374,12 +412,7 @@ deploy_mod_via_rules() {
         type="$(printf '%s' "${rule}" | jq -r '.Type // empty')"
 
         while IFS= read -r target; do
-            clean_target="${target#./}"
-            clean_target="${clean_target#/}"
-            target_path="${dest_dir}/${clean_target}"
-            if [ "${clean_target}" = "." ] || [ -z "${clean_target}" ]; then
-                target_path="${dest_dir}"
-            fi
+            target_path="${dest_dir%/}/${target}"
 
             if [ ! -e "${target_path}" ]; then
                 LogWarn "Target path ${target_path} not found for type ${type}"
@@ -388,35 +421,25 @@ deploy_mod_via_rules() {
 
             case "${type}" in
                 Lua)
-                    dest="${mods_base_dir}/${pkg_name}"
-                    dest_path="${dest}/${clean_target}"
+                    dest="${mods_base_dir}/${pkg_name}/"
                     LogInfo "[Lua] ${pkg_name} → ${dest}"
-                    ModLog_debug "Syncing Lua mod from \"${target_path}\" to \"${dest_path}\""
+                    ModLog_debug "Syncing Lua mod from \"${target_path}\" to \"${dest}\""
                     mkdir -p "${dest}"
-                    if [ -d "${target_path}" ] && [ -d "${dest_path}" ]; then
-                        _sync_dir "${target_path}" "${dest_path}";
-                    else
-                        cp -aur ${verbose} "${target_path}" "${dest}/";
-                    fi
+                    cp "-aur${v}" "${target_path}" "${dest}"
                     _track_lua_mod "${pkg_name}"
                     ;;
                 Paks)
-                    LogInfo "[Paks] ${pkg_name} → LogicMods"
+                    LogInfo "[Paks] ${pkg_name} → /palworld/Pal/Content/Paks/LogicMods/"
                     while IFS= read -r -d '' pak; do
                         deploy_pak_file "${pak}"
                     done < <(find "${target_path}" -type f -name '*.pak' -print0)
                     ;;
                 PalSchema)
-                    dest="${mods_base_dir}/PalSchema/mods/${pkg_name}"
-                    dest_path="${dest}/${clean_target}"
+                    dest="${mods_base_dir}/PalSchema/mods/${pkg_name}/"
                     LogInfo "[PalSchema] ${pkg_name} → ${dest}"
-                    ModLog_debug "Syncing PalSchema mod from \"${target_path}\" to \"${dest_path}\""
+                    ModLog_debug "Syncing PalSchema mod from \"${target_path}\" to \"${dest}\""
                     mkdir -p "${dest}"
-                    if [ -d "${target_path}" ] && [ -d "${dest_path}" ]; then
-                        _sync_dir "${target_path}" "${dest_path}";
-                    else
-                        cp -aur ${verbose} "${target_path}" "${dest}/";
-                    fi
+                    cp "-aur${v}" "${target_path}" "${dest}"
                     _track_palschema_mod "${pkg_name}"
                     ;;
                 UE4SS)
@@ -431,19 +454,37 @@ deploy_mod_via_rules() {
 deploy_mod_auto_discover() {
     local dest_dir="$1"
     local pkg_name="$2"
-    local d sub name dest found_flat pak
+    local d sub name dest found_flat pak pak_name target_paks_dir
 
     ModLog_debug "deploy_mod_auto_discover: ${pkg_name}"
 
-    while IFS= read -r -d '' pak; do
-        deploy_pak_file "${pak}"
-    done < <(find "${dest_dir}" -type f -name '*.pak' -print0)
+    # Logic Mods (.pak files)
+    local default_paks_dir="/palworld/Pal/Content/Paks/LogicMods"
+    local tilde_paks_dir="/palworld/Pal/Content/Paks/~mods"
+    while read -r pak_file; do
+        if [ -f "$pak_file" ]; then
+            pak_name=$(basename "$pak_file")
+            target_paks_dir="$default_paks_dir"
+            
+            # If the pak file is located inside a ~mods folder in the source package, route to ~mods
+            if [[ "$pak_file" == *"~mods"* ]]; then
+                target_paks_dir="$tilde_paks_dir"
+            fi
+            
+            LogInfo "Found pak mod: $pak_name. Deploying to $(basename "$target_paks_dir")..."
+            mkdir -p "$target_paks_dir"
+            cp "-aur${v}" "$pak_file" "$target_paks_dir/"
+            LogDebug "[Pak] Absolute destination: ${target_paks_dir}/${pak_name}"
+            deployed_paks+=("$pak_name")
+        fi
+    done < <(find "$dest_dir" -type f -iname "*.pak")
 
+    # If this is a UE4SS mod with a Mods folder, copy its contents to Mods directory
     if [ -d "${dest_dir}/Mods" ]; then
         for d in "${dest_dir}/Mods"/*/; do
             [ -d "${d}" ] || continue
             name="$(basename "${d}")"
-            _sync_dir "${d}" "${mods_base_dir}/${name}"
+            cp "-aur${v}" "${d%/}" "${mods_base_dir}/"
             if [ "${name}" = "PalSchema" ] && [ -d "${d}/mods" ]; then
                 for sub in "${d}/mods"/*/; do
                     [ -d "${sub}" ] && _track_palschema_mod "$(basename "${sub}")"
@@ -454,28 +495,29 @@ deploy_mod_auto_discover() {
         done
     fi
 
+    # PalSchema mods (either inside a 'PalSchema/mods' folder, a flat 'PalSchema' folder, or 'mods' folder)
     if [ -d "${dest_dir}/PalSchema/mods" ]; then
         mkdir -p "${mods_base_dir}/PalSchema/mods"
         for d in "${dest_dir}/PalSchema/mods"/*/; do
             [ -d "${d}" ] || continue
-            _sync_dir "${d}" "${mods_base_dir}/PalSchema/mods/$(basename "${d}")"
+            cp "-aur${v}" "${d%/}" "${mods_base_dir}/PalSchema/mods/"
             _track_palschema_mod "$(basename "${d}")"
         done
     elif [ -d "${dest_dir}/PalSchema" ]; then
+        # Check if it is the PalSchema framework itself
         if [ -f "${dest_dir}/PalSchema/scripts/main.lua" ] || [ -f "${dest_dir}/PalSchema/main.lua" ]; then
-            _sync_dir "${dest_dir}/PalSchema" "${mods_base_dir}/PalSchema"
-            _track_lua_mod "PalSchema"
+            LogInfo "Detected legacy PalSchema framework in ${dest_dir}/PalSchema ... Ignored."
         else
-            dest="${mods_base_dir}/PalSchema/mods/${pkg_name}"
-            mkdir -p "${dest}"
-            _sync_dir "${dest_dir}/PalSchema" "${dest}"
+            # ${dest_dir}/PalSchema/* → /palworld/Pal/Binaries/Win64/ue4ss/Mods/PalSchema/mods/<pkg_name>/
+            mkdir -p "${mods_base_dir}/PalSchema/mods/${pkg_name}"
+            cp "-aur${v}" "${dest_dir}/PalSchema/." "${mods_base_dir}/PalSchema/mods/${pkg_name}/"
             _track_palschema_mod "${pkg_name}"
         fi
     elif [ -d "${dest_dir}/mods" ]; then
         mkdir -p "${mods_base_dir}/PalSchema/mods"
         for d in "${dest_dir}/mods"/*/; do
             [ -d "${d}" ] || continue
-            _sync_dir "${d}" "${mods_base_dir}/PalSchema/mods/$(basename "${d}")"
+            cp "-aur${v}" "${d%/}" "${mods_base_dir}/PalSchema/mods/"
             _track_palschema_mod "$(basename "${d}")"
         done
     fi
@@ -490,7 +532,7 @@ deploy_mod_auto_discover() {
     if [ "${found_flat}" = true ]; then
         dest="${mods_base_dir}/PalSchema/mods/${pkg_name}"
         mkdir -p "${dest}"
-        _sync_dir "${dest_dir}" "${dest}"
+        cp "-aur${v}" "${dest_dir}/." "${dest}/"
         _track_palschema_mod "${pkg_name}"
     fi
 }
@@ -603,6 +645,7 @@ build_state_json() {
     local deployed_palschema_json='[]'
     local mod_id source_dir version mod_name native_version tracked_file item
 
+    ModLog_debug "Building state JSON for ${#WORKSHOP_IDS[@]} workshop mods, ${#NATIVE_MOD_NAMES[@]} native mods, ${#DEPLOYED_UE4SS_FILES[@]} UE4SS files, ${#DEPLOYED_PAKS[@]} deployed paks, ${#DEPLOYED_LUA_MODS[@]} deployed lua mods, ${#DEPLOYED_PALSCHEMA_MODS[@]} deployed palschema mods."
     for mod_id in "${WORKSHOP_IDS[@]}"; do
         source_dir="$(find_workshop_source_dir "${mod_id}" || true)"
         if [ -n "${source_dir}" ] && [ -f "${source_dir}/Info.json" ]; then
@@ -699,6 +742,7 @@ fi
 if [ -f "${state_file}" ]; then
     previous_state="$(jq -c . "${state_file}" 2>/dev/null || echo '{}')"
 fi
+cleanup_previous_state "${previous_state}"
 
 mapfile -t WORKSHOP_IDS < <(read_workshop_ids || true)
 download_workshop_mods "${WORKSHOP_IDS[@]}"
@@ -710,7 +754,12 @@ DEPLOYED_PAKS=()
 DEPLOYED_LUA_MODS=()
 DEPLOYED_PALSCHEMA_MODS=()
 
-cleanup_previous_state "${previous_state}"
+# install UE4SS experimental if enabled
+if isTrue "${UE4SS_EXPERIMENTAL_INSTALL}"; then
+    sync_ue4ss_experimental_source "/palworld/Mods/.tmp/ue4ss-experimental"
+    deploy_ue4ss_artifacts "/palworld/Mods/.tmp/ue4ss-experimental"
+    ModLog_debug "UE4SS: ${#DEPLOYED_UE4SS_FILES[@]} files deployed."
+fi
 
 # Deploy NativeMods/*
 while IFS= read -r -d '' mod_path; do
@@ -741,10 +790,6 @@ for mod_id in "${WORKSHOP_IDS[@]}"; do
     deploy_mod "${source_dir}" "${dest_dir}" "${pkg_name}"
     ACTIVE_PACKAGES+=("${pkg_name}")
 done
-
-# override with UE4SS experimental if enabled
-sync_ue4ss_experimental_source "/palworld/Mods/.tmp/ue4ss-experimental"
-deploy_ue4ss_artifacts "/palworld/Mods/.tmp/ue4ss-experimental"
 
 cleanup_removed_mods
 update_mods_txt

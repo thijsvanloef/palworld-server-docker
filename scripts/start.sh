@@ -30,14 +30,21 @@ settings_dir=$(dirname "${settings_file}")
 
 LogInfo "Server platform is ${SERVER_PLATFORM:-Linux}"
 
-clean_platform() {
-    LogInfo "Cleaning up other platform files on /palworld"
+clean_platform_linux() {
+    LogInfo "Cleaning up linux platform files on /palworld"
 
-    rm -vf /palworld/PalServer.exe /palworld/Manifest_*_Win64.txt /palworld/steam*.dll /palworld/tier0*.dll /palworld/vstdlib*.dll
     rm -vf /palworld/PalServer.sh  /palworld/Manifest_*_Linux.txt /palworld/steam*.so  /palworld/libsteamwebrtc.so
     rm -vf /palworld/PalServer-arm64.sh
-    rm -vrf /palworld/_CommonRedist /palworld/Mods
     rm -vrf /palworld/linux64
+    rm -vrf /palworld/Engine /palworld/steamapps
+    rm -vrf /palworld/Pal/.sentry-native /palworld/Pal/Binaries /palworld/Pal/Content /palworld/Pal/Intermediate /palworld/Pal/Plugins
+}
+
+clean_platform_windows() {
+    LogInfo "Cleaning up windows platform files on /palworld"
+
+    rm -vf /palworld/PalServer.exe /palworld/Manifest_*_Win64.txt /palworld/steam*.dll /palworld/tier0*.dll /palworld/vstdlib*.dll
+    rm -vrf /palworld/_CommonRedist
     rm -vrf /palworld/Engine /palworld/steamapps
     rm -vrf /palworld/Pal/.sentry-native /palworld/Pal/Binaries /palworld/Pal/Content /palworld/Pal/Intermediate /palworld/Pal/Plugins
 }
@@ -73,11 +80,11 @@ migrate_GUS() {
 }
 
 
-if [ "${platform}" = "windows" ] && { [ -f /palworld/PalServer.sh ] || [ ! -f /palworld/PalServer.exe ] ; }; then
-    clean_platform
+if [ "${platform}" = "windows" ] && [ -f /palworld/PalServer.sh ] && [ ! -f /palworld/PalServer.exe ] ; then
+    clean_platform_linux
     migrate_GUS
-elif [ "${platform}" = "linux" ] && { [ -f /palworld/PalServer.exe ] || [ ! -f /palworld/PalServer.sh ] ; }; then
-    clean_platform
+elif [ "${platform}" = "linux" ] && [ -f /palworld/PalServer.exe ] && [ ! -f /palworld/PalServer.sh ] ; then
+    clean_platform_windows
     migrate_GUS
 fi
 

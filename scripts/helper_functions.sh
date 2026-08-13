@@ -161,7 +161,7 @@ PalworldServerProcessMatch() {
     platform="$(ServerPlatform)"
 
     if [ "${platform}" = "windows" ]; then
-        echo 'PalServer-Win64-Shipping-Cmd.exe'
+        echo "PalServer-Win64-Shipping-Cmd.exe"
         return 0
     fi
 
