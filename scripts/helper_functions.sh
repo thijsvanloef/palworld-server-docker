@@ -149,7 +149,7 @@ PalworldServerBinaryPath() {
     platform="$(ServerPlatform)"
 
     if [ "${platform}" = "windows" ]; then
-        echo "/palworld/PalServer.exe"
+        echo "/palworld/Pal/Binaries/Win64/PalServer-Win64-Shipping-Cmd.exe"
         return 0
     fi
 

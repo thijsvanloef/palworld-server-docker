@@ -324,7 +324,11 @@ LogAction "Starting Server"
 DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
 
 echo "${STARTCOMMAND[*]}"
-"${STARTCOMMAND[@]}"
+if [ "${platform}" = "windows" ]; then
+    script -qec "${STARTCOMMAND[*]}" /dev/null
+else
+    "${STARTCOMMAND[@]}"
+fi
 
 LogAction "Ending Server"
 
