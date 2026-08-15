@@ -161,7 +161,7 @@ PalworldServerProcessMatch() {
     platform="$(ServerPlatform)"
 
     if [ "${platform}" = "windows" ]; then
-        echo '^Z:\\palworld\\Pal\\Binaries\\Win64\\PalServer-Win64-Shipping-Cmd\.exe'
+        printf '%s' '^Z:\\palworld\\Pal\\Binaries\\Win64\\PalServer-Win64-Shipping-Cmd\.exe'
         return 0
     fi
 
