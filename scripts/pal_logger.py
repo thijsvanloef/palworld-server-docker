@@ -59,12 +59,20 @@ def get_iso_timestamp(timestamp_str=None):
 
 def parse_log_line(line):
     # Remove ANSI escape sequences for non-colored formats
+    ansi_prefix = ""
     if LOG_FORMAT_TYPE in ['json', 'logfmt', 'plain']:
         line = re.sub(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])', '', line)
+    else:
+        # Match consecutive ANSI escape sequences at the beginning of the line
+        # and store them in ansi_prefix, with the rest of the line in line.
+        pre_line_match = re.match(r'(\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))+(.*)', line)
+        if pre_line_match:
+            ansi_prefix = pre_line_match.group(1)
+            line = pre_line_match.group(2)
 
     timestamp_str = None
     level = ""
-    message = line
+    message = ansi_prefix + line
 
     # Check for logfmt style (e.g. supercron)
     # Example: time="2025-12-03T13:09:02+09:00" level=warning msg="..."
@@ -82,20 +90,20 @@ def parse_log_line(line):
         match_lvl = re.match(r'^\[([^\]]+)\] (.*)', remaining)
         if match_lvl:
             level = match_lvl.group(1)
-            message = match_lvl.group(2)
+            message = ansi_prefix + match_lvl.group(2)
         else:
-            message = remaining
+            message = ansi_prefix + remaining
     else:
         match_lvl = re.match(r'^\[([^\]]+)\] (.*)', line)
         if match_lvl:
             level = match_lvl.group(1)
-            message = match_lvl.group(2)
+            message = ansi_prefix + match_lvl.group(2)
 
     # Bash xtrace output (set -x) starts with one or more '+' prefixes.
     # Classify it as DEBUG instead of falling back to INFO.
     if not level and re.match(r'^\+{1,}\s', line):
         level = "DEBUG"
-        message = line
+        message = ansi_prefix + line
 
     return timestamp_str, level, message, line
 
@@ -190,6 +198,7 @@ def process_line(line):
     line = line.rstrip()
     _, _, new_content, _ = parse_log_line(line)
     
+    # print(f"DEBUG: Processing line: \"{new_content}\" vs \"{last_content}\"", file=sys.stderr)
     if buffer and new_content == last_content and (now - buffer_timing) < TIMEOUT:
         count += 1
     else:
