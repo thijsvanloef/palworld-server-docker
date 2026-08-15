@@ -161,7 +161,7 @@ PalworldServerProcessMatch() {
     platform="$(ServerPlatform)"
 
     if [ "${platform}" = "windows" ]; then
-        echo "PalServer-Win64-Shipping-Cmd.exe"
+        echo '^Z:\\palworld\\Pal\\Binaries\\Win64\\PalServer-Win64-Shipping-Cmd\.exe'
         return 0
     fi
 
@@ -431,7 +431,20 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if ! rest-cli shutdown 1 "Shutting down"; then
+        if rest-cli shutdown 1 "Shutting down"; then
+            # for windows
+            for ((i = 0; i < 30; i++)); do
+                if ! PalworldServerPid > /dev/null; then
+                    break
+                fi
+                sleep 1s
+            done
+            if PalworldServerPid > /dev/null; then
+                LogWarn "Forcing shutdown"
+                kill -KILL "$(PalworldServerPid)" > /dev/null 2>&1
+                return_val=1
+            fi
+        else
             return_val=1
         fi
     else
