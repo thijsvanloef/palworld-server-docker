@@ -49,7 +49,7 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 ### Massive shoutout to the following individual sponsors
 
 <p align="left"><!-- markdownlint-disable-line --><!-- markdownlint-disable-next-line -->
-<!-- sponsors --><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/indifferentbroc"><img src="https://github.com/indifferentbroc.png" width="50px" alt="indifferentbroc" /></a>&nbsp;&nbsp;<!-- sponsors -->
+<!-- sponsors --><a href="https://github.com/AshishT112203"><img src="https://github.com/AshishT112203.png" width="50px" alt="AshishT112203" /></a>&nbsp;&nbsp;<a href="https://github.com/indifferentbroc"><img src="https://github.com/indifferentbroc.png" width="50px" alt="indifferentbroc" /></a>&nbsp;&nbsp;<a href="https://github.com/SatsuiBird"><img src="https://github.com/SatsuiBird.png" width="50px" alt="SatsuiBird" /></a>&nbsp;&nbsp;<!-- sponsors -->
 </p>
 
 ## Official Documentation
@@ -82,7 +82,7 @@ services:
       ports:
         - 8211:8211/udp
         - 27015:27015/udp
-        - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
+        # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
       environment:
          PUID: 1000
          PGID: 1000
@@ -94,6 +94,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
          CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
@@ -589,12 +590,13 @@ This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENAB
 > [!INFO]
 > This feature requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true` to be set.
 
-| Variable               | Info                                                                                                                                     | Default Values | Allowed Values |
-|------------------------|------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
+| Variable               | Info                                                                                                                                                                  | Default Values | Allowed Values |
+|------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|----------------|
 | AUTO_PAUSE_ENABLED     | Enables automatic pause (Puts the server to sleep to save power when there are no online players). Requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true`. | false          | true/false     |
-| AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established) | 180            | Integer        |
-| AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                | true           | true/false     |
-| AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                          | false          | true/false     |
+| AUTO_PAUSE_TIMEOUT_EST | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established)                              | 180            | Integer        |
+| AUTO_PAUSE_LOG         | Enable auto-pause logging                                                                                                                                             | true           | true/false     |
+| AUTO_PAUSE_DEBUG       | Enable auto-pause debug logging                                                                                                                                       | false          | true/false     |
+| AUTO_PAUSE_KNOCKD_IF   | Network interfaces to listen for connection knocks. Use `auto` (default) for automatic detection of active interfaces, or specify interfaces explicitly.              | auto           | auto/"eth0 lo" |
 
 If you want timestamps in the container logs for auto-pause events, either run `docker logs -t palworld-server`
 or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
@@ -604,6 +606,10 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 
 > [!NOTE]
 > When using **Podman**, you must add the `--cap-add=NET_RAW` option to the `run` or `create` command.
+> AUTO_PAUSE prefers an NFLOG packet monitor when available.
+> If NFLOG setup fails at startup, the system will automatically fall back to knockd.
+> Add the following capability only when you want to use NFLOG monitoring:
+> `--cap-add=NET_ADMIN`
 > Alternatively, add the following `cap_add:` to your `compose.yaml`:
 >
 > ```yaml
@@ -611,6 +617,7 @@ or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 >   palworld:
 >     cap_add:
 >       - NET_RAW
+>       - NET_ADMIN
 > ```
 
 ### Resume manually
@@ -648,6 +655,8 @@ maintain registration on the community server list.
 The proxy server captures communication with `api.palworldgames.com`.
 
 The auto-pause service will replay captured data in the paused state.
+
+If using a different public port (Other than 8211) for the community server you must set `PUBLIC_PORT` to the public port being used.
 
 ## Editing Server Settings
 
@@ -877,6 +886,10 @@ The manifest corresponds to the release date/update versions. Manifests can be f
 | 0.7.2   | 7743228609268535996 |
 | 0.7.3   | 5125159522749666228 |
 | 1.0.0   | 3392720560779800260 |
+| 1.0.1   | 2167164727892555341 |
+| 1.0.2   | 1078324976643066553 |
+| 1.0.2.100993 | 6205737992414484907 |
+| 1.0.2.101103 | 1480973772525600530 |
 
 ## Reporting Issues/Feature Requests
 

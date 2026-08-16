@@ -133,6 +133,8 @@ data:
   USEAUTH: "True"
   BAN_LIST_URL: "https://api.palworldgame.com/api/banlist.txt"
 
+  ENABLE_GAMEDATA_API: "False"
+
   REST_API_ENABLED: "True"
   SHOW_PLAYER_LIST: "True"
   ENABLE_PREDATOR_BOSS_PAL: "True"

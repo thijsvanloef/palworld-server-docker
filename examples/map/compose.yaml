@@ -1,0 +1,42 @@
+---
+services:
+  palworld:
+    extends:
+      file: ../../compose.yaml
+      service: palworld
+    build: ../../
+    cap_add:
+      - NET_RAW    # for podman (docker default has it)
+      - NET_ADMIN  # NFLOG requires this
+    environment:
+      SERVER_NAME: "palworld-server-docker/examples/map"
+      AUTO_PAUSE_ENABLED: true
+      AUTO_PAUSE_TIMEOUT_EST: 10  # Number of seconds before auto pausing.
+      AUTO_PAUSE_LOG: true
+      COMMUNITY: true
+      ENABLE_GAMEDATA_API: true
+
+  api_proxy:
+    image: ghcr.io/musclepr/palworld-api-proxy:latest
+    environment:
+      TARGET_URL: http://palworld:8212
+      PROXY_PORT: 8212
+      LOG_LEVEL: error
+    volumes:
+      - ../../palworld:/palworld:ro
+
+  map:
+    image: ghcr.io/lukehollanddev/palworld-live-map:latest
+    restart: unless-stopped
+    depends_on:
+      palworld:
+        condition: service_healthy
+    environment:
+      PALWORLD_REST_URL: http://api_proxy:8212
+      PALWORLD_ADMIN_PASSWORD: "${ADMIN_PASSWORD:-adminPasswordHere}"
+      SAVE_DATA_ENABLED: "true"
+      PALWORLD_SAVE_ROOT: /palworld-data/Pal/Saved/SaveGames/0
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
+    volumes:
+      - ../../palworld:/palworld-data:ro

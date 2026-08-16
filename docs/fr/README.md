@@ -92,6 +92,7 @@ services:
       TZ: 'UTC'
       ADMIN_PASSWORD: 'adminPasswordHere'
       COMMUNITY: false # Activez ceci si vous souhaitez que votre serveur apparaisse dans l'onglet des serveurs communautaires, À UTILISER AVEC LE MOT DE PASSE DU SERVEUR !
+      # PUBLIC_PORT: 8211
       SERVER_NAME: 'palworld-server-docker par Thijs van Loef'
       SERVER_DESCRIPTION: 'palworld-server-docker par Thijs van Loef'
     volumes:
@@ -602,6 +603,10 @@ Le manifeste correspond aux dates de sortie/mises à jour. Les manifestes peuven
 | 0.7.2   | 7743228609268535996 |
 | 0.7.3   | 5125159522749666228 |
 | 1.0.0   | 3392720560779800260 |
+| 1.0.1   | 2167164727892555341 |
+| 1.0.2   | 1078324976643066553 |
+| 1.0.2.100993 | 6205737992414484907 |
+| 1.0.2.101103 | 1480973772525600530 |
 
 ## Signalement de Problèmes/Demandes de Fonctionnalités
 

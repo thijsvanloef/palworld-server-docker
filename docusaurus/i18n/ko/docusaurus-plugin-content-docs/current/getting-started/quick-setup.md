@@ -53,6 +53,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # 커뮤니티 서버 탐색기에 서버가 표시 되는 것을 허용합니다 (SERVER_PASSWORD 와 함께 사용하는 것을 권장합니다)
+         # PUBLIC_PORT: 8211
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:

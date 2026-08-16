@@ -50,6 +50,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # 如果希望服务器出现在社区服务器选项中，请启用此选项，与 SERVER_PASSWORD 一起使用！
+         # PUBLIC_PORT: 8211
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
       volumes:
