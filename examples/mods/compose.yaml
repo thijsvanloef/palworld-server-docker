@@ -41,9 +41,6 @@ services:
       UE4SS_EXPERIMENTAL_INSTALL: true
       UE4SS_EXPERIMENTAL_URL: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
 
-      # Remove old UE4SS runtime artifacts before redeploy
-      UE4SS_CLEANUP_LEGACY: true
-
       # If workshop mods require account auth:
       # 1) run ./save-login-credential.sh once before startup
       # 2) provide only STEAM_USERNAME (no password in compose)

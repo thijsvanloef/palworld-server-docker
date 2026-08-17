@@ -73,7 +73,6 @@ To auto-download and deploy the experimental UE4SS package:
 environment:
   UE4SS_EXPERIMENTAL_INSTALL: true
   UE4SS_EXPERIMENTAL_URL: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
-  UE4SS_CLEANUP_LEGACY: true
 ```
 
 ## Secure Workshop authentication (no password env)
