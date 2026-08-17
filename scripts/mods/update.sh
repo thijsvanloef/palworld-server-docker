@@ -7,7 +7,6 @@ source "/home/steam/server/helper_functions.sh"
 #-------------------------------------------------
 UE4SS_EXPERIMENTAL_INSTALL="${UE4SS_EXPERIMENTAL_INSTALL:-false}"
 UE4SS_EXPERIMENTAL_URL="${UE4SS_EXPERIMENTAL_URL:-https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip}"
-UE4SS_CLEANUP_LEGACY="${UE4SS_CLEANUP_LEGACY:-true}"
 
 #-------------------------------------------------
 # Mods internal vars
@@ -170,10 +169,6 @@ cleanup_previous_ue4ss_state() {
         #rm -rf "${bin_dir:?}/${tracked_path}"
         _remove_source_from_target "/palworld/Mods/.tmp/ue4ss-experimental/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
     done < <(printf '%s' "${state_json}" | jq -r '.ue4ss.files[]? // empty' 2>/dev/null)
-
-    if isTrue "${UE4SS_CLEANUP_LEGACY}"; then
-        rm "-f${v}" "${bin_dir:?}/dwmapi.dll" "${bin_dir:?}/UE4SS.dll" "${bin_dir:?}/UE4SS-settings.ini" "${bin_dir:?}/MemberVariableLayout.ini" "${bin_dir:?}/Vindsent.dll"
-    fi
 }
 
 add_deployed_ue4ss_file() {
