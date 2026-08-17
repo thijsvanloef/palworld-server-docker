@@ -292,7 +292,7 @@ RUN touch rcon.yaml crontab && \
     chown steam:steam -R /home/steam/server
 
 HEALTHCHECK --start-period=5m \
-    CMD pgrep -f "PalServer-Linux|PalServer-Win64-Shipping" > /dev/null || exit 1
+    CMD bash -c '. ./helper_functions.sh && PalworldServerPid > /dev/null || exit 1'
 
 EXPOSE ${PORT} ${RCON_PORT}
 ENTRYPOINT ["/home/steam/server/init.sh"]
