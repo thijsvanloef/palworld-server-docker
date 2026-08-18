@@ -155,8 +155,8 @@ STARTCOMMAND_NOARGS=("${server_binary}")
 
 if [ "${platform}" = "windows" ]; then
     ensure_windows_runtime
-    STARTCOMMAND=("wine" "${STARTCOMMAND[@]}")
-    STARTCOMMAND_NOARGS=("wine" "${STARTCOMMAND_NOARGS[@]}")
+    STARTCOMMAND=("wine-run" "${STARTCOMMAND[@]}")
+    STARTCOMMAND_NOARGS=("wine-run" "${STARTCOMMAND_NOARGS[@]}")
 fi
 
 # Check if the architecture is arm64
@@ -225,7 +225,7 @@ if [ "${NOSTEAM,,}" = true ]; then
     STARTCOMMAND+=("-nosteam")
 fi
 
-if [ "${NOMODS,,}" = true ]; then
+if ! isTrue "${MOD_ENABLED}"; then
     STARTCOMMAND+=("-NoMods")
 fi
 
@@ -324,11 +324,7 @@ LogAction "Starting Server"
 DiscordMessage "Start" "${DISCORD_PRE_START_MESSAGE}" "success" "${DISCORD_PRE_START_MESSAGE_ENABLED}" "${DISCORD_PRE_START_MESSAGE_URL}"
 
 echo "${STARTCOMMAND[*]}"
-if [ "${platform}" = "windows" ]; then
-    script -qec "${STARTCOMMAND[*]}" /dev/null
-else
-    "${STARTCOMMAND[@]}"
-fi
+"${STARTCOMMAND[@]}"
 
 LogAction "Ending Server"
 

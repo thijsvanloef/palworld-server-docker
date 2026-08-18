@@ -8,21 +8,19 @@ services:
       context: ../../
     environment:
       SERVER_NAME: "palworld-server-docker/examples/mods"
-      NOMODS: false
-      UPDATE_MODS_ON_BOOT: true
-      #MODS_DEBUG: true
+      MOD_ENABLED: true
+      MOD_UPDATE_ON_BOOT: true
+      #MOD_DEBUG: true
 
       # ------------------------------------------------------------
       # MOD install method A: Steam Workshop IDs in env var
       # - Comma-separated workshop IDs
-      # - Works with periodic sync by WORKSHOP_MOD_UPDATE_CRON
       # ------------------------------------------------------------
-      WORKSHOP_MOD_IDS: "3625280368,3625287786${MODS:+,}${MODS:-}"
-      WORKSHOP_MOD_UPDATE_CRON: "0 */6 * * *"
+      MOD_IDS: "3625287786${MODS:+,}${MODS:-}"
 
       # ------------------------------------------------------------
       # MOD install method B: Using workshop-mods.txt file
-      # - Line-separated IDs in /palworld/workshop-mods.txt
+      # - Line-separated IDs in /palworld/Mods/workshop-mods.txt
       # - It is combined with WORKSHOP_MOD_IDS
       # ------------------------------------------------------------
 
@@ -34,12 +32,10 @@ services:
       # ------------------------------------------------------------
 
       # ------------------------------------------------------------
-      # Optional UE4SS helper
-      # - true: download zip and extract to Mods/NativeMods/ue4ss-experimental
-      # - false: no automatic UE4SS download
+      # Optional: Override UE4SS URL and PalSchema mod ID
       # ------------------------------------------------------------
-      UE4SS_EXPERIMENTAL_INSTALL: true
-      UE4SS_EXPERIMENTAL_URL: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+      # MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+      # MOD_ID_PALSCHEMA: "3625280368"
 
       # If workshop mods require account auth:
       # 1) run ./save-login-credential.sh once before startup

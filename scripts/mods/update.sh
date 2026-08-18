@@ -5,8 +5,9 @@ source "/home/steam/server/helper_functions.sh"
 #-------------------------------------------------
 # Mods env vars
 #-------------------------------------------------
-UE4SS_EXPERIMENTAL_INSTALL="${UE4SS_EXPERIMENTAL_INSTALL:-false}"
-UE4SS_EXPERIMENTAL_URL="${UE4SS_EXPERIMENTAL_URL:-https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip}"
+MOD_ENABLED="${MOD_ENABLED:-true}"
+MOD_URL_UE4SS="${MOD_URL_UE4SS:-https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip}"
+MOD_ID_PALSCHEMA="${MOD_ID_PALSCHEMA:-3625280368}"
 
 #-------------------------------------------------
 # Mods internal vars
@@ -14,16 +15,19 @@ UE4SS_EXPERIMENTAL_URL="${UE4SS_EXPERIMENTAL_URL:-https://github.com/Okaetsu/RE-
 image="thijsvanloef/palworld-server-docker:windows"
 platform="$(ServerPlatform)"
 bin_dir="/palworld/Pal/Binaries/Win64"
-src_dir="/palworld/Mods/NativeMods"
+native_mods_dir="/palworld/Mods/NativeMods"
 workshop_staging_dir="/palworld/Mods/.workshop"
+ue4ss_staging_dir="/palworld/Mods/.tmp/ue4ss-experimental"
 mods_base_dir="${bin_dir}/ue4ss/Mods"
 workshop_app_id="1623730"
 state_file="/palworld/Mods/.state.json"
 steamcmd_bin="${steamcmd_bin:-/home/steam/steamcmd/steamcmd.sh}"
 steam_login_user_file="/palworld/.steam/.steam-login-user"
-workshop_mods_file="${workshop_mods_file:-/palworld/workshop-mods.txt}"
+workshop_mods_file="${workshop_mods_file:-/palworld/Mods/workshop-mods.txt}"
 previous_state='{}'
-v="$(isTrue "${MODS_DEBUG:-false}" && echo "v")"
+v="$(isTrue "${MOD_DEBUG:-false}" && echo "v")"
+download_workshop="${MOD_UPDATE_ON_BOOT:-true}"
+download_ue4ss="${MOD_UPDATE_ON_BOOT:-true}"
 
 #-------------------------------------------------
 # helper functions
@@ -36,7 +40,7 @@ _trim() {
 
 ModLog_debug() {
     local msg="${1:-(no message)}"
-    isTrue "${MODS_DEBUG:-false}" && LogInfo "[MODS DEBUG] ${msg}"
+    isTrue "${MOD_DEBUG:-false}" && LogInfo "[MODS DEBUG] ${msg}"
 }
 
 # Given a source path and a target path, remove only the contents of the source from the target.
@@ -105,7 +109,7 @@ sync_ue4ss_experimental_source() {
     local target_dir="$1"
     local should_extract=false
 
-    if ! isTrue "${UE4SS_EXPERIMENTAL_INSTALL}"; then
+    if ! isTrue "${download_ue4ss}"; then
         if [ -d "${target_dir}" ]; then
             rm -rf "${target_dir}"
         fi
@@ -116,7 +120,7 @@ sync_ue4ss_experimental_source() {
     mkdir -p "$(dirname "${target_dir}")"
 
     if [ -f "${zip_file}" ]; then
-        if curl -sSfL -z "${zip_file}" -o "${tmp_file}" "${UE4SS_EXPERIMENTAL_URL}"; then
+        if curl -sSfL -z "${zip_file}" -o "${tmp_file}" "${MOD_URL_UE4SS}"; then
             if [ -s "${tmp_file}" ]; then
                 mv -f "${tmp_file}" "${zip_file}"
                 should_extract=true
@@ -128,7 +132,7 @@ sync_ue4ss_experimental_source() {
                 fi
             fi
         else
-            LogWarn "Failed to check UE4SS experimental updates from ${UE4SS_EXPERIMENTAL_URL}. Using local cache if available."
+            LogWarn "Failed to check UE4SS experimental updates from ${MOD_URL_UE4SS}. Using local cache if available."
             rm -f "${tmp_file}"
             if [ ! -f "${zip_file}" ]; then
                 return 0
@@ -138,8 +142,8 @@ sync_ue4ss_experimental_source() {
             fi
         fi
     else
-        if ! curl -sSfL -o "${zip_file}" "${UE4SS_EXPERIMENTAL_URL}"; then
-            LogWarn "Failed to download UE4SS experimental package from ${UE4SS_EXPERIMENTAL_URL}."
+        if ! curl -sSfL -o "${zip_file}" "${MOD_URL_UE4SS}"; then
+            LogWarn "Failed to download UE4SS experimental package from ${MOD_URL_UE4SS}."
             return 0
         fi
         should_extract=true
@@ -235,27 +239,42 @@ cleanup_previous_state() {
 
     while IFS= read -r item; do
         [ -z "${item}" ] && continue
-        ModLog_debug "Cleaning up previous deployed pak: ${item}"
+        _remove_source_from_target "/palworld/Mods/.workshop/${item}" "${mods_base_dir:?}/${item}" true
+        _remove_source_from_target "/palworld/Mods/NativeMods/${item}" "${mods_base_dir:?}/${item}" true
+        ModLog_debug "Removed undeployed lua mod: ${item}"
+    done < <(printf '%s' "${state_json}" | jq -r '.deployed_lua_mods[]? // empty' 2>/dev/null)
+
+    while IFS= read -r item; do
+        [ -z "${item}" ] && continue
+        _remove_source_from_target "/palworld/Mods/.workshop/${item}" "${mods_base_dir:?}/PalSchema/mods/${item}" true
+        _remove_source_from_target "/palworld/Mods/NativeMods/${item}" "${mods_base_dir:?}/PalSchema/mods/${item}" true
+        ModLog_debug "Removed undeployed palschema mod: ${item}"
+    done < <(printf '%s' "${state_json}" | jq -r '.deployed_palschema_mods[]? // empty' 2>/dev/null)
+
+    while IFS= read -r item; do
+        [ -z "${item}" ] && continue
         rm "-f${v}" "/palworld/Pal/Content/Paks/LogicMods/${item}"
+        rm "-f${v}" "/palworld/Pal/Content/Paks/~mods/${item}"
+        ModLog_debug "Cleaning up previous deployed pak: ${item}"
     done < <(printf '%s' "${state_json}" | jq -r '.deployed_paks[]? // empty' 2>/dev/null)
 
     cleanup_previous_ue4ss_state "${state_json}"
 }
 
 read_workshop_ids() {
-    local ids=()
+    local -a ids=("${MOD_ID_PALSCHEMA}")
     local raw_id
     local line
-    local -r ue4ss_id="3625223587"  # UE4SS workshop mod ID
+    local -r ignore_ue4ss_id="3625223587"  # UE4SS workshop mod ID
 
     if [ -n "${WORKSHOP_MOD_IDS:-}" ]; then
         IFS=',' read -r -a raw_ids <<< "${WORKSHOP_MOD_IDS}"
         for raw_id in "${raw_ids[@]}"; do
             raw_id="$(_trim "${raw_id}")"
             if [ -n "${raw_id}" ]; then
-                if [ "${raw_id}" = "${ue4ss_id}" ]; then
-                    export UE4SS_EXPERIMENTAL_INSTALL=true
-                    LogWarn "UE4SS workshop mod ID ${ue4ss_id} is not supported. Use UE4SS_EXPERIMENTAL_INSTALL=true instead."
+                if [ "${raw_id}" = "${ignore_ue4ss_id}" ]; then
+                    download_ue4ss=true
+                    LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
                     continue
                 fi
                 ids+=("${raw_id}")
@@ -268,9 +287,9 @@ read_workshop_ids() {
             line="${line%%#*}"
             line="$(_trim "${line}")"
             if [ -n "${line}" ]; then
-                if [ "${line}" = "${ue4ss_id}" ]; then
-                    export UE4SS_EXPERIMENTAL_INSTALL=true
-                    LogWarn "UE4SS workshop mod ID ${ue4ss_id} is not supported. Use UE4SS_EXPERIMENTAL_INSTALL=true instead."
+                if [ "${line}" = "${ignore_ue4ss_id}" ]; then
+                    download_ue4ss=true
+                    LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
                     continue
                 fi
                 ids+=("${line}")
@@ -354,38 +373,6 @@ _track_palschema_mod() {
         [ "${existing}" = "${name}" ] && return 0
     done
     DEPLOYED_PALSCHEMA_MODS+=("${name}")
-}
-
-# Remove mod dirs from previous state that are no longer in the current deployment.
-cleanup_removed_mods() {
-    local prev_mod current_mod found
-    while IFS= read -r prev_mod; do
-        [ -z "${prev_mod}" ] && continue
-        found=false
-        for current_mod in "${DEPLOYED_LUA_MODS[@]}"; do
-            [ "${current_mod}" = "${prev_mod}" ] && found=true && break
-        done
-        if [ "${found}" = false ]; then
-            #rm -rf "${mods_base_dir:?}/${prev_mod}"
-            _remove_source_from_target "/palworld/Mods/.workshop/${prev_mod}" "${mods_base_dir:?}/${prev_mod}" true
-            _remove_source_from_target "/palworld/Mods/NativeMods/${prev_mod}" "${mods_base_dir:?}/${prev_mod}" true
-            ModLog_debug "Removed undeployed lua mod: ${prev_mod}"
-        fi
-    done < <(printf '%s' "${previous_state}" | jq -r '.deployed_lua_mods[]? // empty' 2>/dev/null)
-
-    while IFS= read -r prev_mod; do
-        [ -z "${prev_mod}" ] && continue
-        found=false
-        for current_mod in "${DEPLOYED_PALSCHEMA_MODS[@]}"; do
-            [ "${current_mod}" = "${prev_mod}" ] && found=true && break
-        done
-        if [ "${found}" = false ]; then
-            #rm -rf "${mods_base_dir:?}/PalSchema/mods/${prev_mod}"
-            _remove_source_from_target "/palworld/Mods/.workshop/${prev_mod}" "${mods_base_dir:?}/PalSchema/mods/${prev_mod}" true
-            _remove_source_from_target "/palworld/Mods/NativeMods/${prev_mod}" "${mods_base_dir:?}/PalSchema/mods/${prev_mod}" true
-            ModLog_debug "Removed undeployed palschema mod: ${prev_mod}"
-        fi
-    done < <(printf '%s' "${previous_state}" | jq -r '.deployed_palschema_mods[]? // empty' 2>/dev/null)
 }
 
 deploy_mod_via_rules() {
@@ -652,7 +639,7 @@ build_state_json() {
     done
 
     for mod_name in "${NATIVE_MOD_NAMES[@]}"; do
-        source_dir="${src_dir:?}/${mod_name}"
+        source_dir="${native_mods_dir:?}/${mod_name}"
         native_version="$(find "${source_dir}" -type f -printf '%T@\n' 2>/dev/null | sort -nr | head -n 1)"
         if [ -z "${native_version}" ]; then
             native_version="missing"
@@ -727,6 +714,13 @@ download_workshop_mods() {
 # Main flow
 #-------------------------------------------------
 
+ACTIVE_PACKAGES=()
+NATIVE_MOD_NAMES=()
+DEPLOYED_UE4SS_FILES=()
+DEPLOYED_PAKS=()
+DEPLOYED_LUA_MODS=()
+DEPLOYED_PALSCHEMA_MODS=()
+
 # Windows only
 if [ "${platform}" != "windows" ]; then
     LogInfo "Mod support is enabled only for ${image}."
@@ -739,22 +733,43 @@ if [ -f "${state_file}" ]; then
 fi
 cleanup_previous_state "${previous_state}"
 
-mapfile -t WORKSHOP_IDS < <(read_workshop_ids || true)
-download_workshop_mods "${WORKSHOP_IDS[@]}"
-
-ACTIVE_PACKAGES=()
-NATIVE_MOD_NAMES=()
-DEPLOYED_UE4SS_FILES=()
-DEPLOYED_PAKS=()
-DEPLOYED_LUA_MODS=()
-DEPLOYED_PALSCHEMA_MODS=()
-
-# install UE4SS experimental if enabled
-if isTrue "${UE4SS_EXPERIMENTAL_INSTALL}"; then
-    sync_ue4ss_experimental_source "/palworld/Mods/.tmp/ue4ss-experimental"
-    deploy_ue4ss_artifacts "/palworld/Mods/.tmp/ue4ss-experimental"
-    ModLog_debug "UE4SS: ${#DEPLOYED_UE4SS_FILES[@]} files deployed."
+if isTrue "${MOD_ENABLED:-true}"; then
+    LogInfo "Mod support is enabled."
+else
+    LogInfo "Mod support is disabled. Cleaning up mods and exiting."
+    exit 0
 fi
+
+# Load workshop mod IDs
+mapfile -t WORKSHOP_IDS < <(read_workshop_ids || true)
+
+# Check if any workshop mods are missing and need to be downloaded
+for mod_id in "${WORKSHOP_IDS[@]}"; do
+    if ! find_workshop_source_dir "${mod_id}" >/dev/null 2>&1; then
+        download_workshop=true
+        break
+    fi
+done
+
+# Download Workshop mods
+if isTrue "${download_workshop:-true}"; then
+    LogInfo "Downloading Steam Workshop mods..."
+    download_workshop_mods "${WORKSHOP_IDS[@]}"
+else
+    LogInfo "Skipping Steam Workshop mod downloads."
+fi
+
+# Download UE4SS experimental
+if isTrue "${download_ue4ss}" || [ ! -d "${ue4ss_staging_dir}" ]; then
+    LogInfo "Downloading UE4SS experimental..."
+    sync_ue4ss_experimental_source "${ue4ss_staging_dir}"
+else
+    LogInfo "Skipping UE4SS experimental download."
+fi
+
+# Deploy UE4SS experimental artifacts
+deploy_ue4ss_artifacts "${ue4ss_staging_dir}"
+ModLog_debug "UE4SS: ${#DEPLOYED_UE4SS_FILES[@]} files deployed."
 
 # Deploy NativeMods/*
 while IFS= read -r -d '' mod_path; do
@@ -766,7 +781,7 @@ while IFS= read -r -d '' mod_path; do
     ACTIVE_PACKAGES+=("${pkg_name}")
     NATIVE_MOD_NAMES+=("${mod_name}")
     LogInfo "Deployed NativeMods/${mod_name} (${pkg_name}) to ${dest_dir}"
-done < <(find "${src_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+done < <(find "${native_mods_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
 
 # Wipe Workshop staging so stale entries from prior naming don't accumulate
 rm -rf "${workshop_staging_dir}"
@@ -786,7 +801,6 @@ for mod_id in "${WORKSHOP_IDS[@]}"; do
     ACTIVE_PACKAGES+=("${pkg_name}")
 done
 
-cleanup_removed_mods
 update_mods_txt
 ensure_palmodsettings_ini
 
