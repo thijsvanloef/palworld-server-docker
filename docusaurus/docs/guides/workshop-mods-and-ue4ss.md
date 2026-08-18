@@ -2,13 +2,11 @@
 sidebar_position: 3
 ---
 
-# Workshop Mods and UE4SS Setup
+# Workshop Mods and UE4SS and PalSchema Setup
 
-This guide provides a safe and repeatable workflow for running Workshop mods and UE4SS on the Windows server path.
+This guide provides a safe and repeatable workflow for running Workshop mods and UE4SS and PalSchema on the Windows server path.
 
 ## About `-nosteam` / `NOSTEAM`
-
-This image can add `-nosteam` by setting `NOSTEAM=true`.
 
 The official Palworld server documentation does not explicitly mention `-nosteam`.
 
@@ -39,12 +37,12 @@ Set a comma-separated list:
 
 ```yaml
 environment:
-  WORKSHOP_MOD_IDS: "3625280368,3625287786"
+  MOD_IDS: "3625280368,3625287786"
 ```
 
 ### Method B: Workshop IDs in file
 
-Create `/palworld/workshop-mods.txt` and place one ID per line.
+Create `/palworld/Mods/workshop-mods.txt` and place one ID per line.
 
 Example:
 
@@ -53,7 +51,7 @@ Example:
 3625287786
 ```
 
-If you manage IDs in file, leave `WORKSHOP_MOD_IDS` empty.
+If you manage IDs in file, leave `MOD_IDS` empty.
 
 ### Method C: NativeMods folders
 
@@ -65,14 +63,13 @@ Place extracted native mod folders under:
 
 At startup and periodic sync, mod files are deployed to the active runtime path.
 
-## Install latest experimental UE4SS (optional)
+## Install latest experimental UE4SS (default)
 
 To auto-download and deploy the experimental UE4SS package:
 
 ```yaml
 environment:
-  UE4SS_EXPERIMENTAL_INSTALL: true
-  UE4SS_EXPERIMENTAL_URL: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+  MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
 ```
 
 ## Secure Workshop authentication (no password env)
@@ -98,14 +95,7 @@ This file is managed automatically by the helper script and usually does not req
 
 ## Automatic update checks
 
-Configure periodic Workshop sync:
-
-```yaml
-environment:
-  WORKSHOP_MOD_UPDATE_CRON: "0 */6 * * *"
-```
-
-Set empty string to disable periodic checks.
+It depends on AUTO_UPDATE_ENABLED and AUTO_UPDATE_CRON_EXPRESSION.
 
 ## Verify expected logs
 

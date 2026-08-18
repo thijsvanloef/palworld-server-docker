@@ -152,7 +152,6 @@ ENV HOME=/home/steam \
     SERVER_NAME= \
     ADMIN_PASSWORD= \
     UPDATE_ON_BOOT=true \
-    UPDATE_MODS_ON_BOOT=true \
     RCON_ENABLED=false \
     RCON_PORT=25575 \
     QUERY_PORT=27015 \
@@ -224,6 +223,11 @@ ENV HOME=/home/steam \
     CROSSPLAY_PLATFORMS="(Steam,Xbox,PS5,Mac)" \
     USE_DEPOT_DOWNLOADER=false \
     INSTALL_BETA_INSIDER=false \
+    MOD_UPDATE_ON_BOOT=true \
+    MOD_ENABLED=true \
+    MOD_IDS= \
+    MOD_URL_UE4SS="https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip" \
+    MOD_ID_PALSCHEMA="3625280368" \
     LOG_FILTER_ENABLED=true \
     LOG_LEVEL=INFO \
     LOG_FORMAT_TYPE=default
@@ -263,10 +267,11 @@ RUN mkdir -p /home/steam/.mitmproxy && \
     update-ca-certificates
 
 # mods
-RUN chmod +x /home/steam/server/mods/*.sh && \
+RUN chmod +x /home/steam/server/mods/*.sh /home/steam/server/mods/wine-run.py && \
     ln -sf /home/steam/server/mods/update.sh /usr/local/bin/mods-update && \
     ln -sf /home/steam/server/mods/update-wine-rt.sh /usr/local/bin/update-wine-rt && \
-    ln -sf /home/steam/server/mods/steam-login.sh /usr/local/bin/steam-login
+    ln -sf /home/steam/server/mods/steam-login.sh /usr/local/bin/steam-login && \
+    ln -sf /home/steam/server/mods/wine-run.py /usr/local/bin/wine-run
 
 # Bake Visual C++ 2022 Runtime into the image at build time (Windows only).
 # Pre-create directories as root before dropping to steam:
