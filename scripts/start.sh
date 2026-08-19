@@ -257,7 +257,7 @@ if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
 
-if [ "${platform}" = "windows" ] && isTrue "${UPDATE_MODS_ON_BOOT}"; then
+if [ "${platform}" = "windows" ] && isTrue "${MOD_UPDATE_ON_BOOT}"; then
     LogAction "UPDATE MODS"
     mods-update || exit
 fi
@@ -316,6 +316,15 @@ if PlayerLogging_isEnabled; then
         setpriv --reuid=steam --regid=steam --init-groups "${FORCE_CAPS[@]}" /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
+    fi
+    CHILD_PIDS+=($!)
+fi
+
+if isTrue "${MOD_ENABLED}" && isTrue "${MOD_DEBUG}"; then
+    if [[ "$(id -u)" -eq 0 ]]; then
+        su steam -c /home/steam/server/mods/ue4ss_logging.sh &
+    else
+        /home/steam/server/mods/ue4ss_logging.sh &
     fi
     CHILD_PIDS+=($!)
 fi

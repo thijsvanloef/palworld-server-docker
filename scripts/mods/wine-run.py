@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+from contextlib import suppress
 import fcntl
 import os
 import pty
+import shutil
 import struct
 import sys
 import termios
@@ -12,25 +14,20 @@ def main():
     print(f"Usage: {sys.argv[0]} <executable> [args...]", file=sys.stderr)
     sys.exit(1)
 
-  # Use the WINE_BIN environment variable if specified, otherwise default to "wine"
-  wine_bin = os.environ.get("WINE_BIN", "wine")
-
   # Construct the command array by automatically prepending wine
-  cmd = [wine_bin] + sys.argv[1:]
+  cmd = ["/usr/bin/wine"] + sys.argv[1:]
 
   pid, master = pty.fork()
 
   if pid == 0:
     # Child process: start with wine + specified arguments
-    os.execvp(cmd[0], cmd)
+    os.execv(cmd[0], cmd)  # nosec
   else:
     # Parent process: set terminal size to 500x500
-    try:
+    with suppress(OSError):
       fcntl.ioctl(
           master, termios.TIOCSWINSZ, struct.pack("HHHH", 500, 500, 0, 0)
       )
-    except Exception:
-      pass
 
     # Output logs (stdout / stderr combined)
     while True:
