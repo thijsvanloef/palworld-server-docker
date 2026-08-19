@@ -267,8 +267,8 @@ read_workshop_ids() {
     local line
     local -r ignore_ue4ss_id="3625223587"  # UE4SS workshop mod ID
 
-    if [ -n "${WORKSHOP_MOD_IDS:-}" ]; then
-        IFS=',' read -r -a raw_ids <<< "${WORKSHOP_MOD_IDS}"
+    if [ -n "${MOD_IDS:-}" ]; then
+        IFS=',' read -r -a raw_ids <<< "${MOD_IDS}"
         for raw_id in "${raw_ids[@]}"; do
             raw_id="$(_trim "${raw_id}")"
             if [ -n "${raw_id}" ]; then

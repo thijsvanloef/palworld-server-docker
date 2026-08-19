@@ -10,7 +10,7 @@ services:
       SERVER_NAME: "palworld-server-docker/examples/mods"
       MOD_ENABLED: true
       MOD_UPDATE_ON_BOOT: true
-      #MOD_DEBUG: true
+      MOD_DEBUG: true
 
       # ------------------------------------------------------------
       # MOD install method A: Steam Workshop IDs in env var
@@ -21,7 +21,7 @@ services:
       # ------------------------------------------------------------
       # MOD install method B: Using workshop-mods.txt file
       # - Line-separated IDs in /palworld/Mods/workshop-mods.txt
-      # - It is combined with WORKSHOP_MOD_IDS
+      # - It is combined with MOD_IDS
       # ------------------------------------------------------------
 
       # ------------------------------------------------------------
