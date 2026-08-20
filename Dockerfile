@@ -228,6 +228,7 @@ ENV HOME=/home/steam \
     MOD_IDS= \
     MOD_URL_UE4SS="https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip" \
     MOD_ID_PALSCHEMA="3625280368" \
+    MOD_DEBUG=false \
     LOG_FILTER_ENABLED=true \
     LOG_LEVEL=INFO \
     LOG_FORMAT_TYPE=default
