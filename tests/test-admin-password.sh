@@ -78,11 +78,44 @@ assert_unset_environment_variable_is_tolerated() {
     fi
 }
 
+assert_whitespace_around_the_assignment_is_tolerated() {
+    printf 'OptionSettings=(AdminPassword = "adminPass")\n' > "${settings_file}"
+    local password
+    password="$(get_admin_password_from_settings "${settings_file}")" || fail "no password read from the settings file"
+    [ "${password}" = "adminPass" ] || fail "expected adminPass, got ${password}"
+}
+
+assert_commented_lines_are_ignored() {
+    printf ';OptionSettings=(AdminPassword="commentedOut")\nOptionSettings=(AdminPassword="adminPass")\n' > "${settings_file}"
+    local password
+    password="$(get_admin_password_from_settings "${settings_file}")" || fail "no password read from the settings file"
+    [ "${password}" = "adminPass" ] || fail "expected adminPass, got ${password}"
+}
+
+assert_an_empty_value_does_not_hide_a_later_one() {
+    printf 'OptionSettings=(AdminPassword="")\nOptionSettings=(AdminPassword="adminPass")\n' > "${settings_file}"
+    local password
+    password="$(get_admin_password_from_settings "${settings_file}")" || fail "no password read from the settings file"
+    [ "${password}" = "adminPass" ] || fail "expected adminPass, got ${password}"
+}
+
+assert_yaml_scalar_survives_backslashes_and_quotes() {
+    local quoted
+    quoted="$(yaml_single_quoted 'pa\ss"w0rd')"
+    [ "${quoted}" = "'pa\\ss\"w0rd'" ] || fail "expected 'pa\\ss\"w0rd', got ${quoted}"
+    quoted="$(yaml_single_quoted "it's a p@ss")"
+    [ "${quoted}" = "'it''s a p@ss'" ] || fail "expected 'it''s a p@ss', got ${quoted}"
+}
+
 assert_password_from_settings
 assert_special_characters_are_kept
 assert_carriage_returns_are_stripped
 assert_empty_password_is_rejected
 assert_missing_file_is_rejected
+assert_whitespace_around_the_assignment_is_tolerated
+assert_commented_lines_are_ignored
+assert_an_empty_value_does_not_hide_a_later_one
+assert_yaml_scalar_survives_backslashes_and_quotes
 assert_environment_variable_wins
 assert_settings_are_used_when_environment_variable_is_empty
 assert_unset_environment_variable_is_tolerated

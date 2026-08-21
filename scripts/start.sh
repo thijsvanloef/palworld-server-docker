@@ -165,10 +165,13 @@ fi
 
 # Configure RCON settings.
 # DEPRECATED: RCON will be removed in a future release.
+# The password is written as a YAML single quoted scalar so that a backslash or a
+# double quote in it does not get re-interpreted or break the file for rcon-cli
+rcon_password="$(yaml_single_quoted "$(get_admin_password)")"
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
-  password: "$(get_admin_password)"
+  password: ${rcon_password}
 EOL
 
 CHILD_PIDS=()

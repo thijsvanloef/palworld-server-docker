@@ -261,16 +261,27 @@ DiscordMessage() {
 # Returns 1 if the file is unreadable or holds no AdminPassword
 get_admin_password_from_settings() {
     local -r config_file="${1:-/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini}"
-    local -r pattern='AdminPassword="([^"]*)"'
-    local settings
+    local -r pattern='AdminPassword[[:space:]]*=[[:space:]]*"([^"]*)"'
+    local line password=""
 
     if [ ! -r "${config_file}" ]; then
         return 1
     fi
 
-    settings="$(tr -d '\r' < "${config_file}")"
-    if [[ "${settings}" =~ $pattern ]] && [ -n "${BASH_REMATCH[1]}" ]; then
-        printf '%s' "${BASH_REMATCH[1]}"
+    # Commented out lines are skipped and the last value wins, so a file that keeps
+    # an old or empty AdminPassword above the live one still resolves correctly
+    while IFS= read -r line; do
+        line="${line//$'\r'/}"
+        if [[ "${line}" =~ ^[[:space:]]*[\;#] ]]; then
+            continue
+        fi
+        if [[ "${line}" =~ $pattern ]] && [ -n "${BASH_REMATCH[1]}" ]; then
+            password="${BASH_REMATCH[1]}"
+        fi
+    done < "${config_file}"
+
+    if [ -n "${password}" ]; then
+        printf '%s' "${password}"
         return 0
     fi
 
@@ -291,6 +302,13 @@ get_admin_password() {
     fi
 
     get_admin_password_from_settings "$@"
+}
+
+# Renders the given value as a YAML single quoted scalar
+# Single quoted scalars process no escape sequences, only a literal quote is doubled,
+# so a password holding a backslash or a double quote survives unchanged
+yaml_single_quoted() {
+    printf "'%s'" "${1//\'/\'\'}"
 }
 
 # REST API Call
