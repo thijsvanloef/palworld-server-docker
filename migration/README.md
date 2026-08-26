@@ -15,7 +15,7 @@
 > to fail with "AdminPassword is empty" even when the password is correctly configured
 > everywhere else (see #886). `migrate.sh` (below) handles this automatically by moving
 > any pre-existing `WorldOption.sav` aside; if you migrate manually, do the same
-> yourself (see step 3 in "Manually" below).
+> yourself (see step 4 in "Manually" below).
 
 1. Find a directory which is named by game server name and contains all saved game data,
    usually it will at `~/Steam/steamapps/common/PalServer/Pal/Saved/SaveGames/0/`
