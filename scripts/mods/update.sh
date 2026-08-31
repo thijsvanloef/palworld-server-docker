@@ -261,42 +261,56 @@ cleanup_previous_state() {
     cleanup_previous_ue4ss_state "${state_json}"
 }
 
-read_workshop_ids() {
-    local -a ids=("${MOD_ID_PALSCHEMA}")
+# Validate/normalize a raw workshop ID and append it to the caller's "ids" array.
+# Relies on bash dynamic scoping to see the caller's local "ids" array and "ignore_ue4ss_id".
+_append_workshop_id() {
     local raw_id
+    raw_id="$(_trim "${1:-}")"
+    [ -z "${raw_id}" ] && return 0
+
+    if [ "${raw_id}" = "${ignore_ue4ss_id}" ]; then
+        download_ue4ss=true
+        LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
+        return 0
+    fi
+
+    if [[ "${raw_id}" =~ ^[0-9]+$ ]]; then
+        ids+=("${raw_id}")
+    else
+        LogWarn "Invalid workshop mod ID: ${raw_id}"
+    fi
+}
+
+# Read and return unique workshop mod IDs from environment variables and a file.
+read_workshop_ids() {
+    local -a ids=()
+    local -a raw_ids
     local line
     local -r ignore_ue4ss_id="3625223587"  # UE4SS workshop mod ID
 
+    # Process MOD_ID_PALSCHEMA environment variable, if set.
+    if [[ "${MOD_ID_PALSCHEMA}" =~ ^[0-9]+$ ]]; then
+        ids+=("${MOD_ID_PALSCHEMA}")
+    else
+        LogInfo "Skipping PalSchema. (MOD_ID_PALSCHEMA=\"${MOD_ID_PALSCHEMA}\")"
+    fi
+
+    # Process MOD_IDS environment variable, if set.
     if [ -n "${MOD_IDS:-}" ]; then
         IFS=',' read -r -a raw_ids <<< "${MOD_IDS}"
-        for raw_id in "${raw_ids[@]}"; do
-            raw_id="$(_trim "${raw_id}")"
-            if [ -n "${raw_id}" ]; then
-                if [ "${raw_id}" = "${ignore_ue4ss_id}" ]; then
-                    download_ue4ss=true
-                    LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
-                    continue
-                fi
-                ids+=("${raw_id}")
-            fi
+        for line in "${raw_ids[@]}"; do
+            _append_workshop_id "${line}"
         done
     fi
 
+    # Process workshop_mods_file, if it exists.
     if [ -f "${workshop_mods_file}" ]; then
         while IFS= read -r line || [ -n "${line:-}" ]; do
-            line="${line%%#*}"
-            line="$(_trim "${line}")"
-            if [ -n "${line}" ]; then
-                if [ "${line}" = "${ignore_ue4ss_id}" ]; then
-                    download_ue4ss=true
-                    LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
-                    continue
-                fi
-                ids+=("${line}")
-            fi
+            _append_workshop_id "${line%%#*}"
         done < "${workshop_mods_file}"
     fi
 
+    # Print unique workshop IDs
     printf '%s\n' "${ids[@]}" | awk 'NF && !seen[$0]++'
 }
 
