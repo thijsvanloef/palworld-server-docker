@@ -36,8 +36,10 @@ fi
 
 # Always update on boot even if the server is installed, to prevent appmanifest issues
 if [ "$ServerInstalled" == 0 ] && [ "${UPDATE_ON_BOOT,,}" == true ]; then
-    rm /palworld/steamapps/appmanifest_2394010.acf
-    InstallServer
+    if UpdateRequired; then
+        rm /palworld/steamapps/appmanifest_2394010.acf
+        InstallServer
+    fi
 fi
 
 STARTCOMMAND=("./PalServer.sh")
@@ -178,7 +180,7 @@ EOL
 CHILD_PIDS=()
 if PlayerLogging_isEnabled; then
     if [[ "$(id -u)" -eq 0 ]]; then
-        su steam -c /home/steam/server/player_logging.sh &
+        gosu steam /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
     fi

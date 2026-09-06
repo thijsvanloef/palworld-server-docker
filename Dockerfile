@@ -1,4 +1,4 @@
-FROM golang:1.25.12-alpine AS rcon-cli_builder
+FROM golang:1.25.13-alpine AS rcon-cli_builder
 
 ARG RCON_VERSION="0.10.3"
 ARG RCON_TGZ_SHA1SUM=33ee8077e66bea6ee097db4d9c923b5ed390d583
@@ -65,6 +65,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcap2-bin libpcap0.8 \
     ca-certificates \
     python3 python3-venv python3-pip \
+    gosu \
     && (apt-get install -y --no-install-recommends libicu76 || apt-get install -y --no-install-recommends libicu72 || apt-get install -y --no-install-recommends libicu67) \
     && (apt-get install -y --no-install-recommends libsdl3-0 || apt-get install -y --no-install-recommends libsdl3-0-0) \
     && apt-get clean \
