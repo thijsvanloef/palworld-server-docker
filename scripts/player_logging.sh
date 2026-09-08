@@ -36,8 +36,11 @@ else
 fi
 
 # Wait until rcon/rest-api port is open
-while ! nc -z localhost "${_PORT}"; do
-    sleep 5
+while ! nc -w 5 -z localhost "${_PORT}"; do
+    if [ -z "$(PalworldServerPid)" ]; then
+        LogError "Server is not running, cannot show player logging."
+        exit 1
+    fi
     LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
 done
 LogInfo "${_LABEL}(${_PORT}) port is open, player logging started"
