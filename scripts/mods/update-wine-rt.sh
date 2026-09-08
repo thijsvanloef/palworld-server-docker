@@ -18,7 +18,7 @@ WINEPREFIX="${WINEPREFIX:-/opt/wine}"
 export WINEPREFIX
 export WINEARCH="${WINEARCH:-win64}"
 export WINEDEBUG="${WINEDEBUG:--all}"
-export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-"mscoree,mshtml=d;dwmapi,d3d9=n"}"
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-"mscoree,mshtml=d;dwmapi,d3d9=n,b"}"
 
 MARKER_FILE="${WINEPREFIX}/.vcrun2022-installed"
 FORCE=false

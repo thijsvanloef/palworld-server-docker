@@ -10,6 +10,7 @@ services:
       SERVER_NAME: "palworld-server-docker/examples/mods"
       MOD_ENABLED: true
       MOD_UPDATE_ON_BOOT: true
+      MOD_USE_PALDEFENDER: true
       MOD_DEBUG: false
 
       # ------------------------------------------------------------
