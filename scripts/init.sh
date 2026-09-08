@@ -53,9 +53,7 @@ if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
         init_steam_home
 
         chown -R steam:steam /palworld /home/steam/
-        # NOTE: The recursive chown above covers ${PalServerLog_fifo} under /home/steam,
-        # so an explicit second chown/chmod for the FIFO is not required.
-        # Fix Wine prefix top-level ownership (O(1), non-recursive).
+        # Fix WINEPREFIX top-level ownership (O(1), non-recursive).
         # Wine refuses to use a prefix whose directory is not owned by the running user.
         if [ -d "${WINEPREFIX:-/opt/wine}" ]; then
             chown "steam:wine" "${WINEPREFIX:-/opt/wine}" 2>/dev/null \
@@ -81,7 +79,7 @@ fi
 if [ -n "${1}" ]; then
     LogAction "EXECUTING: $* "
     if [ "$(id -u)" -eq 0 ]; then
-        if ! gosu steam "$@"; then
+        if ! setpriv --reuid=steam --regid=steam --init-groups -- "$@"; then
             LogError "Failed to execute command as steam user: $*"
             exit 1
         fi
