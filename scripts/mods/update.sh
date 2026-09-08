@@ -720,8 +720,10 @@ download_workshop_mods() {
     LogInfo "Downloading ${#ids[@]} Steam Workshop mod(s)..."
     ModLog_debug "${steamcmd_bin} +login ${login_source} +workshop_download_item ... +quit"
     if ! "${steamcmd_bin}" "${steamcmd_args[@]}"; then
-        LogWarn "SteamCMD reported an error while downloading workshop mods. Continuing with any files that were downloaded."
+        LogError "SteamCMD reported an error while downloading workshop mods."
+        return 1
     fi
+    return 0
 }
 
 #-------------------------------------------------
@@ -768,7 +770,10 @@ done
 # Download Workshop mods
 if isTrue "${download_workshop:-true}"; then
     LogInfo "Downloading Steam Workshop mods..."
-    download_workshop_mods "${WORKSHOP_IDS[@]}"
+    if ! download_workshop_mods "${WORKSHOP_IDS[@]}"; then
+        LogError "Failed to download Steam Workshop mods."
+        exit 1
+    fi
 else
     LogInfo "Skipping Steam Workshop mod downloads."
 fi
