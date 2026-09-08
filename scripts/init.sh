@@ -79,10 +79,10 @@ fi
 # docker compose run --rm -it palworld steam-login <your-account>
 # docker compose exec -it palworld bash
 if [ -n "${1}" ]; then
-    LogAction "EXECUTING: $@"
+    LogAction "EXECUTING: $* "
     if [ "$(id -u)" -eq 0 ]; then
         if ! gosu steam "$@"; then
-            LogError "Failed to execute command as steam user: $@"
+            LogError "Failed to execute command as steam user: $*"
             exit 1
         fi
         exit 0
