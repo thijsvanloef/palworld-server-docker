@@ -12,5 +12,5 @@ docker compose config --environment | grep STEAM_USERNAME || {
     exit 1
 }
 
-docker compose run --rm -i palworld steam-login "$@"
+docker compose run --rm -it palworld steam-login "$@"
 docker network prune -f
