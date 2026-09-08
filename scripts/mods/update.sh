@@ -8,6 +8,8 @@ source "/home/steam/server/helper_functions.sh"
 MOD_ENABLED="${MOD_ENABLED:-true}"
 MOD_URL_UE4SS="${MOD_URL_UE4SS:-https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip}"
 MOD_ID_PALSCHEMA="${MOD_ID_PALSCHEMA:-3625280368}"
+MOD_USE_PALDEFENDER="${MOD_USE_PALDEFENDER:-false}"
+MOD_URL_PALDEFENDER="${MOD_URL_PALDEFENDER:-https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender.zip}"
 
 #-------------------------------------------------
 # Mods internal vars
@@ -86,6 +88,57 @@ _remove_source_from_target() {
                 rm "-f${v}" "${target_path}"
             fi
         fi
+    fi
+}
+
+#-------------------------------------------------
+# PalDefender functions
+#-------------------------------------------------
+PalDefender_update() {
+    local zip_file="/palworld/Mods/.cache/PalDefender.zip"
+    local tmp_file="${zip_file}.tmp"
+    local target_dir="$1"
+    local should_extract=false
+
+    if ! isTrue "${MOD_USE_PALDEFENDER}"; then
+        if [ -f "${target_dir}/PalDefender.dll" ] || [ -f "${target_dir}/d3d9.dll" ]; then
+            LogInfo "Removed PalDefender files from target: ${target_dir}"
+            rm -f "${target_dir}/PalDefender.dll" "${target_dir}/d3d9.dll"
+        fi
+        return 0
+    fi
+    if ! isTrue "${MOD_UPDATE_ON_BOOT}"; then
+        return 0
+    fi
+
+    mkdir -p "$(dirname "${zip_file}")"
+    mkdir -p "$(dirname "${target_dir}")"
+
+    if [ -f "${zip_file}" ]; then
+        if ! curl -sSfL -o "${tmp_file}" -z "${zip_file}" "${MOD_URL_PALDEFENDER}"; then
+            LogWarn "Failed to download PalDefender package from ${MOD_URL_PALDEFENDER}."
+            return 0
+        fi
+        if [ -s "${tmp_file}" ]; then
+            mv -f "${tmp_file}" "${zip_file}"
+            should_extract=true
+            LogInfo "Downloaded newer PalDefender package."
+        else
+            rm -f "${tmp_file}"
+            if [ ! -f "${target_dir}/PalDefender.dll" ] || [ ! -f "${target_dir}/d3d9.dll" ]; then
+                should_extract=true
+            fi
+        fi
+    else
+        if ! curl -sSfL -o "${zip_file}" "${MOD_URL_PALDEFENDER}"; then
+            LogWarn "Failed to download PalDefender package from ${MOD_URL_PALDEFENDER}."
+            return 0
+        fi
+        should_extract=true
+    fi
+    if isTrue "${should_extract}"; then
+        LogInfo "Deploying PalDefender package to target: ${target_dir}"
+        unzip -o "${zip_file}" -d "${target_dir}"
     fi
 }
 
@@ -822,6 +875,8 @@ done
 
 update_mods_txt
 ensure_palmodsettings_ini
+
+PalDefender_update "${bin_dir}"
 
 current_state="$(build_state_json)"
 

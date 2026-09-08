@@ -38,7 +38,7 @@ wait_for_server_start() {
         ((i++))
     done
     # Wait until rcon/rest-api port is open
-    while ! nc -w 3 -z localhost "${_PORT}"; do
+    while ! nc -w 5 -z localhost "${_PORT}"; do
         if ! PalworldServerIsRunning; then
             LogError "The server may have stalled while starting up."
             return 1
