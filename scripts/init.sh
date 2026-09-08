@@ -75,9 +75,20 @@ if ! [ -w "/palworld" ]; then
     exit 1
 fi
 
-if [ "${1}" = "steam-login" ]; then
-    shift
-    exec steam-login "$@"
+# e.g.,
+# docker compose run --rm -it palworld steam-login <your-account>
+# docker compose exec -it palworld bash
+if [ -n "${1}" ]; then
+    LogAction "EXECUTING: $@"
+    if [ "$(id -u)" -eq 0 ]; then
+        if ! gosu steam "$@"; then
+            LogError "Failed to execute command as steam user: $@"
+            exit 1
+        fi
+        exit 0
+    else
+        exec "$@"
+    fi
 fi
 
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
