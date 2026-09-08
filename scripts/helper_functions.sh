@@ -172,6 +172,18 @@ PalworldServerPid() {
     pgrep -f "$(PalworldServerProcessMatch)"
 }
 
+PalworldServerIsRunning() {
+    # Checks launcher is running, if the platform is windows.
+    if [ "$(ServerPlatform)" = "windows" ]; then
+        pgrep -f "wine-run" >/dev/null
+        return $?
+    fi
+    if [ -n "$(PalworldServerPid)" ]; then
+        return 0
+    fi
+    return 1
+}
+
 PalworldSteamPlatformType() {
     local platform
     platform="$(ServerPlatform)"

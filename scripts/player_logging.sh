@@ -26,6 +26,28 @@ get_player_info(){
     fi
 }
 
+wait_for_server_start() {
+    # Wait for the server to start running before proceeding
+    local i=0
+    while ! PalworldServerIsRunning; do
+        if [ "${i}" -gt 60 ]; then
+            LogError "Server did not start within 60 seconds."
+            return 1
+        fi
+        sleep 0.5
+        ((i++))
+    done
+    # Wait until rcon/rest-api port is open
+    while ! nc -w 3 -z localhost "${_PORT}"; do
+        if ! PalworldServerIsRunning; then
+            LogError "The server may have stalled while starting up."
+            return 1
+        fi
+        LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
+    done
+    return 0
+}
+
 # Prefer REST API
 if [ "${REST_API_ENABLED,,}" = true ]; then
     _PORT=${REST_API_PORT}
@@ -35,14 +57,8 @@ else
     _LABEL="RCON"
 fi
 
-# Wait until rcon/rest-api port is open
-while ! nc -w 5 -z localhost "${_PORT}"; do
-    if [ -z "$(PalworldServerPid)" ]; then
-        LogError "Server is not running, cannot show player logging."
-        exit 1
-    fi
-    LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
-done
+wait_for_server_start || exit 1
+
 LogInfo "${_LABEL}(${_PORT}) port is open, player logging started"
 
 AutoPause_init
