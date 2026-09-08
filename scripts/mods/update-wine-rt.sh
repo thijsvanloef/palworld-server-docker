@@ -18,7 +18,7 @@ WINEPREFIX="${WINEPREFIX:-/opt/wine}"
 export WINEPREFIX
 export WINEARCH="${WINEARCH:-win64}"
 export WINEDEBUG="${WINEDEBUG:--all}"
-export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree,mshtml=;dwmapi=n,b}"
+export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-"mscoree,mshtml=d;dwmapi,d3d9=n"}"
 
 MARKER_FILE="${WINEPREFIX}/.vcrun2022-installed"
 FORCE=false
@@ -69,7 +69,7 @@ if [[ ! -d "${WINEPREFIX}" ]] || [[ ! -f "${WINEPREFIX}/.wine-initialized" ]]; t
     # Best-effort: set wine group and setgid (no-op if already configured by Dockerfile)
     chgrp wine "${WINEPREFIX}" 2>/dev/null || true
     chmod 2770 "${WINEPREFIX}" 2>/dev/null || true
-    WINEDLLOVERRIDES="mscoree,mshtml=" wineboot --init
+    WINEDLLOVERRIDES="mscoree,mshtml=d" wineboot --init
     wineserver -w || true
     touch "${WINEPREFIX}/.wine-initialized"
 fi

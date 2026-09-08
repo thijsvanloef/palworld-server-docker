@@ -97,7 +97,7 @@ ensure_windows_runtime() {
     export WINEPREFIX="${WINEPREFIX:-/opt/wine}"
     export WINEARCH="${WINEARCH:-win64}"
     export WINEDEBUG="${WINEDEBUG:--all}"
-    export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-mscoree,mshtml=;dwmapi=n,b}"
+    export WINEDLLOVERRIDES="${WINEDLLOVERRIDES:-"mscoree,mshtml=d;dwmapi,d3d9=n"}"
     export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR:-/home/steam/.xdg-runtime}"
 
     # Ensure XDG_RUNTIME_DIR exists with proper permissions
