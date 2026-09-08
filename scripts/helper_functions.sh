@@ -423,4 +423,3 @@ get_latest_version() {
 
     echo "$latest_version"
 }
-

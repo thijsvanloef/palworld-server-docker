@@ -154,8 +154,10 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; 
     supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
+CRON_PID=""
 if [ -s "/home/steam/server/crontab" ]; then
     supercronic -passthrough-logs -no-reap "/home/steam/server/crontab" &
+    CRON_PID=$!
     LogInfo "Cronjobs started"
 else
     LogInfo "No Cronjobs found"
@@ -171,8 +173,8 @@ EOL
 
 CHILD_PIDS=()
 if PlayerLogging_isEnabled; then
-    if [[ "$(id -u)" -eq 0 ]]; then
-        gosu steam /home/steam/server/player_logging.sh &
+    if [ "$(id -u)" -eq 0 ]; then
+        setpriv --reuid=steam --regid=steam --init-groups "${FORCE_CAPS[@]}" /home/steam/server/player_logging.sh &
     else
         /home/steam/server/player_logging.sh &
     fi
@@ -186,6 +188,12 @@ echo "${STARTCOMMAND[*]}"
 "${STARTCOMMAND[@]}"
 
 LogAction "Ending Server"
+
+if [ -n "$CRON_PID" ]; then
+    LogInfo "Stopping cronjobs"
+    kill -SIGTERM "$CRON_PID" 2>/dev/null
+fi
+
 if [ ${#CHILD_PIDS[@]} -ne 0 ]; then
     wait "${CHILD_PIDS[@]}"
 fi

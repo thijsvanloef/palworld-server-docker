@@ -10,10 +10,11 @@ if ! ValidateNegativeDeltaRecoverySetting; then
     exit 1
 fi
 
+# Remove old FIFO
+rm -f "${PalServerLog_fifo}"
+
 if [ "${LOG_FILTER_ENABLED,,}" = true ]; then
     # Recreate FIFO at every boot to avoid stale descriptors and permission drift.
-    rm -f "${PalServerLog_fifo}"
-
     if ! mkfifo -m 600 "${PalServerLog_fifo}"; then
         echo "ERROR: Failed to create log FIFO: ${PalServerLog_fifo}" >&2
         exit 1
@@ -54,6 +55,8 @@ if ! [ -w "/palworld" ]; then
     exit 1
 fi
 
+FORCE_CAPS=()
+
 # shellcheck source=scripts/autopause/init.sh
 source "/home/steam/server/autopause/init.sh"
 
@@ -74,10 +77,12 @@ term_handler() {
 trap 'term_handler' SIGTERM
 
 if [[ "$(id -u)" -eq 0 ]]; then
-    gosu steam ./start.sh &
+    # Only if the capabilities set on the executable do not work, we reluctantly add NET_ADMIN and NET_RAW capabilities.
+    setpriv --reuid=steam --regid=steam --init-groups "${FORCE_CAPS[@]}" ./start.sh &
 else
     ./start.sh &
 fi
+
 # Process ID of start.sh
 killpid="$!"
 wait "$killpid"

@@ -27,6 +27,7 @@ Knockd_interfaces="${AUTO_PAUSE_KNOCKD_IF:-auto}"
 Nflog_interfaces=(any)  # NFLOG backend always uses "any" to match all incoming packets via iptables rules.
 
 declare -a Knockd_resolvedInterfaces=()
+declare -r AP_monitor_backend_file="/home/steam/server/autopause/.monitor-backend"
 
 # Add an interface to the Knockd_resolvedInterfaces array if it exists and is not already present.
 # Validates interface exists via /sys/class/net and prevents duplicates.
@@ -370,6 +371,50 @@ Knockd_stopBackend() {
     done
 }
 
+#-------------------------------
+# AutoPause Monitor Backend
+#-------------------------------
+
+APMonitor_detectAvailableBackend() {
+    local monitorBackend
+    # Decide monitor backend at startup and persist it for services.sh.
+    # Priority:
+    #   1. NFLOG (requires iptables + tcpdump + NET_RAW,NET_ADMIN capability)
+    #   2. knockd (requires knockd binary + NET_RAW capability)
+    #   3. Error (no suitable backend available)
+    if command -v iptables > /dev/null 2>&1 && iptables -L > /dev/null 2>&1 && \
+       command -v tcpdump > /dev/null 2>&1 && tcpdump --version > /dev/null 2>&1; then
+        monitorBackend="nflog"
+        APLog "AUTO_PAUSE packet monitor: NFLOG (iptables+tcpdump) available."
+    else
+        APLog "AUTO_PAUSE packet monitor: NFLOG (iptables+tcpdump) unavailable."
+        APLog_warn "NET_ADMIN & NET_RAW capability required for NFLOG. e.g) podman run --cap-add=NET_ADMIN --cap-add=NET_RAW ..."
+        if command -v knockd > /dev/null 2>&1 && knockd --version > /dev/null 2>&1; then
+            monitorBackend="knockd"
+            APLog "AUTO_PAUSE packet monitor: knockd available."
+        else
+            APLog "AUTO_PAUSE packet monitor: knockd unavailable."
+            APLog_error "AUTO_PAUSE requires NET_RAW capability. e.g) podman run --cap-add=NET_RAW ..."
+            return 1
+        fi
+    fi
+
+    printf '%s\n' "${monitorBackend}" > "${AP_monitor_backend_file}"
+    chmod 0644 "${AP_monitor_backend_file}" || true
+    if [ "$(id -u)" -eq 0 ]; then
+        chown steam:steam "${AP_monitor_backend_file}" || true
+    fi
+    return 0
+}
+
+APMonitor_determineBackend() {
+    if [ -r "${AP_monitor_backend_file}" ]; then
+        cat "${AP_monitor_backend_file}"
+    else
+        echo "knockd"
+    fi
+}
+
 # ============================================================================
 # Main Dispatcher
 # ============================================================================
@@ -393,9 +438,15 @@ case "${COMMAND}" in
         Knockd_stopBackend
     fi
     ;;
+"check")
+    APMonitor_detectAvailableBackend
+    ;;
 *)
     echo "Usage: $(basename "${0}") <command>"
     echo "command:"
     echo "    start ... launch NFLOG or knockd based on .monitor-backend"
     echo "    stop  ... stop NFLOG or knockd"
+    echo "    check ... detect available backend and write to .monitor-backend"
+    exit 1
+    ;;
 esac
