@@ -107,9 +107,6 @@ PalDefender_update() {
         fi
         return 0
     fi
-    if ! isTrue "${MOD_UPDATE_ON_BOOT}"; then
-        return 0
-    fi
 
     mkdir -p "$(dirname "${zip_file}")"
     mkdir -p "$(dirname "${target_dir}")"
@@ -665,7 +662,7 @@ EOF
         done
     } >> "${tmp_file}"
 
-    mv "${tmp_file}" "${ini_file}"
+    mv -f "${tmp_file}" "${ini_file}"
     chmod 644 "${ini_file}"
 }
 
