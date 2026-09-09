@@ -6,8 +6,8 @@ services:
       service: palworld
     build: ../../
     cap_add:
-      - NET_RAW # for podman (docker default has it)
-      - NET_ADMIN # NFLOG requires this
+      - NET_RAW  # for podman (docker default has it)
+      - NET_ADMIN  # NFLOG requires this
     environment:
       SERVER_NAME: "palworld-server-docker/examples/autopause"
       AUTO_PAUSE_ENABLED: true
@@ -17,5 +17,5 @@ services:
       COMMUNITY: true
       # PUBLIC_IP: "${PUBLIC_IP:-}"
       # PUBLIC_PORT: ${PUBLIC_PORT:-8211}
-    # ports:
-      # - 8081:8081  # Only available when AUTO_PAUSE_DEBUG is true.
+      # ports:
+        # - 8081:8081  # Only available when AUTO_PAUSE_DEBUG is true.
