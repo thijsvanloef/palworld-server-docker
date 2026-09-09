@@ -201,7 +201,13 @@ PalworldDepotDownloaderOS() {
 }
 
 PalworldDepotId() {
-    echo "${PALWORLD_DEPOT_ID:-2394012}"
+    if [ -n "${PALWORLD_DEPOT_ID:-}" ]; then
+        echo "${PALWORLD_DEPOT_ID}"
+    elif [ "$(ServerPlatform)" = "windows" ]; then
+        echo "2394011"
+    else
+        echo "2394012"
+    fi
 }
 
 PlayerLogging_isEnabled() {

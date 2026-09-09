@@ -13,4 +13,6 @@ docker compose config --environment | grep STEAM_USERNAME || {
 }
 
 docker compose run --rm -it palworld steam-login "$@"
-docker network prune -f
+
+network_name="$(docker compose config | sed -n '/networks:/,$ s/^[[:space:]]*name:[[:space:]]*//p')"
+[ -n "${network_name}" ] && docker network rm "${network_name}" || true

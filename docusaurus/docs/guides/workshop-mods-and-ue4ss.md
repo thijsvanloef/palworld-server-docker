@@ -95,7 +95,7 @@ This file is managed automatically by the helper script and usually does not req
 
 ## Automatic update checks
 
-It depends on AUTO_UPDATE_ENABLED and AUTO_UPDATE_CRON_EXPRESSION.
+Set `MOD_UPDATE_CRON_EXPRESSION` to a cron expression to schedule periodic Workshop mod synchronization.
 
 ## Verify expected logs
 

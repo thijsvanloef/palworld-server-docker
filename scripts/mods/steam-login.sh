@@ -27,7 +27,7 @@ fi
 case "${1:-}" in
   --reset)
     echo "Wiping existing Steam session volume: ${STEAM_HOME}"
-    rm -rf "${STEAM_HOME}/config/*.vdf" "${STEAM_LOGIN_USER_FILE}" 2>/dev/null || true
+    rm -rf "${STEAM_HOME}"/config/*.vdf "${STEAM_LOGIN_USER_FILE}" 2>/dev/null || true
     exit 0
     ;;
   --help)
@@ -53,12 +53,14 @@ mkdir -p "${STEAM_HOME}"
 
 echo "Steam session volume: ${STEAM_HOME}"
 echo "Logging in to Steam as: ${STEAM_USERNAME}"
+LOGIN_PARAMS=("+login" "${STEAM_USERNAME}")
 if [ -n "${STEAM_PASSWORD:-}" ]; then
   echo "Using provided Steam password."
+  LOGIN_PARAMS+=("${STEAM_PASSWORD}")
 else
   echo "No Steam password provided. You will be prompted to enter it interactively."
 fi
-LOGIN_PARAMS=("+login" "${STEAM_USERNAME}" "${STEAM_PASSWORD:-}" "+quit")
+LOGIN_PARAMS+=("+quit")
 /home/steam/steamcmd/steamcmd.sh "${LOGIN_PARAMS[@]}"
 
 printf '%s\n' "${STEAM_USERNAME}" > "${STEAM_LOGIN_USER_FILE}"
