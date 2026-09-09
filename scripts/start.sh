@@ -156,8 +156,8 @@ STARTCOMMAND_NOARGS=("${server_binary}")
 
 if [ "${platform}" = "windows" ]; then
     ensure_windows_runtime
-    STARTCOMMAND=("wine-run" "${STARTCOMMAND[@]}")
-    STARTCOMMAND_NOARGS=("wine-run" "${STARTCOMMAND_NOARGS[@]}")
+    STARTCOMMAND=("wine-run" "${STARTCOMMAND[@]}" "Pal")
+    STARTCOMMAND_NOARGS=("wine-run" "/palworld/PalServer.exe")
 fi
 
 # Check if the architecture is arm64
