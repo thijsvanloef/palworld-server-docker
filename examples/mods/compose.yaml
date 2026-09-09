@@ -6,6 +6,9 @@ services:
       service: palworld
     build:
       context: ../../
+    cap_add:
+      - NET_RAW    # for podman (docker default has it)
+      - NET_ADMIN  # NFLOG requires this
     environment:
       SERVER_NAME: "palworld-server-docker/examples/mods"
       MOD_ENABLED: true
