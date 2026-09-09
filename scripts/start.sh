@@ -257,7 +257,7 @@ if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
 
-if [ "${platform}" = "windows" ] && isTrue "${MOD_UPDATE_ON_BOOT}"; then
+if [ "${platform}" = "windows" ] && isTrue "${MOD_ENABLED}" && isTrue "${MOD_UPDATE_ON_BOOT}"; then
     LogAction "UPDATE MODS"
     mods-update || exit
 fi
@@ -286,7 +286,7 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; 
     supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
-if [ "${platform}" = "windows" ] && isTrue "${MOD_UPDATE_ON_BOOT}" && [ -n "${MOD_UPDATE_CRON_EXPRESSION:-}" ]; then
+if [ "${platform}" = "windows" ] && isTrue "${MOD_ENABLED}" && isTrue "${MOD_UPDATE_ON_BOOT}" && [ -n "${MOD_UPDATE_CRON_EXPRESSION:-}" ]; then
     LogInfo "MOD_UPDATE_CRON=${MOD_UPDATE_CRON_EXPRESSION}"
     LogInfo "Adding cronjob for workshop mod updates"
     echo "$MOD_UPDATE_CRON_EXPRESSION bash /home/steam/server/mods/update.sh" >> "/home/steam/server/crontab"
