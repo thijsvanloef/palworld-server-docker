@@ -9,6 +9,132 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  unit-test-windows:
+    name: Docker - Test (windows)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and export Windows image
+        uses: docker/build-push-action@v7
+        with:
+          file: ./Dockerfile
+          load: true
+          tags: ${{ github.run_id }}:windows
+          platforms: linux/amd64
+          build-args: |
+            TARGET_SERVER_PLATFORM=Windows
+
+      - name: Run Windows server
+        run: |
+            docker run -d \
+            --name palworld-server-windows \
+            -p 8211:8211/udp \
+            -p 27015:27015/udp \
+            -p 25575:25575/tcp \
+            -v ./palworld-windows:/palworld/ \
+            --env-file .env.example \
+            --restart unless-stopped \
+            --stop-timeout 30 \
+            ${{ github.run_id }}:windows
+
+      - name: Wait for Windows server to start
+        run: |
+            TIMEOUT_SECONDS=660
+            START_TIME=$(date +%s)
+
+            while [ "$(docker inspect -f '{{.State.Health.Status}}' palworld-server-windows)" != healthy ]; do
+              CURRENT_TIME=$(date +%s)
+              ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
+
+              if [ "${ELAPSED_TIME}" -gt "${TIMEOUT_SECONDS}" ]; then
+                echo "Timeout reached. Windows server failed to become healthy within ${TIMEOUT_SECONDS} seconds."
+                printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
+                docker logs palworld-server-windows
+                exit 1
+              fi
+
+              echo "Waiting for Windows server to start..."
+              sleep 5
+            done
+
+      - name: Test negative delta recovery is disabled by default
+        run: |
+            docker exec palworld-server-windows bash -c '
+              . ./helper_functions.sh
+              pal_pid="$(PalworldServerPid)"
+              pal_pid="${pal_pid%% *}"
+              if [ -z "${pal_pid}" ]; then
+                echo "PalServer process is missing."
+                exit 1
+              fi
+
+              mapfile -d "" -t arguments < "/proc/${pal_pid}/cmdline"
+              for argument in "${arguments[@]}"; do
+                if [ "${argument}" = "-ini:Engine:[ConsoleVariables]:Pal.AllowNegativeDeltaTime=1" ]; then
+                  echo "Negative delta recovery was unexpectedly enabled."
+                  exit 1
+                fi
+              done
+            '
+
+      - name: Test if the REST API works
+        run: |
+            sleep 100
+            if ! docker exec palworld-server-windows rest-cli info | grep -q "\"version\"\:"; then
+              echo "Server may not have started successfully."
+              exit 4
+            fi
+            docker exec palworld-server-windows rest-cli announce "Hello, Palworld!"
+            if docker logs palworld-server-windows 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
+                echo "Announce OK - continuing."
+            else
+                echo "Required log entry not found - exiting with code 5."
+                exit 5
+            fi
+            docker exec palworld-server-windows rest-cli save
+            if docker logs palworld-server-windows 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
+                echo "Save OK - continuing."
+            else
+                echo "Required log entry not found - exiting with code 5."
+                exit 5
+            fi
+
+      - name: Test if port 8211, 27015, 25575 and 8212 are listening
+        run: |
+            nc -z -u -v 127.0.0.1 8211 || exit 7
+            nc -z -u -v 127.0.0.1 27015 || exit 8
+            nc -z -v 127.0.0.1 25575 || exit 9
+
+      - name: Test the backup script
+        run: |
+            docker exec palworld-server-windows backup
+            if [ ! -f ./palworld-windows/backups/palworld-save-*.tar.gz ]; then
+              echo "Backup file not found. Backup command may have failed."
+              exit 10
+            fi
+
+      - name: Test if PalWorldSettings.ini is valid
+        run: |
+            if [ ! -f ./palworld-windows/Pal/Saved/Config/WindowsServer/PalWorldSettings.ini ]; then
+              echo "Error: PalWorldSettings.ini file is missing."
+              exit 11
+            fi
+
+            if ! grep -q "\[\/Script\/Pal.PalGameWorldSettings\]" ./palworld-windows/Pal/Saved/Config/WindowsServer/PalWorldSettings.ini; then
+              echo "Error: PalWorldSettings.ini is missing the required section [/Script/Pal.PalGameWorldSettings]."
+              exit 12
+            fi
+
+            if ! grep -q "^OptionSettings=\(.*\)" ./palworld-windows/Pal/Saved/Config/WindowsServer/PalWorldSettings.ini; then
+              echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
+              exit 13
+            fi
+
   unit-test-amd64-steamcmd:
     name: Docker - Test (amd64-steamcmd)
     runs-on: ubuntu-latest
