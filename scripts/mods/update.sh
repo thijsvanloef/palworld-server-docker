@@ -396,6 +396,8 @@ collect_package_name() {
     fi
 
     if [ -n "${package_name}" ] && [ "${package_name}" != "null" ]; then
+        # Normalize package name as directory name
+        package_name="$(sed -E -e 's/\//-/g' -e 's/^\.\./__/g' <<< "${package_name}")"
         printf '%s' "${package_name}"
     else
         printf '%s' "${fallback_name}"
@@ -461,6 +463,8 @@ deploy_mod_via_rules() {
         type="$(printf '%s' "${rule}" | jq -r '.Type // empty')"
 
         while IFS= read -r target; do
+            # traverse up directories and replace with __ to prevent directory traversal attacks
+            target="$(sed -E -e 's/\.\./__/g' <<< "${target}")"
             target_path="${dest_dir%/}/${target}"
 
             if [ ! -e "${target_path}" ]; then
@@ -524,7 +528,7 @@ deploy_mod_auto_discover() {
             mkdir -p "$target_paks_dir"
             cp "-aur${v}" "$pak_file" "$target_paks_dir/"
             LogDebug "[Pak] Absolute destination: ${target_paks_dir}/${pak_name}"
-            deployed_paks+=("$pak_name")
+            DEPLOYED_PAKS+=("$pak_name")
         fi
     done < <(find "$dest_dir" -type f -iname "*.pak")
 

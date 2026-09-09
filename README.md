@@ -84,70 +84,36 @@ Versioned tags follow the same pattern:
 
 This repository includes an example [compose.yaml](/compose.yaml) file you can use to set up your server.
 
-The root compose file now includes two paths:
-
-* `palworld` as the default Linux service
-* `palworld-windows` behind the `windows` profile for the Wine-based runtime
-
-Linux remains the default with `docker compose up -d`.
-To start the Windows variant from the same file, run `docker compose --profile windows up -d palworld-windows`.
-
 ```yml
+---
 services:
-   palworld:
-      image: thijsvanloef/palworld-server-docker:latest
-      restart: unless-stopped
-      container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-        # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
-      environment:
-         PUID: 1000
-         PGID: 1000
-         PORT: 8211 # Optional but recommended
-         PLAYERS: 16 # Optional but recommended
-         SERVER_PASSWORD: "worldofpals" # Optional but recommended
-         REST_API_ENABLED: true
-         REST_API_PORT: 8212
-         TZ: "UTC"
-         ADMIN_PASSWORD: "adminPasswordHere"
-         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
-         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
-         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
-         CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
-      volumes:
-         - ./palworld:/palworld/
-
-    palworld-windows:
-      profiles:
-        - windows
-      image: thijsvanloef/palworld-server-docker:windows
-      restart: unless-stopped
-      container_name: palworld-server-windows
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-        - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
-      environment:
-        PUID: 1000
-        PGID: 1000
-        PORT: 8211 # Optional but recommended
-        PLAYERS: 16 # Optional but recommended
-        SERVER_PASSWORD: "worldofpals" # Optional but recommended
-        REST_API_ENABLED: true
-        REST_API_PORT: 8212
-        TZ: "UTC"
-        ADMIN_PASSWORD: "adminPasswordHere"
-        COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-        SERVER_NAME: "palworld-server-docker by Thijs van Loef (Windows)"
-        SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef (Windows/Wine)"
-        CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
-      volumes:
-        - ./palworld-windows:/palworld/
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp  # Required if you want your server to show up in the community servers tab
+      # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
+    environment:
+      PUID: 1000
+      PGID: 1000
+      PORT: 8211  # Optional but recommended
+      PLAYERS: 16  # Optional but recommended
+      SERVER_PASSWORD: "worldofpals"  # Optional but recommended
+      REST_API_ENABLED: true
+      REST_API_PORT: 8212
+      TZ: "UTC"
+      ADMIN_PASSWORD: "adminPasswordHere"
+      COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+      # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
+      SERVER_NAME: "palworld-server-docker by Thijs van Loef"
+      SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+      CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
+      LOG_LEVEL: "INFO"  # DEBUG/INFO/WARN/ERROR. Please be aware that DEBUG will log all command arguments, including secrets, to the logs. Share with caution.
+    volumes:
+      - ./palworld:/palworld/
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -170,6 +136,11 @@ services:
       volumes:
          - ./palworld:/palworld/
 ```
+
+The root compose file now includes two files:
+
+* [compose.yaml](compose.yaml) as the default Linux service.
+* [windows.yaml](windows.yaml) extended for Wine from the [compose.yaml](compose.yaml).
 
 ### Docker Run
 
@@ -271,9 +242,11 @@ It is highly recommended you set the following environment values before startin
 | NOSTEAM                                    | Adds `-nosteam` to server startup arguments when set to true. Useful for some migration/troubleshooting flows between server setups. Official Palworld docs currently do not document this argument.| false                                                                                              | true/false                                                                                                        | 2.8.0            |
 | MOD_ENABLED                                | Enables Mod                                                                                                                                                                                         | true                                                                                               | true/false                                                                                                        | 2.8.0            |
 | MOD_UPDATE_ON_BOOT                         | Update/Install the mods the docker container starts                                                                                                                                                 | true                                                                                               | true/false                                                                                                        | 2.8.0            |
+| MOD_UPDATE_CRON_EXPRESSION                 | Setting affects frequency of automatic mod updates.                                                                                                                                                 |                                                                                                    | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 2.8.0            |
 | MOD_IDS                                    | Comma-separated Steam Workshop mod IDs to download and deploy.                                                                                                                                      |                                                                                                    | Comma-separated numeric IDs                                                                                       | 2.8.0            |
 | MOD_URL_UE4SS                              | Sets the URL for the experimental UE4SS package zip used by default.                                                                                                                                | `https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip`   | .zip URL                                                                                                          | 2.8.0            |
 | MOD_ID_PALSCHEMA                           | Sets the workshop ID for the PalSchema used by default.                                                                                                                                             | `3625280368`                                                                                       | Workshop ID                                                                                                       | 2.8.0            |
+| MOD_USE_PALDEFENDER                        | Use "PalDefender" mod.                                                                                                                                                                              | false                                                                                              | true/false                                                                                                        | 2.8.0            |
 | MOD_DEBUG                                  | Enables Mod debug logging                                                                                                                                                                           | false                                                                                              | true/false                                                                                                        | 2.8.0            |
 | PALWORLD_ALLOW_NEGATIVE_DELTA_TIME         | Enables Palworld's built-in recovery for negative DeltaTime through an Engine ini override. This opt-in mitigation does not correct or synchronize the host or VM clock.                            | false                                                                                              | true/false                                                                                                        | 2.7.0            |
 | COMMUNITY                                  | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false                                                                                              | true/false                                                                                                        | 0.1.0            |

@@ -286,10 +286,10 @@ if [ "${AUTO_REBOOT_ENABLED,,}" = true ] && [ "${REST_API_ENABLED,,}" = true ]; 
     supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 
-if [ "${platform}" = "windows" ] && [ -n "${WORKSHOP_MOD_UPDATE_CRON:-}" ]; then
-    LogInfo "WORKSHOP_MOD_UPDATE_CRON=${WORKSHOP_MOD_UPDATE_CRON}"
+if [ "${platform}" = "windows" ] && isTrue "${MOD_UPDATE_ON_BOOT}" && [ -n "${MOD_UPDATE_CRON_EXPRESSION:-}" ]; then
+    LogInfo "MOD_UPDATE_CRON=${MOD_UPDATE_CRON_EXPRESSION}"
     LogInfo "Adding cronjob for workshop mod updates"
-    echo "$WORKSHOP_MOD_UPDATE_CRON bash /home/steam/server/mods/update.sh" >> "/home/steam/server/crontab"
+    echo "$MOD_UPDATE_CRON_EXPRESSION bash /home/steam/server/mods/update.sh" >> "/home/steam/server/crontab"
     supercronic -quiet -test -no-reap "/home/steam/server/crontab" || exit
 fi
 

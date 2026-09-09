@@ -30,7 +30,7 @@ wait_for_server_start() {
     # Wait for the server to start running before proceeding
     local i=0
     while ! PalworldServerIsRunning; do
-        if [ "${i}" -gt 60 ]; then
+        if [ "${i}" -gt 120 ]; then
             LogError "Server did not start within 60 seconds."
             return 1
         fi
@@ -38,12 +38,13 @@ wait_for_server_start() {
         ((i++))
     done
     # Wait until rcon/rest-api port is open
-    while ! nc -w 5 -z localhost "${_PORT}"; do
+    while ! nc -w 10 -z localhost "${_PORT}"; do
         if ! PalworldServerIsRunning; then
             LogError "The server may have stalled while starting up."
             return 1
         fi
         LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
+        sleep 3
     done
     return 0
 }

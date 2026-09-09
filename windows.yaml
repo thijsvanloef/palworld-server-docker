@@ -9,4 +9,3 @@ services:
       context: .
       args:
         TARGET_SERVER_PLATFORM: Windows
-    environment:

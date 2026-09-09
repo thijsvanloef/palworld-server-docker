@@ -65,7 +65,7 @@ def parse_log_line(line):
     else:
         # Match consecutive ANSI escape sequences at the beginning of the line
         # and store them in ansi_prefix, with the rest of the line in line.
-        pre_line_match = re.match(r'(\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))+(.*)', line)
+        pre_line_match = re.match(r'((?:\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~]))+)(.*)', line)
         if pre_line_match:
             ansi_prefix = pre_line_match.group(1)
             line = pre_line_match.group(2)
