@@ -75,7 +75,8 @@ migrate_GUS() {
             mkdir -p "$(dirname "${new_gus_file}")"
             cp -v "${old_gus_file}" "${new_gus_file}"
         fi
-        rm -v "${old_gus_file}"
+        [ -f "${old_gus_file}.bak" ] && rm -f "${old_gus_file}.bak"
+        mv -vf "${old_gus_file}" "${old_gus_file}.bak"
     fi
 }
 
