@@ -134,7 +134,7 @@ jobs:
               echo "Error: PalWorldSettings.ini is missing or has an invalid OptionSettings section."
               exit 13
             fi
-  
+
   unit-test-amd64-steamcmd:
     name: Docker - Test (amd64-steamcmd)
     runs-on: ubuntu-latest
