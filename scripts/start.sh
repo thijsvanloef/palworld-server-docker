@@ -14,6 +14,9 @@ fi
 # shellcheck source=scripts/helper_install.sh
 source "/home/steam/server/helper_install.sh"
 
+# shellcheck source=scripts/ue4ss.sh
+source "/home/steam/server/ue4ss.sh"
+
 dirExists "/palworld" || exit
 isWritable "/palworld" || exit
 isExecutable "/palworld" || exit
@@ -108,6 +111,11 @@ fi
 
 LogAction "Checking for available container updates"
 container_version_check
+
+# Install/update can replace files under Binaries/Linux; set up UE4SS after install/update.
+if ! SetupUE4SS; then
+    exit 1
+fi
 
 if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   LogAction "GENERATING CONFIG"

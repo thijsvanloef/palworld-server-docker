@@ -1,0 +1,26 @@
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server-ue4ss
+    stop_grace_period: 30s
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp
+      - 8212:8212/tcp
+    environment:
+      PUID: 1000
+      PGID: 1000
+      PORT: 8211
+      PLAYERS: 16
+      SERVER_PASSWORD: "worldofpals"
+      ADMIN_PASSWORD: "adminPasswordHere"
+      REST_API_ENABLED: true
+      REST_API_PORT: 8212
+      TZ: "UTC"
+      COMMUNITY: false
+      SERVER_NAME: "palworld-server-docker UE4SS"
+      # Experimental Linux UE4SS (amd64 only)
+      ENABLE_UE4SS: true
+    volumes:
+      - ./palworld:/palworld/
