@@ -255,13 +255,69 @@ DiscordMessage() {
   fi
 }
 
+# Reads AdminPassword from the given settings file, defaulting to PalWorldSettings.ini
+# Only the quoted form written by the server and by compile-settings.sh is matched
+# Returns 0 and prints the password if one is set
+# Returns 1 if the file is unreadable or holds no AdminPassword
+get_admin_password_from_settings() {
+    local -r config_file="${1:-/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini}"
+    local -r pattern='AdminPassword[[:space:]]*=[[:space:]]*"([^"]*)"'
+    local line password=""
+
+    if [ ! -r "${config_file}" ]; then
+        return 1
+    fi
+
+    # Commented out lines are skipped and the last value wins, so a file that keeps
+    # an old or empty AdminPassword above the live one still resolves correctly
+    while IFS= read -r line; do
+        line="${line//$'\r'/}"
+        if [[ "${line}" =~ ^[[:space:]]*[\;#] ]]; then
+            continue
+        fi
+        if [[ "${line}" =~ $pattern ]] && [ -n "${BASH_REMATCH[1]}" ]; then
+            password="${BASH_REMATCH[1]}"
+        fi
+    done < "${config_file}"
+
+    if [ -n "${password}" ]; then
+        printf '%s' "${password}"
+        return 0
+    fi
+
+    return 1
+}
+
+# Returns the password used to authenticate against the server's own REST API
+# ADMIN_PASSWORD wins when it is set, so this changes nothing for existing setups
+# With DISABLE_GENERATE_SETTINGS=true the .ini is the source of truth and ADMIN_PASSWORD
+# is commonly left unset, which makes every container side call (auto reboot, backup,
+# graceful shutdown) fail with "Unauthorized"; fall back to the .ini in that case
+# Takes an optional settings file path, only used by the tests
+# shellcheck disable=SC2120
+get_admin_password() {
+    if [ -n "${ADMIN_PASSWORD:-}" ]; then
+        printf '%s' "${ADMIN_PASSWORD}"
+        return 0
+    fi
+
+    get_admin_password_from_settings "$@"
+}
+
+# Renders the given value as a YAML single quoted scalar
+# Single quoted scalars process no escape sequences, only a literal quote is doubled,
+# so a password holding a backslash or a double quote survives unchanged
+yaml_single_quoted() {
+    printf "'%s'" "${1//\'/\'\'}"
+}
+
 # REST API Call
 REST_API() {
     autopause resume "REST_API ${1}" > /dev/null
     local -r api="${1}"
     local -r data="${2}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
-    local -r userpass="admin:${ADMIN_PASSWORD}"
+    local -r userpass="admin:$(get_admin_password)"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
     local -i result=0

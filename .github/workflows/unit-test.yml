@@ -19,6 +19,9 @@ jobs:
       - name: Test negative delta recovery setting
         run: ./tests/test-negative-delta-recovery.sh
 
+      - name: Test admin password resolution
+        run: ./tests/test-admin-password.sh
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 

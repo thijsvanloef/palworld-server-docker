@@ -120,6 +120,10 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
       fileExists "/palworld/DefaultPalWorldSettings.ini" || exit
       cp "/palworld/DefaultPalWorldSettings.ini" "/palworld/Pal/Saved/Config/LinuxServer/PalWorldSettings.ini" || exit
   fi
+
+  if [ -z "${ADMIN_PASSWORD}" ] && get_admin_password_from_settings > /dev/null; then
+      LogInfo "ADMIN_PASSWORD is not set, using AdminPassword from PalWorldSettings.ini to authenticate against the REST API"
+  fi
 else
   LogAction "GENERATING CONFIG"
   LogInfo "Using Env vars to create PalWorldSettings.ini"
@@ -165,10 +169,13 @@ fi
 
 # Configure RCON settings.
 # DEPRECATED: RCON will be removed in a future release.
+# The password is written as a YAML single quoted scalar so that a backslash or a
+# double quote in it does not get re-interpreted or break the file for rcon-cli
+rcon_password="$(yaml_single_quoted "$(get_admin_password)")"
 cat >/home/steam/server/rcon.yaml  <<EOL
 default:
   address: "127.0.0.1:${RCON_PORT}"
-  password: "${ADMIN_PASSWORD}"
+  password: ${rcon_password}
 EOL
 
 CHILD_PIDS=()
