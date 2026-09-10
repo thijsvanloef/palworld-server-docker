@@ -142,6 +142,9 @@ The root compose file now includes two files:
 * [compose.yaml](compose.yaml) as the default Linux service.
 * [wine.yaml](wine.yaml) extended for Wine from the [compose.yaml](compose.yaml).
 
+  > [!NOTE]
+  > Please note that the `wine` tag version includes Winegi itself, resulting in a larger image size.
+
 ### Docker Run
 
 Change every <> to your own configuration
