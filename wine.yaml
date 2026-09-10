@@ -4,7 +4,7 @@ services:
     extends:
       file: ./compose.yaml
       service: palworld
-    image: thijsvanloef/palworld-server-docker:windows
+    image: thijsvanloef/palworld-server-docker:wine
     build:
       context: .
       args:

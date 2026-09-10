@@ -52,8 +52,8 @@ jobs:
           build-args: |
             TARGET_SERVER_PLATFORM=Linux
 
-  push-windows:
-    name: Developer image (windows)
+  push-wine:
+    name: Developer image (wine)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -86,7 +86,7 @@ jobs:
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=dev-windows
+            type=raw,value=dev-wine
           flavor: latest=false
 
       - name: Docker - Build / Push

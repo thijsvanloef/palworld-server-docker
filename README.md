@@ -140,7 +140,7 @@ services:
 The root compose file now includes two files:
 
 * [compose.yaml](compose.yaml) as the default Linux service.
-* [windows.yaml](windows.yaml) extended for Wine from the [compose.yaml](compose.yaml).
+* [wine.yaml](wine.yaml) extended for Wine from the [compose.yaml](compose.yaml).
 
 ### Docker Run
 

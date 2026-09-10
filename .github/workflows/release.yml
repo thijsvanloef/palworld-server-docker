@@ -62,8 +62,8 @@ jobs:
             TARGET_SERVER_PLATFORM=Linux
 
   # Builds Windows (Wine) image and pushes it to dockerhub and GHCR
-  release-windows:
-    name: Release - Docker image (windows)
+  release-wine:
+    name: Release - Docker image (wine)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -96,10 +96,10 @@ jobs:
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=windows
-            type=semver,pattern=v{{version}},suffix=-windows
-            type=semver,pattern=v{{major}}.{{minor}},suffix=-windows
-            type=semver,pattern=v{{major}},suffix=-windows
+            type=raw,value=wine
+            type=semver,pattern=v{{version}},suffix=-wine
+            type=semver,pattern=v{{major}}.{{minor}},suffix=-wine
+            type=semver,pattern=v{{major}},suffix=-wine
           flavor: latest=false
 
       - name: Docker - Build / Push

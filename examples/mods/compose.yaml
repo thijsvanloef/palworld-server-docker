@@ -2,7 +2,7 @@
 services:
   palworld:
     extends:
-      file: ../../windows.yaml
+      file: ../../wine.yaml
       service: palworld
     build:
       context: ../../

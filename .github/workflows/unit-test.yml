@@ -9,8 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit-test-windows:
-    name: Docker - Test (windows)
+  unit-test-wine:
+    name: Docker - Test (wine)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,7 +24,7 @@ jobs:
         with:
           file: ./Dockerfile
           load: true
-          tags: ${{ github.run_id }}:windows
+          tags: ${{ github.run_id }}:wine
           platforms: linux/amd64
           build-args: |
             TARGET_SERVER_PLATFORM=Windows
@@ -32,7 +32,7 @@ jobs:
       - name: Run Windows server
         run: |
             docker run -d \
-            --name palworld-server-windows \
+            --name palworld-server-wine \
             -p 8211:8211/udp \
             -p 27015:27015/udp \
             -p 25575:25575/tcp \
@@ -40,21 +40,21 @@ jobs:
             --env-file .env.example \
             --restart unless-stopped \
             --stop-timeout 30 \
-            ${{ github.run_id }}:windows
+            ${{ github.run_id }}:wine
 
       - name: Wait for Windows server to start
         run: |
             TIMEOUT_SECONDS=660
             START_TIME=$(date +%s)
 
-            while [ "$(docker inspect -f '{{.State.Health.Status}}' palworld-server-windows)" != healthy ]; do
+            while [ "$(docker inspect -f '{{.State.Health.Status}}' palworld-server-wine)" != healthy ]; do
               CURRENT_TIME=$(date +%s)
               ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
 
               if [ "${ELAPSED_TIME}" -gt "${TIMEOUT_SECONDS}" ]; then
                 echo "Timeout reached. Windows server failed to become healthy within ${TIMEOUT_SECONDS} seconds."
                 printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
-                docker logs palworld-server-windows
+                docker logs palworld-server-wine
                 exit 1
               fi
 
@@ -64,7 +64,7 @@ jobs:
 
       - name: Test negative delta recovery is disabled by default
         run: |
-            docker exec palworld-server-windows bash -c '
+            docker exec palworld-server-wine bash -c '
               . ./helper_functions.sh
               pal_pid="$(PalworldServerPid)"
               pal_pid="${pal_pid%% *}"
@@ -85,19 +85,19 @@ jobs:
       - name: Test if the REST API works
         run: |
             sleep 100
-            if ! docker exec palworld-server-windows rest-cli info | grep -q "\"version\"\:"; then
+            if ! docker exec palworld-server-wine rest-cli info | grep -q "\"version\"\:"; then
               echo "Server may not have started successfully."
               exit 4
             fi
-            docker exec palworld-server-windows rest-cli announce "Hello, Palworld!"
-            if docker logs palworld-server-windows 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
+            docker exec palworld-server-wine rest-cli announce "Hello, Palworld!"
+            if docker logs palworld-server-wine 2>&1 | grep -q "REST accessed endpoint /v1/api/announce OK"; then
                 echo "Announce OK - continuing."
             else
                 echo "Required log entry not found - exiting with code 5."
                 exit 5
             fi
-            docker exec palworld-server-windows rest-cli save
-            if docker logs palworld-server-windows 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
+            docker exec palworld-server-wine rest-cli save
+            if docker logs palworld-server-wine 2>&1 | grep -q "REST accessed endpoint /v1/api/save OK"; then
                 echo "Save OK - continuing."
             else
                 echo "Required log entry not found - exiting with code 5."
@@ -112,7 +112,7 @@ jobs:
 
       - name: Test the backup script
         run: |
-            docker exec palworld-server-windows backup
+            docker exec palworld-server-wine backup
             if [ ! -f ./palworld-windows/backups/palworld-save-*.tar.gz ]; then
               echo "Backup file not found. Backup command may have failed."
               exit 10
