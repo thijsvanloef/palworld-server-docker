@@ -33,20 +33,25 @@ LogInfo "Server platform is ${SERVER_PLATFORM:-Linux}"
 clean_platform_linux() {
     LogInfo "Cleaning up linux platform files on /palworld"
 
-    rm -vf /palworld/PalServer.sh  /palworld/Manifest_*_Linux.txt /palworld/steam*.so  /palworld/libsteamwebrtc.so
-    rm -vf /palworld/PalServer-arm64.sh
-    rm -vrf /palworld/linux64
-    rm -vrf /palworld/Engine /palworld/steamapps
-    rm -vrf /palworld/Pal/.sentry-native /palworld/Pal/Binaries /palworld/Pal/Content /palworld/Pal/Intermediate /palworld/Pal/Plugins
+    (cd /palworld && \
+        rm -rf ./*.sh ./*.so Manifest_*_Linux.txt linux64 Engine steamapps && \
+        cd Pal && \
+            rm -rf .sentry-native Binaries/Linux Content Intermediate Plugins
+    )
+    sleep 1
 }
 
 clean_platform_windows() {
     LogInfo "Cleaning up windows platform files on /palworld"
 
-    rm -vf /palworld/PalServer.exe /palworld/Manifest_*_Win64.txt /palworld/steam*.dll /palworld/tier0*.dll /palworld/vstdlib*.dll
-    rm -vrf /palworld/_CommonRedist
-    rm -vrf /palworld/Engine /palworld/steamapps
-    rm -vrf /palworld/Pal/.sentry-native /palworld/Pal/Binaries /palworld/Pal/Content /palworld/Pal/Intermediate /palworld/Pal/Plugins
+    (cd /palworld && \
+        rm -rf ./*.exe ./*.dll Manifest_*_Win64.txt _CommonRedist Engine steamapps && \
+        cd Pal && \
+            rm -rf .sentry-native Content Intermediate Plugins && \
+            cd Binaries/Win64 && \
+                rm -rf appcache config logs D3D12 steam_appid.txt ./*.exe boost_*.dll OpenImageDenoise.dll steam*.dll tbb*.dll tier*.dll vstdlib*.dll
+    )
+    sleep 1
 }
 
 migrate_GUS() {
