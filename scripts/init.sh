@@ -38,6 +38,8 @@ init_steam_home() {
         LogError "Unexpected state: ${steam_org_home} is a symlink but ${steam_new_home} does not exist or is not a directory."
         exit 1
     fi
+    mkdir -p /palworld/.steam/package
+    chmod o+w /palworld/.steam/package
 }
 
 if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
@@ -46,9 +48,8 @@ if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
         usermod -o -u "${PUID}" steam
         groupmod -o -g "${PGID}" steam
 
+        LogAction "Initializing Steam home"
         init_steam_home
-        mkdir -p /palworld/.steam/package
-        chmod o+w /palworld/.steam/package
 
         chown -R steam:steam /palworld /home/steam/
         # Fix WINEPREFIX top-level ownership (O(1), non-recursive).
@@ -64,6 +65,9 @@ if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
 elif [[ "$(id -u)" -eq 0 ]] || [[ "$(id -g)" -eq 0 ]]; then
    LogError "Running as root is not supported, please fix your user!"
    exit 1
+else
+    LogAction "Initializing Steam home"
+    init_steam_home
 fi
 
 if ! [ -w "/palworld" ]; then
