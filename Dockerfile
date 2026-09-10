@@ -293,10 +293,8 @@ WORKDIR /home/steam/server
 RUN echo $GIT_VERSION_TAG > GIT_VERSION_TAG
 
 RUN touch rcon.yaml crontab && \
-    mkdir -p /home/steam/Steam/package && \
-    chown steam:steam /home/steam/Steam/package && \
     rm -rf /tmp/dumps && \
-    chmod o+w rcon.yaml crontab /home/steam/Steam/package && \
+    chmod o+w rcon.yaml crontab && \
     chown steam:steam -R /home/steam/server
 
 HEALTHCHECK --start-period=5m \

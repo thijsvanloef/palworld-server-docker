@@ -23,13 +23,9 @@ init_steam_home() {
     local steam_org_home="/home/steam/Steam"
     local steam_new_home="/palworld/.steam"
     if [ ! -L "${steam_org_home}" ] && [ -d "${steam_org_home}" ]; then
-        if [ ! -d "${steam_new_home}" ]; then
-            LogInfo "Redirecting Steam home from ${steam_org_home} to ${steam_new_home}"
-            mkdir -p "${steam_new_home}"
-            cp -av "${steam_org_home}/." "${steam_new_home}/" 2>/dev/null || true
-        else
-            LogInfo "Steam home already redirected to ${steam_new_home}"
-        fi
+        LogInfo "Redirecting Steam home from ${steam_org_home} to ${steam_new_home}"
+        mkdir -p "${steam_new_home}"
+        cp -avr "${steam_org_home}"/. "${steam_new_home}/" 2>/dev/null || true
         rm -rf "${steam_org_home}"
         ln -sfn "${steam_new_home}" "${steam_org_home}"
     elif [ ! -e "${steam_org_home}" ]; then
@@ -51,6 +47,8 @@ if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
         groupmod -o -g "${PGID}" steam
 
         init_steam_home
+        mkdir -p /palworld/.steam/package
+        chmod o+w /palworld/.steam/package
 
         chown -R steam:steam /palworld /home/steam/
         # Fix WINEPREFIX top-level ownership (O(1), non-recursive).
