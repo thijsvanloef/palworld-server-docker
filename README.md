@@ -68,38 +68,55 @@ This container has also been tested and will work on both `x64` and `ARM64` base
 
 Keep in mind that you'll need to change the [environment variables](#environment-variables).
 
+### Image tags
+
+Use image tags by runtime target:
+
+* `thijsvanloef/palworld-server-docker:latest` - Linux runtime (amd64/arm64)
+* `thijsvanloef/palworld-server-docker:wine` - Windows runtime on Wine (amd64 only)
+
+> [!NOTE]
+> Please note that the `wine` tag version includes Wine itself, resulting in a larger image size.
+
+Versioned tags follow the same pattern:
+
+* `vX.Y.Z` for Linux
+* `wine-vX.Y.Z` for Wine (Windows)
+
 ### Docker Compose
 
 This repository includes an example [compose.yaml](/compose.yaml) file you can use to set up your server.
 
 ```yml
+---
 services:
-   palworld:
-      image: thijsvanloef/palworld-server-docker:latest
-      restart: unless-stopped
-      container_name: palworld-server
-      stop_grace_period: 30s # Set to however long you are willing to wait for the container to gracefully stop
-      ports:
-        - 8211:8211/udp
-        - 27015:27015/udp
-        # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
-      environment:
-         PUID: 1000
-         PGID: 1000
-         PORT: 8211 # Optional but recommended
-         PLAYERS: 16 # Optional but recommended
-         SERVER_PASSWORD: "worldofpals" # Optional but recommended
-         REST_API_ENABLED: true
-         REST_API_PORT: 8212
-         TZ: "UTC"
-         ADMIN_PASSWORD: "adminPasswordHere"
-         COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
-         # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
-         SERVER_NAME: "palworld-server-docker by Thijs van Loef"
-         SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
-         CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
-      volumes:
-         - ./palworld:/palworld/
+  palworld:
+    image: thijsvanloef/palworld-server-docker:latest
+    restart: unless-stopped
+    container_name: palworld-server
+    stop_grace_period: 30s  # Set to however long you are willing to wait for the container to gracefully stop
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp  # Required if you want your server to show up in the community servers tab
+      # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
+    environment:
+      PUID: 1000
+      PGID: 1000
+      PORT: 8211  # Optional but recommended
+      PLAYERS: 16  # Optional but recommended
+      SERVER_PASSWORD: "worldofpals"  # Optional but recommended
+      REST_API_ENABLED: true
+      REST_API_PORT: 8212
+      TZ: "UTC"
+      ADMIN_PASSWORD: "adminPasswordHere"
+      COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+      # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
+      SERVER_NAME: "palworld-server-docker by Thijs van Loef"
+      SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
+      CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"
+      LOG_LEVEL: "INFO"  # DEBUG/INFO/WARN/ERROR. Please be aware that DEBUG will log all command arguments, including secrets, to the logs. Share with caution.
+    volumes:
+      - ./palworld:/palworld/
 ```
 
 As an alternative, you can copy the [.env.example](.env.example) file to a new file called **.env** file.
@@ -122,6 +139,11 @@ services:
       volumes:
          - ./palworld:/palworld/
 ```
+
+The root compose file now includes two files:
+
+* [compose.yaml](compose.yaml) as the default Linux service.
+* [wine.yaml](wine.yaml) extended for Wine from the [compose.yaml](compose.yaml).
 
 ### Docker Run
 
@@ -217,10 +239,19 @@ It is highly recommended you set the following environment values before startin
 | PORT*                                      | UDP port that the server will expose                                                                                                                                                                | 8211                                                                                               | 1024-65535                                                                                                        | 0.1.0            |
 | PUID*                                      | The uid of the user the server should run as                                                                                                                                                        | 1000                                                                                               | !0                                                                                                                | 0.6.0            |
 | PGID*                                      | The gid of the group the server should run as                                                                                                                                                       | 1000                                                                                               | !0                                                                                                                | 0.6.0            |
-| MULTITHREADING `DEPRECATED`**             | Deprecated compatibility flag. Use ENABLE_PERF_THREADING_ARGS and WORKER_THREADS_SERVER instead.                                                    | false                                                                                              | true/false                                                                                                        | 0.1.0            |
-| ENABLE_PERF_THREADING_ARGS                | Enables performance-related threading startup arguments (`-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS`).                            | false                                                                                              | true/false                                                                                                        | 2.1.0            |
-| WORKER_THREADS_SERVER                      | Sets `-NumberOfWorkerThreadsServer`. Leave empty to use the game's default. When using deprecated MULTITHREADING=true, this defaults to all CPUs. |                                                                                                    | Positive integer                                                                                                  | 2.1.0            |
-| PALWORLD_ALLOW_NEGATIVE_DELTA_TIME         | Enables Palworld's built-in recovery for negative DeltaTime through an Engine ini override. This opt-in mitigation does not correct or synchronize the host or VM clock. | false                                                                                              | true/false                                                                                                        | 2.7.0            |
+| MULTITHREADING `DEPRECATED`**              | Deprecated compatibility flag. Use ENABLE_PERF_THREADING_ARGS and WORKER_THREADS_SERVER instead.                                                                                                    | false                                                                                              | true/false                                                                                                        | 0.1.0            |
+| ENABLE_PERF_THREADING_ARGS                 | Enables performance-related threading startup arguments (`-useperfthreads -NoAsyncLoadingThread -UseMultithreadForDS`).                                                                             | false                                                                                              | true/false                                                                                                        | 2.1.0            |
+| WORKER_THREADS_SERVER                      | Sets `-NumberOfWorkerThreadsServer`. Leave empty to use the game's default. When using deprecated MULTITHREADING=true, this defaults to all CPUs.                                                   |                                                                                                    | Positive integer                                                                                                  | 2.1.0            |
+| NOSTEAM                                    | Adds `-nosteam` to server startup arguments when set to true. Useful for some migration/troubleshooting flows between server setups. Official Palworld docs currently do not document this argument.| false                                                                                              | true/false                                                                                                        | 2.8.0            |
+| MOD_ENABLED                                | Enables Mod                                                                                                                                                                                         | true                                                                                               | true/false                                                                                                        | 2.8.0            |
+| MOD_UPDATE_ON_BOOT                         | Update/Install the mods the docker container starts                                                                                                                                                 | true                                                                                               | true/false                                                                                                        | 2.8.0            |
+| MOD_UPDATE_CRON_EXPRESSION                 | Setting affects frequency of automatic mod updates.                                                                                                                                                 |                                                                                                    | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 2.8.0            |
+| MOD_IDS                                    | Comma-separated Steam Workshop mod IDs to download and deploy.                                                                                                                                      |                                                                                                    | Comma-separated numeric IDs                                                                                       | 2.8.0            |
+| MOD_URL_UE4SS                              | Sets the URL for the UE4SS Palworld package zip used by default.                                                                                                                                    | `https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip`      | .zip URL                                                                                                          | 2.8.0            |
+| MOD_ID_PALSCHEMA                           | Sets the workshop ID for the PalSchema used by default.                                                                                                                                             | `3625280368`                                                                                       | Workshop ID                                                                                                       | 2.8.0            |
+| MOD_USE_PALDEFENDER                        | Use "PalDefender" mod.                                                                                                                                                                              | false                                                                                              | true/false                                                                                                        | 2.8.0            |
+| MOD_DEBUG                                  | Enables Mod debug logging                                                                                                                                                                           | false                                                                                              | true/false                                                                                                        | 2.8.0            |
+| PALWORLD_ALLOW_NEGATIVE_DELTA_TIME         | Enables Palworld's built-in recovery for negative DeltaTime through an Engine ini override. This opt-in mitigation does not correct or synchronize the host or VM clock.                            | false                                                                                              | true/false                                                                                                        | 2.7.0            |
 | COMMUNITY                                  | Whether or not the server shows up in the community server browser (USE WITH SERVER_PASSWORD)                                                                                                       | false                                                                                              | true/false                                                                                                        | 0.1.0            |
 | PUBLIC_IP                                  | You can manually specify the global IP address of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration. |                                                                                                    | x.x.x.x                                                                                                           | 0.1.0            |
 | PUBLIC_PORT                                | You can manually specify the port number of the network on which the server running. If not specified, it will be detected automatically. If it does not work well, try manual configuration.       |                                                                                                    | 1024-65535                                                                                                        | 0.1.0            |
@@ -231,11 +262,11 @@ It is highly recommended you set the following environment values before startin
 | UPDATE_ON_BOOT**                           | Update/Install the server when the docker container starts | true                                                                                               | true/false                                                                                                        | 0.3.0            |
 | RCON_ENABLED***                            | Enable RCON for the Palworld server                                                                                                                                                                 | false                                                                                              | true/false                                                                                                        | 0.1.0            |
 | RCON_PORT                                  | RCON port to connect to                                                                                                                                                                             | 25575                                                                                              | 1024-65535                                                                                                        | 0.1.0            |
-| REST_API_ENABLED                           | Enable REST API for the palworld server                                                                                                                                                             | true                                                                                              | true/false                                                                                                        | 0.35.0           |
+| REST_API_ENABLED                           | Enable REST API for the palworld server                                                                                                                                                             | true                                                                                               | true/false                                                                                                        | 0.35.0           |
 | REST_API_PORT                              | REST API port to connect to                                                                                                                                                                         | 8212                                                                                               | 1024-65535                                                                                                        | 0.35.0           |
-| ENABLE_GAMEDATA_API                        | Enable the Palworld game data API by adding `-enable-gamedata-api` at server start.                                                                                                              | false                                                                                              | true/false                                                                                                        | 2.1.0            |
+| ENABLE_GAMEDATA_API                        | Enable the Palworld game data API by adding `-enable-gamedata-api` at server start.                                                                                                                 | false                                                                                              | true/false                                                                                                        | 2.1.0            |
 | QUERY_PORT                                 | Query port used to communicate with Steam servers                                                                                                                                                   | 27015                                                                                              | 1024-65535                                                                                                        | 0.1.0            |
-| ALLOW_CONNECT_PLATFORM `DEPRECATED`                    | Specify if you are hosting a dedicated server for Steam or Xbox players                                                                                                                             | Steam                                                                                              | Steam/Xbox                                                                                                        | 0.38.0           |
+| ALLOW_CONNECT_PLATFORM `DEPRECATED`        | Specify if you are hosting a dedicated server for Steam or Xbox players                                                                                                                             | Steam                                                                                              | Steam/Xbox                                                                                                        | 0.38.0           |
 | BACKUP_CRON_EXPRESSION                     | Setting affects frequency of automatic backups.                                                                                                                                                     | 0 0 \* \* \*                                                                                       | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 0.19.0           |
 | BACKUP_ENABLED                             | Enables automatic backups                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        | 0.19.0           |
 | USE_BACKUP_SAVE_DATA                       | Enables native automatic backups                                                                                                                                                                    | true                                                                                               | true/false                                                                                                        | 0.35.0           |
@@ -248,13 +279,13 @@ It is highly recommended you set the following environment values before startin
 | AUTO_REBOOT_ENABLED                        | Enables automatic reboots                                                                                                                                                                           | false                                                                                              | true/false                                                                                                        | 0.21.0           |
 | AUTO_REBOOT_WARN_MINUTES                   | How long to wait to reboot the server, after the player were informed.                                                                                                                              | 5                                                                                                  | Integer                                                                                                           | 0.21.0           |
 | AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE         | Restart the Server even if there are players online.                                                                                                                                                | false                                                                                              | true/false                                                                                                        | 0.21.0           |
-| AUTO_PAUSE_ENABLED                         | Enables automatic pause (with ENABLE_PLAYER_LOGGING=true and REST_API_ENABLED=true required.)                                                                                                                                 | false                                                                                              | true/false                                                                                                        | 1.4.0           |
-| AUTO_PAUSE_TIMEOUT_EST                     | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established)                                                            | 180                                                                                                | Integer                                                                                                           | 1.4.0           |
-| AUTO_PAUSE_LOG                             | Enable auto-pause logging                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        | 1.4.0           |
-| AUTO_PAUSE_DEBUG                           | Enable auto-pause debug logging                                                                                                                                                                     | false                                                                                              | true/false                                                                                                        | 1.4.0           |
-| TARGET_MANIFEST_ID                         | Locks game version to corespond with Manifest ID from Steam Download, use with STEAM_USERNAME/STEAM_PASSWORD Depot.                                                                                                                         |                                                                                                    | See [Manifest ID Table](#locking-specific-game-version)                                                           | 0.27.0           |
-| STEAM_USERNAME                            | Steam username for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                                    |                                                                                                    | "string"                                                                                                          | 1.2.2           |
-| STEAM_PASSWORD                           | Steam password for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                                    |                                                                                                    | "string"                                                                                                          | 1.2.2           |
+| AUTO_PAUSE_ENABLED                         | Enables automatic pause (with ENABLE_PLAYER_LOGGING=true and REST_API_ENABLED=true required.)                                                                                                       | false                                                                                              | true/false                                                                                                        | 1.4.0            |
+| AUTO_PAUSE_TIMEOUT_EST                     | default 180 (seconds) describes the time between the last client disconnect and the pausing of the process (read as timeout established)                                                            | 180                                                                                                | Integer                                                                                                           | 1.4.0            |
+| AUTO_PAUSE_LOG                             | Enable auto-pause logging                                                                                                                                                                           | true                                                                                               | true/false                                                                                                        | 1.4.0            |
+| AUTO_PAUSE_DEBUG                           | Enable auto-pause debug logging                                                                                                                                                                     | false                                                                                              | true/false                                                                                                        | 1.4.0            |
+| TARGET_MANIFEST_ID                         | Locks game version to corespond with Manifest ID from Steam Download, use with STEAM_USERNAME/STEAM_PASSWORD Depot.                                                                                 |                                                                                                    | See [Manifest ID Table](#locking-specific-game-version)                                                           | 0.27.0           |
+| STEAM_USERNAME                             | Steam username for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                |                                                                                                    | "string"                                                                                                          | 1.2.2            |
+| STEAM_PASSWORD                             | Steam password for downloading the server with a TARGET_MANIFEST_ID.                                                                                                                                |                                                                                                    | "string"                                                                                                          | 1.2.2            |
 | INSTALL_BETA_INSIDER                       | Installs the latest Beta version of the Palworld dedicated server                                                                                                                                   | false                                                                                              | true/false                                                                                                        | 0.38.0           |
 | DISCORD_WEBHOOK_URL                        | Discord webhook url found after creating a webhook on a discord server.                                                                                                                             |                                                                                                    | `https://discord.com/api/webhooks/<webhook_id>`                                                                   | 0.22.0           |
 | DISCORD_SUPPRESS_NOTIFICATIONS             | Enables/Disables `@silent` messages for the server messages.                                                                                                                                        | false                                                                                              | boolean                                                                                                           | 0.34.0           |
@@ -298,11 +329,11 @@ It is highly recommended you set the following environment values before startin
 | DISCORD_ERR_BACKUP_DELETE_MESSAGE_URL      | Discord Webhook URL for this message (if left empty will use DISCORD_WEBHOOK_URL)                                                                                                                   |                                                                                                    | "string"                                                                                                          | 0.31.0           |
 | DISABLE_GENERATE_SETTINGS                  | Whether to automatically generate the PalWorldSettings.ini                                                                                                                                          | false                                                                                              | true/false                                                                                                        | 0.24.0           |
 | DISABLE_GENERATE_ENGINE                    | Whether to automatically generate the Engine.ini                                                                                                                                                    | true                                                                                               | true/false                                                                                                        | 0.30.0           |
-| ENABLE_PLAYER_LOGGING                      | Enables Logging and announcing when players join and leave (with REST_API_ENABLED=true required.)                                                                                                                                          | true                                                                                               | true/false                                                                                                        | 0.31.0           |
+| ENABLE_PLAYER_LOGGING                      | Enables Logging and announcing when players join and leave (with REST_API_ENABLED=true required.)                                                                                                   | true                                                                                               | true/false                                                                                                        | 0.31.0           |
 | PLAYER_LOGGING_POLL_PERIOD                 | Polling period (in seconds) to check for players who have joined or left                                                                                                                            | 5                                                                                                  | !0                                                                                                                | 0.31.0           |
-| USE_DEPOT_DOWNLOADER                     | Uses DepotDownloader to download game server files instead of steamcmd. This will help hosts incompatible with steamcmd (e.g. M-series Mac)                                                    | false                                                                                              | true/false                                                                                                        | 0.39.0           |
+| USE_DEPOT_DOWNLOADER                       | Uses DepotDownloader to download game server files instead of steamcmd. This will help hosts incompatible with steamcmd (e.g. M-series Mac)                                                         | false                                                                                              | true/false                                                                                                        | 0.39.0           |
 | LOG_FILTER_ENABLED                         | Enable filter to reduce duplicated log lines                                                                                                                                                        | true                                                                                               | true/false                                                                                                        | 2.0.1            |
-| LOG_LEVEL                                  | Minimum container log level to emit (`DEBUG` < `INFO` < `WARN` < `ERROR`; `SUCCESS`/`ACTION` are treated as `INFO`)                                                                             | INFO                                                                                               | DEBUG/INFO/WARN/ERROR/OFF                                                                                         | 2.1.0            |
+| LOG_LEVEL                                  | Minimum container log level to emit (`DEBUG` < `INFO` < `WARN` < `ERROR`; `SUCCESS`/`ACTION` are treated as `INFO`)                                                                                 | INFO                                                                                               | DEBUG/INFO/WARN/ERROR/OFF                                                                                         | 2.1.0            |
 | LOG_FORMAT_TYPE                            | Configure log format type                                                                                                                                                                           | default                                                                                            | json/logfmt/colored/plain/default                                                                                 | 2.0.1            |
 
 *highly recommended to set
@@ -324,15 +355,15 @@ For the Box64 configurations, please see the their official documentation for mo
 > For more specific device compatibility, create an issue on the
 > [base image repo](https://github.com/sonroyaalmerol/steamcmd-arm64).
 
-| Variable                                   | Info                                                                                                                                                                                                | Default Values                                                                                     | Allowed Values                                                                                                                                  | Added in Version |
-|--------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|------------------|
-| BOX64_DYNAREC_STRONGMEM                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_strongmem-)] Enable/Disable simulation of Strong Memory model                                                    | 1                                                                                              | 0, 1, 2, 3                                                                                                        | 0.23.0           |
-| BOX64_DYNAREC_BIGBLOCK                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_bigblock-)] Enables/Disables Box64's Dynarec building BigBlock.                                                    | 1                                                                                              | 0, 1, 2, 3                                                                                                        | 0.23.0           |
-| BOX64_DYNAREC_SAFEFLAGS                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_safeflags-)] Handling of flags on CALL/RET opcodes                                                    | 1                                                                                              | 0, 1, 2                                                                                                        | 0.23.0           |
-| BOX64_DYNAREC_FASTROUND                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_fastround-)] Enable/Disable generation of precise x86 rounding                                                    | 1                                                                                              | 0, 1                                                                                                        | 0.23.0           |
-| BOX64_DYNAREC_FASTNAN                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_fastnan-)] Enable/Disable generation of -NAN                                                    | 1                                                                                              | 0, 1                                                                                                        | 0.23.0           |
-| BOX64_DYNAREC_X87DOUBLE                     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_x87double-)] Force the use of Double for x87 emulation                                                    | 0                                                                                              | 0, 1                                                                                                        | 0.23.0           |
-| ARM64_DEVICE                     | Specify Box64 build to be used based on host device. This setting is only applicable for ARM64 hosts.                                                    | generic                                                                                              | generic, m1, rpi5, adlink                                                                                                        | 0.39.0           |
+| Variable                   | Info                                                                                                                                                     | Default Values   | Allowed Values               | Added in Version |
+|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|------------------------------|------------------|
+| BOX64_DYNAREC_STRONGMEM    | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_strongmem-)] Enable/Disable simulation of Strong Memory model     | 1                | 0, 1, 2, 3                   | 0.23.0           |
+| BOX64_DYNAREC_BIGBLOCK     | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_bigblock-)] Enables/Disables Box64's Dynarec building BigBlock.   | 1                | 0, 1, 2, 3                   | 0.23.0           |
+| BOX64_DYNAREC_SAFEFLAGS    | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_safeflags-)] Handling of flags on CALL/RET opcodes                | 1                | 0, 1, 2                      | 0.23.0           |
+| BOX64_DYNAREC_FASTROUND    | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_fastround-)] Enable/Disable generation of precise x86 rounding    | 1                | 0, 1                         | 0.23.0           |
+| BOX64_DYNAREC_FASTNAN      | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_fastnan-)] Enable/Disable generation of -NAN                      | 1                | 0, 1                         | 0.23.0           |
+| BOX64_DYNAREC_X87DOUBLE    | [[Box64 config](https://github.com/ptitSeb/box64/blob/main/docs/USAGE.md#box64_dynarec_x87double-)] Force the use of Double for x87 emulation            | 0                | 0, 1                         | 0.23.0           |
+| ARM64_DEVICE               | Specify Box64 build to be used based on host device. This setting is only applicable for ARM64 hosts.                                                    | generic          | generic, m1, rpi5, adlink    | 0.39.0           |
 
 ### Game Ports
 
@@ -342,6 +373,49 @@ For the Box64 configurations, please see the their official documentation for mo
 | 8212  | REST API Port (TCP) |
 | 27015 | Query Port (UDP)    |
 | 25575 | RCON Port (TCP)     |
+
+### Using MOD
+
+> [!NOTE]
+> It is available only with the `thijsvanloef/palworld-server-docker:wine` image.
+
+`MOD_ENABLED=true` is set by default, so the MOD is enabled.
+
+#### Install Steam Workshop mods by ID
+
+By specifying Steam Workshop IDs in `MOD_IDS` or `/palworld/Mods/workshop-mods.txt`,
+you can use the mods while keeping them synchronized with the latest versions.
+
+For subscribed Steam Workshop items, save Steam session (`/palworld/.steam`) with `STEAM_USERNAME`.
+
+The helper script at [examples/mods/save-login-credential.sh](examples/mods/save-login-credential.sh)
+performs one-time interactive login and stores the login user marker in the session volume.
+
+#### Essential system mods
+
+The following mods are automatically installed, as they are components required by many mods.
+
+You need subscribe to following mods.
+
+* [UE4SS Palworld](https://steamcommunity.com/workshop/filedetails/?id=3625223587) ([GitHub](https://github.com/Okaetsu/RE-UE4SS))
+
+* [PalSchema](https://steamcommunity.com/workshop/filedetails/?id=3625280368) ([GitHub](https://github.com/Okaetsu/PalSchema))
+
+#### Optionally installable mods
+
+The following mods can be installed using the `MOD_USE_*` environment variables.
+
+|Environment vars   |Default |Mod              |
+|-------------------|--------|-----------------|
+|MOD_USE_PALDEFENDER|false   |PalDefender ([GitHub](https://github.com/Ultimeit/PalDefender)) ([Nexusmods](https://www.nexusmods.com/palworld/mods/451)) |
+
+#### Install mods manually
+
+If there are any mods you wish to install manually, please place them in the `/palworld/Mods/NativeMods/<mod-name>` folder.
+
+#### Mod Example
+
+For a complete Wine + Workshop + UE4SS + PalSchema + PalDefender (optional) example, see [examples/mods/compose.yaml](examples/mods/compose.yaml).
 
 ## Using RCON
 
