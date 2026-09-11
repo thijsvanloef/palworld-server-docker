@@ -93,7 +93,7 @@ UpdateRequired() {
   fi
 
   # Parse temp file for manifest id
-  LATEST_MANIFEST=$(cat "$temp_file" | jq -r ".data.\"2394010\".depots.\"${depot_id}\".manifests.public.gid")
+  LATEST_MANIFEST=$(jq -r ".data.\"2394010\".depots.\"${depot_id}\".manifests.public.gid" < "$temp_file")
   rm "$temp_file"
 
   if [ -z "$LATEST_MANIFEST" ]; then
