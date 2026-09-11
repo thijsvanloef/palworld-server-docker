@@ -93,7 +93,7 @@ UpdateRequired() {
   fi
 
   # Parse temp file for manifest id
-  LATEST_MANIFEST=$(grep -Po "\"${depot_id}\".*\"gid\": \"\\d+\"" <"$temp_file" | sed -r 's/.*("[0-9]+")$/\1/' | tr -d '"')
+  LATEST_MANIFEST=$(cat "$temp_file" | jq -r ".data.\"2394010\".depots.\"${depot_id}\".manifests.public.gid")
   rm "$temp_file"
 
   if [ -z "$LATEST_MANIFEST" ]; then
