@@ -73,12 +73,15 @@ Keep in mind that you'll need to change the [environment variables](#environment
 Use image tags by runtime target:
 
 * `thijsvanloef/palworld-server-docker:latest` - Linux runtime (amd64/arm64)
-* `thijsvanloef/palworld-server-docker:windows` - Windows runtime on Wine (amd64 only)
+* `thijsvanloef/palworld-server-docker:wine` - Windows runtime on Wine (amd64 only)
+
+> [!NOTE]
+> Please note that the `wine` tag version includes Wine itself, resulting in a larger image size.
 
 Versioned tags follow the same pattern:
 
 * `vX.Y.Z` for Linux
-* `vX.Y.Z-windows` for Windows (Wine)
+* `wine-vX.Y.Z` for Wine (Windows)
 
 ### Docker Compose
 
@@ -141,9 +144,6 @@ The root compose file now includes two files:
 
 * [compose.yaml](compose.yaml) as the default Linux service.
 * [wine.yaml](wine.yaml) extended for Wine from the [compose.yaml](compose.yaml).
-
-  > [!NOTE]
-  > Please note that the `wine` tag version includes Winegi itself, resulting in a larger image size.
 
 ### Docker Run
 
@@ -247,7 +247,7 @@ It is highly recommended you set the following environment values before startin
 | MOD_UPDATE_ON_BOOT                         | Update/Install the mods the docker container starts                                                                                                                                                 | true                                                                                               | true/false                                                                                                        | 2.8.0            |
 | MOD_UPDATE_CRON_EXPRESSION                 | Setting affects frequency of automatic mod updates.                                                                                                                                                 |                                                                                                    | Needs a Cron-Expression - See [Configuring Automatic Backups with Cron](#configuring-automatic-backups-with-cron) | 2.8.0            |
 | MOD_IDS                                    | Comma-separated Steam Workshop mod IDs to download and deploy.                                                                                                                                      |                                                                                                    | Comma-separated numeric IDs                                                                                       | 2.8.0            |
-| MOD_URL_UE4SS                              | Sets the URL for the experimental UE4SS package zip used by default.                                                                                                                                | `https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip`   | .zip URL                                                                                                          | 2.8.0            |
+| MOD_URL_UE4SS                              | Sets the URL for the UE4SS Palworld package zip used by default.                                                                                                                                    | `https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip`      | .zip URL                                                                                                          | 2.8.0            |
 | MOD_ID_PALSCHEMA                           | Sets the workshop ID for the PalSchema used by default.                                                                                                                                             | `3625280368`                                                                                       | Workshop ID                                                                                                       | 2.8.0            |
 | MOD_USE_PALDEFENDER                        | Use "PalDefender" mod.                                                                                                                                                                              | false                                                                                              | true/false                                                                                                        | 2.8.0            |
 | MOD_DEBUG                                  | Enables Mod debug logging                                                                                                                                                                           | false                                                                                              | true/false                                                                                                        | 2.8.0            |
@@ -377,17 +377,52 @@ For the Box64 configurations, please see the their official documentation for mo
 ### Using MOD
 
 > [!NOTE]
-> It is available only with the `thijsvanloef/palworld-server-docker:windows` image.
+> It is available only with the `thijsvanloef/palworld-server-docker:wine` image.
 
 To use mods, `MOD_ENABLED=true` is required. It is set to `true` by default.
 We can use `MOD_IDS` or `/palworld/Mods/workshop-mods.txt` for the Workshop mod synchronization.
-The mod system uses the experimental-UE4SS and PalSchema by default.
+The mod system uses the UE4SS and PalSchema by default.
 If there are any mods you wish to install manually, please place them in the `/palworld/Mods/NativeMods/<mod-name>` folder.
 
-For registered Workshop items, save Steam session (`/palworld/.steam`) with `STEAM_USERNAME`.
+The latest versions of UE4SS Palworld and PalSchema are automatically installed, as they are components required by many mods.
+You need subscribe to following mods.
+
+- UE4SS Palworld
+  - [Steam Workshop ID:3625223587](https://steamcommunity.com/workshop/filedetails/?id=3625223587)
+  - [GitHub](https://github.com/Okaetsu/RE-UE4SS)
+  - <details><summary>Default settings</summary>
+
+    ```
+    MOD_URL_UE4SS=https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip
+    ```
+    </details>
+
+- PalSchema
+  - [Steam Workshop ID:3625280368](https://steamcommunity.com/workshop/filedetails/?id=3625280368)
+  - [GitHub](https://github.com/Okaetsu/PalSchema)
+  - <details><summary>Default settings</summary>
+
+    ```
+    MOD_ID_PALSCHEMA=3625280368
+    ```
+    </details>
+
+Supports following mods optionaly:
+
+- [PalDefender](https://github.com/Ultimeit/PalDefender)
+  - [Nexusmods](https://www.nexusmods.com/palworld/mods/451)
+  - <details><summary>Default settings</summary>
+
+    ```
+    MOD_USE_PALDEFENDER=false
+    MOD_URL_PALDEFENDER=https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender.zip
+    ```
+    </details>
+
+For subscribed Steam Workshop items, save Steam session (`/palworld/.steam`) with `STEAM_USERNAME`.
 The helper script at [examples/mods/save-login-credential.sh](examples/mods/save-login-credential.sh)
 performs one-time interactive login and stores the login user marker in the session volume.
-For a complete Windows + Workshop + UE4SS example, see [examples/mods/compose.yaml](examples/mods/compose.yaml).
+For a complete Wine + Workshop + UE4SS + PalSchema + PalDefender (optional) example, see [examples/mods/compose.yaml](examples/mods/compose.yaml).
 
 ## Using RCON
 

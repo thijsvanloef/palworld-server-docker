@@ -13,7 +13,6 @@ services:
       SERVER_NAME: "palworld-server-docker/examples/mods"
       MOD_ENABLED: true
       MOD_UPDATE_ON_BOOT: true
-      MOD_USE_PALDEFENDER: true
       MOD_DEBUG: false
 
       # ------------------------------------------------------------
@@ -38,8 +37,13 @@ services:
       # ------------------------------------------------------------
       # Optional: Override UE4SS URL and PalSchema mod ID
       # ------------------------------------------------------------
-      # MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+      # MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip"
       # MOD_ID_PALSCHEMA: "3625280368"
+
+      # ------------------------------------------------------------
+      # Optional: PalDefender mod usage
+      # ------------------------------------------------------------
+      MOD_USE_PALDEFENDER: true
 
       # If workshop mods require account auth:
       # 1) run ./save-login-credential.sh once before startup

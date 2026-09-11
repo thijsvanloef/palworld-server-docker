@@ -6,7 +6,7 @@ source "/home/steam/server/helper_functions.sh"
 # Mods env vars
 #-------------------------------------------------
 MOD_ENABLED="${MOD_ENABLED:-true}"
-MOD_URL_UE4SS="${MOD_URL_UE4SS:-https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip}"
+MOD_URL_UE4SS="${MOD_URL_UE4SS:-https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip}"
 MOD_ID_PALSCHEMA="${MOD_ID_PALSCHEMA:-3625280368}"
 MOD_USE_PALDEFENDER="${MOD_USE_PALDEFENDER:-false}"
 MOD_URL_PALDEFENDER="${MOD_URL_PALDEFENDER:-https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender.zip}"
@@ -19,7 +19,7 @@ platform="$(ServerPlatform)"
 bin_dir="/palworld/Pal/Binaries/Win64"
 native_mods_dir="/palworld/Mods/NativeMods"
 workshop_staging_dir="/palworld/Mods/.workshop"
-ue4ss_staging_dir="/palworld/Mods/.tmp/ue4ss-experimental"
+ue4ss_staging_dir="/palworld/Mods/.tmp/ue4ss-palworld"
 mods_base_dir="${bin_dir}/ue4ss/Mods"
 workshop_app_id="1623730"
 state_file="/palworld/Mods/.state.json"
@@ -28,8 +28,8 @@ steam_login_user_file="/palworld/.steam/.steam-login-user"
 workshop_mods_file="${workshop_mods_file:-/palworld/Mods/workshop-mods.txt}"
 previous_state='{}'
 v="$(isTrue "${MOD_DEBUG:-false}" && echo "v")"
-download_workshop="${MOD_UPDATE_ON_BOOT:-true}"
-download_ue4ss="${MOD_UPDATE_ON_BOOT:-true}"
+download_workshop=true
+download_ue4ss=true
 
 #-------------------------------------------------
 # helper functions
@@ -153,7 +153,7 @@ ue4ss_source_is_available() {
     [ -f "${source_dir}/Vindsent.dll" ]
 }
 
-sync_ue4ss_experimental_source() {
+sync_ue4ss_palworld_source() {
     local zip_file="/palworld/Mods/.cache/UE4SS-Palworld.zip"
     local tmp_file="${zip_file}.tmp"
     local target_dir="$1"
@@ -174,7 +174,7 @@ sync_ue4ss_experimental_source() {
             if [ -s "${tmp_file}" ]; then
                 mv -f "${tmp_file}" "${zip_file}"
                 should_extract=true
-                LogInfo "Downloaded newer UE4SS experimental package."
+                LogInfo "Downloaded newer UE4SS Palworld package."
             else
                 rm -f "${tmp_file}"
                 if [ ! -d "${target_dir}" ]; then
@@ -182,7 +182,7 @@ sync_ue4ss_experimental_source() {
                 fi
             fi
         else
-            LogWarn "Failed to check UE4SS experimental updates from ${MOD_URL_UE4SS}. Using local cache if available."
+            LogWarn "Failed to check UE4SS Palworld updates from ${MOD_URL_UE4SS}. Using local cache if available."
             rm -f "${tmp_file}"
             if [ ! -f "${zip_file}" ]; then
                 return 0
@@ -193,7 +193,7 @@ sync_ue4ss_experimental_source() {
         fi
     else
         if ! curl -sSfL -o "${zip_file}" "${MOD_URL_UE4SS}"; then
-            LogWarn "Failed to download UE4SS experimental package from ${MOD_URL_UE4SS}."
+            LogWarn "Failed to download UE4SS Palworld package from ${MOD_URL_UE4SS}."
             return 0
         fi
         should_extract=true
@@ -207,9 +207,9 @@ sync_ue4ss_experimental_source() {
     mkdir -p "${target_dir}"
 
     if unzip -o "${zip_file}" -d "${target_dir}" >/dev/null; then
-        ModLog_debug "Extracted UE4SS experimental package to ${target_dir}"
+        ModLog_debug "Extracted UE4SS Palworld package to ${target_dir}"
     else
-        LogWarn "Failed to extract UE4SS experimental package."
+        LogWarn "Failed to extract UE4SS Palworld package."
         rm -rf "${target_dir}"
     fi
 }
@@ -221,7 +221,7 @@ cleanup_previous_ue4ss_state() {
     while IFS= read -r tracked_path; do
         [ -z "${tracked_path}" ] && continue
         #rm -rf "${bin_dir:?}/${tracked_path}"
-        _remove_source_from_target "/palworld/Mods/.tmp/ue4ss-experimental/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
+        _remove_source_from_target "/palworld/Mods/.tmp/ue4ss/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
     done < <(printf '%s' "${state_json}" | jq -r '.ue4ss.files[]? // empty' 2>/dev/null)
 }
 
@@ -832,15 +832,15 @@ else
     LogInfo "Skipping Steam Workshop mod downloads."
 fi
 
-# Download UE4SS experimental
+# Download UE4SS Palworld
 if isTrue "${download_ue4ss}" || [ ! -d "${ue4ss_staging_dir}" ]; then
-    LogInfo "Downloading UE4SS experimental..."
-    sync_ue4ss_experimental_source "${ue4ss_staging_dir}"
+    LogInfo "Downloading UE4SS Palworld..."
+    sync_ue4ss_palworld_source "${ue4ss_staging_dir}"
 else
-    LogInfo "Skipping UE4SS experimental download."
+    LogInfo "Skipping UE4SS Palworld download."
 fi
 
-# Deploy UE4SS experimental artifacts
+# Deploy UE4SS Palworld artifacts
 deploy_ue4ss_artifacts "${ue4ss_staging_dir}"
 ModLog_debug "UE4SS: ${#DEPLOYED_UE4SS_FILES[@]} files deployed."
 

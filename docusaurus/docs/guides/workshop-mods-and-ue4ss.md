@@ -63,13 +63,13 @@ Place extracted native mod folders under:
 
 At startup and periodic sync, mod files are deployed to the active runtime path.
 
-## Install latest experimental UE4SS (default)
+## Install latest UE4SS Palworld (default)
 
-To auto-download and deploy the experimental UE4SS package:
+To auto-download and deploy the UE4SS Palworld package:
 
 ```yaml
 environment:
-  MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/experimental-palworld/UE4SS-Palworld.zip"
+  MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip"
 ```
 
 ## Secure Workshop authentication (no password env)
