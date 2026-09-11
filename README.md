@@ -379,49 +379,42 @@ For the Box64 configurations, please see the their official documentation for mo
 > [!NOTE]
 > It is available only with the `thijsvanloef/palworld-server-docker:wine` image.
 
-To use mods, `MOD_ENABLED=true` is required. It is set to `true` by default.
-We can use `MOD_IDS` or `/palworld/Mods/workshop-mods.txt` for the Workshop mod synchronization.
-The mod system uses the UE4SS and PalSchema by default.
-If there are any mods you wish to install manually, please place them in the `/palworld/Mods/NativeMods/<mod-name>` folder.
+`MOD_ENABLED=true` is set by default, so the MOD is enabled.
 
-The latest versions of UE4SS Palworld and PalSchema are automatically installed, as they are components required by many mods.
-You need subscribe to following mods.
+#### Install Steam Workshop mods by ID
 
-- UE4SS Palworld
-  - [Steam Workshop ID:3625223587](https://steamcommunity.com/workshop/filedetails/?id=3625223587)
-  - [GitHub](https://github.com/Okaetsu/RE-UE4SS)
-  - <details><summary>Default settings</summary>
-
-    ```
-    MOD_URL_UE4SS=https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip
-    ```
-    </details>
-
-- PalSchema
-  - [Steam Workshop ID:3625280368](https://steamcommunity.com/workshop/filedetails/?id=3625280368)
-  - [GitHub](https://github.com/Okaetsu/PalSchema)
-  - <details><summary>Default settings</summary>
-
-    ```
-    MOD_ID_PALSCHEMA=3625280368
-    ```
-    </details>
-
-Supports following mods optionaly:
-
-- [PalDefender](https://github.com/Ultimeit/PalDefender)
-  - [Nexusmods](https://www.nexusmods.com/palworld/mods/451)
-  - <details><summary>Default settings</summary>
-
-    ```
-    MOD_USE_PALDEFENDER=false
-    MOD_URL_PALDEFENDER=https://github.com/Ultimeit/PalDefender/releases/latest/download/PalDefender.zip
-    ```
-    </details>
+By specifying Steam Workshop IDs in `MOD_IDS` or `/palworld/Mods/workshop-mods.txt`,
+you can use the mods while keeping them synchronized with the latest versions.
 
 For subscribed Steam Workshop items, save Steam session (`/palworld/.steam`) with `STEAM_USERNAME`.
+
 The helper script at [examples/mods/save-login-credential.sh](examples/mods/save-login-credential.sh)
 performs one-time interactive login and stores the login user marker in the session volume.
+
+#### Essential system mods
+
+The following mods are automatically installed, as they are components required by many mods.
+
+You need subscribe to following mods.
+
+* [UE4SS Palworld](https://steamcommunity.com/workshop/filedetails/?id=3625223587) ([GitHub](https://github.com/Okaetsu/RE-UE4SS))
+
+* [PalSchema](https://steamcommunity.com/workshop/filedetails/?id=3625280368) ([GitHub](https://github.com/Okaetsu/PalSchema))
+
+#### Optionally installable mods
+
+The following mods can be installed using the `MOD_USE_*` environment variables.
+
+|Environment vars   |Default |Mod              |
+|-------------------|--------|-----------------|
+|MOD_USE_PALDEFENDER|false   |PalDefender ([GitHub](https://github.com/Ultimeit/PalDefender)) ([Nexusmods](https://www.nexusmods.com/palworld/mods/451)) |
+
+#### Install mods manually
+
+If there are any mods you wish to install manually, please place them in the `/palworld/Mods/NativeMods/<mod-name>` folder.
+
+#### Mod Example
+
 For a complete Wine + Workshop + UE4SS + PalSchema + PalDefender (optional) example, see [examples/mods/compose.yaml](examples/mods/compose.yaml).
 
 ## Using RCON
