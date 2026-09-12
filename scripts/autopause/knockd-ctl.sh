@@ -258,7 +258,7 @@ Nflog_startBackend() {
             echo "${monitorPid}" > "${Nflog_pidFile}"
             Nflog_saveState
             APLog_debug "Start NFLOG monitor (PID:${monitorPid}, chain:${Nflog_chainName}, group:${Nflog_group})"
-            return
+            return 0
         fi
 
         if [ -s "${Nflog_logFile}" ]; then
@@ -289,8 +289,11 @@ Nflog_stopBackend() {
 
     if [ -f "${Nflog_pidFile}" ]; then
         pid="$(cat "${Nflog_pidFile}")"
-        kill -TERM "${pid}" 2>/dev/null || true
+        # Kill children before the parent: once the pipe wrapper (pid) exits,
+        # its children (tcpdump and the "while read" loop) are reparented to
+        # init and "pkill -P" can no longer find them by that PPID.
         pkill -TERM -P "${pid}" 2>/dev/null || true
+        kill -TERM "${pid}" 2>/dev/null || true
         rm -f "${Nflog_pidFile}"
     fi
     Nflog_killTcpdump
