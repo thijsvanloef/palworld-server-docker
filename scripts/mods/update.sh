@@ -231,8 +231,7 @@ UE4SS_undeploy() {
 
     while IFS= read -r tracked_path; do
         [ -z "${tracked_path}" ] && continue
-        #rm -rf "${bin_dir:?}/${tracked_path}"
-        Mod_removeSourceFromTarget "/palworld/Mods/.tmp/ue4ss/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
+        Mod_removeSourceFromTarget "${ue4ss_staging_dir:?}/${tracked_path}" "${bin_dir:?}/${tracked_path}" true
     done < <(printf '%s' "${state_json}" | jq -r '.ue4ss.files[]? // empty' 2>/dev/null)
 }
 
