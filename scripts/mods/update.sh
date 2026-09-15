@@ -794,7 +794,7 @@ fi
 
 # Sync UE4SS Palworld
 LogInfo "Syncing UE4SS Palworld..."
-UE4SS_sync "${ue4ss_staging_dir}"
+UE4SS_sync "${ue4ss_staging_dir}" || exit 1
 
 # Deploy UE4SS Palworld artifacts
 UE4SS_deploy "${ue4ss_staging_dir}"
