@@ -11,7 +11,7 @@ set -euo pipefail
 
 # If running as root, switch to the steam user
 if [ "$(id -u)" -eq 0 ]; then
-  exec su steam -c "$0 $*"
+  exec setpriv --reuid=steam --regid=steam --init-groups -- "$0" "$@"
 fi
 
 STEAM_HOME="/palworld/.steam"
