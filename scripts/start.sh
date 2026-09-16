@@ -263,9 +263,18 @@ if [ "${DISABLE_GENERATE_ENGINE,,}" = false ]; then
     /home/steam/server/compile-engine.sh || exit
 fi
 
-if [ "${platform}" = "windows" ] && isTrue "${MOD_ENABLED}" && isTrue "${MOD_UPDATE_ON_BOOT}"; then
-    LogAction "UPDATE MODS"
-    mods-update || exit
+if [ "${platform}" = "windows" ]; then
+    if isTrue "${MOD_ENABLED}"; then
+        if isTrue "${MOD_UPDATE_ON_BOOT}"; then
+            LogAction "Update the Mods"
+            mods-update || exit
+        fi
+    else
+        if [ -f "/palworld/Mods/.state.json" ]; then
+            LogAction "Clean the Mods"
+            mods-update clean|| exit
+        fi
+    fi
 fi
 
 LogAction "GENERATING CRONTAB"
