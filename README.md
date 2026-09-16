@@ -81,7 +81,7 @@ Use image tags by runtime target:
 Versioned tags follow the same pattern:
 
 * `vX.Y.Z` for Linux
-* `wine-vX.Y.Z` for Wine (Windows)
+* `vX.Y.Z-wine` for Wine (Windows)
 
 ### Docker Compose
 
