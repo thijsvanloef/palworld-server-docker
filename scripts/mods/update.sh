@@ -485,8 +485,7 @@ ModState_buildJson() {
     local deployed_paks_json='[]'
     local deployed_lua_json='[]'
     local deployed_palschema_json='[]'
-    local deployment_entries_json='[]'
-    local mod_id source_dir version mod_name native_version tracked_file item record
+    local mod_id source_dir version mod_name native_version tracked_file item
 
     ModLog_debug "Building state JSON for ${#WORKSHOP_IDS[@]} workshop mods, ${#NATIVE_MOD_NAMES[@]} native mods, ${#DEPLOYED_UE4SS_FILES[@]} UE4SS files, ${#DEPLOYED_PAKS[@]} deployed paks, ${#DEPLOYED_LUA_MODS[@]} deployed lua mods, ${#DEPLOYED_PALSCHEMA_MODS[@]} deployed palschema mods."
     for mod_id in "${WORKSHOP_IDS[@]}"; do
@@ -524,18 +523,13 @@ ModState_buildJson() {
         deployed_palschema_json="$(jq -cn --argjson base "${deployed_palschema_json}" --arg value "${item}" '$base + [$value]')"
     done
 
-    for record in "${MOD_STATE_DEPLOYMENTS[@]}"; do
-        deployment_entries_json="$(jq -cn --argjson base "${deployment_entries_json}" --argjson item "${record}" '$base + [$item]')"
-    done
-
-    jq -cn \
+    printf '%s\n' "${MOD_STATE_DEPLOYMENTS[@]}" | jq -cn \
         --argjson workshop "${workshop_json}" \
         --argjson native "${native_json}" \
         --argjson ue4ss_files "${ue4ss_files_json}" \
         --argjson deployed_paks "${deployed_paks_json}" \
         --argjson deployed_lua_mods "${deployed_lua_json}" \
         --argjson deployed_palschema_mods "${deployed_palschema_json}" \
-        --argjson deployments "${deployment_entries_json}" \
         --arg ue4ss_source_version "$(UE4SS_zipMtime)" \
         '{
             schema_version: 2,
@@ -547,7 +541,7 @@ ModState_buildJson() {
             deployed_lua_mods: $deployed_lua_mods,
             deployed_palschema_mods: $deployed_palschema_mods,
             staging_dirs: ["/palworld/Mods/.workshop","/palworld/Mods/.tmp/ue4ss-palworld"],
-            deployments: $deployments
+            deployments: [inputs]
         }'
 }
 
