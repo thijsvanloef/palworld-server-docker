@@ -26,6 +26,29 @@ get_player_info(){
     fi
 }
 
+wait_for_server_start() {
+    # Wait for the server to start running before proceeding
+    local i=0
+    while ! PalworldServerIsRunning; do
+        if [ "${i}" -gt 120 ]; then
+            LogError "Server did not start within 60 seconds."
+            return 1
+        fi
+        sleep 0.5
+        ((i++))
+    done
+    # Wait until rcon/rest-api port is open
+    while ! nc -w 10 -z localhost "${_PORT}"; do
+        if ! PalworldServerIsRunning; then
+            LogError "The server may have stalled while starting up."
+            return 1
+        fi
+        LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
+        sleep 3
+    done
+    return 0
+}
+
 # Prefer REST API
 if [ "${REST_API_ENABLED,,}" = true ]; then
     _PORT=${REST_API_PORT}
@@ -35,16 +58,13 @@ else
     _LABEL="RCON"
 fi
 
-# Wait until rcon/rest-api port is open
-while ! nc -z localhost "${_PORT}"; do
-    sleep 5
-    LogInfo "Waiting for ${_LABEL}(${_PORT}) port to open to show player logging..."
-done
+wait_for_server_start || exit 1
+
 LogInfo "${_LABEL}(${_PORT}) port is open, player logging started"
 
 AutoPause_init
 while true; do
-    server_pid=$(pidof PalServer-Linux-Shipping)
+    server_pid=$(PalworldServerPid)
     if [ -n "${server_pid}" ]; then
         # Player IDs are usally 9 or 10 digits however when a player joins for the first time for a given boot their ID is temporary 00000000 (8x zeros or 32x zeros) while loading
         # Player ID is also 00000000 (8x zeros or 32x zeros) when in character creation

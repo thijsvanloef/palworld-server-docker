@@ -95,6 +95,121 @@ isTrue() {
     return 1
 }
 
+ServerPlatform() {
+    local platform="${SERVER_PLATFORM:-Linux}"
+    platform="${platform,,}"
+
+    case "${platform}" in
+        linux)
+            echo "linux"
+            ;;
+        windows)
+            echo "windows"
+            ;;
+        *)
+            echo "linux"
+            ;;
+    esac
+}
+
+PalworldConfigSubdir() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "WindowsServer"
+        return 0
+    fi
+
+    echo "LinuxServer"
+}
+
+PalworldSettingsFilePath() {
+    echo "/palworld/Pal/Saved/Config/$(PalworldConfigSubdir)/PalWorldSettings.ini"
+}
+
+PalworldEngineFilePath() {
+    echo "/palworld/Pal/Saved/Config/$(PalworldConfigSubdir)/Engine.ini"
+}
+
+PalworldInstallMarkerPath() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "/palworld/PalServer.exe"
+        return 0
+    fi
+
+    echo "/palworld/PalServer.sh"
+}
+
+PalworldServerBinaryPath() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "/palworld/Pal/Binaries/Win64/PalServer-Win64-Shipping-Cmd.exe"
+        return 0
+    fi
+
+    echo "/palworld/PalServer.sh"
+}
+
+PalworldServerProcessMatch() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        printf '%s' '^Z:\\palworld\\Pal\\Binaries\\Win64\\PalServer-Win64-Shipping-Cmd\.exe'
+        return 0
+    fi
+
+    echo "PalServer-Linux-Shipping"
+}
+
+PalworldServerPid() {
+    pgrep -f "$(PalworldServerProcessMatch)"
+}
+
+PalworldServerIsRunning() {
+    # Checks launcher is running, if the platform is windows.
+    if [ "$(ServerPlatform)" = "windows" ]; then
+        pgrep -f "wine-run" >/dev/null
+        return $?
+    fi
+    if [ -n "$(PalworldServerPid)" ]; then
+        return 0
+    fi
+    return 1
+}
+
+PalworldSteamPlatformType() {
+    local platform
+    platform="$(ServerPlatform)"
+
+    if [ "${platform}" = "windows" ]; then
+        echo "windows"
+        return 0
+    fi
+
+    echo "linux"
+}
+
+PalworldDepotDownloaderOS() {
+    PalworldSteamPlatformType
+}
+
+PalworldDepotId() {
+    if [ -n "${PALWORLD_DEPOT_ID:-}" ]; then
+        echo "${PALWORLD_DEPOT_ID}"
+    elif [ "$(ServerPlatform)" = "windows" ]; then
+        echo "2394011"
+    else
+        echo "2394012"
+    fi
+}
+
 PlayerLogging_isEnabled() {
     isTrue "${ENABLE_PLAYER_LOGGING}" && [[ "${PLAYER_LOGGING_POLL_PERIOD}" =~ ^[0-9]+$ ]] && { isTrue "${REST_API_ENABLED}" || isTrue "${RCON_ENABLED}"; }
 }
@@ -259,7 +374,7 @@ DiscordMessage() {
 REST_API() {
     autopause resume "REST_API ${1}" > /dev/null
     local -r api="${1}"
-    local -r data="${2}"
+    local -r data="${2:-}"
     local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
@@ -334,7 +449,20 @@ shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
     if save_server; then
-        if ! rest-cli shutdown 1 "Shutting down"; then
+        if rest-cli shutdown 1 "Shutting down"; then
+            # for windows
+            for ((i = 0; i < 30; i++)); do
+                if ! PalworldServerPid > /dev/null; then
+                    break
+                fi
+                sleep 1s
+            done
+            if PalworldServerPid > /dev/null; then
+                LogWarn "Forcing shutdown"
+                kill -KILL "$(PalworldServerPid)" > /dev/null 2>&1
+                return_val=1
+            fi
+        else
             return_val=1
         fi
     else

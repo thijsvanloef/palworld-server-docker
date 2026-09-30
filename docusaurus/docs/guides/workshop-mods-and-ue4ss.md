@@ -1,0 +1,125 @@
+---
+sidebar_position: 3
+---
+
+# Workshop Mods and UE4SS and PalSchema Setup
+
+This guide provides a safe and repeatable workflow for running Workshop mods and UE4SS and PalSchema on the Windows server path.
+
+## About `-nosteam` / `NOSTEAM`
+
+The official Palworld server documentation does not explicitly mention `-nosteam`.
+
+It appears to be used when maintaining existing save data, though the details are unclear.
+
+Because of that, treat `NOSTEAM` as an operational compatibility option and validate behavior
+in your own environment when you enable it.
+
+## Recommended base example
+
+Start from the included example:
+
+* [examples/mods/compose.yaml](https://github.com/thijsvanloef/palworld-server-docker/blob/main/examples/mods/compose.yaml)
+
+The example includes all mod-related environment variables.
+
+## Choose mod source(s)
+
+You can combine these methods:
+
+A. Workshop IDs via environment variable
+B. Workshop IDs via file
+C. NativeMods folders under `/palworld/Mods/NativeMods`
+
+### Method A: Workshop IDs in environment variable
+
+Set a comma-separated list:
+
+```yaml
+environment:
+  MOD_IDS: "3625280368,3625287786"
+```
+
+### Method B: Workshop IDs in file
+
+Create `/palworld/Mods/workshop-mods.txt` and place one ID per line.
+
+Example:
+
+```text
+3625280368
+3625287786
+```
+
+If you manage IDs in file, leave `MOD_IDS` empty.
+
+### Method C: NativeMods folders
+
+Place extracted native mod folders under:
+
+```text
+/palworld/Mods/NativeMods/<mod_name>/...
+```
+
+At startup and periodic sync, mod files are deployed to the active runtime path.
+
+## Install latest UE4SS Palworld (default)
+
+To auto-download and deploy the UE4SS Palworld package:
+
+```yaml
+environment:
+  MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip"
+```
+
+## Secure Workshop authentication (no password env)
+
+For paid/private Workshop items, do not put Steam password in compose or dotenv.
+
+Use this flow:
+
+1. Set `STEAM_USERNAME` in `compose.yaml`
+2. run `steam-login` once to save the login credentials to the `/palworld` volume.
+3. Restart the server.
+
+Example:
+
+```bash
+cd examples/mods
+./save-login-credential.sh
+docker compose up -d
+```
+
+The helper stores account metadata in `.steam-login-user` under the `/palworld/.steam/`.
+This file is managed automatically by the helper script and usually does not require manual edits.
+
+## Automatic update checks
+
+Set `MOD_UPDATE_CRON_EXPRESSION` to a cron expression to schedule periodic Workshop mod synchronization.
+
+## Verify expected logs
+
+Healthy sync typically includes:
+
+* `Syncing workshop mods`
+* `Logging in using cached credentials`
+* `Success. Downloaded item ...`
+* `Mod changes detected` (only when effective changes are found)
+
+## Troubleshooting quick checks
+
+1. Workshop download fails
+
+    Check whether `/palworld` is persisted
+    and whether one-time login was completed with `steam-login`.
+    See `examples/mods/save-login-credential.sh`
+
+2. Files downloaded but mod not active
+
+    Confirm deployed files appear under `Pal/Binaries/Win64/ue4ss/Mods`.
+
+3. Steam credentials prompts keep returning
+
+    Re-run `steam-login` and complete Steam Guard approval,
+    then restart the container.
+    See `examples/mods/save-login-credential.sh`

@@ -7,20 +7,20 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
     LogAction "AUTO PAUSE with Community"
 
     LogInfo "Launch proxy."
+    MITMPROXY_LOG_DIR="/home/steam/server/autopause/community/logs"
     MITMPROXY_ADDONS_DIR="/home/steam/server/autopause/community/addons"
-    IGNORE_HOSTS="api.steamcmd.net,discord.com,api.github.com,.sentry.io"
-    IGNORE_HOSTS_PATTERN="api\\.steamcmd\\.net|discord\\.com|api\\.github\\.com|(?:.*\\.)?sentry\\.io"
+    IGNORE_HOSTS=".steamcmd.net,.discord.com,.github.com,.githubusercontent.com,.sentry.io,.steamstatic.com,.steampowered.com,.steamserver.net"
     MITMPROXY_OPTIONS=(
         "--set" "block_global=false"
         "--ssl-insecure"
-        "--ignore-hosts" "^(${IGNORE_HOSTS_PATTERN})\$"
         "-s" "${MITMPROXY_ADDONS_DIR}/PalCommCapture.py"
     )
+    mkdir -p "${MITMPROXY_LOG_DIR}"
     if isTrue "${AUTO_PAUSE_DEBUG}"; then
         PYTHONUNBUFFERED=1 mitmweb --web-host 0.0.0.0 "${MITMPROXY_OPTIONS[@]}" &
         LogInfo "Web Interface URL: http://localhost:8081/"
     else
-        mitmdump "${MITMPROXY_OPTIONS[@]}" > /var/log/mitmdump.log &
+        mitmdump "${MITMPROXY_OPTIONS[@]}" > "${MITMPROXY_LOG_DIR}/mitmdump.log" &
     fi
 
     LogInfo "Wait until proxy is initialized..."
@@ -29,6 +29,7 @@ if isTrue "${COMMUNITY}" && isTrue "${AUTO_PAUSE_ENABLED}" && PlayerLogging_isEn
     done
     LogInfo "Proxy initialized."
     if [ "$(id -u)" -eq 0 ]; then
+        chown -R "${PUID}:${PGID}" "${MITMPROXY_LOG_DIR}"
         chown -R "${PUID}:${PGID}" "${MITMPROXY_ADDONS_DIR}/__pycache__"
         chown -R "${PUID}:${PGID}" "/home/steam/.mitmproxy"
     fi
