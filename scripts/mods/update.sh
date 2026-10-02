@@ -1,6 +1,8 @@
 #!/bin/bash
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
+# shellcheck source=scripts/mods/mod_state.sh
+source "/home/steam/server/mods/mod_state.sh"
 
 #-------------------------------------------------
 # Mods env vars
@@ -17,11 +19,15 @@ MOD_URL_PALDEFENDER="${MOD_URL_PALDEFENDER:-https://github.com/Ultimeit/PalDefen
 image="thijsvanloef/palworld-server-docker:wine"
 bin_dir="/palworld/Pal/Binaries/Win64"
 native_mods_dir="/palworld/Mods/NativeMods"
+native_staging_dir="/palworld/Mods/.tmp/native-mods"
 workshop_staging_dir="/palworld/Mods/.workshop"
 ue4ss_staging_dir="/palworld/Mods/.tmp/ue4ss-palworld"
+ue4ss_mods_config_staging_file="/palworld/Mods/.tmp/ue4ss-mods.txt"
 ue4ss_mods_dir="${bin_dir}/ue4ss/Mods"
 workshop_app_id="1623730"
 state_file="/palworld/Mods/.state.json"
+state_backup_dir="/palworld/Mods/.state-backups"
+state_journal_file="/palworld/Mods/.state-journal.json"
 steamcmd_bin="${steamcmd_bin:-/home/steam/steamcmd/steamcmd.sh}"
 steam_login_user_file="/palworld/.steam/.steam-login-user"
 workshop_mods_file="${workshop_mods_file:-/palworld/Mods/workshop-mods.txt}"
@@ -29,6 +35,8 @@ previous_state='{}'
 v="$(isTrue "${MOD_DEBUG:-false}" && echo "v")"
 download_ue4ss=true
 MOD_STATE_DEPLOYMENTS=()
+MOD_STATE_PACKAGES='{}'
+MOD_STATE_ORDER=0
 
 #-------------------------------------------------
 # helper functions
@@ -65,7 +73,7 @@ NativeMods_listNames() {
     local mod_path
     while IFS= read -r -d '' mod_path; do
         out_names+=("$(basename "${mod_path}")")
-    done < <(find "${native_mods_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+    done < <(find "${native_mods_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null | LC_ALL=C sort -z)
 }
 
 ModState_isSafeTargetPath() {
@@ -76,79 +84,57 @@ ModState_isSafeTargetPath() {
     return 0
 }
 
-ModState_addDeploymentRecord() {
-    local owner_kind="${1:-}"
-    local owner_id="${2:-}"
-    local owner_name="${3:-}"
-    local artifact="${4:-}"
-    local source_path="${5:-}"
-    local target_path="${6:-}"
-    local source_mtime="${7:-0}"
-    local source_size="${8:-0}"
-    local record
+ModState_registerPackage() {
+    local owner_key="$1"
+    local kind="$2"
+    local name="$3"
+    local source_id="$4"
+    local version="${5:-unknown}"
 
-    [ -n "${source_path}" ] || return 0
-    [ -n "${target_path}" ] || return 0
-    if ! ModState_isSafeTargetPath "${target_path}"; then
-        LogWarn "Skipping unsafe mod deployment target: ${target_path}"
-        return 0
-    fi
-
-    if ! [[ "${source_mtime}" =~ ^[0-9]+$ ]]; then
-        source_mtime=0
-    fi
-    if ! [[ "${source_size}" =~ ^[0-9]+$ ]]; then
-        source_size=0
-    fi
-
-    record="$(jq -nc \
-        --arg owner_kind "${owner_kind}" \
-        --arg owner_id "${owner_id}" \
-        --arg owner_name "${owner_name}" \
-        --arg artifact "${artifact}" \
-        --arg source_path "${source_path}" \
-        --arg target_path "${target_path}" \
-        --arg source_mtime "${source_mtime}" \
-        --arg source_size "${source_size}" \
-        '{
-            owner_kind: $owner_kind,
-            owner_id: $owner_id,
-            owner_name: $owner_name,
-            artifact: $artifact,
-            source_path: $source_path,
-            target_path: $target_path,
-            source_mtime: ($source_mtime | tonumber),
-            source_size: ($source_size | tonumber)
-        }')"
-
-    MOD_STATE_DEPLOYMENTS+=("${record}")
+    MOD_STATE_PACKAGES="$(jq -c --arg owner "${owner_key}" --arg kind "${kind}" --arg name "${name}" --arg source_id "${source_id}" --arg version "${version}" '. + {($owner):{kind:$kind,name:$name,source_id:$source_id,version:$version}}' <<< "${MOD_STATE_PACKAGES}")"
 }
 
 ModState_recordTree() {
-    local owner_kind="${1:-}"
-    local owner_id="${2:-}"
-    local owner_name="${3:-}"
-    local artifact="${4:-}"
-    local source_root="${5:-}"
-    local target_root="${6:-}"
-    local source_file rel_path target_file source_mtime source_size
+    local source_root="${1:-}"
+    local target_root="${2:-}"
+    local owner_key="${3:-}"
+    local order="${4:-}"
+    local source_file rel_path target_file
 
     [ -n "${source_root}" ] || return 0
     [ -n "${target_root}" ] || return 0
+    [ -n "${owner_key}" ] || return 0
 
+    # Collect desired files only; the reconciler applies them after all packages are staged.
     if [ -d "${source_root}" ]; then
         while IFS= read -r -d '' source_file; do
             rel_path="${source_file#"${source_root}"/}"
             target_file="${target_root%/}/${rel_path}"
-            source_mtime="$(stat -c '%Y' "${source_file}" 2>/dev/null || echo 0)"
-            source_size="$(stat -c '%s' "${source_file}" 2>/dev/null || echo 0)"
-            ModState_addDeploymentRecord "${owner_kind}" "${owner_id}" "${owner_name}" "${artifact}" "${source_file}" "${target_file}" "${source_mtime}" "${source_size}"
-        done < <(find "${source_root}" -type f -print0 2>/dev/null)
+            ModState_recordFileClaim "${owner_key}" "${source_file}" "${target_file}" "${order}"
+        done < <(find "${source_root}" -type f -print0 2>/dev/null | LC_ALL=C sort -z)
     elif [ -f "${source_root}" ]; then
-        source_mtime="$(stat -c '%Y' "${source_root}" 2>/dev/null || echo 0)"
-        source_size="$(stat -c '%s' "${source_root}" 2>/dev/null || echo 0)"
-        ModState_addDeploymentRecord "${owner_kind}" "${owner_id}" "${owner_name}" "${artifact}" "${source_root}" "${target_root}" "${source_mtime}" "${source_size}"
+        ModState_recordFileClaim "${owner_key}" "${source_root}" "${target_root}" "${order}"
     fi
+}
+
+ModState_recordFileClaim() {
+    local owner_key="$1"
+    local source_file="$2"
+    local target_file="$3"
+    local order="${4:-}"
+    local claim
+
+    # Owner identity is independent of the package's display name.
+    if ! ModStateV3_isSafeTargetPath "${target_file}" "/palworld"; then
+        LogWarn "Skipping unsafe mod deployment target: ${target_file}"
+        return 0
+    fi
+    if [ -z "${order}" ]; then
+        MOD_STATE_ORDER=$((MOD_STATE_ORDER + 1))
+        order="${MOD_STATE_ORDER}"
+    fi
+    claim="$(jq -nc --arg owner "${owner_key}" --arg source "${source_file}" --arg target "${target_file}" --argjson order "${order}" --arg sha256 "$(ModStateV3_hashFile "${source_file}")" '{owner:$owner,source:$source,target:$target,order:$order,sha256:$sha256}')"
+    MOD_STATE_DEPLOYMENTS+=("${claim}")
 }
 
 # Given a source path and a target path, remove only the contents of the source from the target.
@@ -347,15 +333,17 @@ UE4SS_undeploy() {
 # Deploy UE4SS artifacts and record their top-level paths for later cleanup.
 UE4SS_deploy() {
     local source_dir="$1"
+    local owner_key="${2:-ue4ss}"
     local rel_path
 
     if ! UE4SS_isDownloaded "${source_dir}"; then
         return 0
     fi
 
-    mkdir -p "${bin_dir}"
-    cp -aur "${source_dir}/." "${bin_dir}/" > /dev/null 2>&1
-    ModState_recordTree "ue4ss" "" "ue4ss" "ue4ss" "${source_dir}" "${bin_dir}"
+    if [ "${owner_key}" = "ue4ss" ]; then
+        ModState_registerPackage "ue4ss" "ue4ss" "UE4SS" "ue4ss" "$(UE4SS_zipMtime)"
+    fi
+    ModState_recordTree "${source_dir}" "${bin_dir}" "${owner_key}"
 
     # Only the top-level entry names are tracked for later cleanup.
     while IFS= read -r rel_path; do
@@ -365,8 +353,16 @@ UE4SS_deploy() {
 
 # Enable deployed Lua mods in the UE4SS mods configuration file.
 UE4SS_updateModsTxt() {
-    local mods_txt="${ue4ss_mods_dir}/mods.txt"
-    [ -f "${mods_txt}" ] || return 0
+    local source_mods_txt mods_txt="${ue4ss_mods_config_staging_file}"
+    source_mods_txt="$(find "${ue4ss_staging_dir}" -type f -path '*/Mods/mods.txt' -print -quit 2>/dev/null)"
+    if [ -z "${source_mods_txt}" ] && [ -f "${ue4ss_mods_dir}/mods.txt" ]; then
+        LogWarn "UE4SS staging mods.txt was not found. Falling back to the deployed file; removed MOD entries may remain enabled, so review and disable stale entries manually."
+        source_mods_txt="${ue4ss_mods_dir}/mods.txt"
+    fi
+    [ -n "${source_mods_txt}" ] || return 0
+
+    mkdir -p "$(dirname "${mods_txt}")"
+    cp -p -- "${source_mods_txt}" "${mods_txt}"
 
     local lua_mod line already_in_file
     for lua_mod in "${DEPLOYED_LUA_MODS[@]}"; do
@@ -382,6 +378,8 @@ UE4SS_updateModsTxt() {
             LogInfo "Enabled ${lua_mod} in mods.txt"
         fi
     done
+    ModState_registerPackage "ue4ss" "ue4ss" "UE4SS" "ue4ss" "$(UE4SS_zipMtime)"
+    ModState_recordFileClaim "ue4ss" "${mods_txt}" "${ue4ss_mods_dir}/mods.txt"
 }
 
 #-------------------------------------------------
@@ -481,6 +479,8 @@ ModState_cleanupStagingDirs() {
 ModState_buildJson() {
     local workshop_json='{}'
     local native_json='{}'
+    local claims_json='[]'
+    local targets_json='{}'
     local ue4ss_files_json='[]'
     local deployed_paks_json='[]'
     local deployed_lua_json='[]'
@@ -495,7 +495,7 @@ ModState_buildJson() {
         else
             version="missing"
         fi
-        workshop_json="$(jq -cn --argjson base "${workshop_json}" --arg key "${mod_id}" --arg value "${version}" '$base + {($key): $value}')"
+        workshop_json="$(jq -c --arg key "${mod_id}" --arg value "${version}" '. + {($key): $value}' <<< "${workshop_json}")"
     done
 
     for mod_name in "${NATIVE_MOD_NAMES[@]}"; do
@@ -504,35 +504,53 @@ ModState_buildJson() {
         if [ -z "${native_version}" ]; then
             native_version="missing"
         fi
-        native_json="$(jq -cn --argjson base "${native_json}" --arg key "${mod_name}" --arg value "${native_version}" '$base + {($key): $value}')"
+        native_json="$(jq -c --arg key "${mod_name}" --arg value "${native_version}" '. + {($key): $value}' <<< "${native_json}")"
     done
 
     for tracked_file in "${DEPLOYED_UE4SS_FILES[@]}"; do
-        ue4ss_files_json="$(jq -cn --argjson base "${ue4ss_files_json}" --arg value "${tracked_file}" '$base + [$value]')"
+        ue4ss_files_json="$(jq -c --arg value "${tracked_file}" '. + [$value]' <<< "${ue4ss_files_json}")"
     done
 
     for item in "${DEPLOYED_PAKS[@]}"; do
-        deployed_paks_json="$(jq -cn --argjson base "${deployed_paks_json}" --arg value "${item}" '$base + [$value]')"
+        deployed_paks_json="$(jq -c --arg value "${item}" '. + [$value]' <<< "${deployed_paks_json}")"
     done
 
     for item in "${DEPLOYED_LUA_MODS[@]}"; do
-        deployed_lua_json="$(jq -cn --argjson base "${deployed_lua_json}" --arg value "${item}" '$base + [$value]')"
+        deployed_lua_json="$(jq -c --arg value "${item}" '. + [$value]' <<< "${deployed_lua_json}")"
     done
 
     for item in "${DEPLOYED_PALSCHEMA_MODS[@]}"; do
-        deployed_palschema_json="$(jq -cn --argjson base "${deployed_palschema_json}" --arg value "${item}" '$base + [$value]')"
+        deployed_palschema_json="$(jq -c --arg value "${item}" '. + [$value]' <<< "${deployed_palschema_json}")"
     done
 
-    printf '%s\n' "${MOD_STATE_DEPLOYMENTS[@]}" | jq -cn \
-        --argjson workshop "${workshop_json}" \
-        --argjson native "${native_json}" \
-        --argjson ue4ss_files "${ue4ss_files_json}" \
-        --argjson deployed_paks "${deployed_paks_json}" \
-        --argjson deployed_lua_mods "${deployed_lua_json}" \
-        --argjson deployed_palschema_mods "${deployed_palschema_json}" \
+    if [ "${#MOD_STATE_DEPLOYMENTS[@]}" -gt 0 ]; then
+        claims_json="$(printf '%s\n' "${MOD_STATE_DEPLOYMENTS[@]}" | jq -sc '.')"
+        targets_json="$(jq -c 'sort_by(.target) | group_by(.target) | map({(.[0].target):{claims:map({owner,source,sha256,order})}}) | add // {}' <<< "${claims_json}")"
+    fi
+
+    printf '%s\n' \
+        "${MOD_STATE_PACKAGES}" \
+        "${targets_json}" \
+        "${workshop_json}" \
+        "${native_json}" \
+        "${ue4ss_files_json}" \
+        "${deployed_paks_json}" \
+        "${deployed_lua_json}" \
+        "${deployed_palschema_json}" |
+        jq -cs \
         --arg ue4ss_source_version "$(UE4SS_zipMtime)" \
-        '{
-            schema_version: 2,
+        '.[0] as $packages |
+         .[1] as $targets |
+         .[2] as $workshop |
+         .[3] as $native |
+         .[4] as $ue4ss_files |
+         .[5] as $deployed_paks |
+         .[6] as $deployed_lua_mods |
+         .[7] as $deployed_palschema_mods |
+         {
+            schema_version: 3,
+            packages: $packages,
+            targets: $targets,
             workshop: $workshop,
             native: $native,
             ue4ss: {files: $ue4ss_files},
@@ -540,8 +558,7 @@ ModState_buildJson() {
             deployed_paks: $deployed_paks,
             deployed_lua_mods: $deployed_lua_mods,
             deployed_palschema_mods: $deployed_palschema_mods,
-            staging_dirs: ["/palworld/Mods/.workshop","/palworld/Mods/.tmp/ue4ss-palworld"],
-            deployments: [inputs]
+            staging_dirs: ["/palworld/Mods/.workshop","/palworld/Mods/.tmp/ue4ss-palworld","/palworld/Mods/.tmp/native-mods"]
         }'
 }
 
@@ -558,7 +575,7 @@ ModState_buildSourceSnapshot() {
         else
             version="missing"
         fi
-        workshop_json="$(jq -cn --argjson base "${workshop_json}" --arg key "${mod_id}" --arg value "${version}" '$base + {($key): $value}')"
+        workshop_json="$(jq -c --arg key "${mod_id}" --arg value "${version}" '. + {($key): $value}' <<< "${workshop_json}")"
     done
 
     for mod_name in "${NATIVE_MOD_NAMES[@]}"; do
@@ -567,14 +584,13 @@ ModState_buildSourceSnapshot() {
         if [ -z "${native_version}" ]; then
             native_version="missing"
         fi
-        native_json="$(jq -cn --argjson base "${native_json}" --arg key "${mod_name}" --arg value "${native_version}" '$base + {($key): $value}')"
+        native_json="$(jq -c --arg key "${mod_name}" --arg value "${native_version}" '. + {($key): $value}' <<< "${native_json}")"
     done
 
-    jq -cn \
-        --argjson workshop "${workshop_json}" \
-        --argjson native "${native_json}" \
+    printf '%s\n' "${workshop_json}" "${native_json}" |
+        jq -cs \
         --arg ue4ss_source_version "$(UE4SS_zipMtime)" \
-        '{workshop: $workshop, native: $native, ue4ss_source_version: $ue4ss_source_version}'
+        '.[0] as $workshop | .[1] as $native | {workshop: $workshop, native: $native, ue4ss_source_version: $ue4ss_source_version}'
 }
 
 # Print installed mod versions and deployed artifacts from the last recorded state.
@@ -625,9 +641,9 @@ ModInfo_print() {
 
 # Acquire an exclusive lock so concurrent mods-update invocations don't race on shared caches/state.
 ModLock_acquire() {
-    local lock_file="/palworld/Mods/.update.lock"
-    mkdir -p "$(dirname "${lock_file}")"
-    exec 9>"${lock_file}"
+    local lock_dir="/palworld/Mods"
+    mkdir -p "${lock_dir}"
+    exec 9<"${lock_dir}"
     if ! command -v flock >/dev/null 2>&1; then
         LogWarn "flock command not found; concurrent mods-update runs are not protected against."
         return 0
@@ -787,6 +803,7 @@ Mod_collectPackageName() {
 Mod_deployViaRules() {
     local dest_dir="$1"
     local pkg_name="$2"
+    local owner_key="$3"
     local info_json="${dest_dir}/Info.json"
     local pak pak_name rules_json rule type target target_path dest source_root
 
@@ -817,33 +834,27 @@ Mod_deployViaRules() {
                     dest="${ue4ss_mods_dir}/${pkg_name}/"
                     LogInfo "[Lua] ${pkg_name} → ${dest}"
                     ModLog_debug "Syncing Lua mod from \"${target_path}\" to \"${dest}\""
-                    mkdir -p "${dest}"
-                    cp "-aur${v}" "${target_path}" "${dest}"
-                    ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "lua" "${target_path}" "${dest}"
+                    ModState_recordTree "${target_path}" "${dest}" "${owner_key}"
                     ModTrack_addUnique DEPLOYED_LUA_MODS "${pkg_name}"
                     ;;
                 Paks)
                     LogInfo "[Paks] ${pkg_name} → /palworld/Pal/Content/Paks/LogicMods/"
                     while IFS= read -r -d '' pak; do
                         pak_name="$(basename "${pak}")"
-                        mkdir -p "/palworld/Pal/Content/Paks/LogicMods"
-                        cp "-auf${v}" "${pak}" "/palworld/Pal/Content/Paks/LogicMods/"
-                        ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "pak" "${pak}" "/palworld/Pal/Content/Paks/LogicMods/${pak_name}"
+                        ModState_recordTree "${pak}" "/palworld/Pal/Content/Paks/LogicMods/${pak_name}" "${owner_key}"
                         ModTrack_addUnique DEPLOYED_PAKS "${pak_name}"
-                    done < <(find "${target_path}" -type f -name '*.pak' -print0)
+                    done < <(find "${target_path}" -type f -name '*.pak' -print0 | LC_ALL=C sort -z)
                     ;;
                 PalSchema)
                     dest="${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}/"
                     LogInfo "[PalSchema] ${pkg_name} → ${dest}"
                     ModLog_debug "Syncing PalSchema mod from \"${target_path}\" to \"${dest}\""
-                    mkdir -p "${dest}"
-                    cp "-aur${v}" "${target_path}" "${dest}"
-                    ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "palschema" "${target_path}" "${dest}"
+                    ModState_recordTree "${target_path}" "${dest}" "${owner_key}"
                     ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "${pkg_name}"
                     ;;
                 UE4SS)
                     LogInfo "[UE4SS] deploying framework from ${target_path}"
-                    UE4SS_deploy "${target_path}"
+                    UE4SS_deploy "${target_path}" "${owner_key}"
                     ;;
             esac
         done < <(printf '%s' "${rule}" | jq -r '.Targets[]? // empty')
@@ -852,9 +863,10 @@ Mod_deployViaRules() {
 
 # Detect and deploy mod artifacts when no InstallRule is available.
 Mod_deployAutoDiscover() {
-    local dest_dir="$1"
+    local staged_mod_dir="$1"
     local pkg_name="$2"
-    local check_dir d sub name dest found_flat pak_file pak_name target_paks_dir
+    local owner_key="$3"
+    local check_dir d sub name dest found_flat pak_file pak_name target_paks_dir staged_ue4ss_mod_dir
 
     ModLog_debug "Mod_deployAutoDiscover: ${pkg_name}"
 
@@ -872,21 +884,24 @@ Mod_deployAutoDiscover() {
             fi
 
             LogInfo "Found pak mod: $pak_name. Deploying to $(basename "$target_paks_dir")..."
-            mkdir -p "$target_paks_dir"
-            cp "-aur${v}" "$pak_file" "$target_paks_dir/"
-            ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "pak" "$pak_file" "${target_paks_dir}/${pak_name}"
+            ModState_recordTree "$pak_file" "${target_paks_dir}/${pak_name}" "${owner_key}"
             LogDebug "[Pak] Absolute destination: ${target_paks_dir}/${pak_name}"
             ModTrack_addUnique DEPLOYED_PAKS "${pak_name}"
         fi
-    done < <(find "$dest_dir" -type f -iname "*.pak")
+    done < <(find "$staged_mod_dir" -type f -iname "*.pak")
 
     # If this is a UE4SS mod with a Mods folder, copy its contents to Mods directory
-    if [ -d "${dest_dir}/Mods" ]; then
-        for d in "${dest_dir}/Mods"/*/; do
+    if [ -d "${staged_mod_dir}/Pal/Binaries/Win64/ue4ss/Mods" ]; then
+        staged_ue4ss_mod_dir="${staged_mod_dir}/Pal/Binaries/Win64/ue4ss/Mods"
+    else
+        staged_ue4ss_mod_dir="${staged_mod_dir}/Mods"
+    fi
+    LogInfo "Checking for UE4SS Mods directory in ${staged_ue4ss_mod_dir}..."
+    if [ -d "${staged_ue4ss_mod_dir}" ]; then
+        for d in "${staged_ue4ss_mod_dir}"/*/; do
             [ -d "${d}" ] || continue
             name="$(basename "${d}")"
-            cp "-aur${v}" "${d%/}" "${ue4ss_mods_dir}/"
-            ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "lua" "${d%/}" "${ue4ss_mods_dir}/${name}"
+            ModState_recordTree "${d%/}" "${ue4ss_mods_dir}/${name}" "${owner_key}"
             if [ "${name}" = "PalSchema" ] && [ -d "${d}/mods" ]; then
                 for sub in "${d}/mods"/*/; do
                     [ -d "${sub}" ] && ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "$(basename "${sub}")"
@@ -898,47 +913,39 @@ Mod_deployAutoDiscover() {
     fi
 
     # PalSchema mods (either inside a 'PalSchema/mods' folder, a flat 'PalSchema' folder, or 'mods' folder)
-    if [ -d "${dest_dir}/PalSchema/mods" ]; then
-        mkdir -p "${ue4ss_mods_dir}/PalSchema/mods"
-        for d in "${dest_dir}/PalSchema/mods"/*/; do
+    if [ -d "${staged_mod_dir}/PalSchema/mods" ]; then
+        for d in "${staged_mod_dir}/PalSchema/mods"/*/; do
             [ -d "${d}" ] || continue
-            cp "-aur${v}" "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/"
-            ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "palschema" "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/$(basename "${d}")"
+            ModState_recordTree "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/$(basename "${d}")" "${owner_key}"
             ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "$(basename "${d}")"
         done
-    elif [ -d "${dest_dir}/PalSchema" ]; then
+    elif [ -d "${staged_mod_dir}/PalSchema" ]; then
         # Check if it is the PalSchema framework itself
-        if [ -f "${dest_dir}/PalSchema/scripts/main.lua" ] || [ -f "${dest_dir}/PalSchema/main.lua" ]; then
-            LogInfo "Detected legacy PalSchema framework in ${dest_dir}/PalSchema ... Ignored."
+        if [ -f "${staged_mod_dir}/PalSchema/scripts/main.lua" ] || [ -f "${staged_mod_dir}/PalSchema/main.lua" ]; then
+            LogInfo "Detected legacy PalSchema framework in ${staged_mod_dir}/PalSchema ... Ignored."
         else
-            # ${dest_dir}/PalSchema/* → /palworld/Pal/Binaries/Win64/ue4ss/Mods/PalSchema/mods/<pkg_name>/
-            mkdir -p "${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}"
-            cp "-aur${v}" "${dest_dir}/PalSchema/." "${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}/"
-            ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "palschema" "${dest_dir}/PalSchema" "${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}"
+            # ${staged_mod_dir}/PalSchema/* → /palworld/Pal/Binaries/Win64/ue4ss/Mods/PalSchema/mods/<pkg_name>/
+            ModState_recordTree "${staged_mod_dir}/PalSchema" "${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}" "${owner_key}"
             ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "${pkg_name}"
         fi
-    elif [ -d "${dest_dir}/mods" ]; then
-        mkdir -p "${ue4ss_mods_dir}/PalSchema/mods"
-        for d in "${dest_dir}/mods"/*/; do
+    elif [ -d "${staged_mod_dir}/mods" ]; then
+        for d in "${staged_mod_dir}/mods"/*/; do
             [ -d "${d}" ] || continue
-            cp "-aur${v}" "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/"
-            ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "palschema" "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/$(basename "${d}")"
+            ModState_recordTree "${d%/}" "${ue4ss_mods_dir}/PalSchema/mods/$(basename "${d}")" "${owner_key}"
             ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "$(basename "${d}")"
         done
     fi
 
     found_flat=false
     for check_dir in blueprints raw translations items; do
-        if [ -d "${dest_dir}/${check_dir}" ]; then
+        if [ -d "${staged_mod_dir}/${check_dir}" ]; then
             found_flat=true
             break
         fi
     done
     if [ "${found_flat}" = true ]; then
         dest="${ue4ss_mods_dir}/PalSchema/mods/${pkg_name}"
-        mkdir -p "${dest}"
-        cp "-aur${v}" "${dest_dir}/." "${dest}/"
-        ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "palschema" "${dest_dir}" "${dest}"
+        ModState_recordTree "${staged_mod_dir}" "${dest}" "${owner_key}"
         ModTrack_addUnique DEPLOYED_PALSCHEMA_MODS "${pkg_name}"
     fi
 }
@@ -948,16 +955,16 @@ Mod_deploy() {
     local source_dir="$1"
     local dest_dir="$2"
     local pkg_name="$3"
+    local owner_key="$4"
     local info_json
 
     mkdir -p "${dest_dir}"
     cp "-aur${v}" "${source_dir}/." "${dest_dir}/"
-    ModState_recordTree "workshop" "${pkg_name}" "${pkg_name}" "staged" "${source_dir}" "${dest_dir}"
     info_json="${dest_dir}/Info.json"
     if [ -f "${info_json}" ] && jq -e '.InstallRule' "${info_json}" >/dev/null 2>&1; then
-        Mod_deployViaRules "${dest_dir}" "${pkg_name}"
+        Mod_deployViaRules "${dest_dir}" "${pkg_name}" "${owner_key}"
     else
-        Mod_deployAutoDiscover "${dest_dir}" "${pkg_name}"
+        Mod_deployAutoDiscover "${dest_dir}" "${pkg_name}" "${owner_key}"
     fi
 }
 
@@ -974,23 +981,46 @@ ModConfig_ensurePalModSettings() {
     mkdir -p "$(dirname "${ini_file}")"
 
     if [ -f "${ini_file}" ]; then
-        local in_active_list=false
+        # Remove existing [ActiveModList] section and its contents.
+        # Remove existing [Settings] section and its contents.
+        # Override bGlobalEnableMod=True within [PalModSettings] section.
+        # Remove any other bGlobalEnableMod lines.
+        local in_active_list=false in_setting_section=false in_palmod_settings_section=false
         while IFS= read -r line || [ -n "${line:-}" ]; do
-            if [ "${line}" = "[ActiveModList]" ]; then
+            if [ "${in_active_list}" = true ]; then
+                if [[ "${line}" =~ ^\[.*\]$ ]]; then
+                    in_active_list=false
+                else
+                    continue
+                fi
+            fi
+            if [ "${in_setting_section}" = true ]; then
+                if [[ "${line}" =~ ^\[.*\]$ ]]; then
+                    in_setting_section=false
+                else
+                    continue
+                fi
+            fi
+            if [[ "${line}" =~ ^\[ActiveModList\] ]]; then
                 in_active_list=true
                 continue
             fi
-
-            if [[ "${line}" =~ ^\[.*\]$ ]] && [ "${in_active_list}" = true ]; then
-                in_active_list=false
+            if [[ "${line}" =~ ^\[Settings\] ]]; then
+                in_setting_section=true
+                continue
             fi
-
-            if [ "${in_active_list}" = true ]; then
+            if [[ "${line}" =~ ^\[PalModSettings\] ]]; then
+                in_palmod_settings_section=true
+                echo "${line}" >> "${tmp_file}"
                 continue
             fi
 
             if [[ "${line}" =~ ^bGlobalEnableMod= ]]; then
-                echo "bGlobalEnableMod=true" >> "${tmp_file}"
+                if [ "${in_palmod_settings_section}" = true ]; then
+                    echo "bGlobalEnableMod=True" >> "${tmp_file}"
+                else
+                    continue
+                fi
             else
                 echo "${line}" >> "${tmp_file}"
             fi
@@ -999,18 +1029,20 @@ ModConfig_ensurePalModSettings() {
 
     if [ ! -s "${tmp_file}" ]; then
         cat > "${tmp_file}" <<'EOF'
-[Settings]
-bGlobalEnableMod=true
+[PalModSettings]
+ConfigVersion=1.0
+bGlobalEnableMod=True
 EOF
-    elif ! grep -q '^bGlobalEnableMod=true$' "${tmp_file}" 2>/dev/null; then
+    elif ! grep -q '^bGlobalEnableMod=True$' "${tmp_file}" 2>/dev/null; then
         if grep -q '^bGlobalEnableMod=' "${tmp_file}" 2>/dev/null; then
-            sed -i 's/^bGlobalEnableMod=.*/bGlobalEnableMod=true/' "${tmp_file}"
-        elif grep -q '^\[Settings\]$' "${tmp_file}" 2>/dev/null; then
-            sed -i '/^\[Settings\]$/a bGlobalEnableMod=true' "${tmp_file}"
+            sed -i 's/^bGlobalEnableMod=.*/bGlobalEnableMod=True/' "${tmp_file}"
+        elif grep -q '^\[PalModSettings\]$' "${tmp_file}" 2>/dev/null; then
+            sed -i '/^\[PalModSettings\]$/a bGlobalEnableMod=True' "${tmp_file}"
         else
             {
-                echo '[Settings]'
-                echo 'bGlobalEnableMod=true'
+                echo '[PalModSettings]'
+                echo 'ConfigVersion=1.0'
+                echo 'bGlobalEnableMod=True'
                 echo
                 cat "${tmp_file}"
             } > "${tmp_file}.new"
@@ -1018,11 +1050,14 @@ EOF
         fi
     fi
 
+    # Append the [ActiveModList] section at the end of the ini file.
+    if [ -s "${tmp_file}" ] && [ "$(tail -c 1 "${tmp_file}")" != "" ]; then
+        echo >> "${tmp_file}"
+    fi
     {
-        echo
         echo '[ActiveModList]'
         for package_name in "${ACTIVE_PACKAGES[@]}"; do
-            echo "${package_name}=true"
+            echo "${package_name}=True"
         done
     } >> "${tmp_file}"
 
@@ -1042,6 +1077,8 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     DEPLOYED_LUA_MODS=()
     DEPLOYED_PALSCHEMA_MODS=()
     MOD_STATE_DEPLOYMENTS=()
+    MOD_STATE_PACKAGES='{}'
+    MOD_STATE_ORDER=0
 
     # Windows only
     if [ "$(ServerPlatform)" != "windows" ]; then
@@ -1061,12 +1098,29 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
     # Serialize clean/check/update against concurrent mods-update invocations sharing the same caches and state file.
     ModLock_acquire
+    MOD_STATE_V3_RECOVERED=false
+    export MOD_STATE_V3_RECOVERED
+    if ! ModStateV3_recoverJournal "${state_journal_file}" "${state_file}" "/palworld" "${state_backup_dir}"; then
+        LogError "Failed to recover the interrupted mod deployment transaction."
+        exit 1
+    fi
+    if [ -f "${state_file}" ]; then
+        previous_state="$(jq -c . "${state_file}" 2>/dev/null || echo '{}')"
+    fi
 
     if [ "$1" = "clean" ]; then
         LogInfo "Cleaning up mods..."
-        ModState_cleanup "${previous_state}"
+        if [ "$(printf '%s' "${previous_state}" | jq -r '.schema_version // 1')" = "3" ]; then
+            if ! ModStateV3_reconcile "${previous_state}" '{"schema_version":3,"packages":{},"targets":{}}' "${state_file}" "/palworld" "${state_backup_dir}" "${state_journal_file}"; then
+                LogError "Failed to restore managed mod files while cleaning up."
+                exit 1
+            fi
+        else
+            ModState_cleanup "${previous_state}"
+        fi
         ModState_cleanupStagingDirs
         rm -f "${state_file}"
+        rm -rf "${native_staging_dir}" "${state_backup_dir}" "${state_journal_file}"
         exit 0
     fi
 
@@ -1114,16 +1168,20 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     ModLog_debug "UE4SS: ${#DEPLOYED_UE4SS_FILES[@]} files deployed."
 
     # Deploy NativeMods/*
+    rm -rf "${native_staging_dir}"
+    mkdir -p "${native_staging_dir}"
     while IFS= read -r -d '' mod_path; do
         mod_name="$(basename "${mod_path}")"
         pkg_name="$(Mod_collectPackageName "${mod_path}" "${mod_name}")"
-        dest_dir="${ue4ss_mods_dir}/${mod_name}"
+        owner_key="native:${mod_name}"
+        dest_dir="${native_staging_dir}/${mod_name}"
 
-        Mod_deploy "${mod_path}" "${dest_dir}" "${pkg_name}"
+        ModState_registerPackage "${owner_key}" "native" "${pkg_name}" "${mod_name}" "$(jq -r '.Version // "unknown"' "${mod_path}/Info.json" 2>/dev/null || echo unknown)"
+        Mod_deploy "${mod_path}" "${dest_dir}" "${pkg_name}" "${owner_key}"
         ACTIVE_PACKAGES+=("${pkg_name}")
         NATIVE_MOD_NAMES+=("${mod_name}")
-        LogInfo "Deployed NativeMods/${mod_name} (${pkg_name}) to ${dest_dir}"
-    done < <(find "${native_mods_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+        LogInfo "Staged NativeMods/${mod_name} (${pkg_name}) for ${dest_dir}"
+    done < <(find "${native_mods_dir}" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null | LC_ALL=C sort -z)
 
     # Wipe Workshop staging so stale entries from prior naming don't accumulate
     rm -rf "${workshop_staging_dir}"
@@ -1137,9 +1195,12 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
         fi
 
         pkg_name="$(Mod_collectPackageName "${source_dir}" "${mod_id}")"
-        dest_dir="${workshop_staging_dir}/${pkg_name}"
+        owner_key="workshop:${mod_id}"
+        dest_dir="${workshop_staging_dir}/${mod_id}"
+        version="$(jq -r '.Version // "unknown"' "${source_dir}/Info.json" 2>/dev/null || echo unknown)"
+        ModState_registerPackage "${owner_key}" "workshop" "${pkg_name}" "${mod_id}" "${version}"
         LogInfo "Deploy workshop mod ${mod_id} (${pkg_name}) to ${dest_dir}"
-        Mod_deploy "${source_dir}" "${dest_dir}" "${pkg_name}"
+        Mod_deploy "${source_dir}" "${dest_dir}" "${pkg_name}" "${owner_key}"
         ACTIVE_PACKAGES+=("${pkg_name}")
     done
 
@@ -1150,18 +1211,28 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 
     current_state="$(ModState_buildJson)"
 
-    if [ "${current_state}" = "${previous_state}" ]; then
+    if [ "$(printf '%s' "${previous_state}" | jq -r '.schema_version // 1')" = "2" ]; then
+        LogWarn "Migrating mod state from schema version 2; managed deployment files will be rebuilt."
+        # v2 owner IDs are ambiguous, so rebuild from current inputs instead of guessing package ownership.
+        migration_state="$(printf '%s' "${previous_state}" | jq -c 'if .schema_version == 2 then .deployments |= map(select(.artifact != "staged")) else . end')"
+        ModState_cleanup "${migration_state}"
+        previous_state='{}'
+    fi
+
+    if ! ModStateV3_reconcile "${previous_state}" "${current_state}" "${state_file}" "/palworld" "${state_backup_dir}" "${state_journal_file}"; then
+        LogError "Failed to reconcile mod deployments. The previous state was retained for recovery."
+        exit 1
+    fi
+
+    if [ "${MOD_STATE_V3_CHANGED:-false}" != true ]; then
         LogInfo "No mod changes detected."
+        ModState_cleanupStagingDirs
+        rm -rf "${native_staging_dir}"
         exit 0
     fi
 
-    # Only remove outdated runtime artifacts after the new staged payload has been prepared successfully.
-    # This keeps the last known-good install available if a download or staging step fails.
-    ModState_cleanup "${previous_state}"
-
-    printf '%s\n' "${current_state}" | jq '.' > "${state_file}"
-    chmod 644 "${state_file}"
     ModState_cleanupStagingDirs
+    rm -rf "${native_staging_dir}"
 
     ModLog_debug "previous state: ${previous_state}"
     ModLog_debug "current state: ${current_state}"
