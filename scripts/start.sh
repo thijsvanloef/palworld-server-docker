@@ -277,6 +277,11 @@ if [ "${platform}" = "windows" ]; then
     fi
 fi
 
+if isTrue "${SETUP_ONLY}"; then
+    LogSuccess "SETUP_ONLY is set: server files and config are ready, exiting without starting the server"
+    exit 0
+fi
+
 LogAction "GENERATING CRONTAB"
 truncate -s 0  "/home/steam/server/crontab"
 
