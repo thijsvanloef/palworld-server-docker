@@ -246,11 +246,16 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
   # shellcheck disable=SC2143
   if [ ! "$(grep -s '[^[:space:]]' "${settings_file}")" ]; then
       LogAction "GENERATING CONFIG"
-      # Server will generate all ini files after first run.
-      timeout --preserve-status 15s "${STARTCOMMAND_NOARGS[@]}" 1> /dev/null
+      # SETUP_ONLY must not start the server, so skip the generation run and only
+      # copy the default settings; the server writes its other ini files on its
+      # first real start.
+      if ! isTrue "${SETUP_ONLY}"; then
+          # Server will generate all ini files after first run.
+          timeout --preserve-status 15s "${STARTCOMMAND_NOARGS[@]}" 1> /dev/null
 
-      # Wait for shutdown
-      sleep 5
+          # Wait for shutdown
+          sleep 5
+      fi
       cp /palworld/DefaultPalWorldSettings.ini "${settings_file}"
   fi
 else
