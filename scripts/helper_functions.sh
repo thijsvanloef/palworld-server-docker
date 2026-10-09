@@ -375,11 +375,30 @@ DiscordMessage() {
 }
 
 # REST API Call
+# Usage: REST_API [--no-proxy] <api> [data]
 REST_API() {
-    autopause resume "REST_API ${1}" > /dev/null
+    local no_proxy=false
+    while [[ $# -gt 0 ]] && { [[ -z "$1" ]] || [[ "$1" =~ ^- ]]; }; do
+        if [ "$1" = "--no-proxy" ]; then
+            no_proxy=true
+        fi
+        shift
+    done
     local -r api="${1}"
     local -r data="${2:-}"
-    local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
+    local port="${REST_API_PORT}"
+    local request_path="/v1/api/${api}"
+    [[ "${api}" =~ ^/ ]] && request_path="${api}"
+    local skip_resume=false
+    if isTrue "${API_PROXY_ENABLED:-false}" && ! isTrue "${no_proxy}"; then
+        local -r cached_api="players|game-data|metrics|info|settings|save"
+        [[ "${api}" =~ ${cached_api} ]] && skip_resume=true
+        port="${API_PROXY_PORT}"
+    fi
+    if [[ "${skip_resume}" != true ]]; then
+        autopause resume "REST_API ${api}" > /dev/null
+    fi
+    local -r url="http://127.0.0.1:${port}${request_path}"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
@@ -441,6 +460,7 @@ broadcast_command() {
 }
 
 # Saves the server
+# options: [--no-proxy]
 # Returns 0 if it saves
 # Returns 1 if it is not able to save
 save_server() {
@@ -449,7 +469,11 @@ save_server() {
         return 0
     fi
     local return_val=0
-    if ! REST_API save; then
+    local opt="$1"
+    if [[ ! "${opt}" =~ ^- ]]; then
+        opt=""
+    fi
+    if ! REST_API "${opt}" save; then
         return_val=1
     fi
     return "$return_val"
@@ -461,8 +485,8 @@ save_server() {
 shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
-    if save_server; then
-        if rest-cli shutdown 1 "Shutting down"; then
+    if save_server --no-proxy; then
+        if rest-cli --no-proxy shutdown 1 "Shutting down"; then
             # for windows
             for ((i = 0; i < 30; i++)); do
                 if ! PalworldServerPid > /dev/null; then
@@ -563,4 +587,14 @@ get_latest_version() {
     latest_version=$(curl https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest -s | jq .name -r)
 
     echo "$latest_version"
+}
+
+# Update server container status
+update_server_status() {
+    local status="$1"
+    local progress="$2"
+
+    # Write the status and progress to the SERVER_STATUS_PATH file atomically
+    echo "{\"status\": \"${status}\", \"progress\": ${progress}}" > /palworld/.status.tmp
+    mv /palworld/.status.tmp /palworld/.status
 }

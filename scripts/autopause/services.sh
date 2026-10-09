@@ -112,6 +112,18 @@ AutoPause_preSave() {
     return 1;
 }
 
+AutoPause_preCache() {
+    if isTrue "${REST_API_ENABLED}" && isTrue "${API_PROXY_ENABLED}"; then
+        REST_API info > /dev/null
+        REST_API metrics > /dev/null
+        REST_API settings > /dev/null
+        #REST_API players  # skip because it is handled separately by player_logging.sh
+        if isTrue "${ENABLE_GAMEDATA_API}"; then
+            REST_API game-data > /dev/null
+        fi
+    fi
+}
+
 AutoPause_challengeToPause() {
     if isTrue "${COMMUNITY}"; then
         if ! APComm_isCaptured; then
@@ -124,6 +136,8 @@ AutoPause_challengeToPause() {
         APLog_error "Save failed before pausing... ${result}"
         return 1
     fi
+
+    AutoPause_preCache
 
     AP_pause on;
 }

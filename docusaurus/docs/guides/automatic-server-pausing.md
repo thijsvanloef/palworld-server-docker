@@ -27,6 +27,8 @@ This feature requires `ENABLE_PLAYER_LOGGING=true` and `REST_API_ENABLED=true` t
 | AUTO_PAUSE_LOG              | Enable auto-pause logging                                                                                                                                               | true           | true/false     |
 | AUTO_PAUSE_DEBUG            | Enable auto-pause debug logging                                                                                                                                         | false          | true/false     |
 | AUTO_PAUSE_KNOCKD_IF        | Network interfaces to listen for connection knocks. Use `auto` (default) for automatic detection of active interfaces, or specify interfaces explicitly.                | auto           | auto/"eth0 lo" |
+| API_PROXY_ENABLED           | Enable the cached REST API proxy service. Requires REST API, AutoPause, and a non-empty `ADMIN_PASSWORD`.                                                                     | false          | true/false     |
+| API_PROXY_PORT              | Port for the cached REST API proxy; use a separate, private port.                                                                                                          | 8213           | 1-65535        |
 
 If you want timestamps in the container logs for auto-pause events,
 either run `docker logs -t palworld-server` or set
@@ -34,6 +36,47 @@ either run `docker logs -t palworld-server` or set
 
 `AUTO_PAUSE_LOG` messages go through the shared container logger,
 so `LOG_FILTER_ENABLED` and `LOG_FORMAT_TYPE` apply to them too.
+
+### Cached REST API proxy
+
+When `API_PROXY_ENABLED` is set to `true`, the proxy service starts and listens on `API_PROXY_PORT`.
+When it is `false`, the proxy is not used, and REST API requests connect directly to `REST_API_PORT`.
+
+The proxy uses `API_PROXY_PORT` (default: `8213`).
+Use a different port from `REST_API_PORT`.
+
+Authenticated requests to the proxy use the following cacheable endpoints. While the server is paused, a cached response is returned from memory without waking the server:
+
+   GET /v1/api/players
+   GET /v1/api/game-data
+   GET /v1/api/metrics
+   GET /v1/api/info
+   GET /v1/api/settings
+   POST /v1/api/save
+
+If no cached response is available for a cacheable endpoint, the proxy resumes the server, forwards the request to the REST API, caches a successful response, and returns it.
+Authenticated requests to other endpoints, or requests received while the server is not paused, are forwarded directly to the REST API.
+
+After requesting a resume, the proxy waits up to five seconds for the REST API to become available. If it does not become available in time, or the REST API is unreachable when the request is forwarded, the proxy returns HTTP 503.
+
+The container startup script waits for the PalServer process and stops the proxy when the server exits. Because the cache is held in memory, it is lost when the proxy stops.
+
+Before pausing the server, AUTO PAUSE calls the cacheable APIs to refresh their cached responses.
+
+```yaml
+#port:
+#   - "127.0.0.1:8213:8213/tcp"
+environment:
+   API_PROXY_ENABLED: true
+   API_PROXY_PORT: 8213
+```
+
+For Kubernetes, enable `API_PROXY_ENABLED` in the ConfigMap and apply the optional ClusterIP Service:
+
+```shell
+kubectl apply -f kubernetes/api-proxy-service.yaml
+#kubectl port-forward service/palworld-api-proxy 8213:8213
+```
 
 ### Network Interface Configuration
 
