@@ -25,6 +25,9 @@ spec:
             - name: query
               containerPort: 27015
               protocol: UDP
+            - name: api-proxy
+              containerPort: 8213
+              protocol: TCP
           envFrom:
             - configMapRef:
                 name: palworld-cm

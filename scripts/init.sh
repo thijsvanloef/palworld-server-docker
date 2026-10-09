@@ -127,10 +127,15 @@ term_handler() {
         fi
     fi
 
+    APIProxy_stop
     tail --pid="$killpid" -f /dev/null 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
+
+if ! APIProxy_start; then
+    exit 1
+fi
 
 if [[ "$(id -u)" -eq 0 ]]; then
     # Only if the capabilities set on the executable do not work, we reluctantly add NET_ADMIN and NET_RAW capabilities.
@@ -143,6 +148,7 @@ fi
 killpid="$!"
 wait "$killpid"
 child_rc=$?
+APIProxy_stop
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then
