@@ -111,7 +111,7 @@ AP_status() {
     echo "${status}"
 
     if [ -n "${check}" ]; then
-        echo "${status}" | grep -qE "${check}" && return 0 || return 1
+        echo "${status}" | grep -qE -- "${check}" && return 0 || return 1
     fi
     return 0
 }
