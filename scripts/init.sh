@@ -25,7 +25,7 @@ init_steam_home() {
     if [ ! -L "${steam_org_home}" ] && [ -d "${steam_org_home}" ]; then
         LogInfo "Redirecting Steam home from ${steam_org_home} to ${steam_new_home}"
         mkdir -p "${steam_new_home}"
-        cp -avr "${steam_org_home}"/. "${steam_new_home}/" 2>/dev/null || true
+        cp -auvr "${steam_org_home}"/. "${steam_new_home}/" 2>/dev/null || true
         rm -rf "${steam_org_home}"
         ln -sfn "${steam_new_home}" "${steam_org_home}"
     elif [ ! -e "${steam_org_home}" ]; then
