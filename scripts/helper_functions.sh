@@ -218,7 +218,7 @@ PlayerLogging_isEnabled() {
 convert_JSON_to_CSV_players() {
     echo 'name,playeruid,platform_userid'
     echo -n "${1}" | \
-        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
+        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' 2>/dev/null | \
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
         -re 's/"//g'
 }
@@ -383,9 +383,9 @@ REST_API() {
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
-    local -ar common_opts=("--connect-timeout" "10" "-m" "30" "-s" "-L")
+    local -ar common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
     local -i result=0
-    local output
+    local output error_message
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
         output=$(curl "${common_opts[@]}" -X GET  "${url}" -u "${userpass}" -H "Accept: application/json")
         result=$?
@@ -393,14 +393,18 @@ REST_API() {
         output=$(curl "${common_opts[@]}" -X POST "${url}" -u "${userpass}" --json "${data}")
         result=$?
     fi
-    if [[ "${output}" =~ ^Unauthorized ]]; then
-        LogError "${output}"
-        return 1
+    if [ "${result}" -ne 0 ]; then
+        error_message="$(curl --manual | sed -n '/^EXIT CODES$/,/^    XX$/p' | sed -nE "/^    ${result}\$/,/^    [0-9X]+\$/{s/^\\t+//p}" | tr '\n' ' ')"
+        if [ -z "${error_message}" ]; then
+            error_message="Unknown error (curl exit code ${result})"
+        fi
+        LogError "REST_API ${api} failed: ${error_message}"
+    else
+        if [[ ${api} =~ ${down_api} ]]; then
+            autopause stop > /dev/null
+        fi
+        printf '%s' "${output}"
     fi
-    if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
-        autopause stop > /dev/null
-    fi
-    printf '%s' "${output}"
     return ${result}
 }
 
