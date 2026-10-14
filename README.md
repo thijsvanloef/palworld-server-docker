@@ -676,6 +676,16 @@ This feature can be enabled by setting the environment variable `AUTO_PAUSE_ENAB
 | API_PROXY_ENABLED      | Enable the cached REST API proxy service. Requires REST API, AUTO_PAUSE, and a non-empty ADMIN_PASSWORD.                                                               | false          | true/false     |
 | API_PROXY_PORT         | Separate port for the cached REST API proxy.                                                                                                                          | 8213           | 1-65535        |
 
+The current server state is atomically written to `/palworld/.status` as JSON:
+
+```json
+{"status":"starting","progress":10}
+```
+
+`status` is one of `starting`, `updating`, `running`, `stopping`, `stopped`, or `paused`.
+`progress` is an integer from 0 to 100. When `API_PROXY_ENABLED=true`, the authenticated
+`/proxy/v1/api/status` endpoint returns the current status.
+
 If you want timestamps in the container logs for auto-pause events, either run `docker logs -t palworld-server`
 or set `LOG_FORMAT_TYPE=plain` or `LOG_FORMAT_TYPE=colored`.
 

@@ -203,11 +203,38 @@ async def proxy(
                     "headers": response_headers(resp.headers),
                 }
 
-            return Response(
+            response = Response(
                 content=resp.content,
                 status_code=resp.status_code,
                 headers=response_headers(resp.headers),
             )
+            if (
+                request.method == "POST"
+                and req_path in {"/v1/api/shutdown", "/v1/api/stop"}
+                and resp.status_code < 400
+            ):
+                try:
+                    status_process = await asyncio.create_subprocess_exec(
+                        "/bin/bash",
+                        "/home/steam/server/update_server_status.sh",
+                        "stopping",
+                        "10",
+                        stderr=asyncio.subprocess.PIPE,
+                    )
+                    _, status_error = await status_process.communicate()
+                    if status_process.returncode != 0:
+                        app.logger.error(
+                            "Failed to update server status after shutdown request "
+                            "(exit code %s): %s",
+                            status_process.returncode,
+                            status_error.decode(errors="replace").strip()
+                            or "no error output",
+                        )
+                except OSError as exc:
+                    app.logger.error(
+                        "Failed to update server status after shutdown request: %s", exc
+                    )
+            return response
 
         except httpx.RequestError:
             if cacheable and key in cache:
