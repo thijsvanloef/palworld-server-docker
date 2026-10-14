@@ -260,6 +260,7 @@ get_player_count() {
 export LINE=$'\n'
 export RESET=$'\033[0m'       # Text Reset
 export WhiteText=$'\033[0;37m'        # White
+export GrayText=$'\033[0;90m'            # Gray
 
 # Bold
 export RedBoldText=$'\033[1;31m'         # Red
@@ -317,6 +318,9 @@ LogSuccess() {
 }
 LogAction() {
     Log "****$1****" "$CyanBoldText" "ACTION" && LogFlush
+}
+LogProgress() {
+    Log "--- $1 ---" "$GrayText" "PROGRESS"
 }
 LogFlush() {
     if [ -p "${PalServerLog_fifo}" ]; then
@@ -421,6 +425,7 @@ REST_API() {
     else
         if [[ ${api} =~ ${down_api} ]]; then
             autopause stop > /dev/null
+            update_server_status "stopping" 10
         fi
         printf '%s' "${output}"
     fi
@@ -487,6 +492,7 @@ shutdown_server() {
     # Do not shutdown if not able to save
     if save_server --no-proxy; then
         if rest-cli --no-proxy shutdown 1 "Shutting down"; then
+            update_server_status "stopping" 10
             # for windows
             for ((i = 0; i < 30; i++)); do
                 if ! PalworldServerPid > /dev/null; then
@@ -593,8 +599,41 @@ get_latest_version() {
 update_server_status() {
     local status="$1"
     local progress="$2"
+    local status_file="/palworld/.status"
+    local temp_file
 
-    # Write the status and progress to the SERVER_STATUS_PATH file atomically
-    echo "{\"status\": \"${status}\", \"progress\": ${progress}}" > /palworld/.status.tmp
-    mv /palworld/.status.tmp /palworld/.status
+    case "${status}" in
+        starting|updating|running|stopping|stopped|paused) ;;
+        *)
+            LogError "Invalid server status: ${status}"
+            return 1
+            ;;
+    esac
+    if ! [[ "${progress}" =~ ^[0-9]{1,3}$ ]] || (( 10#${progress} > 100 )); then
+        LogError "Invalid server status progress: ${progress}"
+        return 1
+    fi
+    progress=$((10#${progress}))
+
+    if ! temp_file="$(mktemp "/palworld/.status.XXXXXX")"; then
+        LogError "Failed to create temporary server status file."
+        return 1
+    fi
+    if ! printf '{"status":"%s","progress":%s}\n' "${status}" "${progress}" > "${temp_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to write temporary server status file."
+        return 1
+    fi
+    if [[ "$(id -u)" -eq 0 ]] && ! chown steam:steam "${temp_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to set temporary server status file owner to steam:steam."
+        return 1
+    fi
+    if ! mv -f "${temp_file}" "${status_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to atomically update ${status_file}."
+        return 1
+    fi
+    [ "${LOG_LEVEL^^}" = "DEBUG" ] && LogProgress "${status} / ${progress}%"
+    return 0
 }
