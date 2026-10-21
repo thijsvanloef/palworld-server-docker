@@ -218,7 +218,7 @@ PlayerLogging_isEnabled() {
 convert_JSON_to_CSV_players() {
     echo 'name,playeruid,platform_userid'
     echo -n "${1}" | \
-        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' | \
+        jq -r '.players[] | [ .name, .playerId, .userId ] | @csv' 2>/dev/null | \
         sed -re 's/"None"/"00000000000000000000000000000000"/' \
         -re 's/"//g'
 }
@@ -227,6 +227,10 @@ convert_JSON_to_CSV_players() {
 # Outputs nothing if REST API or RCON is not enabled and returns 1
 # Outputs player list if REST API or RCON is enabled and returns 0
 get_players_list() {
+    if autopause status '(paused|sleeping)' >/dev/null 2>&1; then
+        echo ""
+        return 0
+    fi
     # Prefer REST API
     if isTrue "${REST_API_ENABLED}"; then
         convert_JSON_to_CSV_players "$(REST_API players)"
@@ -379,23 +383,28 @@ REST_API() {
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
+    local -ar common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
     local -i result=0
-    local output
+    local output error_message
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
-        output=$(curl -s -L -X GET  "${url}" -u "${userpass}" -H "Accept: application/json")
+        output=$(curl "${common_opts[@]}" -X GET  "${url}" -u "${userpass}" -H "Accept: application/json")
         result=$?
     else
-        output=$(curl -s -L -X POST "${url}" -u "${userpass}" --json "${data}")
+        output=$(curl "${common_opts[@]}" -X POST "${url}" -u "${userpass}" --json "${data}")
         result=$?
     fi
-    if [[ "${output}" =~ ^Unauthorized ]]; then
-        LogError "${output}"
-        return 1
+    if [ "${result}" -ne 0 ]; then
+        error_message="$(curl --manual | sed -n '/^EXIT CODES$/,/^    XX$/p' | sed -nE "/^    ${result}\$/,/^    [0-9X]+\$/{s/^\\t+//p}" | tr '\n' ' ')"
+        if [ -z "${error_message}" ]; then
+            error_message="Unknown error (curl exit code ${result})"
+        fi
+        LogError "REST_API ${api} failed: ${error_message}"
+    else
+        if [[ ${api} =~ ${down_api} ]]; then
+            autopause stop > /dev/null
+        fi
+        printf '%s' "${output}"
     fi
-    if [ ${result} -eq 0 ] && [[ ${api} =~ ${down_api} ]]; then
-        autopause stop > /dev/null
-    fi
-    printf '%s' "${output}"
     return ${result}
 }
 
@@ -435,6 +444,10 @@ broadcast_command() {
 # Returns 0 if it saves
 # Returns 1 if it is not able to save
 save_server() {
+    if autopause status '(paused|sleeping)' >/dev/null 2>&1; then
+        LogInfo "Server is paused; skipping save (world already saved before pause)."
+        return 0
+    fi
     local return_val=0
     if ! REST_API save; then
         return_val=1

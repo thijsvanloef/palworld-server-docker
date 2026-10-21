@@ -4,7 +4,10 @@ source "/home/steam/server/helper_functions.sh"
 
 DiscordMessage "Backup" "${DISCORD_PRE_BACKUP_MESSAGE}" "in-progress" "${DISCORD_PRE_BACKUP_MESSAGE_ENABLED}" "${DISCORD_PRE_BACKUP_MESSAGE_URL}"
 if [ "${REST_API_ENABLED,,}" = true ]; then
-    save_server
+    if ! save_server; then
+        LogError "Failed to save server before backup."
+        exit 1
+    fi
 fi
 
 DATE=$(date +"%Y-%m-%d_%H-%M-%S")
