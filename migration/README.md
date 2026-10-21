@@ -4,8 +4,9 @@
 
 > [!WARNING]
 > Use this script at your own risk, I am not responsible for dataloss!
->
 > Please make sure you always have a backup!
+
+<!-- -->
 
 > [!IMPORTANT]
 > If you're migrating a save that was ever played on Windows (including via Steam's
