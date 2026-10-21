@@ -63,6 +63,25 @@ Place extracted native mod folders under:
 
 At startup and periodic sync, mod files are deployed to the active runtime path.
 
+## Package ownership and updates
+
+Mod deployment state is stored in `/palworld/Mods/.state.json`.
+Schema version 3 tracks stable package identities and the owners of each runtime file.
+Removing one Workshop ID or NativeMods directory removes only that package's ownership;
+files still owned by another package remain active.
+
+When packages provide identical content for the same file, they share an ownership layer.
+If they provide different content, the later deployment takes precedence.
+The previous content is backed up under `/palworld/Mods/.state-backups` and restored when the winning package is removed.
+Keep the `/palworld` volume, including this backup directory, persistent.
+
+Files edited outside the mod updater are detected by content hash and preserved as the baseline when ownership changes.
+If an update is interrupted, the next update attempts to recover or resume its journal before applying another change.
+
+The first update from schema version 2 performs a one-time cleanup and rebuild from the currently requested mod set.
+This may temporarily remove previously deployed files during that update.
+Keep the server's `/palworld` volume intact until the migration completes successfully.
+
 ## Install latest UE4SS Palworld (default)
 
 To auto-download and deploy the UE4SS Palworld package:

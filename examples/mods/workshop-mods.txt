@@ -1,5 +1,6 @@
 #
-# Palworld Workshop Mods [Browse](https://steamcommunity.com/workshop/browse/?appid=1623730)
+# The location of this file is `/palworld/Mods/workshop-mods.txt`.
+#  - Palworld Workshop Mods [Browse](https://steamcommunity.com/workshop/browse/?appid=1623730)
 #
 # NOTE:
 #  - Do not use workshop's UE4SS (legacy style)
