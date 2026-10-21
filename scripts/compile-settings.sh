@@ -26,6 +26,33 @@ if [ -n "$ALLOW_CONNECT_PLATFORM" ]; then
     LogWarn "ALLOW_CONNECT_PLATFORM is deprecated and will not be applied to the PalWorldSettings.ini. Please use CROSSPLAY_PLATFORMS instead."
 fi
 
+# These reach PalWorldSettings.ini as quoted free text. The file is a single
+# line of comma-separated Key=Value pairs with no escape syntax, so a double
+# quote closes the value early and everything after it is read as further
+# settings. A line break is removed by the `tr -d "\n\r"` below, silently
+# joining the lines. Neither can be represented, so refuse them by name rather
+# than writing back a value the user did not set.
+validate_free_text() {
+    local name value invalid=0
+    for name in RANDOMIZER_SEED SERVER_NAME SERVER_DESCRIPTION ADMIN_PASSWORD \
+        SERVER_PASSWORD PUBLIC_IP REGION BAN_LIST_URL; do
+        value="${!name}"
+        if [[ "$value" == *'"'* ]]; then
+            LogError "${name} cannot contain a double quote; it would corrupt PalWorldSettings.ini."
+            invalid=1
+        fi
+        if [[ "$value" == *$'\n'* || "$value" == *$'\r'* ]]; then
+            LogError "${name} cannot contain a line break; it would be removed from PalWorldSettings.ini."
+            invalid=1
+        fi
+    done
+    return "$invalid"
+}
+
+if ! validate_free_text; then
+    exit 1
+fi
+
 export DIFFICULTY=${DIFFICULTY:-None}
 export RANDOMIZER_TYPE=${RANDOMIZER_TYPE:-None}
 export RANDOMIZER_SEED=\"${RANDOMIZER_SEED:-""}\"
