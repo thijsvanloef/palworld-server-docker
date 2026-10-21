@@ -55,12 +55,12 @@ AP_isForceDisabled() {
 
 # is realy paused
 AP_isSleep() {
-    test -n "$(pgrep -r T 'PalServer-Linux')"
+    test -n "$(pgrep -r T -f "$(PalworldServerProcessMatch)")"
 }
 
 AP_do() {
     if [[ "$(id -u)" -eq 0 ]]; then
-        su steam -c "${1}"
+        setpriv --reuid=steam --regid=steam --init-groups -- bash -c "${1}"
     else
         eval "${1}"
     fi
@@ -80,7 +80,7 @@ AP_disable() {
 
 AP_pause() {
     local -r on="${1:-on}"
-    local -r pid=$(pidof PalServer-Linux-Shipping)
+    local -r pid=$(PalworldServerPid)
     if isTrue "${on}"; then
         if AP_isSleep; then
             APLog_warn "Already sleeped..."
@@ -116,6 +116,7 @@ AP_pullRequest() {
 }
 
 AP_pushRequest() {
+    APLog_debug "AP_pushRequest: ${1}"
     AP_do "echo \"${1}\" > \"${AP_request_file}\""
 }
 
@@ -133,4 +134,3 @@ AP_waitPullRequest()
     APLog_debug "AP_waitPullRequest ... time out."
     return 1
 }
-

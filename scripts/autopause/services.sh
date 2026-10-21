@@ -16,18 +16,10 @@ declare -i AP_no_player_sec=0
 
 AP_startDaemon() {
     knockd-ctl start
-    local pid
-    pid=$(pidof knockd)
-    APLog_debug "Start knockd (PID:${pid})"
 }
 
 AP_stopDaemon() {
-    local pid
-    pid=$(pidof knockd)
-    APLog_debug "Stop knockd (PID:${pid})"
-    if [ -n "${pid}" ]; then
-        knockd-ctl stop
-    fi
+    knockd-ctl stop
 }
 
 #-------------------------------
@@ -137,7 +129,13 @@ AutoPause_challengeToPause() {
 }
 
 AutoPause_waitWakeup() {
-    AP_startDaemon
+    if ! AP_startDaemon; then
+        # Without a working monitor there is no way to detect incoming
+        # traffic, so resume immediately instead of pausing forever.
+        APLog_error "Failed to start AUTO_PAUSE network monitor. Resuming without waiting for wakeup."
+        AP_pause off
+        return
+    fi
     isTrue "${COMMUNITY}" && APComm_init
     while true; do
         sleep 0.5

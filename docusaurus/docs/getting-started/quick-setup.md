@@ -13,6 +13,9 @@ sidebar_label: Quick Setup
 This guide will help you get setup with hosting your Palworld Dedicated server on Docker!
 This Palworld server quick setup will only take a couple of minutes and you'll have a working server.
 
+If you are setting up Windows-based Workshop mods or UE4SS,
+continue with [Workshop Mods and UE4SS Setup](../guides/workshop-mods-and-ue4ss.md) after this quick setup.
+
 ## Prerequisites
 
 * Virtualization enabled in the BIOS/UEFI
@@ -42,7 +45,7 @@ services:
       ports:
          - 8211:8211/udp
          - 27015:27015/udp  # Required if you want your server to show up in the community servers tab
-         - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
+         # - 8212:8212/tcp  # REST API enabled port, enabled by default. DO NOT PORT FORWARD THIS.
       environment:
          PUID: 1000
          PGID: 1000
@@ -55,6 +58,7 @@ services:
          TZ: "UTC"
          ADMIN_PASSWORD: "adminPasswordHere"
          COMMUNITY: false  # Enable this if you want your server to show up in the community servers tab, USE WITH SERVER_PASSWORD!
+         # PUBLIC_PORT: 8211 # If enabling community server and using a different public port you must change this
          SERVER_NAME: "palworld-server-docker by Thijs van Loef"
          SERVER_DESCRIPTION: "palworld-server-docker by Thijs van Loef"
          CROSSPLAY_PLATFORMS: "(Steam,Xbox,PS5,Mac)"

@@ -1,0 +1,54 @@
+---
+services:
+  palworld:
+    extends:
+      file: ../../wine.yaml
+      service: palworld
+    build:
+      context: ../../
+    cap_add:
+      - NET_RAW    # for podman (docker default has it)
+      - NET_ADMIN  # NFLOG requires this
+    environment:
+      SERVER_NAME: "palworld-server-docker/examples/mods"
+      MOD_ENABLED: true
+      MOD_UPDATE_ON_BOOT: true
+      MOD_DEBUG: false
+
+      # ------------------------------------------------------------
+      # MOD install method A: Steam Workshop IDs in env var
+      # - Comma-separated workshop IDs
+      # ------------------------------------------------------------
+      MOD_IDS: "3625287786${MODS:+,}${MODS:-}"
+
+      # ------------------------------------------------------------
+      # MOD install method B: Using workshop-mods.txt file
+      # - Line-separated IDs in /palworld/Mods/workshop-mods.txt
+      # - It is combined with MOD_IDS
+      # ------------------------------------------------------------
+
+      # ------------------------------------------------------------
+      # MOD install method C: NativeMods (manual mod folders)
+      # - Put extracted mods under:
+      #   ./palworld/Mods/NativeMods/<mod_name>/...
+      # - `mods-update` auto-deploys these on startup/sync
+      # ------------------------------------------------------------
+
+      # ------------------------------------------------------------
+      # Optional: Override UE4SS URL and PalSchema mod ID
+      # ------------------------------------------------------------
+      # MOD_URL_UE4SS: "https://github.com/Okaetsu/RE-UE4SS/releases/download/2281fa31/UE4SS-Palworld-g2281fa31.zip"
+      # MOD_ID_PALSCHEMA: "3625280368"
+
+      # ------------------------------------------------------------
+      # Optional: PalDefender mod usage
+      # ------------------------------------------------------------
+      MOD_USE_PALDEFENDER: true
+
+      # If workshop mods require account auth:
+      # 1) run ./save-login-credential.sh once before startup
+      # 2) provide only STEAM_USERNAME (no password in compose)
+      STEAM_USERNAME: "${STEAM_USERNAME:-}"
+
+    volumes:
+      - ../../palworld:/palworld/

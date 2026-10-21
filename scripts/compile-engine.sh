@@ -2,7 +2,7 @@
 # shellcheck source=scripts/helper_functions.sh
 source "/home/steam/server/helper_functions.sh"
 
-engine_file="/palworld/Pal/Saved/Config/LinuxServer/Engine.ini"
+engine_file="$(PalworldEngineFilePath)"
 engine_dir=$(dirname "$engine_file")
 
 mkdir -p "$engine_dir" || exit
