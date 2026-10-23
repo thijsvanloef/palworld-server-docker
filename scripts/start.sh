@@ -259,9 +259,14 @@ if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ]; then
       cp /palworld/DefaultPalWorldSettings.ini "${settings_file}"
   fi
 
-  if [ -z "${ADMIN_PASSWORD}" ] && get_admin_password_from_settings > /dev/null; then
-      LogInfo "ADMIN_PASSWORD is not set, using AdminPassword from PalWorldSettings.ini to authenticate against the REST API"
+  if ini_admin_password="$(get_admin_password_from_settings)"; then
+      if [ -z "${ADMIN_PASSWORD}" ]; then
+          LogInfo "ADMIN_PASSWORD is not set, using AdminPassword from PalWorldSettings.ini to authenticate against the REST API"
+      elif [ "${ADMIN_PASSWORD}" != "${ini_admin_password}" ]; then
+          LogWarn "ADMIN_PASSWORD differs from AdminPassword in PalWorldSettings.ini, using the value from PalWorldSettings.ini to authenticate against the REST API"
+      fi
   fi
+  unset ini_admin_password
 else
   LogAction "GENERATING CONFIG"
   LogInfo "Using Env vars to create PalWorldSettings.ini"

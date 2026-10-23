@@ -107,6 +107,36 @@ assert_yaml_scalar_survives_backslashes_and_quotes() {
     [ "${quoted}" = "'it''s a p@ss'" ] || fail "expected 'it''s a p@ss', got ${quoted}"
 }
 
+assert_settings_win_when_generation_is_disabled() {
+    write_settings "serverPass" '"adminPass"'
+    ADMIN_PASSWORD="fromEnvironment"
+    DISABLE_GENERATE_SETTINGS="TRUE"
+    local password
+    password="$(get_admin_password "${settings_file}")" || fail "no password returned"
+    [ "${password}" = "adminPass" ] || fail "expected adminPass, got ${password}"
+    unset ADMIN_PASSWORD DISABLE_GENERATE_SETTINGS
+}
+
+assert_environment_variable_is_fallback_when_generation_is_disabled() {
+    write_settings "serverPass" '""'
+    ADMIN_PASSWORD="fromEnvironment"
+    DISABLE_GENERATE_SETTINGS="true"
+    local password
+    password="$(get_admin_password "${settings_file}")" || fail "no password returned"
+    [ "${password}" = "fromEnvironment" ] || fail "expected fromEnvironment, got ${password}"
+    unset ADMIN_PASSWORD DISABLE_GENERATE_SETTINGS
+}
+
+assert_environment_variable_wins_when_generation_is_enabled() {
+    write_settings "serverPass" '"adminPass"'
+    ADMIN_PASSWORD="fromEnvironment"
+    DISABLE_GENERATE_SETTINGS="false"
+    local password
+    password="$(get_admin_password "${settings_file}")" || fail "no password returned"
+    [ "${password}" = "fromEnvironment" ] || fail "expected fromEnvironment, got ${password}"
+    unset ADMIN_PASSWORD DISABLE_GENERATE_SETTINGS
+}
+
 assert_password_from_settings
 assert_special_characters_are_kept
 assert_carriage_returns_are_stripped
@@ -119,5 +149,8 @@ assert_yaml_scalar_survives_backslashes_and_quotes
 assert_environment_variable_wins
 assert_settings_are_used_when_environment_variable_is_empty
 assert_unset_environment_variable_is_tolerated
+assert_settings_win_when_generation_is_disabled
+assert_environment_variable_is_fallback_when_generation_is_disabled
+assert_environment_variable_wins_when_generation_is_enabled
 
 echo "admin password tests passed"

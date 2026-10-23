@@ -408,13 +408,18 @@ get_admin_password_from_settings() {
 }
 
 # Returns the password used to authenticate against the server's own REST API
-# ADMIN_PASSWORD wins when it is set, so this changes nothing for existing setups
-# With DISABLE_GENERATE_SETTINGS=true the .ini is the source of truth and ADMIN_PASSWORD
-# is commonly left unset, which makes every container side call (auto reboot, backup,
-# graceful shutdown) fail with "Unauthorized"; fall back to the .ini in that case
+# With DISABLE_GENERATE_SETTINGS=true env vars are not applied and the .ini is what the
+# server authenticates against, so its AdminPassword wins and ADMIN_PASSWORD is only a
+# fallback for an .ini that holds none
+# Otherwise the .ini is generated from ADMIN_PASSWORD, so ADMIN_PASSWORD wins and the
+# .ini is only read when ADMIN_PASSWORD is unset
 # Takes an optional settings file path, only used by the tests
 # shellcheck disable=SC2120
 get_admin_password() {
+    if [ "${DISABLE_GENERATE_SETTINGS,,}" = true ] && get_admin_password_from_settings "$@"; then
+        return 0
+    fi
+
     if [ -n "${ADMIN_PASSWORD:-}" ]; then
         printf '%s' "${ADMIN_PASSWORD}"
         return 0

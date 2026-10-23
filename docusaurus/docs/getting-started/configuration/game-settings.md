@@ -160,9 +160,10 @@ Changes can only be made to `PalWorldSettings.ini` while the server is off.
 Any changes made while the server is live will be overwritten when the server stops.
 :::
 
-When `ADMIN_PASSWORD` is not set, the `AdminPassword` from `PalWorldSettings.ini` is used to authenticate
-the container against the REST API, so auto reboots, backups and graceful shutdowns keep working when the
-admin password is only set in the file. `ADMIN_PASSWORD` still takes precedence whenever it is set.
+With `DISABLE_GENERATE_SETTINGS=true`, the container authenticates against the REST API with the
+`AdminPassword` from `PalWorldSettings.ini`, since that is the password the server actually uses. This keeps
+auto reboots, backups and graceful shutdowns working when the admin password is only set in the file.
+`ADMIN_PASSWORD` is only used as a fallback when the file holds no `AdminPassword`.
 
 For a more detailed list of server settings go to: [Palworld Wiki](https://palworld.wiki.gg/wiki/PalWorldSettings.ini)
 
