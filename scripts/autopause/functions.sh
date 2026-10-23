@@ -101,6 +101,21 @@ AP_pause() {
     return 0
 }
 
+AP_status() {
+    local check="${1:-}"
+    local status
+    status=$(AP_isEnabled && echo "enabled" || echo "disabled")
+    status+=$(AP_isPaused && echo ",paused")
+    status+=$(AP_isSleep && echo ",sleeping")
+    status+=$(AP_isForceDisabled && echo ",force_disabled")
+    echo "${status}"
+
+    if [ -n "${check}" ]; then
+        echo "${status}" | grep -qE -- "${check}" && return 0 || return 1
+    fi
+    return 0
+}
+
 #-------------------------------
 # AutoPause Request
 #-------------------------------

@@ -109,6 +109,31 @@ docker exec -it palworld-server autopause continue
 This `autopause stop` command is also used during automatic reboots, automatic updates, and container stops.
 It is also used to shutdown command via REST API/RCON.
 
+### Check status
+
+Show the current auto-pause state with:
+
+```shell
+docker exec -it palworld-server autopause status
+```
+
+The comma-separated output can include these states:
+
+- `enabled`: `AUTO_PAUSE_ENABLED` is enabled and Player Logging is enabled.
+- `disabled`: auto-pause or Player Logging is disabled.
+- `paused`: the `/palworld/.paused` file exists.
+- `sleeping`: the PalServer process is stopped.
+- `force_disabled`: the `/palworld/.autopause-disabled` file exists.
+
+Multiple states can be reported at the same time. Pass an optional `grep -E` regular
+expression to make the command return `0` when the output matches and `1` when it does not:
+
+```shell
+docker exec -it palworld-server autopause status 'paused|sleeping'
+```
+
+Without a filter, the command returns `0`.
+
 ### Troubleshooting
 
 #### No usable interfaces detected

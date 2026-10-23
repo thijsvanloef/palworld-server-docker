@@ -260,6 +260,7 @@ It is highly recommended you set the following environment values before startin
 | SERVER_PASSWORD                            | Secure your community server with a password                                                                                                                                                        |                                                                                                    | "string"                                                                                                          | 0.1.0            |
 | ADMIN_PASSWORD                             | Secure administration access in the server with a password                                                                                                                                          |                                                                                                    | "string"                                                                                                          | 0.4.0            |
 | UPDATE_ON_BOOT**                           | Update/Install the server when the docker container starts | true                                                                                               | true/false                                                                                                        | 0.3.0            |
+| SETUP_ONLY                                 | Install/update the server (and mods, if enabled) and generate its config, then exit without starting it. Use with restart policy `no` | false                                                                                              | true/false                                                                                                        | 2.9.0            |
 | RCON_ENABLED***                            | Enable RCON for the Palworld server                                                                                                                                                                 | false                                                                                              | true/false                                                                                                        | 0.1.0            |
 | RCON_PORT                                  | RCON port to connect to                                                                                                                                                                             | 25575                                                                                              | 1024-65535                                                                                                        | 0.1.0            |
 | REST_API_ENABLED                           | Enable REST API for the palworld server                                                                                                                                                             | true                                                                                               | true/false                                                                                                        | 0.35.0           |
@@ -719,6 +720,31 @@ docker exec -it palworld-server autopause continue
 
 This `autopause stop` command is also used during automatic reboots, automatic updates, and container stops.
 It is also used to shutdown command via REST API/RCON.
+
+### Check status
+
+Show the current auto-pause state with:
+
+```shell
+docker exec -it palworld-server autopause status
+```
+
+The comma-separated output can include these states:
+
+* `enabled`: `AUTO_PAUSE_ENABLED` is enabled and Player Logging is enabled.
+* `disabled`: auto-pause or Player Logging is disabled.
+* `paused`: the `/palworld/.paused` file exists.
+* `sleeping`: the PalServer process is stopped.
+* `force_disabled`: the `/palworld/.autopause-disabled` file exists.
+
+Multiple states can be reported at the same time. Pass an optional `grep -E` regular
+expression to make the command return `0` when the output matches and `1` when it does not:
+
+```shell
+docker exec -it palworld-server autopause status 'paused|sleeping'
+```
+
+Without a filter, the command returns `0`.
 
 ### With Community Server
 

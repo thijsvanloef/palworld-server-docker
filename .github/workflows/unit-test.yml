@@ -147,6 +147,8 @@ jobs:
 
       - name: Test admin password resolution
         run: ./tests/test-admin-password.sh
+      - name: Test mod state v3 ownership reconciliation
+        run: bash ./tests/test-mod-state.sh
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
