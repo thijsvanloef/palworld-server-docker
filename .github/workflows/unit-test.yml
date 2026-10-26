@@ -145,6 +145,8 @@ jobs:
       - name: Test negative delta recovery setting
         run: ./tests/test-negative-delta-recovery.sh
 
+      - name: Test admin password resolution
+        run: ./tests/test-admin-password.sh
       - name: Test mod state v3 ownership reconciliation
         run: bash ./tests/test-mod-state.sh
 
