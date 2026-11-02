@@ -96,6 +96,32 @@ def cache_key(method: str, path: str, query: str, body: bytes = b"") -> CACHE_KE
     return method.upper(), path, query, body
 
 
+def has_cache_control_directive(request: Request, directive_name: str) -> bool:
+    directive_name = directive_name.lower()
+    for header_value in request.headers.getlist("cache-control"):
+        in_quotes = False
+        escaped = False
+        start = 0
+        for index, character in enumerate(header_value):
+            if escaped:
+                escaped = False
+            elif in_quotes and character == "\\":
+                escaped = True
+            elif character == '"':
+                in_quotes = not in_quotes
+            elif character == "," and not in_quotes:
+                name, separator, _ = header_value[start:index].partition("=")
+                if not separator and name.strip().lower() == directive_name:
+                    return True
+                start = index + 1
+
+        name, separator, _ = header_value[start:].partition("=")
+        if not separator and name.strip().lower() == directive_name:
+            return True
+
+    return False
+
+
 def response_headers(headers: httpx.Headers | dict[str, str]) -> dict[str, str]:
     return {
         key: value
@@ -148,6 +174,16 @@ async def proxy(
         (request.method == "GET" and req_path != SAVE_ENDPOINT)
         or (request.method == "POST" and req_path == SAVE_ENDPOINT)
     )
+
+    if has_cache_control_directive(request, "only-if-cached"):
+        if request.method == "GET" and cacheable and key in cache:
+            cached_res = cache[key]
+            return Response(
+                content=cached_res["content"],
+                status_code=cached_res["status_code"],
+                headers=cached_res["headers"],
+            )
+        return Response(status_code=504)
 
     # Check if the .paused file exists
     is_paused = os.path.exists(PAUSED_FILE_PATH)
