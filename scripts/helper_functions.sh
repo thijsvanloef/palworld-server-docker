@@ -379,12 +379,15 @@ DiscordMessage() {
 }
 
 # REST API Call
-# Usage: REST_API [--no-proxy] <api> [data]
+# Usage: REST_API [--no-proxy|--only-if-cached] <api> [data]
 REST_API() {
     local no_proxy=false
+    local -a common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
     while [[ $# -gt 0 ]] && { [[ -z "$1" ]] || [[ "$1" =~ ^- ]]; }; do
         if [ "$1" = "--no-proxy" ]; then
             no_proxy=true
+        elif [ "$1" = "--only-if-cached" ]; then
+            common_opts+=("-H" "Cache-Control: only-if-cached")
         fi
         shift
     done
@@ -406,7 +409,6 @@ REST_API() {
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
-    local -ar common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
     local -i result=0
     local output error_message
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
