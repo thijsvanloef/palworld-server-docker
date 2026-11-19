@@ -137,6 +137,149 @@ def unavailable_response() -> Response:
         media_type="application/json",
     )
 
+
+def cached_response(key: CACHE_KEY) -> Response | None:
+    cached_res = cache.get(key)
+    if cached_res is None:
+        return None
+    return Response(
+        content=cached_res["content"],
+        status_code=cached_res["status_code"],
+        headers=cached_res["headers"],
+    )
+
+
+def is_cacheable_request(method: str, path: str) -> bool:
+    return path in CACHE_ENDPOINTS and (
+        (method == "GET" and path != SAVE_ENDPOINT)
+        or (method == "POST" and path == SAVE_ENDPOINT)
+    )
+
+
+def only_if_cached_response(
+    request: Request, key: CACHE_KEY, cacheable: bool
+) -> Response | None:
+    if not has_cache_control_directive(request, "only-if-cached"):
+        return None
+    if request.method == "GET" and cacheable:
+        cached_res = cached_response(key)
+        if cached_res is not None:
+            return cached_res
+    return Response(status_code=504)
+
+
+async def resume_if_paused(
+    cacheable: bool, key: CACHE_KEY
+) -> tuple[Response | None, float | None]:
+    # Check whether the server is paused.
+    if not os.path.exists(PAUSED_FILE_PATH):
+        return None, None
+    if not cacheable:
+        return None, None
+
+    cached_res = cached_response(key)
+    if cached_res is not None:
+        return cached_res, None
+
+    loop = asyncio.get_running_loop()
+    resume_deadline = loop.time() + API_TIMEOUT
+    try:
+        # The resume request wakes the server through the port-knock handler.
+        await request_resume()
+    except OSError:
+        return unavailable_response(), None
+
+    remaining = resume_deadline - loop.time()
+    if remaining <= 0 or not await wait_for_rest_api(remaining):
+        return unavailable_response(), None
+    return None, resume_deadline
+
+
+async def update_status_after_shutdown(
+    method: str, path: str, status_code: int
+) -> None:
+    if (
+        method != "POST"
+        or path not in {"/v1/api/shutdown", "/v1/api/stop"}
+        or status_code >= 400
+    ):
+        return
+
+    try:
+        status_process = await asyncio.create_subprocess_exec(
+            "/bin/bash",
+            "/home/steam/server/update_server_status.sh",
+            "stopping",
+            "10",
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, status_error = await status_process.communicate()
+        if status_process.returncode != 0:
+            logger.error(
+                "Failed to update server status after shutdown request "
+                "(exit code %s): %s",
+                status_process.returncode,
+                status_error.decode(errors="replace").strip() or "no error output",
+            )
+    except OSError as exc:
+        logger.error("Failed to update server status after shutdown request: %s", exc)
+
+
+async def forward_request(
+    request: Request,
+    req_path: str,
+    body: bytes,
+    key: CACHE_KEY,
+    cacheable: bool,
+    resume_deadline: float | None,
+) -> Response:
+    # Forward requests to the REST API.
+    url = f"{TARGET_URL}{req_path}"
+    if request.url.query:
+        url += f"?{request.url.query}"
+
+    async with httpx.AsyncClient() as client:
+        try:
+            timeout = API_TIMEOUT
+            if resume_deadline is not None:
+                timeout = resume_deadline - asyncio.get_running_loop().time()
+                if timeout <= 0:
+                    return unavailable_response()
+            resp = await client.request(
+                method=request.method,
+                url=url,
+                headers={
+                    key: value
+                    for key, value in request.headers.items()
+                    if key.lower() != "host"
+                },
+                content=body,
+                timeout=timeout,
+            )
+
+            if cacheable and resp.status_code == 200:
+                cache[key] = {
+                    "content": resp.content,
+                    "status_code": resp.status_code,
+                    "headers": response_headers(resp.headers),
+                }
+
+            await update_status_after_shutdown(
+                request.method, req_path, resp.status_code
+            )
+            return Response(
+                content=resp.content,
+                status_code=resp.status_code,
+                headers=response_headers(resp.headers),
+            )
+        except httpx.RequestError:
+            if cacheable:
+                cached_res = cached_response(key)
+                if cached_res is not None:
+                    return cached_res
+            return unavailable_response()
+
+
 @app.api_route("/proxy/v1/api/status", methods=["GET"])
 async def status(_: None = Depends(require_auth)):
     # Endpoint to get the current server status
@@ -170,115 +313,16 @@ async def proxy(
     req_path = f"/{path}"
     body = await request.body()
     key = cache_key(request.method, req_path, request.url.query, body)
-    cacheable = req_path in CACHE_ENDPOINTS and (
-        (request.method == "GET" and req_path != SAVE_ENDPOINT)
-        or (request.method == "POST" and req_path == SAVE_ENDPOINT)
+    cacheable = is_cacheable_request(request.method, req_path)
+
+    cached_only_response = only_if_cached_response(request, key, cacheable)
+    if cached_only_response is not None:
+        return cached_only_response
+
+    paused_response, resume_deadline = await resume_if_paused(cacheable, key)
+    if paused_response is not None:
+        return paused_response
+
+    return await forward_request(
+        request, req_path, body, key, cacheable, resume_deadline
     )
-
-    if has_cache_control_directive(request, "only-if-cached"):
-        if request.method == "GET" and cacheable and key in cache:
-            cached_res = cache[key]
-            return Response(
-                content=cached_res["content"],
-                status_code=cached_res["status_code"],
-                headers=cached_res["headers"],
-            )
-        return Response(status_code=504)
-
-    # Check if the .paused file exists
-    is_paused = os.path.exists(PAUSED_FILE_PATH)
-    resume_deadline = None
-
-    if is_paused:
-        if cacheable and key in cache:
-            cached_res = cache[key]
-            return Response(
-                content=cached_res["content"],
-                status_code=cached_res["status_code"],
-                headers=cached_res["headers"],
-            )
-        if cacheable:
-            loop = asyncio.get_running_loop()
-            resume_deadline = loop.time() + API_TIMEOUT
-            try:
-                await request_resume()
-            except OSError:
-                return unavailable_response()
-            remaining = resume_deadline - loop.time()
-            if remaining <= 0 or not await wait_for_rest_api(remaining):
-                return unavailable_response()
-
-    # Forward requests to the REST API.
-    # If paused, server will resume by port knock.
-    url = f"{TARGET_URL}{req_path}"
-    if request.url.query:
-        url += f"?{request.url.query}"
-    async with httpx.AsyncClient() as client:
-        try:
-            timeout = API_TIMEOUT
-            if resume_deadline is not None:
-                timeout = resume_deadline - asyncio.get_running_loop().time()
-                if timeout <= 0:
-                    return unavailable_response()
-            resp = await client.request(
-                method=request.method,
-                url=url,
-                headers={
-                    k: v
-                    for k, v in request.headers.items()
-                    if k.lower() != "host"
-                },
-                content=body,
-                timeout=timeout,
-            )
-
-            if cacheable and resp.status_code == 200:
-                cache[key] = {
-                    "content": resp.content,
-                    "status_code": resp.status_code,
-                    "headers": response_headers(resp.headers),
-                }
-
-            response = Response(
-                content=resp.content,
-                status_code=resp.status_code,
-                headers=response_headers(resp.headers),
-            )
-            if (
-                request.method == "POST"
-                and req_path in {"/v1/api/shutdown", "/v1/api/stop"}
-                and resp.status_code < 400
-            ):
-                try:
-                    status_process = await asyncio.create_subprocess_exec(
-                        "/bin/bash",
-                        "/home/steam/server/update_server_status.sh",
-                        "stopping",
-                        "10",
-                        stderr=asyncio.subprocess.PIPE,
-                    )
-                    _, status_error = await status_process.communicate()
-                    if status_process.returncode != 0:
-                        app.logger.error(
-                            "Failed to update server status after shutdown request "
-                            "(exit code %s): %s",
-                            status_process.returncode,
-                            status_error.decode(errors="replace").strip()
-                            or "no error output",
-                        )
-                except OSError as exc:
-                    app.logger.error(
-                        "Failed to update server status after shutdown request: %s", exc
-                    )
-            return response
-
-        except httpx.RequestError:
-            if cacheable and key in cache:
-                cached_res = cache[key]
-                return Response(
-                    content=cached_res["content"],
-                    status_code=cached_res["status_code"],
-                    headers=cached_res["headers"],
-                )
-
-            return unavailable_response()

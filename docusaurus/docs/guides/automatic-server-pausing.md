@@ -45,7 +45,8 @@ When it is `false`, the proxy is not used, and REST API requests connect directl
 The proxy uses `API_PROXY_PORT` (default: `8213`).
 Use a different port from `REST_API_PORT`.
 
-Authenticated requests to the proxy use the following cacheable endpoints. While the server is paused, a cached response is returned from memory without waking the server:
+Authenticated requests to the proxy use the following cacheable endpoints. While the server is paused, a cached response
+from memory is returned without waking the server:
 
    GET /v1/api/players
    GET /v1/api/game-data
@@ -54,13 +55,20 @@ Authenticated requests to the proxy use the following cacheable endpoints. While
    GET /v1/api/settings
    POST /v1/api/save
 
-By default, if no cached response is available for a cacheable endpoint, the proxy resumes the server, forwards the request to the REST API, caches a successful response, and returns it.
-Requests with `Cache-Control: only-if-cached` return a stored response for an eligible GET even while the server is running. On a cache miss, a non-cacheable endpoint, or any other method (including `POST /v1/api/save`), the proxy returns HTTP 504 without resuming the server or forwarding the request. This uses the existing in-memory snapshots and does not evaluate response freshness.
-Authenticated requests to other endpoints, or requests received while the server is not paused, are forwarded directly to the REST API unless they include `Cache-Control: only-if-cached`.
+By default, if no cached response is available for a cacheable endpoint, the proxy resumes the server, forwards the request to the
+REST API, caches a successful response, and returns it.
+Requests with `Cache-Control: only-if-cached` return a stored response for an eligible GET even while the server is running.
+On a cache miss, a non-cacheable endpoint, or any other method (including `POST /v1/api/save`), the proxy returns HTTP 504
+without resuming the server or forwarding the request. This uses the existing in-memory snapshots and does not evaluate response
+freshness.
+Authenticated requests to other endpoints, or requests received while the server is not paused, are forwarded directly to the REST
+API unless they include `Cache-Control: only-if-cached`.
 
-After requesting a resume, the proxy waits up to five seconds for the REST API to become available. If it does not become available in time, or the REST API is unreachable when the request is forwarded, the proxy returns HTTP 503.
+After requesting a resume, the proxy waits up to five seconds for the REST API to become available. If it does not become
+available in time, or the REST API is unreachable when the request is forwarded, the proxy returns HTTP 503.
 
-The container startup script waits for the PalServer process and stops the proxy when the server exits. Because the cache is held in memory, it is lost when the proxy stops.
+The container startup script waits for PalServer to exit, then stops the proxy. Its in-memory cache is lost when the
+proxy stops.
 
 Before pausing the server, AUTO PAUSE calls the cacheable APIs to refresh their cached responses.
 
