@@ -11,6 +11,8 @@ services:
     environment:
       SERVER_NAME: "palworld-server-docker/examples/autopause"
       AUTO_PAUSE_ENABLED: true
+      API_PROXY_ENABLED: true
+      API_PROXY_PORT: 8213
       AUTO_PAUSE_TIMEOUT_EST: 10  # Number of seconds before auto pausing.
       AUTO_PAUSE_LOG: true
       # AUTO_PAUSE_DEBUG: false

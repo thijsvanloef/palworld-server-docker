@@ -5,6 +5,12 @@ source "/home/steam/server/helper_functions.sh"
 # shellcheck source=scripts/negative_delta_recovery.sh
 source "/home/steam/server/negative_delta_recovery.sh"
 
+# Initialize server status tracking if no command-line arguments are provided.
+if [ -z "$1" ]; then
+    update_server_status "starting" 0
+    trap 'update_server_status "stopped" 100' EXIT
+fi
+
 # Remove old FIFO
 rm -f "${PalServerLog_fifo}"
 
@@ -12,9 +18,6 @@ if ! ValidateNegativeDeltaRecoverySetting; then
     LogError "PALWORLD_ALLOW_NEGATIVE_DELTA_TIME must be true or false."
     exit 1
 fi
-
-# Remove old FIFO
-rm -f "${PalServerLog_fifo}"
 
 mkdir -p /palworld/backups
 
@@ -41,6 +44,8 @@ init_steam_home() {
     mkdir -p /palworld/.steam/package
     chmod o+w /palworld/.steam/package
 }
+
+[ -z "$1" ] && update_server_status "starting" 10
 
 if [[ "$(id -u)" -eq 0 ]] && [[ "$(id -g)" -eq 0 ]]; then
     if [[ "${PUID}" -ne 0 ]] && [[ "${PGID}" -ne 0 ]]; then
@@ -117,6 +122,7 @@ source "/home/steam/server/autopause/init.sh"
 # shellcheck disable=SC2317,SC2329
 term_handler() {
     autopause stop "term_handler"
+    update_server_status "stopping" 10
 
   DiscordMessage "Shutdown" "${DISCORD_PRE_SHUTDOWN_MESSAGE}" "in-progress" "${DISCORD_PRE_SHUTDOWN_MESSAGE_ENABLED}" "${DISCORD_PRE_SHUTDOWN_MESSAGE_URL}"
 
@@ -127,10 +133,15 @@ term_handler() {
         fi
     fi
 
+    APIProxy_stop
     tail --pid="$killpid" -f /dev/null 2>/dev/null
 }
 
 trap 'term_handler' SIGTERM
+
+if ! APIProxy_start; then
+    exit 1
+fi
 
 if [[ "$(id -u)" -eq 0 ]]; then
     # Only if the capabilities set on the executable do not work, we reluctantly add NET_ADMIN and NET_RAW capabilities.
@@ -143,6 +154,8 @@ fi
 killpid="$!"
 wait "$killpid"
 child_rc=$?
+update_server_status "stopped" 100
+APIProxy_stop
 
 mapfile -t backup_pids < <(pgrep backup)
 if [ "${#backup_pids[@]}" -ne 0 ]; then

@@ -156,6 +156,7 @@ InstallServer() {
     LogError "SERVER_PLATFORM=Windows is not supported on arm64."
     return 2
   fi
+  update_server_status "updating" 10
 
   # Get host kernel page size
   kernel_page_size=$(getconf PAGESIZE)
@@ -232,34 +233,39 @@ InstallServer() {
       LogWarn "Installing latest beta version"
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files with DepotDownloader"
-        UseDepotDownloader "beta"
+        update_server_status "updating" 50
+        UseDepotDownloader "beta" || return 1
       else
         LogWarn "Downloading server files with SteamCMD"
 
         WarmupSteamCMD
+        update_server_status "updating" 50
 
         if ! UseSteamCmd "beta"; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
-          UseDepotDownloader "beta"
+          UseDepotDownloader "beta" || return 1
         fi
       fi
     else
       if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
         LogWarn "Downloading server files with DepotDownloader"
-        UseDepotDownloader
+        update_server_status "updating" 50
+        UseDepotDownloader || return 1
       else
         LogWarn "Downloading server files with SteamCMD"
 
         WarmupSteamCMD
+        update_server_status "updating" 50
 
         if ! UseSteamCmd; then
           LogWarn "SteamCMD failed, falling back to DepotDownloader"
-          UseDepotDownloader
+          UseDepotDownloader || return 1
         fi
       fi
     fi
 
     DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+    update_server_status "updating" 100
     return
   fi
 
@@ -277,19 +283,22 @@ InstallServer() {
 
   if [ "${USE_DEPOT_DOWNLOADER}" == true ]; then
     LogWarn "Downloading server files with DepotDownloader"
-    UseDepotDownloader "" "$targetManifest"
+    update_server_status "updating" 50
+    UseDepotDownloader "" "$targetManifest" || return 1
   else
     LogWarn "Downloading server files with SteamCMD"
 
     WarmupSteamCMD
+    update_server_status "updating" 50
 
     if ! UseSteamCmd "" "$targetManifest"; then
       LogWarn "SteamCMD failed, falling back to DepotDownloader"
-      UseDepotDownloader "" "$targetManifest"
+      UseDepotDownloader "" "$targetManifest" || return 1
     else
-      CreateACFFile "$targetManifest"
+      CreateACFFile "$targetManifest" || return 1
     fi
   fi
 
   DiscordMessage "Install" "${DISCORD_POST_UPDATE_BOOT_MESSAGE}" "success" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_ENABLED}" "${DISCORD_POST_UPDATE_BOOT_MESSAGE_URL}"
+  update_server_status "updating" 100
 }

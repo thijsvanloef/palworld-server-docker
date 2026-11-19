@@ -89,6 +89,7 @@ AP_pause() {
         APLog "Paused. (PID:${pid})"
         kill -STOP "${pid}"
         AP_touch on "${AP_pause_file}"
+        update_server_status "paused" 100
     else
         if ! AP_isSleep; then
             APLog_warn "Already wakeuped..."
@@ -97,6 +98,7 @@ AP_pause() {
         APLog "Wakeup!!! (PID:${pid})"
         kill -CONT "${pid}"
         AP_touch off "${AP_pause_file}"
+        update_server_status "running" 100
     fi
     return 0
 }
