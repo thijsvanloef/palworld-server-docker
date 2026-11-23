@@ -16,6 +16,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      # Docker 29.4.2 blocks 32-bit socketcall, preventing Wine from starting.
+      - name: Set up Docker Engine
+        uses: docker/setup-docker-action@v5
+        with:
+          version: v29.9.3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
