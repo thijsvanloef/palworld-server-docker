@@ -38,7 +38,8 @@ jobs:
             -p 25575:25575/tcp \
             -v ./palworld-windows:/palworld/ \
             --env-file .env.example \
-            --restart unless-stopped \
+            -e MOD_ID_PALSCHEMA=disabled \
+            --restart on-failure:2 \
             --stop-timeout 30 \
             ${{ github.run_id }}:wine
 
@@ -53,6 +54,13 @@ jobs:
 
               if [ "${ELAPSED_TIME}" -gt "${TIMEOUT_SECONDS}" ]; then
                 echo "Timeout reached. Windows server failed to become healthy within ${TIMEOUT_SECONDS} seconds."
+                printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
+                docker logs palworld-server-wine
+                exit 1
+              fi
+
+              if [ "$(docker inspect -f '{{.State.Running}}' palworld-server-wine)" != "true" ]; then
+                echo "The Windows server container stopped unexpectedly."
                 printf "\e[0;32m%s\e[0m\n" "*****Container LOGS*****"
                 docker logs palworld-server-wine
                 exit 1
