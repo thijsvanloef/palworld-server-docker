@@ -975,7 +975,7 @@ Mod_deploy() {
     local info_json
 
     mkdir -p "${dest_dir}"
-    cp "-aur${v}" "${source_dir}/." "${dest_dir}/"
+    cp "-au${v}" "${source_dir}/." "${dest_dir}/"
     info_json="${dest_dir}/Info.json"
     if [ -f "${info_json}" ] && jq -e '.InstallRule' "${info_json}" >/dev/null 2>&1; then
         Mod_deployViaRules "${dest_dir}" "${pkg_name}" "${owner_key}"
