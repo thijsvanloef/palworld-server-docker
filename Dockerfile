@@ -18,6 +18,12 @@ RUN wget -q https://github.com/gorcon/rcon-cli/archive/refs/tags/v${RCON_VERSION
     && go build -v ./cmd/gorcon
 
 FROM cm2network/steamcmd:root-trixie AS base-amd64
+# The steamcmd base is rebuilt rarely, so pick up Debian security updates here.
+# Not done for arm64: that base pins box64 by date.
+# hadolint ignore=DL3005
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 # Ignoring --platform=arm64 as this is required for the multi-arch build to continue to work on amd64 hosts
 # hadolint ignore=DL3029
 FROM --platform=arm64 sonroyaalmerol/steamcmd-arm64:root-trixie-2026-06-07 AS base-arm64
@@ -41,9 +47,9 @@ LABEL maintainer="thijs@loef.dev" \
 # RCON: Latest releases available at https://github.com/gorcon/rcon-cli/releases
 # DEPOT_DOWNLOADER: Latest releases available at https://github.com/SteamRE/DepotDownloader/releases
 # NOTICE: edit RCON_MD5SUM SUPERCRONIC_SHA1SUM when using binaries of another version or arch.
-ARG SUPERCRONIC_SHA1SUM_ARM64="639ab81a72771990790df7ee87d9acfe88e5fa83"
-ARG SUPERCRONIC_SHA1SUM_AMD64="5bcefed628e32adc08e32634db2d10e9230dbca0"
-ARG SUPERCRONIC_VERSION="0.2.46"
+ARG SUPERCRONIC_SHA1SUM_ARM64="9d4c2000493215a1898502b2fc2dada3e8ea8c7a"
+ARG SUPERCRONIC_SHA1SUM_AMD64="1692066e350a88ff4d7d6474fe3c7a6c41ec5e89"
+ARG SUPERCRONIC_VERSION="0.2.51"
 ARG DEPOT_DOWNLOADER_VERSION="3.4.0"
 ARG KNOCK_VERSION="0.8.1"
 ARG WINE_BRANCH="stable"
