@@ -86,6 +86,11 @@ RUN python3 -m venv /opt/mitmproxy-venv \
     && ln -s /opt/mitmproxy-venv/bin/mitmdump /usr/local/bin/ \
     && ln -s /opt/mitmproxy-venv/bin/mitmweb /usr/local/bin/
 
+COPY scripts/autopause/requirements.txt /tmp/api-proxy-requirements.txt
+RUN python3 -m venv /opt/api-proxy-venv \
+    && /opt/api-proxy-venv/bin/pip install --no-cache-dir -r /tmp/api-proxy-requirements.txt \
+    && rm /tmp/api-proxy-requirements.txt
+
 # install rcon and supercronic
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -158,6 +163,8 @@ ENV HOME=/home/steam \
     QUERY_PORT=27015 \
     REST_API_ENABLED=true \
     REST_API_PORT=8212 \
+    API_PROXY_ENABLED=false \
+    API_PROXY_PORT=8213 \
     TZ=UTC \
     SERVER_DESCRIPTION= \
     BACKUP_ENABLED=true \

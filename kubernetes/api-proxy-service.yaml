@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: palworld-server
+  name: palworld-api-proxy
+spec:
+  ports:
+    - name: api-proxy
+      port: 8213
+      protocol: TCP
+      targetPort: api-proxy
+  selector:
+    app: palworld-server
+  type: ClusterIP

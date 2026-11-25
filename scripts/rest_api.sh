@@ -5,12 +5,15 @@ source "${SCRIPT_DIR}/helper_functions.sh"
 
 SCRIPT=$(basename "${0}")
 
-# Parse arguments to handle --no-flush-log
+# Parse arguments to handle --no-flush-log and --no-proxy
 args=()
 flush_log=true
+opts=()
 for arg in "$@"; do
     if [ "$arg" == "--no-flush-log" ]; then
         flush_log=false
+    elif [ "$arg" == "--no-proxy" ]; then
+        opts+=("$arg")
     else
         args+=("$arg")
     fi
@@ -25,7 +28,7 @@ fi
 help="-h|--help"
 if [ $# -lt 1 ] || [[ ${1} =~ ${help} ]]; then
     cat << EOF
-Usage: ${SCRIPT} <api> [options]
+Usage: ${SCRIPT} [--no-proxy] <api> [options]
 api:
   announce <json> ... announce message.
   ban <json>      ... ban player.
@@ -109,7 +112,7 @@ if [[ ${api} =~ ${api_required_json} ]]; then
     fi
 fi
 
-response=$(REST_API "${api}" "${json}")
+response=$(REST_API "${opts[@]}" "${api}" "${json}")
 exit_code=$?
 if [ -n "${response}" ]; then
     echo "${response}"

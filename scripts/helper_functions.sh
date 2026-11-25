@@ -260,6 +260,7 @@ get_player_count() {
 export LINE=$'\n'
 export RESET=$'\033[0m'       # Text Reset
 export WhiteText=$'\033[0;37m'        # White
+export GrayText=$'\033[0;90m'            # Gray
 
 # Bold
 export RedBoldText=$'\033[1;31m'         # Red
@@ -318,6 +319,9 @@ LogSuccess() {
 LogAction() {
     Log "****$1****" "$CyanBoldText" "ACTION" && LogFlush
 }
+LogProgress() {
+    Log "--- $1 ---" "$GrayText" "PROGRESS"
+}
 LogFlush() {
     if [ -p "${PalServerLog_fifo}" ]; then
         if ! timeout 1s echo "LOG_FLUSH" > "${PalServerLog_fifo}"; then
@@ -375,15 +379,36 @@ DiscordMessage() {
 }
 
 # REST API Call
+# Usage: REST_API [--no-proxy|--only-if-cached] <api> [data]
 REST_API() {
-    autopause resume "REST_API ${1}" > /dev/null
+    local no_proxy=false
+    local -a common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
+    while [[ $# -gt 0 ]] && { [[ -z "$1" ]] || [[ "$1" =~ ^- ]]; }; do
+        if [ "$1" = "--no-proxy" ]; then
+            no_proxy=true
+        elif [ "$1" = "--only-if-cached" ]; then
+            common_opts+=("-H" "Cache-Control: only-if-cached")
+        fi
+        shift
+    done
     local -r api="${1}"
     local -r data="${2:-}"
-    local -r url="http://localhost:${REST_API_PORT}/v1/api/${api}"
+    local port="${REST_API_PORT}"
+    local request_path="/v1/api/${api}"
+    [[ "${api}" =~ ^/ ]] && request_path="${api}"
+    local skip_resume=false
+    if isTrue "${API_PROXY_ENABLED:-false}" && ! isTrue "${no_proxy}"; then
+        local -r cached_api="players|game-data|metrics|info|settings|save"
+        [[ "${api}" =~ ${cached_api} ]] && skip_resume=true
+        port="${API_PROXY_PORT}"
+    fi
+    if [[ "${skip_resume}" != true ]]; then
+        autopause resume "REST_API ${api}" > /dev/null
+    fi
+    local -r url="http://127.0.0.1:${port}${request_path}"
     local -r userpass="admin:${ADMIN_PASSWORD}"
     local -r post_api="save|stop"
     local -r down_api="shutdown|stop"
-    local -ar common_opts=("--connect-timeout" "5" "-m" "35" "-sfL")
     local -i result=0
     local output error_message
     if [ "${data}" = "" ] && [[ ! ${api} =~ ${post_api} ]]; then
@@ -402,6 +427,7 @@ REST_API() {
     else
         if [[ ${api} =~ ${down_api} ]]; then
             autopause stop > /dev/null
+            update_server_status "stopping" 10
         fi
         printf '%s' "${output}"
     fi
@@ -441,6 +467,7 @@ broadcast_command() {
 }
 
 # Saves the server
+# options: [--no-proxy]
 # Returns 0 if it saves
 # Returns 1 if it is not able to save
 save_server() {
@@ -449,7 +476,11 @@ save_server() {
         return 0
     fi
     local return_val=0
-    if ! REST_API save; then
+    local opt="$1"
+    if [[ ! "${opt}" =~ ^- ]]; then
+        opt=""
+    fi
+    if ! REST_API "${opt}" save; then
         return_val=1
     fi
     return "$return_val"
@@ -461,8 +492,9 @@ save_server() {
 shutdown_server() {
     local return_val=0
     # Do not shutdown if not able to save
-    if save_server; then
-        if rest-cli shutdown 1 "Shutting down"; then
+    if save_server --no-proxy; then
+        if rest-cli --no-proxy shutdown 1 "Shutting down"; then
+            update_server_status "stopping" 10
             # for windows
             for ((i = 0; i < 30; i++)); do
                 if ! PalworldServerPid > /dev/null; then
@@ -563,4 +595,47 @@ get_latest_version() {
     latest_version=$(curl https://api.github.com/repos/thijsvanloef/palworld-server-docker/releases/latest -s | jq .name -r)
 
     echo "$latest_version"
+}
+
+# Update server container status
+update_server_status() {
+    local status="$1"
+    local progress="$2"
+    local status_file="/palworld/.status"
+    local temp_file
+
+    case "${status}" in
+        starting|updating|running|stopping|stopped|paused) ;;
+        *)
+            LogError "Invalid server status: ${status}"
+            return 1
+            ;;
+    esac
+    if ! [[ "${progress}" =~ ^[0-9]{1,3}$ ]] || (( 10#${progress} > 100 )); then
+        LogError "Invalid server status progress: ${progress}"
+        return 1
+    fi
+    progress=$((10#${progress}))
+
+    if ! temp_file="$(mktemp "/palworld/.status.XXXXXX")"; then
+        LogError "Failed to create temporary server status file."
+        return 1
+    fi
+    if ! printf '{"status":"%s","progress":%s}\n' "${status}" "${progress}" > "${temp_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to write temporary server status file."
+        return 1
+    fi
+    if [[ "$(id -u)" -eq 0 ]] && ! chown steam:steam "${temp_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to set temporary server status file owner to steam:steam."
+        return 1
+    fi
+    if ! mv -f "${temp_file}" "${status_file}"; then
+        rm -f "${temp_file}"
+        LogError "Failed to atomically update ${status_file}."
+        return 1
+    fi
+    [ "${LOG_LEVEL^^}" = "DEBUG" ] && LogProgress "${status} / ${progress}%"
+    return 0
 }
