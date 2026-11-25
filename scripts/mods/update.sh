@@ -666,22 +666,33 @@ ModLock_release() {
 # Validate and normalize a raw Workshop ID before adding it to the named array.
 Workshop_appendId() {
     local target_array_name="$1"
-    local ignored_id="$2"
     local raw_id
-    raw_id="$(_trim "${3:-}")"
+    raw_id="$(_trim "${2:-}")"
     [ -z "${raw_id}" ] && return 0
-
-    if [ "${raw_id}" = "${ignored_id}" ]; then
-        download_ue4ss=true
-        LogWarn "UE4SS workshop mod ID ${ignored_id} is not supported. It has been ignored."
-        return 0
-    fi
 
     if [[ "${raw_id}" =~ ^[0-9]+$ ]]; then
         ModTrack_addUnique "${target_array_name}" "${raw_id}"
     else
         LogWarn "Invalid workshop mod ID: ${raw_id}"
     fi
+}
+
+# Remove a Workshop ID from the named array.
+Workshop_removeId() {
+    local target_array_name="$1"
+    local raw_id
+    raw_id="$(_trim "${2:-}")"
+    [ -z "${raw_id}" ] && return 1
+
+    local -n target_array="${target_array_name}"
+    local -i i result=1
+    for i in "${!target_array[@]}"; do
+        if [ "${target_array[i]}" = "${raw_id}" ]; then
+            unset 'target_array[i]'
+            result=0
+        fi
+    done
+    return ${result}
 }
 
 # Read and return unique workshop mod IDs from environment variables and a file.
@@ -702,18 +713,23 @@ Workshop_readIds() {
     if [ -n "${MOD_IDS:-}" ]; then
         IFS=',' read -r -a raw_ids <<< "${MOD_IDS}"
         for line in "${raw_ids[@]}"; do
-            Workshop_appendId ids "${ignore_ue4ss_id}" "${line}"
+            Workshop_appendId ids "${line}"
         done
     fi
 
     # Process workshop_mods_file, if it exists.
     if [ -f "${workshop_mods_file}" ]; then
         while IFS= read -r line || [ -n "${line:-}" ]; do
-            Workshop_appendId ids "${ignore_ue4ss_id}" "${line%%#*}"
+            Workshop_appendId ids "${line%%#*}"
         done < "${workshop_mods_file}"
     fi
 
-    printf '%s\n' "${ids[@]}"
+    if Workshop_removeId ids "${ignore_ue4ss_id}"; then
+        download_ue4ss=true
+        LogWarn "UE4SS workshop mod ID ${ignore_ue4ss_id} is not supported. It has been ignored."
+    fi
+
+    WORKSHOP_IDS=("${ids[@]}")
 }
 
 # Locate a downloaded Workshop mod across supported Steam library paths.
@@ -959,7 +975,7 @@ Mod_deploy() {
     local info_json
 
     mkdir -p "${dest_dir}"
-    cp "-aur${v}" "${source_dir}/." "${dest_dir}/"
+    cp "-au${v}" "${source_dir}/." "${dest_dir}/"
     info_json="${dest_dir}/Info.json"
     if [ -f "${info_json}" ] && jq -e '.InstallRule' "${info_json}" >/dev/null 2>&1; then
         Mod_deployViaRules "${dest_dir}" "${pkg_name}" "${owner_key}"
@@ -1132,7 +1148,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     fi
 
     # Load workshop mod IDs
-    mapfile -t WORKSHOP_IDS < <(Workshop_readIds || true)
+    Workshop_readIds
 
     # SteamCMD/curl compare manifests internally, so syncing is always safe and cheap when nothing changed.
     # Both "check" and the full update share this same sync step before diverging below.
