@@ -187,7 +187,7 @@ InstallServer() {
     elif [ -n "${2}" ]; then
       if /home/steam/steamcmd/steamcmd.sh +@sSteamCmdForcePlatformType "${steam_platform}" +@sSteamCmdForcePlatformBitness 64 +force_install_dir "/palworld" +login "${STEAM_USERNAME}" "${STEAM_PASSWORD}" +download_depot 2394010 "${depot_id}" "${2}" +quit; then
         depot_content_path=$(find /home/steam -type d -path "*/steamapps/content/app_2394010/depot_${depot_id}" | head -n 1)
-        if [ -n "${depot_content_path}" ] && cp -vr "${depot_content_path}/." "/palworld/"; then
+        if [ -n "${depot_content_path}" ] && cp -vR "${depot_content_path}/." "/palworld/"; then
           return 0
         fi
       fi
